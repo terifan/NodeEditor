@@ -1,10 +1,10 @@
 package org.terifan.ui.relationeditor;
 
 import java.awt.Rectangle;
-import javax.swing.JComponent;
+import javax.swing.JPanel;
 
 
-public abstract class RelationBox extends JComponent
+public abstract class RelationBox extends JPanel
 {
 	protected boolean mMinimized;
 	protected String mTitle;

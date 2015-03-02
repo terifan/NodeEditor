@@ -1,6 +1,7 @@
 package org.terifan.ui.relationeditor;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import org.terifan.ui.ColumnLayout;
@@ -26,6 +27,24 @@ public class RelationListBox extends RelationBox
 
 
 	@Override
+	public Dimension getPreferredSize()
+	{
+		Dimension s = super.getPreferredSize();
+		s.width = Math.max(s.width, 80);
+		return s;
+	}
+
+
+	@Override
+	public Dimension getMinimumSize()
+	{
+		Dimension s = super.getMinimumSize();
+		s.width = Math.max(s.width, 80);
+		return s;
+	}
+
+
+	@Override
 	public void setMinimized(boolean aMinimized)
 	{
 		mMinimized = aMinimized;
@@ -35,6 +54,7 @@ public class RelationListBox extends RelationBox
 			getComponent(i).setVisible(!mMinimized);
 		}
 
+		setSize(getPreferredSize());
 		invalidate();
 	}
 
