@@ -1,7 +1,9 @@
 package org.terifan.ui.relationeditor.test;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import org.terifan.ui.ColumnLayout;
 import org.terifan.ui.Utilities;
 import org.terifan.ui.relationeditor.DefaultRelationItem;
 import org.terifan.ui.relationeditor.DefaultConnection;
@@ -24,7 +26,9 @@ public class Test
 			DefaultRelationItem itemE = new DefaultRelationItem("doggy");
 			DefaultRelationItem itemF = new DefaultRelationItem("WORLD");
 			DefaultRelationItem itemG = new DefaultRelationItem("horsy");
-			DefaultRelationItem itemH = new DefaultRelationItem("doggy");
+			DefaultRelationItem itemH1 = new DefaultRelationItem("doggy1");
+			DefaultRelationItem itemH2 = new DefaultRelationItem("doggy2");
+			DefaultRelationItem itemH3 = new DefaultRelationItem("doggy3");
 
 			RelationListBox boxA = new RelationListBox("Box A");
 			boxA.add(itemA);
@@ -40,7 +44,9 @@ public class Test
 
 			RelationListBox boxD = new RelationListBox("Box D");
 			boxD.add(itemG);
-			boxD.add(itemH);
+			boxD.add(itemH1);
+			boxD.add(itemH2);
+			boxD.add(itemH3);
 
 			RelationEditor editor = new RelationEditor();
 
@@ -52,9 +58,9 @@ public class Test
 			editor.addRelationship(new DefaultConnection(itemA, itemC));
 			editor.addRelationship(itemB, itemF);
 			editor.addRelationship(itemD, itemG);
-			editor.addRelationship(itemE, itemH);
+			editor.addRelationship(itemE, itemH1);
 
-//			editor.arrangeBoxes();
+			editor.arrangeBoxes();
 
 			boxA.getBounds().y += 50;
 			boxC.getBounds().x = boxB.getBounds().x;

@@ -14,10 +14,11 @@ import org.terifan.ui.TextBox;
 public class RelationBoxBorder implements Border
 {
 	private final static Color COLOR_32 = new Color(32, 32, 32);
-	private final static Color COLOR_64 = new Color(64, 64, 64);
+	private final static Color COLOR_48 = new Color(48, 48, 48);
+	private final static Color COLOR_68 = new Color(68, 68, 68);
 	private final static Color COLOR_80 = new Color(80, 80, 80);
 	private final static Color COLOR_96 = new Color(96, 96, 96);
-	private final static Color COLOR_68 = new Color(68,68,68);
+	private final static Color COLOR_160 = new Color(160, 160, 160);
 
 
 	@Override
@@ -39,26 +40,49 @@ public class RelationBoxBorder implements Border
 	{
 		Graphics2D g = (Graphics2D)aGraphics;
 
-		Rectangle bounds = new Rectangle(aX, aY, aWidth - 1, aHeight - 1);
+		Rectangle b = new Rectangle(aX, aY, aWidth - 1, aHeight - 1);
 
-		drawBorder(g, bounds, 0, COLOR_96, COLOR_32);
-		drawBorder(g, bounds, 1, COLOR_64, COLOR_80);
+		drawBorder(g, b, 0, COLOR_96, COLOR_32);
+		drawBorder(g, b, 1, COLOR_80, COLOR_80);
 
 		g.setColor(COLOR_68);
-		bounds.grow(-2, -2);
-		g.draw(bounds);
-		bounds.grow(-1, -1);
-		g.draw(bounds);
+		b.grow(-2, -2);
+		g.draw(b);
+		b.grow(-1, -1);
+		g.draw(b);
 
-		bounds.width -= 16;
-		bounds.height = 16;
+		b.width -= 16;
+		b.height = 16;
 
 		RelationBox box = (RelationBox)aComponent;
-		new TextBox(box.getTitle()).setAnchor(Anchor.WEST).setBounds(bounds).setMargins(0, 4, 0, 4).setForeground(Color.WHITE).render(g);
+
+		new TextBox(box.getTitle()).setAnchor(Anchor.WEST).setBounds(b).setMargins(0, 4, 0, 4).setForeground(Color.WHITE).setMaxLineCount(1).render(g);
+
+		b.x += b.width + 1;
+		b.y++;
+		b.width = 14;
+		b.height = 14;
+
+		drawBorder(g, b, 0, COLOR_96, COLOR_48);
+		g.setColor(COLOR_160);
+
+		if (box.isMinimized())
+		{
+			g.drawLine(b.x+3, b.y+4, b.x+b.width-3, b.y+4);
+			g.drawLine(b.x+3, b.y+5, b.x+b.width-3, b.y+5);
+			g.drawLine(b.x+3, b.y+10, b.x+b.width-3, b.y+10);
+			g.drawLine(b.x+3, b.y+4, b.x+3, b.y+10);
+			g.drawLine(b.x+b.width-3, b.y+4, b.x+b.width-3, b.y+10);
+		}
+		else
+		{
+			g.drawLine(b.x+4, b.y+9, b.x+b.width-4, b.y+9);
+			g.drawLine(b.x+4, b.y+10, b.x+b.width-4, b.y+10);
+		}
 	}
 
 
-	public static void drawBorder(Graphics aGraphics, Rectangle b, int i, Color aColor, Color aColor0)
+	private void drawBorder(Graphics aGraphics, Rectangle b, int i, Color aColor, Color aColor0)
 	{
 		aGraphics.setColor(aColor);
 		aGraphics.drawLine(b.x+i, b.y+i, b.x+b.width-i, b.y+i);

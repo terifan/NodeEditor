@@ -9,7 +9,6 @@ public abstract class RelationBox extends JComponent
 	protected boolean mMinimized;
 	protected String mTitle;
 
-//	abstract ArrayList<RelationItem> getItems();
 
 	abstract Rectangle[] getAnchors(RelationItem aItem);
 
@@ -26,8 +25,5 @@ public abstract class RelationBox extends JComponent
 	}
 
 
-	public void setMinimized(boolean aMinimized)
-	{
-		mMinimized = aMinimized;
-	}
+	public abstract void setMinimized(boolean aMinimized);
 }

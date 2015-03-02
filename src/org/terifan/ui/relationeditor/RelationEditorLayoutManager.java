@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import java.awt.LayoutManager2;
 import java.awt.Rectangle;
 import java.util.ArrayList;
-import org.terifan.util.log.Log;
 
 
 public class RelationEditorLayoutManager implements LayoutManager2
@@ -84,13 +83,11 @@ public class RelationEditorLayoutManager implements LayoutManager2
 		{
 			Rectangle b = box.getBounds();
 			w = Math.max(b.x + b.width, w);
-			h = Math.max(h + b.height, h);
+			h = Math.max(b.y + b.height, h);
 		}
 
 		w += 10;
 		h += 10;
-
-		Log.out.println(w+" "+h+" "+mBoxes.size());
 
 		return new Dimension(w, h);
 	}
@@ -105,19 +102,8 @@ public class RelationEditorLayoutManager implements LayoutManager2
 	@Override
 	public void layoutContainer(Container aParent)
 	{
-		int x = 10;
-		int y = 10;
-
-		for (RelationBox box : mBoxes)
-		{
-			Dimension d = box.getPreferredSize();
-
-			d.width = Math.max(d.width, 80);
-
-			box.setBounds(x, y, d.width, d.height);
-
-			x += d.width + 50;
-			y += 20;
-		}
+//		synchronized (parent.getTreeLock())
+//		{
+//		}
 	}
 }
