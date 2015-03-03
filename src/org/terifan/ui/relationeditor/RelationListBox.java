@@ -1,61 +1,36 @@
 package org.terifan.ui.relationeditor;
 
+import org.terifan.ui.resizablepanel.ResizablePanel;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import javax.swing.BorderFactory;
+import javax.swing.border.BevelBorder;
 import org.terifan.ui.ColumnLayout;
+import org.terifan.ui.resizablepanel.ResizablePanelBorder;
 
 
-public class RelationListBox extends RelationBox
+public class RelationListBox extends ResizablePanel implements RelationBox
 {
 	private final static Color COLOR_68 = new Color(68, 68, 68);
+	private final static Color HI_OUTER_COLOR = new Color(96, 96, 96);
+	private final static Color HI_INNER_COLOR = new Color(80, 80, 80);
+	private final static Color LO_OUTER_COLOR = new Color(32, 32, 32);
+	private final static Color LO_INNER_COLOR = new Color(80, 80, 80);
+	private final static Color ICON_COLOR = new Color(160, 160, 160);
 
 
 	public RelationListBox(String aTitle)
 	{
-		mTitle = aTitle;
+		super(new Rectangle());
 
-		RelationBoxMouseListener relationBoxMouseListener = new RelationBoxMouseListener(this);
-		addMouseListener(relationBoxMouseListener);
-		addMouseMotionListener(relationBoxMouseListener);
+		setTitle(aTitle);
 		setLayout(new ColumnLayout(1, 0, 1));
-		setBorder(new RelationBoxBorder());
 		setBackground(COLOR_68);
+		setForeground(Color.WHITE);
 		setOpaque(true);
-	}
 
-
-	@Override
-	public Dimension getPreferredSize()
-	{
-		Dimension s = super.getPreferredSize();
-		s.width = Math.max(s.width, 80);
-		return s;
-	}
-
-
-	@Override
-	public Dimension getMinimumSize()
-	{
-		Dimension s = super.getMinimumSize();
-		s.width = Math.max(s.width, 80);
-		return s;
-	}
-
-
-	@Override
-	public void setMinimized(boolean aMinimized)
-	{
-		mMinimized = aMinimized;
-
-		for (int i = 0; i < getComponentCount(); i++)
-		{
-			getComponent(i).setVisible(!mMinimized);
-		}
-
-		setSize(getPreferredSize());
-		invalidate();
+		((ResizablePanelBorder)getBorder()).setBevelBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED, HI_OUTER_COLOR, HI_INNER_COLOR, LO_OUTER_COLOR, LO_INNER_COLOR));
 	}
 
 
@@ -78,7 +53,7 @@ public class RelationListBox extends RelationBox
 
 		int titleHeight = getBorder().getBorderInsets(this).top;
 
-		if (mMinimized || aItem == null)
+		if (isMinimized() || aItem == null)
 		{
 			return new Rectangle[]
 			{
@@ -105,5 +80,12 @@ public class RelationListBox extends RelationBox
 		}
 
 		return null;
+	}
+
+
+	@Override
+	protected void fireSelectedEvent()
+	{
+		((RelationEditor)getParent()).setSelectedComponent(this);
 	}
 }

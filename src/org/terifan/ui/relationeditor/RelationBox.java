@@ -1,29 +1,29 @@
 package org.terifan.ui.relationeditor;
 
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Rectangle;
-import javax.swing.JPanel;
 
 
-public abstract class RelationBox extends JPanel
+public interface RelationBox
 {
-	protected boolean mMinimized;
-	protected String mTitle;
+	Component getComponent(int aIndex);
 
 
-	abstract Rectangle[] getAnchors(RelationItem aItem);
+	int getComponentCount();
 
 
-	public String getTitle()
-	{
-		return mTitle;
-	}
+	Dimension getPreferredSize();
 
 
-	public boolean isMinimized()
-	{
-		return mMinimized;
-	}
+	Rectangle getBounds();
 
 
-	public abstract void setMinimized(boolean aMinimized);
+	void setBounds(Rectangle aBounds);
+
+
+	Rectangle[] getAnchors(RelationItem aItem);
+
+
+	String getTitle();
 }

@@ -1,5 +1,6 @@
 package org.terifan.ui.relationeditor;
 
+import org.terifan.ui.NullLayoutManager;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -15,37 +16,17 @@ public class RelationEditor extends JPanel
 {
 	private final static long serialVersionUID = 1L;
 
-//	private ArrayList<RelationBox> mBoxes;
 	private ArrayList<Connection> mRelationships;
-	private RelationEditorLayoutManager mRelationEditorLayoutManager;
 	private JComponent mSelectedComponent;
 
 
 	public RelationEditor()
 	{
-		mRelationEditorLayoutManager = new RelationEditorLayoutManager(this);
-
-		setLayout(mRelationEditorLayoutManager);
+		setLayout(new NullLayoutManager());
 		setBackground(new Color(68,68,68));
 
 		mRelationships = new ArrayList<>();
-
-//		RelationEditorMouseListener ml = new RelationEditorMouseListener(this);
-//		addMouseListener(ml);
-//		addMouseMotionListener(ml);
 	}
-
-
-//	public ArrayList<RelationBox> getBoxes()
-//	{
-//		return mBoxes;
-//	}
-//
-//
-//	public void addBox(RelationBox aBox)
-//	{
-//		mBoxes.add(aBox);
-//	}
 
 
 	public void addRelationship(Connection aRelationship)
@@ -172,7 +153,7 @@ public class RelationEditor extends JPanel
 
 			d.width = Math.max(d.width, 80);
 
-			box.setBounds(x, y, d.width, d.height);
+			box.setBounds(new Rectangle(x, y, d.width, d.height));
 
 			x += d.width + 50;
 			y += 20;
