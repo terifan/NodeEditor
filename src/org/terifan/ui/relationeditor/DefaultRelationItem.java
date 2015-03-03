@@ -34,7 +34,13 @@ public class DefaultRelationItem extends RelationItem
 			}
 
 			@Override
-			public boolean drop(DropEvent aDropEvent)
+			public boolean canDrop(DropEvent aDropEvent)
+			{
+				return true;
+			}
+
+			@Override
+			public void drop(DropEvent aDropEvent)
 			{
 				RelationEditor editor = (RelationEditor)SwingUtilities.getAncestorOfClass(RelationEditor.class, DefaultRelationItem.this);
 				RelationItem relatedItem = editor.findRelationItem((UUID)aDropEvent.getTransferData());
@@ -42,9 +48,7 @@ public class DefaultRelationItem extends RelationItem
 				{
 					editor.addRelationship(relatedItem, DefaultRelationItem.this);
 					editor.repaint();
-					return true;
 				}
-				return false;
 			}
 		};
 	}
