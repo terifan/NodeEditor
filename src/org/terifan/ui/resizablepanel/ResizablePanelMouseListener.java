@@ -9,7 +9,7 @@ import javax.swing.SwingUtilities;
 import org.terifan.util.log.Log;
 
 
-class ResizablePanelMouseListener extends MouseAdapter
+class RelationBoxMouseListener extends MouseAdapter
 {
 	private final static int[] CURSORS = {
 		Cursor.DEFAULT_CURSOR, Cursor.W_RESIZE_CURSOR, Cursor.N_RESIZE_CURSOR, Cursor.NW_RESIZE_CURSOR, Cursor.E_RESIZE_CURSOR,
@@ -25,7 +25,7 @@ class ResizablePanelMouseListener extends MouseAdapter
 	private int mStartHeight;
 
 
-	public ResizablePanelMouseListener(ResizablePanel aResizablePanel)
+	public RelationBoxMouseListener(ResizablePanel aResizablePanel)
 	{
 		mPanel = aResizablePanel;
 	}

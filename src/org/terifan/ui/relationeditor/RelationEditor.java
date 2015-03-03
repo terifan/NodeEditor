@@ -2,14 +2,18 @@ package org.terifan.ui.relationeditor;
 
 import org.terifan.ui.NullLayoutManager;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.UUID;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import org.terifan.ui.Utilities;
+import org.terifan.util.log.Log;
 
 
 public class RelationEditor extends JPanel
@@ -158,5 +162,39 @@ public class RelationEditor extends JPanel
 			x += d.width + 50;
 			y += 20;
 		}
+	}
+
+
+	public RelationItem findRelationItem(UUID aIdentity)
+	{
+		return findRelationItem(this, aIdentity);
+	}
+
+
+	private RelationItem findRelationItem(Container aContainer, UUID aIdentity)
+	{
+		for (int i = 0; i < aContainer.getComponentCount(); i++)
+		{
+			Component component = aContainer.getComponent(i);
+
+			if (RelationItem.class.isAssignableFrom(component.getClass()))
+			{
+				RelationItem item = (RelationItem)component;
+				if (item.getIdentity().equals(aIdentity))
+				{
+					return item;
+				}
+			}
+			else if (Container.class.isAssignableFrom(component.getClass()))
+			{
+				RelationItem item = findRelationItem((Container)component, aIdentity);
+				if (item != null)
+				{
+					return item;
+				}
+			}
+		}
+
+		return null;
 	}
 }
