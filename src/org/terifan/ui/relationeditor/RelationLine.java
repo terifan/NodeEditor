@@ -3,7 +3,6 @@ package org.terifan.ui.relationeditor;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.Stroke;
 
 
@@ -16,14 +15,14 @@ public class RelationLine
 	private final static Color COLOR_192 = new Color(192,192,192);
 
 
-	public void render(Graphics2D aGraphics, Rectangle aAnchorA, Rectangle aAnchorB, boolean aAnchorALeft, boolean aAnchorBLeft)
+	public void render(Graphics2D aGraphics, Anchor aAnchorA, Anchor aAnchorB)
 	{
-		int x0 = aAnchorA.x;
-		int y0 = aAnchorA.y + aAnchorA.height / 2;
-		int x1 = aAnchorB.x;
-		int y1 = aAnchorB.y + aAnchorB.height / 2;
-		int d0 = aAnchorALeft ? -16 : 16;
-		int d1 = aAnchorBLeft ? -16 : 16;
+		int x0 = aAnchorA.getBounds().x;
+		int y0 = aAnchorA.getBounds().y + aAnchorA.getBounds().height / 2;
+		int x1 = aAnchorB.getBounds().x;
+		int y1 = aAnchorB.getBounds().y + aAnchorB.getBounds().height / 2;
+		int d0 = aAnchorA.getOritentation() == Anchor.LEFT ? -16 : 16;
+		int d1 = aAnchorB.getOritentation() == Anchor.LEFT ? -16 : 16;
 
 		Stroke old = aGraphics.getStroke();
 

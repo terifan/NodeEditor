@@ -7,13 +7,15 @@ import java.io.Serializable;
 
 public class DefaultConnection implements Connection, Serializable
 {
-	private final static long serialVersionUID = 1L;
+	private RelationLine mLineRenderer;
 	private RelationItem mFrom;
 	private RelationItem mTo;
 
 
 	public DefaultConnection(RelationItem aFrom, RelationItem aTo)
 	{
+		mLineRenderer = new RelationLine();
+
 		mFrom = aFrom;
 		mTo = aTo;
 	}
@@ -46,51 +48,58 @@ public class DefaultConnection implements Connection, Serializable
 
 
 	@Override
-	public void draw(Graphics2D aGraphics, RelationEditor aRelationEditor)
+	public void draw(Graphics2D aGraphics)
 	{
-		RelationBox fromBox = aRelationEditor.getRelationBox(getFrom());
-		RelationBox toBox = aRelationEditor.getRelationBox(getTo());
+		RelationEditor editor = RelationEditor.findEditor(mFrom.getComponent());
+
+		if (editor == null)
+		{
+			return;
+		}
+
+		RelationBox fromBox = editor.getRelationBox(getFrom());
+		RelationBox toBox = editor.getRelationBox(getTo());
 
 		if (fromBox == null || toBox == null)
 		{
 			return;
 		}
 
-		Rectangle[] anchorsFrom = fromBox.getAnchors(getFrom());
-		Rectangle[] anchorsTo = toBox.getAnchors(getTo());
+		Anchor[] anchorsFrom = fromBox.getConnectionAnchors(getFrom());
+		Anchor[] anchorsTo = toBox.getConnectionAnchors(getTo());
 
 		if (anchorsFrom == null || anchorsTo == null)
 		{
 			return;
 		}
 
-		Rectangle bestFrom = null;
-		Rectangle bestTo = null;
-		boolean fromLeft = true;
-		boolean toLeft = true;
+		Anchor bestFrom = null;
+		Anchor bestTo = null;
 		double dist = Integer.MAX_VALUE;
 
-		for (Rectangle from : anchorsFrom)
+		for (Anchor fromAnchor : anchorsFrom)
 		{
-			for (Rectangle to : anchorsTo)
+			for (Anchor toAnchor : anchorsTo)
 			{
-				int dx = from.x - to.x;
-				int dy = from.y + from.height / 2 - to.y + to.height / 2;
-				double d = Math.sqrt(dx*dx+dy*dy);
-				if (d < dist)
+				Rectangle from = fromAnchor.getBounds();
+				Rectangle to = toAnchor.getBounds();
+
+				double dx = from.getCenterX() - to.getCenterX();
+				double dy = from.getCenterY() - to.getCenterY();
+				double dsqr = dx * dx + dy * dy;
+
+				if (dsqr < dist)
 				{
-					dist = d;
-					bestFrom = from;
-					bestTo = to;
-					fromLeft = from.x < fromBox.getBounds().getCenterX();
-					toLeft = to.x < toBox.getBounds().getCenterX();
+					dist = dsqr;
+					bestFrom = fromAnchor;
+					bestTo = toAnchor;
 				}
 			}
 		}
 
 		if (bestFrom != null)
 		{
-			new RelationLine().render(aGraphics, bestFrom, bestTo, fromLeft, toLeft);
+			mLineRenderer.render(aGraphics, bestFrom, bestTo);
 		}
 	}
 }

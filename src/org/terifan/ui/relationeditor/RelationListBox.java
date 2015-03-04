@@ -62,7 +62,7 @@ public class RelationListBox extends ResizablePanel implements RelationBox
 
 
 	@Override
-	public Rectangle[] getAnchors(RelationItem aRelationItem)
+	public Anchor[] getConnectionAnchors(RelationItem aRelationItem)
 	{
 		Rectangle bounds = getBounds();
 		int x0 = bounds.x;
@@ -72,10 +72,10 @@ public class RelationListBox extends ResizablePanel implements RelationBox
 		{
 			int titleHeight = getInsets().top;
 
-			return new Rectangle[]
+			return new Anchor[]
 			{
-				new Rectangle(x0                - 1, y0, 0, titleHeight),
-				new Rectangle(x0 + bounds.width + 1, y0, 0, titleHeight)
+				new Anchor(new Rectangle(x0                - 1, y0, 0, titleHeight), Anchor.LEFT),
+				new Anchor(new Rectangle(x0 + bounds.width + 1, y0, 0, titleHeight), Anchor.RIGHT)
 			};
 		}
 
@@ -85,10 +85,10 @@ public class RelationListBox extends ResizablePanel implements RelationBox
 		{
 			Rectangle d = getComponent(index).getBounds();
 
-			return new Rectangle[]
+			return new Anchor[]
 			{
-				new Rectangle(x0 + d.x           - 1, y0 + d.y, 0, d.height),
-				new Rectangle(x0 + d.x + d.width + 1, y0 + d.y, 0, d.height)
+				new Anchor(new Rectangle(x0 + d.x           - 1, y0 + d.y, 0, d.height), Anchor.LEFT),
+				new Anchor(new Rectangle(x0 + d.x + d.width + 1, y0 + d.y, 0, d.height), Anchor.RIGHT)
 			};
 		}
 

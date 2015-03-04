@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import org.terifan.ui.Utilities;
 
 
@@ -56,7 +57,7 @@ public class RelationEditor extends JPanel
 
 		for (Connection relationship : mRelationships)
 		{
-			relationship.draw(g, this);
+			relationship.draw(g);
 		}
 	}
 
@@ -83,6 +84,8 @@ public class RelationEditor extends JPanel
 	protected void setSelectedComponent(JComponent aElement)
 	{
 		mSelectedComponent = aElement;
+
+		mSelectedComponent.setBackground(Color.red);
 	}
 
 
@@ -136,5 +139,11 @@ public class RelationEditor extends JPanel
 		}
 
 		return null;
+	}
+
+
+	protected static RelationEditor findEditor(Component aComponent)
+	{
+		return (RelationEditor)SwingUtilities.getAncestorOfClass(RelationEditor.class, aComponent);
 	}
 }
