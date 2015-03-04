@@ -7,10 +7,13 @@ import java.awt.Rectangle;
 
 public interface RelationBox
 {
-	Component getComponent(int aIndex);
+	String getTitle();
 
 
-	int getComponentCount();
+	int getRelationItemCount();
+
+
+	RelationItem getRelationItem(int aIndex);
 
 
 	Dimension getPreferredSize();
@@ -23,7 +26,4 @@ public interface RelationBox
 
 
 	Rectangle[] getAnchors(RelationItem aItem);
-
-
-	String getTitle();
 }

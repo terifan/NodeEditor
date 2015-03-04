@@ -5,7 +5,7 @@ import java.awt.Rectangle;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import org.terifan.ui.NullLayoutManager;
+import org.terifan.ui.NullLayout;
 
 
 public class Test
@@ -23,7 +23,7 @@ public class Test
 			panel2.add(new JScrollPane(new JTextArea()), BorderLayout.CENTER);
 
 			JFrame frame = new JFrame();
-			frame.setLayout(new NullLayoutManager());
+			frame.setLayout(new NullLayout());
 			frame.add(panel1);
 			frame.add(panel2);
 			frame.setSize(1024, 768);

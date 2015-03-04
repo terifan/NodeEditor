@@ -5,24 +5,26 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.util.ArrayList;
-import org.terifan.ui.ColumnLayout;
+import org.terifan.ui.AbsoluteAreaLayout;
 
 
-public class RelationListBox extends ResizablePanel implements RelationBox
+public class RelationAreaBox extends ResizablePanel implements RelationBox
 {
 	private final static Color BACKGROUND_COLOR = new Color(68, 68, 68);
 
 	private ArrayList<RelationItem> mRelationItems;
+	private AbsoluteAreaLayout mAbsoluteAreaLayout;
 
 
-	public RelationListBox(String aTitle)
+	public RelationAreaBox(String aTitle)
 	{
 		super(new Rectangle());
 
 		mRelationItems = new ArrayList<>();
+		mAbsoluteAreaLayout = new AbsoluteAreaLayout(1, 1);
 
 		setTitle(aTitle);
-		setLayout(new ColumnLayout(1, 0, 1));
+		setLayout(mAbsoluteAreaLayout);
 		setBackground(BACKGROUND_COLOR);
 		setForeground(Color.WHITE);
 		setOpaque(true);
@@ -43,11 +45,11 @@ public class RelationListBox extends ResizablePanel implements RelationBox
 	}
 
 
-	public void add(RelationItem aRelationItem)
+	public void add(RelationItem aRelationItem, Rectangle aBounds)
 	{
 		mRelationItems.add(aRelationItem);
 
-		super.add(aRelationItem.getComponent());
+		super.add(aRelationItem.getComponent(), aBounds);
 	}
 
 
@@ -84,12 +86,30 @@ public class RelationListBox extends ResizablePanel implements RelationBox
 		if (index != -1)
 		{
 			Rectangle d = getComponent(index).getBounds();
+			Rectangle e = mAbsoluteAreaLayout.getConstraints(aRelationItem.getComponent());
 
-			return new Rectangle[]
+			if (e.x == 0 && e.width == 100)
 			{
-				new Rectangle(x0 + d.x           - 1, y0 + d.y, 0, d.height),
-				new Rectangle(x0 + d.x + d.width + 1, y0 + d.y, 0, d.height)
-			};
+				return new Rectangle[]
+				{
+					new Rectangle(x0 + d.x - 1,           y0 + d.y, 0, d.height),
+					new Rectangle(x0 + d.x + d.width + 1, y0 + d.y, 0, d.height)
+				};
+			}
+			else if (e.x == 0)
+			{
+				return new Rectangle[]
+				{
+					new Rectangle(x0 + d.x - 1,           y0 + d.y, 0, d.height)
+				};
+			}
+			else if (e.x + e.width == 100)
+			{
+				return new Rectangle[]
+				{
+					new Rectangle(x0 + d.x + d.width + 1, y0 + d.y, 0, d.height)
+				};
+			}
 		}
 
 		return null;

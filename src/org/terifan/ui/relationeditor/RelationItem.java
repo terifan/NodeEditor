@@ -1,10 +1,12 @@
 package org.terifan.ui.relationeditor;
 
+import java.awt.Component;
 import java.util.UUID;
-import javax.swing.JComponent;
 
 
-public abstract class RelationItem extends JComponent
+public abstract interface RelationItem
 {
-	abstract UUID getIdentity();
+	UUID getIdentity();
+
+	Component getComponent();
 }

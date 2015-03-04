@@ -1,9 +1,8 @@
 package org.terifan.ui.relationeditor;
 
-import org.terifan.ui.NullLayoutManager;
+import org.terifan.ui.NullLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -13,7 +12,6 @@ import java.util.UUID;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import org.terifan.ui.Utilities;
-import org.terifan.util.log.Log;
 
 
 public class RelationEditor extends JPanel
@@ -26,7 +24,7 @@ public class RelationEditor extends JPanel
 
 	public RelationEditor()
 	{
-		setLayout(new NullLayoutManager());
+		setLayout(new NullLayout());
 		setBackground(new Color(68,68,68));
 
 		mRelationships = new ArrayList<>();
@@ -56,18 +54,22 @@ public class RelationEditor extends JPanel
 		g.setColor(getBackground());
 		g.fillRect(0, 0, getWidth(), getHeight());
 
-		drawRelationLines(g);
+		for (Connection relationship : mRelationships)
+		{
+			relationship.draw(g, this);
+		}
 	}
 
 
-	protected RelationBox getRelationBox(RelationItem aItem)
+	public RelationBox getRelationBox(RelationItem aItem)
 	{
 		for (int i = 0; i < getComponentCount(); i++)
 		{
 			RelationBox box = (RelationBox)getComponent(i);
-			for (int j = 0; j < box.getComponentCount(); j++)
+
+			for (int j = 0; j < box.getRelationItemCount(); j++)
 			{
-				if (box.getComponent(j) == aItem)
+				if (box.getRelationItem(j) == aItem)
 				{
 					return box;
 				}
@@ -78,63 +80,9 @@ public class RelationEditor extends JPanel
 	}
 
 
-	protected void drawRelationLines(Graphics2D aGraphics)
-	{
-		for (Connection relationship : mRelationships)
-		{
-			RelationBox fromBox = getRelationBox(relationship.getFrom());
-			RelationBox toBox = getRelationBox(relationship.getTo());
-
-			if (fromBox == null || toBox == null)
-			{
-				continue;
-			}
-
-			Rectangle[] anchorsFrom = fromBox.getAnchors(relationship.getFrom());
-			Rectangle[] anchorsTo = toBox.getAnchors(relationship.getTo());
-
-			Rectangle bestFrom = null;
-			Rectangle bestTo = null;
-			boolean fromLeft = true;
-			boolean toLeft = true;
-			double dist = Integer.MAX_VALUE;
-
-			for (Rectangle from : anchorsFrom)
-			{
-				for (Rectangle to : anchorsTo)
-				{
-					int dx = from.x - to.x;
-					int dy = from.y + from.height / 2 - to.y + to.height / 2;
-					double d = Math.sqrt(dx*dx+dy*dy);
-					if (d < dist)
-					{
-						dist = d;
-						bestFrom = from;
-						bestTo = to;
-						fromLeft = from.x < fromBox.getBounds().getCenterX();
-						toLeft = to.x < toBox.getBounds().getCenterX();
-					}
-				}
-			}
-
-			if (bestFrom != null)
-			{
-				new RelationLine().render(aGraphics, bestFrom, bestTo, fromLeft, toLeft);
-			}
-		}
-	}
-
-
 	protected void setSelectedComponent(JComponent aElement)
 	{
 		mSelectedComponent = aElement;
-
-//		if (aElement != null)
-//		{
-//			remove(aElement);
-//			add(aElement, 0);
-//			repaint();
-//		}
 	}
 
 
@@ -151,7 +99,7 @@ public class RelationEditor extends JPanel
 
 		for (int i = 0; i < getComponentCount(); i++)
 		{
-			RelationBox box  = (RelationBox)getComponent(i);
+			Component box  = getComponent(i);
 
 			Dimension d = box.getPreferredSize();
 
@@ -167,30 +115,22 @@ public class RelationEditor extends JPanel
 
 	public RelationItem findRelationItem(UUID aIdentity)
 	{
-		return findRelationItem(this, aIdentity);
-	}
-
-
-	private RelationItem findRelationItem(Container aContainer, UUID aIdentity)
-	{
-		for (int i = 0; i < aContainer.getComponentCount(); i++)
+		for (int i = 0; i < getComponentCount(); i++)
 		{
-			Component component = aContainer.getComponent(i);
+			Component component = getComponent(i);
 
-			if (RelationItem.class.isAssignableFrom(component.getClass()))
+			if (RelationBox.class.isAssignableFrom(component.getClass()))
 			{
-				RelationItem item = (RelationItem)component;
-				if (item.getIdentity().equals(aIdentity))
+				RelationBox box = (RelationBox)component;
+
+				for (int j = 0; j < box.getRelationItemCount(); j++)
 				{
-					return item;
-				}
-			}
-			else if (Container.class.isAssignableFrom(component.getClass()))
-			{
-				RelationItem item = findRelationItem((Container)component, aIdentity);
-				if (item != null)
-				{
-					return item;
+					RelationItem item = box.getRelationItem(j);
+
+					if (item.getIdentity().equals(aIdentity))
+					{
+						return item;
+					}
 				}
 			}
 		}
