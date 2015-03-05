@@ -1,47 +1,21 @@
 package org.terifan.ui.relationeditor;
 
-import org.terifan.ui.resizablepanel.ResizablePanel;
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Rectangle;
-import java.util.ArrayList;
 import org.terifan.ui.AbsoluteAreaLayout;
 
 
-public class RelationAreaBox extends ResizablePanel implements RelationBox
+public class RelationAreaBox extends AbstractRelationBox
 {
-	private final static Color BACKGROUND_COLOR = new Color(68, 68, 68);
-
-	private ArrayList<RelationItem> mRelationItems;
-	private AbsoluteAreaLayout mAbsoluteAreaLayout;
-
-
 	public RelationAreaBox(String aTitle)
 	{
 		super(new Rectangle());
 
-		mRelationItems = new ArrayList<>();
-		mAbsoluteAreaLayout = new AbsoluteAreaLayout(1, 1);
-
 		setTitle(aTitle);
-		setLayout(mAbsoluteAreaLayout);
+		setLayout(new AbsoluteAreaLayout(1, 1));
 		setBackground(BACKGROUND_COLOR);
 		setForeground(Color.WHITE);
 		setOpaque(true);
-	}
-
-
-	@Override
-	public RelationItem getRelationItem(int aIndex)
-	{
-		return mRelationItems.get(aIndex);
-	}
-
-
-	@Override
-	public int getRelationItemCount()
-	{
-		return mRelationItems.size();
 	}
 
 
@@ -50,16 +24,6 @@ public class RelationAreaBox extends ResizablePanel implements RelationBox
 		mRelationItems.add(aRelationItem);
 
 		super.add(aRelationItem.getComponent(), aBounds);
-	}
-
-
-	@Override
-	protected void paintComponent(Graphics aGraphics)
-	{
-		aGraphics.setColor(getBackground());
-		aGraphics.fillRect(0, 0, getWidth(), getHeight());
-
-		super.paintComponent(aGraphics);
 	}
 
 
@@ -85,6 +49,8 @@ public class RelationAreaBox extends ResizablePanel implements RelationBox
 
 		if (index != -1)
 		{
+			AbsoluteAreaLayout mAbsoluteAreaLayout = (AbsoluteAreaLayout)getLayout();
+
 			Rectangle d = getComponent(index).getBounds();
 			Rectangle e = mAbsoluteAreaLayout.getConstraints(aRelationItem.getComponent());
 
@@ -113,12 +79,5 @@ public class RelationAreaBox extends ResizablePanel implements RelationBox
 		}
 
 		return null;
-	}
-
-
-	@Override
-	protected void fireSelectedEvent()
-	{
-		((RelationEditor)getParent()).setSelectedComponent(this);
 	}
 }

@@ -8,19 +8,24 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.UUID;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import org.terifan.ui.Utilities;
+import org.terifan.util.Tuple;
+import org.terifan.util.log.Log;
 
 
-public class RelationEditor extends JPanel
+public class RelationEditor extends JPanel implements Iterable<RelationBox>
 {
 	private final static long serialVersionUID = 1L;
 
 	private ArrayList<Connection> mConnections;
-	private Object mSelectedComponent;
 	private ConnectionRenderer mConnectionRenderer;
+	private RelationItem mSelectedItem;
+	private RelationBox mSelectedBox;
+	private Connection mSelectedConnection;
 
 
 	public RelationEditor()
@@ -81,7 +86,7 @@ public class RelationEditor extends JPanel
 
 			if (anchors != null)
 			{
-				mConnectionRenderer.render(g, connection, anchors[0], anchors[1], mSelectedComponent == connection);
+				mConnectionRenderer.render(g, connection, anchors[0], anchors[1], mSelectedConnection == connection);
 			}
 		}
 	}
@@ -89,10 +94,8 @@ public class RelationEditor extends JPanel
 
 	public RelationBox getRelationBox(RelationItem aItem)
 	{
-		for (int i = 0; i < getComponentCount(); i++)
+		for (RelationBox box : this)
 		{
-			RelationBox box = (RelationBox)getComponent(i);
-
 			for (int j = 0; j < box.getRelationItemCount(); j++)
 			{
 				if (box.getRelationItem(j) == aItem)
@@ -105,30 +108,87 @@ public class RelationEditor extends JPanel
 		return null;
 	}
 
-Color old;
+
 	protected void setSelectedComponent(Object aComponent)
 	{
-		if (mSelectedComponent != null)
+		RelationBox relationBox = null;
+		RelationItem relationItem = null;
+		Connection connection = null;
+
+		if (aComponent instanceof RelationBox)
 		{
-			if (mSelectedComponent instanceof Component)
+			relationBox = (RelationBox)aComponent;
+
+			if (relationBox == mSelectedBox)
 			{
-				((Component)mSelectedComponent).setBackground(old);
+				relationItem = mSelectedItem;
+			}
+		}
+		else if (aComponent instanceof RelationItem)
+		{
+			Tuple<RelationBox, RelationItem> findRelation = findRelationBox(aComponent);
+			if (findRelation != null && findRelation.getSecond() == aComponent)
+			{
+				relationBox = findRelation.getFirst();
+				relationItem = (RelationItem)aComponent;
+			}
+		}
+		else if (aComponent instanceof Connection)
+		{
+			connection = (Connection)aComponent;
+		}
+		else if (aComponent instanceof Component)
+		{
+			Tuple<RelationBox, RelationItem> findRelation = findRelationBox((Component)aComponent);
+
+			if (findRelation != null)
+			{
+				relationBox = findRelation.getFirst();
+				relationItem = findRelation.getSecond();
 			}
 		}
 
-		mSelectedComponent = aComponent;
-
-		if (mSelectedComponent instanceof Component)
+		for (RelationBox box : this)
 		{
-			old = ((Component)mSelectedComponent).getBackground();
-			((Component)mSelectedComponent).setBackground(Color.RED);
+			if (box == mSelectedBox || box == relationBox)
+			{
+				box.onSelectionChanged(this, box == relationBox);
+			}
+
+			for (int j = 0; j < box.getRelationItemCount(); j++)
+			{
+				RelationItem item = box.getRelationItem(j);
+
+				if (item == mSelectedItem || item == relationItem)
+				{
+					item.onSelectionChanged(this, box, item == relationItem);
+				}
+			}
 		}
+
+		mSelectedBox = relationBox;
+		mSelectedConnection = connection;
+		mSelectedItem = relationItem;
+
+		repaint();
 	}
 
 
-	public Object getSelectedComponent()
+	public RelationBox getSelectedBox()
 	{
-		return mSelectedComponent;
+		return mSelectedBox;
+	}
+
+
+	public RelationItem getSelectedItem()
+	{
+		return mSelectedItem;
+	}
+
+
+	public Connection getSelectedConnection()
+	{
+		return mSelectedConnection;
 	}
 
 
@@ -155,22 +215,15 @@ Color old;
 
 	public RelationItem findRelationItem(UUID aIdentity)
 	{
-		for (int i = 0; i < getComponentCount(); i++)
+		for (RelationBox box : this)
 		{
-			Component component = getComponent(i);
-
-			if (RelationBox.class.isAssignableFrom(component.getClass()))
+			for (int j = 0; j < box.getRelationItemCount(); j++)
 			{
-				RelationBox box = (RelationBox)component;
+				RelationItem item = box.getRelationItem(j);
 
-				for (int j = 0; j < box.getRelationItemCount(); j++)
+				if (item.getIdentity().equals(aIdentity))
 				{
-					RelationItem item = box.getRelationItem(j);
-
-					if (item.getIdentity().equals(aIdentity))
-					{
-						return item;
-					}
+					return item;
 				}
 			}
 		}
@@ -182,6 +235,25 @@ Color old;
 	protected static RelationEditor findEditor(Component aComponent)
 	{
 		return (RelationEditor)SwingUtilities.getAncestorOfClass(RelationEditor.class, aComponent);
+	}
+
+
+	protected Tuple<RelationBox,RelationItem> findRelationBox(Object aComponentOrItem)
+	{
+		for (RelationBox box : this)
+		{
+			for (int j = 0; j < box.getRelationItemCount(); j++)
+			{
+				RelationItem item = box.getRelationItem(j);
+
+				if (item == aComponentOrItem || item.getComponent() == aComponentOrItem)
+				{
+					return new Tuple<>(box, item);
+				}
+			}
+		}
+
+		return null;
 	}
 
 
@@ -236,5 +308,24 @@ Color old;
 		}
 
 		return null;
+	}
+
+
+	@Override
+	public Iterator<RelationBox> iterator()
+	{
+		ArrayList<RelationBox> list = new ArrayList<>();
+
+		for (int i = 0; i < getComponentCount(); i++)
+		{
+			Component component = getComponent(i);
+
+			if (component instanceof RelationBox)
+			{
+				list.add((RelationBox)component);
+			}
+		}
+
+		return list.iterator();
 	}
 }

@@ -15,4 +15,6 @@ public abstract interface RelationItem
 	 * Return the visual representation of this item (e.g. a JLabel). The same instance must be returned trough out the life time of this object.
 	 */
 	Component getComponent();
+
+	void onSelectionChanged(RelationEditor aRelationEditor, RelationBox aRelationBox, boolean aSelected);
 }

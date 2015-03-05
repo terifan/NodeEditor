@@ -1,19 +1,20 @@
 package org.terifan.ui.relationeditor;
 
 import java.awt.Color;
-import java.awt.Component;
 import org.terifan.ui.DragAndDrop;
 import java.awt.Point;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.UUID;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import org.terifan.util.log.Log;
 
 
 public class DefaultRelationItem implements RelationItem
 {
+	private Color BACKGROUND_COLOR = new Color(48,48,48);
+	private final static Color BACKGROUND_SELECTED_COLOR = new Color(128, 0, 0);
+
 	private UUID mIdentity;
 	private JComponent mComponent;
 
@@ -23,11 +24,11 @@ public class DefaultRelationItem implements RelationItem
 		mIdentity = UUID.randomUUID();
 
 		mComponent = new JLabel(aText);
-		mComponent.setBackground(new Color(48,48,48));
+		mComponent.setBackground(BACKGROUND_COLOR);
 		mComponent.setForeground(Color.WHITE);
 		mComponent.setOpaque(true);
 		mComponent.setBorder(BorderFactory.createEmptyBorder(2, 4, 2, 4));
-		mComponent.addMouseListener(mMouseAdapter);
+		mComponent.addMouseListener(new RelationItemMouseListener());
 
 		new DragAndDrop(mComponent)
 		{
@@ -71,13 +72,17 @@ public class DefaultRelationItem implements RelationItem
 		return mIdentity;
 	}
 
-	private static MouseAdapter mMouseAdapter = new MouseAdapter()
+
+	@Override
+	public void onSelectionChanged(RelationEditor aRelationEditor, RelationBox aRelationBox, boolean aSelected)
 	{
-		@Override
-		public void mouseClicked(MouseEvent aEvent)
+		if (aSelected)
 		{
-			Component comp = aEvent.getComponent();
-			RelationEditor.findEditor(comp).setSelectedComponent(comp);
+			mComponent.setBackground(BACKGROUND_SELECTED_COLOR);
 		}
-	};
+		else
+		{
+			mComponent.setBackground(BACKGROUND_COLOR);
+		}
+	}
 }

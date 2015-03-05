@@ -8,4 +8,6 @@ public interface RelationBox
 	RelationItem getRelationItem(int aIndex);
 
 	Anchor[] getConnectionAnchors(RelationItem aRelationItem);
+
+	void onSelectionChanged(RelationEditor aRelationEditor, boolean aSelected);
 }

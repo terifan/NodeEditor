@@ -1,25 +1,15 @@
 package org.terifan.ui.relationeditor;
 
-import org.terifan.ui.resizablepanel.ResizablePanel;
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Rectangle;
-import java.util.ArrayList;
 import org.terifan.ui.ColumnLayout;
 
 
-public class RelationListBox extends ResizablePanel implements RelationBox
+public class RelationListBox extends AbstractRelationBox
 {
-	private final static Color BACKGROUND_COLOR = new Color(68, 68, 68);
-
-	private ArrayList<RelationItem> mRelationItems;
-
-
 	public RelationListBox(String aTitle)
 	{
 		super(new Rectangle());
-
-		mRelationItems = new ArrayList<>();
 
 		setTitle(aTitle);
 		setLayout(new ColumnLayout(1, 0, 1));
@@ -29,35 +19,11 @@ public class RelationListBox extends ResizablePanel implements RelationBox
 	}
 
 
-	@Override
-	public RelationItem getRelationItem(int aIndex)
-	{
-		return mRelationItems.get(aIndex);
-	}
-
-
-	@Override
-	public int getRelationItemCount()
-	{
-		return mRelationItems.size();
-	}
-
-
 	public void add(RelationItem aRelationItem)
 	{
 		mRelationItems.add(aRelationItem);
 
 		super.add(aRelationItem.getComponent());
-	}
-
-
-	@Override
-	protected void paintComponent(Graphics aGraphics)
-	{
-		aGraphics.setColor(getBackground());
-		aGraphics.fillRect(0, 0, getWidth(), getHeight());
-
-		super.paintComponent(aGraphics);
 	}
 
 
@@ -93,12 +59,5 @@ public class RelationListBox extends ResizablePanel implements RelationBox
 		}
 
 		return null;
-	}
-
-
-	@Override
-	protected void fireSelectedEvent()
-	{
-		((RelationEditor)getParent()).setSelectedComponent(this);
 	}
 }

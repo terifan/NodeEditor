@@ -35,8 +35,6 @@ class RelationEditorMouseListener extends MouseAdapter
 			}
 		}
 
-		Log.out.println(dist);
-
 		if (conn != null)
 		{
 			mRelationEditor.setSelectedComponent(conn);

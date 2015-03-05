@@ -74,8 +74,6 @@ public class Test
 
 			editor.arrangeBoxes();
 
-			editor.setConnectionRenderer(new XXXConnectionRenderer());
-
 			boxA.setLocation(boxA.getLocation().x, boxA.getLocation().y = 50);
 			boxC.setLocation(boxB.getLocation().x, boxB.getLocation().y + boxB.getBounds().height + 10+100);
 			boxD.setLocation(boxC.getLocation().x + 150, boxB.getLocation().y + 75);
