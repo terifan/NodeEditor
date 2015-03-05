@@ -9,7 +9,6 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.UUID;
-import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import org.terifan.ui.Utilities;
@@ -19,28 +18,49 @@ public class RelationEditor extends JPanel
 {
 	private final static long serialVersionUID = 1L;
 
-	private ArrayList<Connection> mRelationships;
-	private JComponent mSelectedComponent;
+	private ArrayList<Connection> mConnections;
+	private Object mSelectedComponent;
+	private ConnectionRenderer mConnectionRenderer;
 
 
 	public RelationEditor()
 	{
+		mConnections = new ArrayList<>();
+		mConnectionRenderer = new DefaultConnectionRenderer();
+
 		setLayout(new NullLayout());
 		setBackground(new Color(68,68,68));
-
-		mRelationships = new ArrayList<>();
+		addMouseListener(new RelationEditorMouseListener(this));
 	}
 
 
-	public void addRelationship(Connection aRelationship)
+	public void addConnection(Connection aRelationship)
 	{
-		mRelationships.add(aRelationship);
+		mConnections.add(aRelationship);
 	}
 
 
-	public void addRelationship(RelationItem aFrom, RelationItem aTo)
+	public void addConnection(RelationItem aFrom, RelationItem aTo)
 	{
-		mRelationships.add(new DefaultConnection(aFrom, aTo));
+		mConnections.add(new DefaultConnection(aFrom, aTo));
+	}
+
+
+	public ArrayList<Connection> getConnections()
+	{
+		return mConnections;
+	}
+
+
+	public ConnectionRenderer getConnectionRenderer()
+	{
+		return mConnectionRenderer;
+	}
+
+
+	public void setConnectionRenderer(ConnectionRenderer aConnectionRenderer)
+	{
+		mConnectionRenderer = aConnectionRenderer;
 	}
 
 
@@ -55,9 +75,14 @@ public class RelationEditor extends JPanel
 		g.setColor(getBackground());
 		g.fillRect(0, 0, getWidth(), getHeight());
 
-		for (Connection relationship : mRelationships)
+		for (Connection connection : mConnections)
 		{
-			relationship.draw(g);
+			Anchor[] anchors = findConnectionAnchors(connection);
+
+			if (anchors != null)
+			{
+				mConnectionRenderer.render(g, connection, anchors[0], anchors[1], mSelectedComponent == connection);
+			}
 		}
 	}
 
@@ -80,16 +105,28 @@ public class RelationEditor extends JPanel
 		return null;
 	}
 
-
-	protected void setSelectedComponent(JComponent aElement)
+Color old;
+	protected void setSelectedComponent(Object aComponent)
 	{
-		mSelectedComponent = aElement;
+		if (mSelectedComponent != null)
+		{
+			if (mSelectedComponent instanceof Component)
+			{
+				((Component)mSelectedComponent).setBackground(old);
+			}
+		}
 
-		mSelectedComponent.setBackground(Color.red);
+		mSelectedComponent = aComponent;
+
+		if (mSelectedComponent instanceof Component)
+		{
+			old = ((Component)mSelectedComponent).getBackground();
+			((Component)mSelectedComponent).setBackground(Color.RED);
+		}
 	}
 
 
-	public JComponent getSelectedComponent()
+	public Object getSelectedComponent()
 	{
 		return mSelectedComponent;
 	}
@@ -145,5 +182,59 @@ public class RelationEditor extends JPanel
 	protected static RelationEditor findEditor(Component aComponent)
 	{
 		return (RelationEditor)SwingUtilities.getAncestorOfClass(RelationEditor.class, aComponent);
+	}
+
+
+	protected Anchor[] findConnectionAnchors(Connection aConnection)
+	{
+		RelationItem from = aConnection.getFrom();
+		RelationItem to = aConnection.getTo();
+
+		RelationBox fromBox = getRelationBox(from);
+		RelationBox toBox = getRelationBox(to);
+
+		if (fromBox == null || toBox == null)
+		{
+			return null;
+		}
+
+		Anchor[] anchorsFrom = fromBox.getConnectionAnchors(from);
+		Anchor[] anchorsTo = toBox.getConnectionAnchors(to);
+
+		if (anchorsFrom == null || anchorsTo == null)
+		{
+			return null;
+		}
+
+		Anchor bestFrom = null;
+		Anchor bestTo = null;
+		double dist = Integer.MAX_VALUE;
+
+		for (Anchor fromAnchor : anchorsFrom)
+		{
+			for (Anchor toAnchor : anchorsTo)
+			{
+				Rectangle fromRect = fromAnchor.getBounds();
+				Rectangle toRect = toAnchor.getBounds();
+
+				double dx = fromRect.getCenterX() - toRect.getCenterX();
+				double dy = fromRect.getCenterY() - toRect.getCenterY();
+				double dsqr = dx * dx + dy * dy;
+
+				if (dsqr < dist)
+				{
+					dist = dsqr;
+					bestFrom = fromAnchor;
+					bestTo = toAnchor;
+				}
+			}
+		}
+
+		if (bestFrom != null)
+		{
+			return new Anchor[]{bestFrom, bestTo};
+		}
+
+		return null;
 	}
 }

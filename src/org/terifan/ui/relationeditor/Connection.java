@@ -8,6 +8,4 @@ public interface Connection
 	RelationItem getFrom();
 
 	RelationItem getTo();
-
-	void draw(Graphics2D aGraphics);
 }

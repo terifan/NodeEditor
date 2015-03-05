@@ -64,15 +64,17 @@ public class Test
 			editor.add(boxD);
 			editor.add(boxE);
 
-			editor.addRelationship(new DefaultConnection(itemA, itemC));
-			editor.addRelationship(itemB, itemF);
-			editor.addRelationship(itemD, itemG);
-			editor.addRelationship(itemE, itemH1);
-			editor.addRelationship(itemH1, itemI1);
-			editor.addRelationship(itemH2, itemI2);
-			editor.addRelationship(itemH3, itemI3);
+			editor.addConnection(new DefaultConnection(itemA, itemC));
+			editor.addConnection(itemB, itemF);
+			editor.addConnection(itemD, itemG);
+			editor.addConnection(itemE, itemH1);
+			editor.addConnection(itemH1, itemI1);
+			editor.addConnection(itemH2, itemI2);
+			editor.addConnection(itemH3, itemI3);
 
 			editor.arrangeBoxes();
+
+			editor.setConnectionRenderer(new XXXConnectionRenderer());
 
 			boxA.setLocation(boxA.getLocation().x, boxA.getLocation().y = 50);
 			boxC.setLocation(boxB.getLocation().x, boxB.getLocation().y + boxB.getBounds().height + 10+100);

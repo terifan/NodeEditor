@@ -5,8 +5,8 @@ import java.awt.Rectangle;
 
 public class Anchor
 {
-	static int LEFT = 1;
-	static int RIGHT = 2;
+	public static int LEFT = 1;
+	public static int RIGHT = 2;
 
 	private Rectangle mBounds;
 	private int mOritentation;

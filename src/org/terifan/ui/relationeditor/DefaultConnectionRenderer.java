@@ -2,11 +2,14 @@ package org.terifan.ui.relationeditor;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.Stroke;
+import org.terifan.math.vec2;
 
 
-public class RelationLine
+public class DefaultConnectionRenderer implements ConnectionRenderer
 {
 	private final static BasicStroke basicStroke = new BasicStroke(5, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL);
 	private final static BasicStroke basicStroke1 = new BasicStroke(5, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_BEVEL);
@@ -15,31 +18,37 @@ public class RelationLine
 	private final static Color COLOR_192 = new Color(192,192,192);
 
 
-	public void render(Graphics2D aGraphics, Anchor aAnchorA, Anchor aAnchorB)
+	@Override
+	public void render(Graphics aGraphics, Connection aConnection, Anchor aFromAnchor, Anchor aToAnchor, boolean aSelected)
 	{
-		int x0 = aAnchorA.getBounds().x;
-		int y0 = aAnchorA.getBounds().y + aAnchorA.getBounds().height / 2;
-		int x1 = aAnchorB.getBounds().x;
-		int y1 = aAnchorB.getBounds().y + aAnchorB.getBounds().height / 2;
-		int d0 = aAnchorA.getOritentation() == Anchor.LEFT ? -16 : 16;
-		int d1 = aAnchorB.getOritentation() == Anchor.LEFT ? -16 : 16;
+		Graphics2D g = (Graphics2D)aGraphics;
 
-		Stroke old = aGraphics.getStroke();
+		Rectangle from = aFromAnchor.getBounds();
+		Rectangle to = aToAnchor.getBounds();
 
-		aGraphics.setStroke(basicStroke);
-		aGraphics.setColor(COLOR_128);
-		aGraphics.drawLine(x0+d0,y0,x1+d1,y1);
-		aGraphics.setStroke(basicStroke1);
-		aGraphics.drawLine(x0,y0,x0+d0,y0);
-		aGraphics.drawLine(x1,y1,x1+d1,y1);
+		int x0 = (int)from.getCenterX();
+		int y0 = (int)from.getCenterY();
+		int x1 = (int)to.getCenterX();
+		int y1 = (int)to.getCenterY();
+		int d0 = aFromAnchor.getOritentation() == Anchor.LEFT ? -16 : 16;
+		int d1 = aToAnchor.getOritentation() == Anchor.LEFT ? -16 : 16;
 
-		aGraphics.setStroke(basicStroke2);
-		aGraphics.setColor(COLOR_192);
-		aGraphics.drawLine(x0,y0,x0+d0,y0);
-		aGraphics.drawLine(x0+d0,y0,x1+d1,y1);
-		aGraphics.drawLine(x1,y1,x1+d1,y1);
+		Stroke old = g.getStroke();
 
-		aGraphics.setStroke(old);
+		g.setStroke(basicStroke);
+		g.setColor(aSelected ? new Color(128,0,0) : COLOR_128);
+		g.drawLine(x0+d0,y0,x1+d1,y1);
+		g.setStroke(basicStroke1);
+		g.drawLine(x0,y0,x0+d0,y0);
+		g.drawLine(x1,y1,x1+d1,y1);
+
+		g.setStroke(basicStroke2);
+		g.setColor(aSelected ? new Color(192,0,0) : COLOR_192);
+		g.drawLine(x0,y0,x0+d0,y0);
+		g.drawLine(x0+d0,y0,x1+d1,y1);
+		g.drawLine(x1,y1,x1+d1,y1);
+
+		g.setStroke(old);
 	}
 
 //		Color[] colors = {
@@ -93,4 +102,21 @@ public class RelationLine
 //			aGraphics.drawLine(x0 - 16, y0 - 2 + i, polyX[2 * i], y0 - 2 + i);
 //			aGraphics.drawLine(polyX[2 * i + 1], y1 - 2 + i, x1 + 16, y1 - 2 + i);
 //		}
+
+
+	@Override
+	public double distance(Connection aConnection, Anchor aFromAnchor, Anchor aToAnchor, int aX, int aY)
+	{
+		Rectangle from = aFromAnchor.getBounds();
+		Rectangle to = aToAnchor.getBounds();
+
+		vec2 p = vec2.as(aX,aY);
+		vec2 v = vec2.as(from.getCenterX(), from.getCenterY());
+		vec2 w = vec2.as(to.getCenterX(), to.getCenterY());
+
+		int d0 = aFromAnchor.getOritentation() == Anchor.LEFT ? -16 : 16;
+		int d1 = aToAnchor.getOritentation() == Anchor.LEFT ? -16 : 16;
+
+		return Math.min(p.distanceLineSegment(v, v.add(d0,0)), Math.min(p.distanceLineSegment(v.add(d0,0), w.add(d1,0)), p.distanceLineSegment(w, w.add(d1,0))));
+	}
 }
