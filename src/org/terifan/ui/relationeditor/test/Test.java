@@ -1,6 +1,10 @@
 package org.terifan.ui.relationeditor.test;
 
 import java.awt.Rectangle;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import org.terifan.ui.Utilities;
@@ -9,6 +13,7 @@ import org.terifan.ui.relationeditor.DefaultConnection;
 import org.terifan.ui.relationeditor.RelationAreaBox;
 import org.terifan.ui.relationeditor.RelationListBox;
 import org.terifan.ui.relationeditor.RelationEditor;
+import org.terifan.util.log.Log;
 
 
 public class Test
@@ -57,6 +62,51 @@ public class Test
 			boxE.add(itemI3, new Rectangle(50,50,50,50));
 
 			RelationEditor editor = new RelationEditor();
+
+			editor.addKeyListener(new KeyAdapter()
+			{
+				@Override
+				public void keyPressed(KeyEvent aEvent)
+				{
+					if (aEvent.getKeyCode() == KeyEvent.VK_DELETE && editor.getSelectedConnection() != null)
+					{
+						editor.removeConnection(editor.getSelectedConnection());
+						editor.repaint();
+					}
+					if (aEvent.getKeyCode() == KeyEvent.VK_INSERT && editor.getSelectedBox() != null)
+					{
+						if (editor.getSelectedBox() instanceof RelationListBox)
+						{
+							RelationListBox box = (RelationListBox)editor.getSelectedBox();
+							box.add(new DefaultRelationItem("test"));
+							editor.repaint();
+						}
+					}
+				}
+			});
+			boxA.addMouseListener(new MouseAdapter()
+			{
+				@Override
+				public void mousePressed(MouseEvent aEvent)
+				{
+					aEvent.getComponent().requestFocusInWindow();
+				}
+			});
+			boxA.addKeyListener(new KeyAdapter()
+			{
+				@Override
+				public void keyPressed(KeyEvent aEvent)
+				{
+					if (aEvent.getKeyCode() == KeyEvent.VK_INSERT)
+					{
+						RelationListBox box = (RelationListBox)editor.getSelectedBox();
+						box.add(new DefaultRelationItem("test"));
+						editor.invalidate();
+						editor.validate();
+						editor.repaint();
+					}
+				}
+			});
 
 			editor.add(boxA);
 			editor.add(boxB);

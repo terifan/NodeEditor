@@ -12,6 +12,12 @@ public class RelationItemMouseListener extends MouseAdapter
 	{
 		Component comp = aEvent.getComponent();
 
-		RelationEditor.findEditor(comp).setSelectedComponent(comp);
+		comp.requestFocusInWindow();
+
+		RelationEditor editor = RelationEditor.findEditor(comp);
+
+		editor.setSelectedComponent(comp);
+
+		editor.fireRelationBoxClicked(RelationEditor.findRelationBox(comp));
 	}
 }

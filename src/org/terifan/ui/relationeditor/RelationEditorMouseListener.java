@@ -19,6 +19,8 @@ class RelationEditorMouseListener extends MouseAdapter
 	@Override
 	public void mousePressed(MouseEvent aEvent)
 	{
+		mRelationEditor.requestFocus();
+
 		double dist = Integer.MAX_VALUE;
 		Connection conn = null;
 

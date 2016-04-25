@@ -4,7 +4,7 @@ import java.awt.Component;
 import java.util.UUID;
 
 
-public abstract interface RelationItem
+public interface RelationItem
 {
 	/**
 	 * Return an unique identity of this item. Used in drag and drop operations.

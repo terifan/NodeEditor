@@ -69,6 +69,12 @@ public class RelationEditor extends JPanel implements Iterable<RelationBox>
 	}
 
 
+	public void removeConnection(Connection aConnection)
+	{
+		mConnections.remove(aConnection);
+	}
+
+
 	@Override
 	protected void paintComponent(Graphics aGraphics)
 	{
@@ -126,7 +132,7 @@ public class RelationEditor extends JPanel implements Iterable<RelationBox>
 		}
 		else if (aComponent instanceof RelationItem)
 		{
-			Tuple<RelationBox, RelationItem> findRelation = findRelationBox(aComponent);
+			Tuple<RelationBox, RelationItem> findRelation = findRelationBoxImpl(aComponent);
 			if (findRelation != null && findRelation.getSecond() == aComponent)
 			{
 				relationBox = findRelation.getFirst();
@@ -139,7 +145,7 @@ public class RelationEditor extends JPanel implements Iterable<RelationBox>
 		}
 		else if (aComponent instanceof Component)
 		{
-			Tuple<RelationBox, RelationItem> findRelation = findRelationBox((Component)aComponent);
+			Tuple<RelationBox, RelationItem> findRelation = findRelationBoxImpl((Component)aComponent);
 
 			if (findRelation != null)
 			{
@@ -238,7 +244,13 @@ public class RelationEditor extends JPanel implements Iterable<RelationBox>
 	}
 
 
-	protected Tuple<RelationBox,RelationItem> findRelationBox(Object aComponentOrItem)
+	protected static RelationBox findRelationBox(Component aComponent)
+	{
+		return findEditor(aComponent).findRelationBoxImpl(aComponent).getFirst();
+	}
+
+
+	protected Tuple<RelationBox,RelationItem> findRelationBoxImpl(Object aComponentOrItem)
 	{
 		for (RelationBox box : this)
 		{
@@ -327,5 +339,10 @@ public class RelationEditor extends JPanel implements Iterable<RelationBox>
 		}
 
 		return list.iterator();
+	}
+
+
+	void fireRelationBoxClicked(RelationBox aFindRelationBox)
+	{
 	}
 }
