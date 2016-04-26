@@ -16,5 +16,12 @@ public interface RelationItem
 	 */
 	Component getComponent();
 
+	/**
+	 * Return the editor representation of this item (e.g. a JTextField).
+	 */
+	Component getEditorComponent();
+
 	void onSelectionChanged(RelationEditor aRelationEditor, RelationBox aRelationBox, boolean aSelected);
+
+	void updateValue(Component aEditorComponent);
 }

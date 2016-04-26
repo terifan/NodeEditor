@@ -1,6 +1,7 @@
 package org.terifan.ui.relationeditor;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Rectangle;
 import org.terifan.ui.ColumnLayout;
 
@@ -19,11 +20,13 @@ public class RelationListBox extends AbstractRelationBox
 	}
 
 
-	public void add(RelationItem aRelationItem)
+	public RelationListBox addItem(RelationItem aRelationItem)
 	{
 		mRelationItems.add(aRelationItem);
 
 		super.add(aRelationItem.getComponent());
+
+		return this;
 	}
 
 

@@ -39,59 +39,30 @@ public class Test
 			DefaultRelationItem itemI3 = new DefaultRelationItem("cat3");
 
 			RelationListBox boxA = new RelationListBox("Box A");
-			boxA.add(itemA);
-			boxA.add(itemB);
+			boxA.addItem(itemA);
+			boxA.addItem(itemB);
 
 			RelationListBox boxB = new RelationListBox("Box B");
-			boxB.add(itemC);
-			boxB.add(itemD);
+			boxB.addItem(itemC);
+			boxB.addItem(itemD);
 
 			RelationListBox boxC = new RelationListBox("Box C");
-			boxC.add(itemE);
-			boxC.add(itemF);
+			boxC.addItem(itemE);
+			boxC.addItem(itemF);
 
 			RelationListBox boxD = new RelationListBox("Box D");
-			boxD.add(itemG);
-			boxD.add(itemH1);
-			boxD.add(itemH2);
-			boxD.add(itemH3);
+			boxD.addItem(itemG);
+			boxD.addItem(itemH1);
+			boxD.addItem(itemH2);
+			boxD.addItem(itemH3);
 
 			RelationAreaBox boxE = new RelationAreaBox("Box E");
-			boxE.add(itemI1, new Rectangle(0,0,50,100));
-			boxE.add(itemI2, new Rectangle(50,0,50,50));
-			boxE.add(itemI3, new Rectangle(50,50,50,50));
+			boxE.addItem(itemI1, new Rectangle(0,0,50,100));
+			boxE.addItem(itemI2, new Rectangle(50,0,50,50));
+			boxE.addItem(itemI3, new Rectangle(50,50,50,50));
 
 			RelationEditor editor = new RelationEditor();
 
-			editor.addKeyListener(new KeyAdapter()
-			{
-				@Override
-				public void keyPressed(KeyEvent aEvent)
-				{
-					if (aEvent.getKeyCode() == KeyEvent.VK_DELETE && editor.getSelectedConnection() != null)
-					{
-						editor.removeConnection(editor.getSelectedConnection());
-						editor.repaint();
-					}
-					if (aEvent.getKeyCode() == KeyEvent.VK_INSERT && editor.getSelectedBox() != null)
-					{
-						if (editor.getSelectedBox() instanceof RelationListBox)
-						{
-							RelationListBox box = (RelationListBox)editor.getSelectedBox();
-							box.add(new DefaultRelationItem("test"));
-							editor.repaint();
-						}
-					}
-				}
-			});
-			boxA.addMouseListener(new MouseAdapter()
-			{
-				@Override
-				public void mousePressed(MouseEvent aEvent)
-				{
-					aEvent.getComponent().requestFocusInWindow();
-				}
-			});
 			boxA.addKeyListener(new KeyAdapter()
 			{
 				@Override

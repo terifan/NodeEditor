@@ -14,7 +14,6 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import org.terifan.ui.Utilities;
 import org.terifan.util.Tuple;
-import org.terifan.util.log.Log;
 
 
 public class RelationEditor extends JPanel implements Iterable<RelationBox>
@@ -36,6 +35,7 @@ public class RelationEditor extends JPanel implements Iterable<RelationBox>
 		setLayout(new NullLayout());
 		setBackground(new Color(68,68,68));
 		addMouseListener(new RelationEditorMouseListener(this));
+		addKeyListener(new RelationEditorKeyListener(this));
 	}
 
 

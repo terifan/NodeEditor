@@ -19,7 +19,7 @@ public class RelationAreaBox extends AbstractRelationBox
 	}
 
 
-	public void add(RelationItem aRelationItem, Rectangle aBounds)
+	public void addItem(RelationItem aRelationItem, Rectangle aBounds)
 	{
 		mRelationItems.add(aRelationItem);
 

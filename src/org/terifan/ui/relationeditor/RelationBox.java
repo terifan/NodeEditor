@@ -1,5 +1,7 @@
 package org.terifan.ui.relationeditor;
 
+import java.awt.Component;
+
 
 public interface RelationBox
 {
@@ -10,4 +12,12 @@ public interface RelationBox
 	Anchor[] getConnectionAnchors(RelationItem aRelationItem);
 
 	void onSelectionChanged(RelationEditor aRelationEditor, boolean aSelected);
+
+	RelationItem getItemByComponent(Component aComponent);
+
+	void startEditItem(RelationItem aItem);
+
+	void cancelEditItem();
+
+	void finishEditItem();
 }

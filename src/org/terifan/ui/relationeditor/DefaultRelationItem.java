@@ -1,36 +1,44 @@
 package org.terifan.ui.relationeditor;
 
 import java.awt.Color;
+import java.awt.Component;
 import org.terifan.ui.DragAndDrop;
 import java.awt.Point;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.UUID;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import org.terifan.util.log.Log;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 
-public class DefaultRelationItem implements RelationItem
+public class DefaultRelationItem extends JLabel implements RelationItem
 {
 	private Color BACKGROUND_COLOR = new Color(48,48,48);
 	private final static Color BACKGROUND_SELECTED_COLOR = new Color(128, 0, 0);
 
 	private UUID mIdentity;
-	private JComponent mComponent;
 
 
 	public DefaultRelationItem(String aText)
 	{
+		super(aText);
+
 		mIdentity = UUID.randomUUID();
 
-		mComponent = new JLabel(aText);
-		mComponent.setBackground(BACKGROUND_COLOR);
-		mComponent.setForeground(Color.WHITE);
-		mComponent.setOpaque(true);
-		mComponent.setBorder(BorderFactory.createEmptyBorder(2, 4, 2, 4));
-		mComponent.addMouseListener(new RelationItemMouseListener());
+		super.setFocusable(true);
+		super.setBackground(BACKGROUND_COLOR);
+		super.setForeground(Color.WHITE);
+		super.setOpaque(true);
+		super.setBorder(BorderFactory.createEmptyBorder(2, 4, 2, 4));
+		super.addMouseListener(new RelationItemMouseListener());
+		super.addKeyListener(new RelationItemKeyListener());
 
-		new DragAndDrop(mComponent)
+		new DragAndDrop(this)
 		{
 			@Override
 			public Object drag(Point aDragOrigin)
@@ -62,7 +70,51 @@ public class DefaultRelationItem implements RelationItem
 	@Override
 	public JComponent getComponent()
 	{
-		return mComponent;
+		return this;
+	}
+
+
+	@Override
+	public Component getEditorComponent()
+	{
+		final JTextField textField = new JTextField(getText());
+
+		textField.addKeyListener(new KeyAdapter()
+		{
+			@Override
+			public void keyPressed(KeyEvent aEvent)
+			{
+				if (aEvent.getKeyCode() == KeyEvent.VK_ESCAPE)
+				{
+					RelationBox ancestor = (RelationBox)SwingUtilities.getAncestorOfClass(RelationBox.class, textField);
+					ancestor.cancelEditItem();
+				}
+				if (aEvent.getKeyCode() == KeyEvent.VK_ENTER)
+				{
+					RelationBox ancestor = (RelationBox)SwingUtilities.getAncestorOfClass(RelationBox.class, textField);
+					ancestor.finishEditItem();
+				}
+			}
+		});
+
+		textField.addComponentListener(new ComponentAdapter()
+		{
+			@Override
+			public void componentResized(ComponentEvent aEvent)
+			{
+				textField.requestFocusInWindow();
+				textField.setCaretPosition(textField.getText().length());
+			}
+		});
+
+		return textField;
+	}
+
+
+	@Override
+	public void updateValue(Component aEditorComponent)
+	{
+		setText(((JTextField)aEditorComponent).getText());
 	}
 
 
@@ -78,11 +130,11 @@ public class DefaultRelationItem implements RelationItem
 	{
 		if (aSelected)
 		{
-			mComponent.setBackground(BACKGROUND_SELECTED_COLOR);
+			setBackground(BACKGROUND_SELECTED_COLOR);
 		}
 		else
 		{
-			mComponent.setBackground(BACKGROUND_COLOR);
+			setBackground(BACKGROUND_COLOR);
 		}
 	}
 }
