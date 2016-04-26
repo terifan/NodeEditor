@@ -3,20 +3,31 @@ package org.terifan.ui.relationeditor;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Rectangle;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import org.terifan.ui.ColumnLayout;
 
 
 public class RelationListBox extends AbstractRelationBox
 {
+	private JPanel mPanel;
+
+
 	public RelationListBox(String aTitle)
 	{
 		super(new Rectangle());
 
-		setTitle(aTitle);
-		setLayout(new ColumnLayout(1, 0, 1));
-		setBackground(BACKGROUND_COLOR);
-		setForeground(Color.WHITE);
-		setOpaque(true);
+		mPanel = new JPanel();
+		mPanel.setLayout(new ColumnLayout(1, 0, 1));
+
+		JScrollPane scrollPane = new JScrollPane(mPanel);
+		super.add(scrollPane);
+
+		super.setTitle(aTitle);
+//		super.setLayout(new ColumnLayout(1, 0, 1));
+		super.setBackground(BACKGROUND_COLOR);
+		super.setForeground(Color.WHITE);
+		super.setOpaque(true);
 	}
 
 
@@ -24,7 +35,7 @@ public class RelationListBox extends AbstractRelationBox
 	{
 		mRelationItems.add(aRelationItem);
 
-		super.add(aRelationItem.getComponent());
+		mPanel.add(aRelationItem.getComponent());
 
 		return this;
 	}
@@ -52,7 +63,7 @@ public class RelationListBox extends AbstractRelationBox
 
 		if (index != -1)
 		{
-			Rectangle d = getComponent(index).getBounds();
+			Rectangle d = mPanel.getComponent(index).getBounds();
 
 			return new Anchor[]
 			{

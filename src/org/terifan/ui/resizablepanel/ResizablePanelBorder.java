@@ -94,6 +94,8 @@ public class ResizablePanelBorder implements Border
 
 		new TextBox(panel.getTitle()).setAnchor(Anchor.WEST).setBounds(b).setMargins(0, 4, 0, 4).setForeground(aComponent.getForeground()).setMaxLineCount(1).render(g);
 
+		// button
+
 		b.x += b.width + 1;
 		b.y++;
 		b.width = mTitleHeight - 2;
