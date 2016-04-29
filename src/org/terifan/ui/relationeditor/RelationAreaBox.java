@@ -11,19 +11,22 @@ public class RelationAreaBox extends AbstractRelationBox
 	{
 		super(new Rectangle());
 
-		setTitle(aTitle);
-		setLayout(new AbsoluteAreaLayout(1, 1));
-		setBackground(BACKGROUND_COLOR);
-		setForeground(Color.WHITE);
-		setOpaque(true);
+		super.setTitle(aTitle);
+		super.setBackground(BACKGROUND_COLOR);
+		super.setForeground(Color.WHITE);
+		super.setOpaque(true);
+
+		mContainer.setLayout(new AbsoluteAreaLayout(1, 1));
 	}
 
 
-	public void addItem(RelationItem aRelationItem, Rectangle aBounds)
+	public RelationAreaBox addItem(RelationItem aRelationItem, Rectangle aBounds)
 	{
 		mRelationItems.add(aRelationItem);
 
-		super.add(aRelationItem.getComponent(), aBounds);
+		mContainer.add(aRelationItem.getComponent(), aBounds);
+
+		return this;
 	}
 
 
@@ -49,9 +52,9 @@ public class RelationAreaBox extends AbstractRelationBox
 
 		if (index != -1)
 		{
-			AbsoluteAreaLayout mAbsoluteAreaLayout = (AbsoluteAreaLayout)getLayout();
+			AbsoluteAreaLayout mAbsoluteAreaLayout = (AbsoluteAreaLayout)mContainer.getLayout();
 
-			Rectangle d = getComponent(index).getBounds();
+			Rectangle d = mContainer.getComponent(index).getBounds();
 			Rectangle e = mAbsoluteAreaLayout.getConstraints(aRelationItem.getComponent());
 
 			if (e.x == 0 && e.width == 100)

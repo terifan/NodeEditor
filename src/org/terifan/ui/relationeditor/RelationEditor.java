@@ -20,6 +20,8 @@ public class RelationEditor extends JPanel implements Iterable<RelationBox>
 {
 	private final static long serialVersionUID = 1L;
 
+	protected final static Color BACKGROUND_COLOR = new Color(68, 68, 68);
+
 	private ArrayList<Connection> mConnections;
 	private ConnectionRenderer mConnectionRenderer;
 	private RelationItem mSelectedItem;
@@ -33,7 +35,7 @@ public class RelationEditor extends JPanel implements Iterable<RelationBox>
 		mConnectionRenderer = new DefaultConnectionRenderer();
 
 		setLayout(new NullLayout());
-		setBackground(new Color(68,68,68));
+		setBackground(BACKGROUND_COLOR);
 		addMouseListener(new RelationEditorMouseListener(this));
 		addKeyListener(new RelationEditorKeyListener(this));
 	}

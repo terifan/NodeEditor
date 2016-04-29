@@ -3,8 +3,6 @@ package org.terifan.ui.relationeditor.test;
 import java.awt.Rectangle;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import org.terifan.ui.Utilities;
@@ -13,7 +11,6 @@ import org.terifan.ui.relationeditor.DefaultConnection;
 import org.terifan.ui.relationeditor.RelationAreaBox;
 import org.terifan.ui.relationeditor.RelationListBox;
 import org.terifan.ui.relationeditor.RelationEditor;
-import org.terifan.util.log.Log;
 
 
 public class Test
@@ -71,7 +68,7 @@ public class Test
 					if (aEvent.getKeyCode() == KeyEvent.VK_INSERT)
 					{
 						RelationListBox box = (RelationListBox)editor.getSelectedBox();
-						box.add(new DefaultRelationItem("test"));
+						box.addItem(new DefaultRelationItem("test"));
 						editor.invalidate();
 						editor.validate();
 						editor.repaint();

@@ -6,27 +6,53 @@ import java.awt.Container;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import org.terifan.ui.resizablepanel.ResizablePanel;
 
 
 public abstract class AbstractRelationBox extends ResizablePanel implements RelationBox
 {
-	protected final static Color BACKGROUND_COLOR = new Color(68, 68, 68);
+	protected final static Color BACKGROUND_COLOR = new Color(58, 58, 58);
 	protected final static Color BACKGROUND_SELECTED_COLOR = new Color(200, 200, 200);
 
 	protected ArrayList<RelationItem> mRelationItems;
 	protected RelationItem mEditedItem;
 	protected Component mEditorComponent;
+	protected JPanel mContainer;
+	protected JScrollPane mContainerScrollPane;
 
 
 	public AbstractRelationBox(Rectangle aBounds)
 	{
 		super(aBounds);
 
+		mContainer = new JPanel();
+		mContainer.setBackground(BACKGROUND_COLOR);
+
+		mContainerScrollPane = new JScrollPane(mContainer);
 		mRelationItems = new ArrayList<>();
 
+		super.add(mContainerScrollPane);
 		super.addMouseListener(new RelationBoxMouseListener(this));
+	}
+
+
+	@Override
+	public Component add(Component aComp)
+	{
+		if (aComp instanceof RelationItem)
+		{
+			throw new IllegalArgumentException("Use addItem method to add items to a box.");
+		}
+		return super.add(aComp);
+	}
+
+
+	public JPanel getContainer()
+	{
+		return mContainer;
 	}
 
 
@@ -123,9 +149,9 @@ public abstract class AbstractRelationBox extends ResizablePanel implements Rela
 
 		int index = getComponentIndex(aItem.getComponent());
 
-		super.add(mEditorComponent, index);
+		mContainer.add(mEditorComponent, index);
 
-		super.remove(aItem.getComponent());
+		mContainer.remove(aItem.getComponent());
 
 		mEditorComponent.setBounds(aItem.getComponent().getBounds());
 
@@ -157,9 +183,9 @@ public abstract class AbstractRelationBox extends ResizablePanel implements Rela
 				return;
 			}
 
-			super.add(mEditedItem.getComponent(), index);
+			mContainer.add(mEditedItem.getComponent(), index);
 
-			super.remove(mEditorComponent);
+			mContainer.remove(mEditorComponent);
 
 			mEditedItem.getComponent().setVisible(true);
 
