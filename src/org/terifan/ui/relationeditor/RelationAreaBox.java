@@ -62,7 +62,7 @@ public class RelationAreaBox extends AbstractRelationBox
 				return new Anchor[]
 				{
 					new Anchor(new Rectangle(x0 + d.x - 1,           y0 + d.y, 0, d.height), Anchor.LEFT),
-					new Anchor(new Rectangle(x0 + d.x + d.width + 1, y0 + d.y, 0, d.height), Anchor.RIGHT)
+					new Anchor(new Rectangle(x0 + bounds.width + 1, y0 + d.y, 0, d.height), Anchor.RIGHT)
 				};
 			}
 			else if (e.x == 0)
@@ -76,7 +76,7 @@ public class RelationAreaBox extends AbstractRelationBox
 			{
 				return new Anchor[]
 				{
-					new Anchor(new Rectangle(x0 + d.x + d.width + 1, y0 + d.y, 0, d.height), Anchor.RIGHT)
+					new Anchor(new Rectangle(x0 + bounds.width + 1, y0 + d.y, 0, d.height), Anchor.RIGHT)
 				};
 			}
 		}

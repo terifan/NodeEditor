@@ -1,8 +1,10 @@
 package org.terifan.ui.relationeditor;
 
 import java.awt.Color;
+import java.awt.Insets;
 import java.awt.Rectangle;
 import org.terifan.ui.ColumnLayout;
+import org.terifan.util.log.Log;
 
 
 public class RelationListBox extends AbstractRelationBox
@@ -34,8 +36,9 @@ public class RelationListBox extends AbstractRelationBox
 	public Anchor[] getConnectionAnchors(RelationItem aRelationItem)
 	{
 		Rectangle bounds = getBounds();
+		Insets borderInsets = getBorder().getBorderInsets(this);
 		int x0 = bounds.x;
-		int y0 = bounds.y;
+		int y0 = bounds.y + borderInsets.top;
 
 		if (isMinimized() || aRelationItem == null)
 		{
@@ -54,10 +57,13 @@ public class RelationListBox extends AbstractRelationBox
 		{
 			Rectangle d = mContainer.getComponent(index).getBounds();
 
+			int yd = mContainerScrollPane.getVerticalScrollBar().getValue();
+			int y = Math.min(bounds.height + 5 - 2 * borderInsets.top - borderInsets.bottom, Math.max(-5, d.y - yd));
+
 			return new Anchor[]
 			{
-				new Anchor(new Rectangle(x0 + d.x           - 1, y0 + d.y, 0, d.height), Anchor.LEFT),
-				new Anchor(new Rectangle(x0 + d.x + d.width + 1, y0 + d.y, 0, d.height), Anchor.RIGHT)
+				new Anchor(new Rectangle(x0                - 1, y0 + y, 0, d.height), Anchor.LEFT),
+				new Anchor(new Rectangle(x0 + bounds.width + 1, y0 + y, 0, d.height), Anchor.RIGHT)
 			};
 		}
 

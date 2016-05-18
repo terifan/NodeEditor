@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import javax.swing.JPanel;
-import org.terifan.util.log.Log;
 
 
 public class ResizablePanel extends JPanel
@@ -17,11 +16,12 @@ public class ResizablePanel extends JPanel
 	public ResizablePanel(Rectangle aBounds)
 	{
 		RelationBoxMouseListener relationBoxMouseListener = new RelationBoxMouseListener(this);
-		addMouseListener(relationBoxMouseListener);
-		addMouseMotionListener(relationBoxMouseListener);
-		setBorder(new ResizablePanelBorder());
-		setBounds(aBounds);
-		setLayout(new BorderLayout());
+
+		super.addMouseListener(relationBoxMouseListener);
+		super.addMouseMotionListener(relationBoxMouseListener);
+		super.setBorder(new ResizablePanelBorder());
+		super.setBounds(aBounds);
+		super.setLayout(new BorderLayout());
 	}
 
 

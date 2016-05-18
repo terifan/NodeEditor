@@ -5,6 +5,8 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.util.ArrayList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -32,7 +34,22 @@ public abstract class AbstractRelationBox extends ResizablePanel implements Rela
 		mContainer.setBackground(BACKGROUND_COLOR);
 
 		mContainerScrollPane = new JScrollPane(mContainer);
+		mContainerScrollPane.setBorder(null);
+//		mContainerScrollPane.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED, new Color(46,46,46), new Color(40,40,40)));
+		
 		mRelationItems = new ArrayList<>();
+		
+		mContainerScrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener()
+		{
+			@Override
+			public void adjustmentValueChanged(AdjustmentEvent aE)
+			{
+				// TODO: 
+				RelationEditor editor = (RelationEditor)SwingUtilities.getAncestorOfClass(RelationEditor.class, AbstractRelationBox.this);
+				editor.invalidate();
+				editor.repaint();
+			}
+		});
 
 		super.add(mContainerScrollPane);
 		super.addMouseListener(new RelationBoxMouseListener(this));
