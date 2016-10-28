@@ -6,10 +6,10 @@ import java.awt.event.KeyEvent;
 
 class RelationEditorKeyListener extends KeyAdapter
 {
-	private final RelationEditor mEditor;
+	private final RelationEditorPane mEditor;
 
 
-	public RelationEditorKeyListener(RelationEditor aEditor)
+	public RelationEditorKeyListener(RelationEditorPane aEditor)
 	{
 		this.mEditor = aEditor;
 	}

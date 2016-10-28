@@ -11,7 +11,7 @@ public interface RelationBox
 
 	Anchor[] getConnectionAnchors(RelationItem aRelationItem);
 
-	void onSelectionChanged(RelationEditor aRelationEditor, boolean aSelected);
+	void onSelectionChanged(RelationEditorPane aRelationEditor, boolean aSelected);
 
 	RelationItem getItemByComponent(Component aComponent);
 

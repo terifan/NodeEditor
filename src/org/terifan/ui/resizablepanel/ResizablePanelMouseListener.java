@@ -83,47 +83,44 @@ class RelationBoxMouseListener extends MouseAdapter
 
 			Point point = SwingUtilities.convertPoint(mPanel, aEvent.getPoint(), mPanel.getParent());
 
-			if (mCursor == Cursor.W_RESIZE_CURSOR)
+			switch (mCursor)
 			{
-				b.width -= point.x - b.x;
-				b.x = point.x;
-			}
-			else if (mCursor == Cursor.N_RESIZE_CURSOR)
-			{
-				b.height -= point.y - b.y;
-				b.y = point.y;
-			}
-			else if (mCursor == Cursor.NW_RESIZE_CURSOR)
-			{
-				b.width -= point.x - b.x;
-				b.x = point.x;
-				b.height -= point.y - b.y;
-				b.y = point.y;
-			}
-			else if (mCursor == Cursor.SW_RESIZE_CURSOR)
-			{
-				b.width -= point.x - b.x;
-				b.x = point.x;
-				b.height = mStartHeight - mClickPoint.y + aEvent.getY();
-			}
-			else if (mCursor == Cursor.NE_RESIZE_CURSOR)
-			{
-				b.width = mStartWidth - mClickPoint.x + aEvent.getX();
-				b.height -= point.y - b.y;
-				b.y = point.y;
-			}
-			else if (mCursor == Cursor.E_RESIZE_CURSOR)
-			{
-				b.width = mStartWidth - mClickPoint.x + aEvent.getX();
-			}
-			else if (mCursor == Cursor.S_RESIZE_CURSOR)
-			{
-				b.height = mStartHeight - mClickPoint.y + aEvent.getY();
-			}
-			else if (mCursor == Cursor.SE_RESIZE_CURSOR)
-			{
-				b.width = mStartWidth - mClickPoint.x + aEvent.getX();
-				b.height = mStartHeight - mClickPoint.y + aEvent.getY();
+				case Cursor.W_RESIZE_CURSOR:
+					b.width -= point.x - b.x;
+					b.x = point.x;
+					break;
+				case Cursor.N_RESIZE_CURSOR:
+					b.height -= point.y - b.y;
+					b.y = point.y;
+					break;
+				case Cursor.NW_RESIZE_CURSOR:
+					b.width -= point.x - b.x;
+					b.x = point.x;
+					b.height -= point.y - b.y;
+					b.y = point.y;
+					break;
+				case Cursor.SW_RESIZE_CURSOR:
+					b.width -= point.x - b.x;
+					b.x = point.x;
+					b.height = mStartHeight - mClickPoint.y + aEvent.getY();
+					break;
+				case Cursor.NE_RESIZE_CURSOR:
+					b.width = mStartWidth - mClickPoint.x + aEvent.getX();
+					b.height -= point.y - b.y;
+					b.y = point.y;
+					break;
+				case Cursor.E_RESIZE_CURSOR:
+					b.width = mStartWidth - mClickPoint.x + aEvent.getX();
+					break;
+				case Cursor.S_RESIZE_CURSOR:
+					b.height = mStartHeight - mClickPoint.y + aEvent.getY();
+					break;
+				case Cursor.SE_RESIZE_CURSOR:
+					b.width = mStartWidth - mClickPoint.x + aEvent.getX();
+					b.height = mStartHeight - mClickPoint.y + aEvent.getY();
+					break;
+				default:
+					break;
 			}
 
 			b.width = Math.max(80, b.width);
@@ -174,6 +171,9 @@ class RelationBoxMouseListener extends MouseAdapter
 			return -10;
 		}
 
-		return CURSORS[(x < S ? 1 : 0) + (y < S ? 2 : 0) + (x >= mPanel.getWidth() - S ? 4 : 0) + (y >= mPanel.getHeight() - S ? 8 : 0)];
+		int lx = mPanel.isResizableHorizontal() ? 1 : 0;
+		int ly = mPanel.isResizableVertical() ? 1 : 0;
+		
+		return CURSORS[lx * (x < S ? 1 : 0) + ly * (y < S ? 2 : 0) + lx * (x >= mPanel.getWidth() - S ? 4 : 0) + ly * (y >= mPanel.getHeight() - S ? 8 : 0)];
 	}
 }

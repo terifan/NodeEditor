@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
@@ -12,6 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import org.terifan.ui.resizablepanel.ResizablePanel;
+import org.terifan.util.log.Log;
 
 
 public abstract class AbstractRelationBox extends ResizablePanel implements RelationBox
@@ -45,7 +48,7 @@ public abstract class AbstractRelationBox extends ResizablePanel implements Rela
 			public void adjustmentValueChanged(AdjustmentEvent aE)
 			{
 				// TODO: 
-				RelationEditor editor = (RelationEditor)SwingUtilities.getAncestorOfClass(RelationEditor.class, AbstractRelationBox.this);
+				RelationEditorPane editor = (RelationEditorPane)SwingUtilities.getAncestorOfClass(RelationEditorPane.class, AbstractRelationBox.this);
 				editor.invalidate();
 				editor.repaint();
 			}
@@ -85,7 +88,7 @@ public abstract class AbstractRelationBox extends ResizablePanel implements Rela
 		super.remove(aItem.getComponent());
 		super.validate();
 
-		Container ancestor = SwingUtilities.getAncestorOfClass(RelationEditor.class, this);
+		Container ancestor = SwingUtilities.getAncestorOfClass(RelationEditorPane.class, this);
 		if (ancestor != null)
 		{
 			ancestor.repaint();
@@ -110,12 +113,12 @@ public abstract class AbstractRelationBox extends ResizablePanel implements Rela
 	@Override
 	protected void fireSelectedEvent()
 	{
-		RelationEditor.findEditor(this).setSelectedComponent(this);
+		RelationEditorPane.findEditor(this).setSelectedComponent(this);
 	}
 
 
 	@Override
-	public void onSelectionChanged(RelationEditor aRelationEditor, boolean aSelected)
+	public void onSelectionChanged(RelationEditorPane aRelationEditor, boolean aSelected)
 	{
 		if (aSelected)
 		{
@@ -226,4 +229,37 @@ public abstract class AbstractRelationBox extends ResizablePanel implements Rela
 
 		return -1;
 	}
+
+
+	@Override
+	public Anchor[] getConnectionAnchors(RelationItem aRelationItem)
+	{
+		Insets borderInsets = getBorder().getBorderInsets(this);
+		Rectangle bounds = getBounds();
+
+		if (isMinimized() || aRelationItem == null)
+		{
+			int titleHeight = getInsets().top;
+			int x0 = bounds.x;
+			int y0 = bounds.y;
+
+			return new Anchor[]
+			{
+				new Anchor(new Rectangle(x0                - 1, y0, 0, titleHeight), Anchor.LEFT),
+				new Anchor(new Rectangle(x0 + bounds.width + 1, y0, 0, titleHeight), Anchor.RIGHT)
+			};
+		}
+
+		int index = mRelationItems.indexOf(aRelationItem);
+
+		if (index == -1)
+		{
+			return null;
+		}
+		
+		return getConnectionAnchorsImpl(index, aRelationItem, bounds, borderInsets);
+	}
+
+
+	protected abstract Anchor[] getConnectionAnchorsImpl(int aRelationItemIndex, RelationItem aRelationItem, Rectangle aBounds, Insets aBorderInsets);
 }

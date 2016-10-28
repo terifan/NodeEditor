@@ -11,6 +11,8 @@ public class ResizablePanel extends JPanel
 	private Dimension mRestoredDimension;
 	private boolean mMinimized;
 	private String mTitle;
+	private boolean mResizableVertical;
+	private boolean mResizableHorizontal;
 
 
 	public ResizablePanel(Rectangle aBounds)
@@ -22,6 +24,35 @@ public class ResizablePanel extends JPanel
 		super.setBorder(new ResizablePanelBorder());
 		super.setBounds(aBounds);
 		super.setLayout(new BorderLayout());
+		
+		mResizableVertical = true;
+		mResizableHorizontal = true;
+	}
+
+
+	public boolean isResizableVertical()
+	{
+		return mResizableVertical;
+	}
+
+
+	public ResizablePanel setResizableVertical(boolean aResizableVertical)
+	{
+		mResizableVertical = aResizableVertical;
+		return this;
+	}
+
+
+	public boolean isResizableHorizontal()
+	{
+		return mResizableHorizontal;
+	}
+
+
+	public ResizablePanel setResizableHorizontal(boolean aResizableHorizontal)
+	{
+		this.mResizableHorizontal = aResizableHorizontal;
+		return this;
 	}
 
 

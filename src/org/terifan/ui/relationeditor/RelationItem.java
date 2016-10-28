@@ -21,7 +21,7 @@ public interface RelationItem
 	 */
 	Component getEditorComponent();
 
-	void onSelectionChanged(RelationEditor aRelationEditor, RelationBox aRelationBox, boolean aSelected);
+	void onSelectionChanged(RelationEditorPane aRelationEditor, RelationBox aRelationBox, boolean aSelected);
 
 	void updateValue(Component aEditorComponent);
 }

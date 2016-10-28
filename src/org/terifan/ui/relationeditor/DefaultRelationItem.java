@@ -55,7 +55,7 @@ public class DefaultRelationItem extends JLabel implements RelationItem
 			@Override
 			public void drop(DropEvent aDropEvent)
 			{
-				RelationEditor editor = RelationEditor.findEditor(mComponent);
+				RelationEditorPane editor = RelationEditorPane.findEditor(mComponent);
 				RelationItem relatedItem = editor.findRelationItem(aDropEvent.getTransferData(UUID.class));
 				if (relatedItem != null)
 				{
@@ -126,7 +126,7 @@ public class DefaultRelationItem extends JLabel implements RelationItem
 
 
 	@Override
-	public void onSelectionChanged(RelationEditor aRelationEditor, RelationBox aRelationBox, boolean aSelected)
+	public void onSelectionChanged(RelationEditorPane aRelationEditor, RelationBox aRelationBox, boolean aSelected)
 	{
 		if (aSelected)
 		{

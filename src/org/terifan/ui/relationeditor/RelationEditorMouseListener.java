@@ -7,10 +7,10 @@ import org.terifan.util.log.Log;
 
 class RelationEditorMouseListener extends MouseAdapter
 {
-	private RelationEditor mRelationEditor;
+	private RelationEditorPane mRelationEditor;
 
 
-	RelationEditorMouseListener(RelationEditor aRelationEditor)
+	RelationEditorMouseListener(RelationEditorPane aRelationEditor)
 	{
 		mRelationEditor = aRelationEditor;
 	}
@@ -28,12 +28,15 @@ class RelationEditorMouseListener extends MouseAdapter
 		{
 			Anchor[] anchors = mRelationEditor.findConnectionAnchors(connection);
 
-			double d = mRelationEditor.getConnectionRenderer().distance(connection, anchors[0], anchors[1], aEvent.getX(), aEvent.getY());
-
-			if (d < dist)
+			if (anchors != null)
 			{
-				dist = d;
-				conn = connection;
+				double d = mRelationEditor.getConnectionRenderer().distance(connection, anchors[0], anchors[1], aEvent.getX(), aEvent.getY());
+
+				if (d < dist)
+				{
+					dist = d;
+					conn = connection;
+				}
 			}
 		}
 

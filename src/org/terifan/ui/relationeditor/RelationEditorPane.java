@@ -6,6 +6,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -16,7 +17,7 @@ import org.terifan.ui.Utilities;
 import org.terifan.util.Tuple;
 
 
-public class RelationEditor extends JPanel implements Iterable<RelationBox>
+public class RelationEditorPane extends JPanel implements Iterable<RelationBox>
 {
 	private final static long serialVersionUID = 1L;
 
@@ -29,7 +30,7 @@ public class RelationEditor extends JPanel implements Iterable<RelationBox>
 	private Connection mSelectedConnection;
 
 
-	public RelationEditor()
+	public RelationEditorPane()
 	{
 		mConnections = new ArrayList<>();
 		mConnectionRenderer = new DefaultConnectionRenderer();
@@ -74,6 +75,49 @@ public class RelationEditor extends JPanel implements Iterable<RelationBox>
 	public void removeConnection(Connection aConnection)
 	{
 		mConnections.remove(aConnection);
+	}
+
+
+	@Override
+	protected void paintChildren(Graphics aGraphics)
+	{
+		super.paintChildren(aGraphics);
+
+		for (int j = 0; j < getComponentCount(); j++)
+		{
+			Component o = getComponent(j);
+
+			if (o instanceof RelationBox)
+			{
+				RelationBox relationBox = (RelationBox)o;
+				
+				for (int i = 0; i < relationBox.getRelationItemCount(); i++)
+				{
+					RelationItem relationItem = relationBox.getRelationItem(i);
+					Anchor[] anchors = relationBox.getConnectionAnchors(relationItem);
+					if (anchors != null)
+					{
+						for (Anchor anchor : anchors)
+						{
+							Rectangle r = new Rectangle(anchor.getBounds());
+							r.grow(1, 1);
+							if (anchor.getOritentation() == Anchor.LEFT)
+							{
+								r.translate(-4, 0);
+							}
+							else
+							{
+								r.translate(4, 0);
+							}
+							aGraphics.setColor(new Color(0xC7C729));
+							aGraphics.fillOval(r.x+1,r.y+1,r.width-1,r.height-1);
+							aGraphics.setColor(Color.BLACK);
+							aGraphics.drawOval(r.x,r.y,r.width,r.height);
+						}
+					}
+				}
+			}
+		}
 	}
 
 
@@ -240,9 +284,9 @@ public class RelationEditor extends JPanel implements Iterable<RelationBox>
 	}
 
 
-	protected static RelationEditor findEditor(Component aComponent)
+	protected static RelationEditorPane findEditor(Component aComponent)
 	{
-		return (RelationEditor)SwingUtilities.getAncestorOfClass(RelationEditor.class, aComponent);
+		return (RelationEditorPane)SwingUtilities.getAncestorOfClass(RelationEditorPane.class, aComponent);
 	}
 
 
