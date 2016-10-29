@@ -6,7 +6,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -129,6 +128,24 @@ public class RelationEditorPane extends JPanel implements Iterable<RelationBox>
 
 		g.setColor(getBackground());
 		g.fillRect(0, 0, getWidth(), getHeight());
+		g.setColor(new Color(47,47,47));
+		for (int x = 0; x < getWidth(); x+=25)
+		{
+			g.drawLine(x, 0, x, getHeight());
+		}
+		for (int y = 0; y < getWidth(); y+=25)
+		{
+			g.drawLine(0, y, getWidth(), y);
+		}
+		g.setColor(new Color(41,41,41));
+		for (int x = 0; x < getWidth(); x+=5*25)
+		{
+			g.drawLine(x, 0, x, getHeight());
+		}
+		for (int y = 0; y < getWidth(); y+=5*25)
+		{
+			g.drawLine(0, y, getWidth(), y);
+		}
 
 		for (Connection connection : mConnections)
 		{

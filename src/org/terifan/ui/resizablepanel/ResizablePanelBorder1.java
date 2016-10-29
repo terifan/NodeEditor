@@ -35,9 +35,9 @@ public class ResizablePanelBorder1 implements Border
 	{
 		Insets borderInsets = new Insets(0,0,0,0);
 
-		borderInsets.left += 4;
+		borderInsets.left += 4+6;
 		borderInsets.top += 4 + mTitleHeight;
-		borderInsets.right += 4;
+		borderInsets.right += 4+6;
 		borderInsets.bottom += 4;
 
 		return borderInsets;
@@ -47,6 +47,9 @@ public class ResizablePanelBorder1 implements Border
 	@Override
 	public void paintBorder(Component aComponent, Graphics aGraphics, int aX, int aY, int aWidth, int aHeight)
 	{
+		aX += 6;
+		aWidth -= 12;
+		
 		Graphics2D g = (Graphics2D)aGraphics;
 		g.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
 		

@@ -5,18 +5,19 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.awt.geom.Point2D;
 import org.terifan.math.vec2;
 import org.terifan.ui.Utilities;
+import org.terifan.util.log.Log;
 
 
 public class DefaultConnectionRenderer implements ConnectionRenderer
 {
-	private final static BasicStroke STROKE_1 = new BasicStroke(3, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL);
-	private final static BasicStroke STROKE_3 = new BasicStroke(1, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL);
+	private final static BasicStroke STROKE_WIDE = new BasicStroke(3, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL);
+	private final static BasicStroke STROKE_THIN = new BasicStroke(1, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL);
 	private final static Color COLOR_DARK = new Color(0, 0, 0, 128);
 	private final static Color COLOR_BRIGHT = new Color(255, 255, 255);
 	private static final Color COLOR_BRIGHT_SELECTED = new Color(192, 0, 0);
@@ -27,7 +28,9 @@ public class DefaultConnectionRenderer implements ConnectionRenderer
 	public void render(Graphics aGraphics, Connection aConnection, Anchor aFromAnchor, Anchor aToAnchor, boolean aSelected)
 	{
 		Graphics2D g = (Graphics2D)aGraphics;
-		Utilities.enableAntialiasing(g);
+		
+		g.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
 		Rectangle from = aFromAnchor.getBounds();
 		Rectangle to = aToAnchor.getBounds();
@@ -43,11 +46,11 @@ public class DefaultConnectionRenderer implements ConnectionRenderer
 
 		Stroke old = g.getStroke();
 
-		g.setStroke(STROKE_1);
+		g.setStroke(STROKE_WIDE);
 		g.setColor(COLOR_DARK);
 		drawSpline(g, spline);
 
-		g.setStroke(STROKE_3);
+		g.setStroke(STROKE_THIN);
 		g.setColor(COLOR_BRIGHT);
 		drawSpline(g, spline);
 
@@ -59,12 +62,14 @@ public class DefaultConnectionRenderer implements ConnectionRenderer
 	{
 		Point2D.Double prev = null;
 
-		for (double i = 0, s = 50; --s >= 0; i+=1.0/s)
+		int segments = Math.max(20, (int)aSpline.getPoint(0).distance(aSpline.getPoint(1)) / 4);
+
+		for (double i = 0, s = segments; --s >= 0; i+=1.0/s)
 		{
 			Point2D.Double next = aSpline.getPoint(i);
 			if (prev != null)
 			{
-				aGraphics.drawLine((int)prev.x, (int)prev.y, (int)next.x, (int)next.y);
+				aGraphics.drawLine((int)Math.round(prev.x), (int)Math.round(prev.y), (int)Math.round(next.x), (int)Math.round(next.y));
 			}
 			prev = next;
 		}
