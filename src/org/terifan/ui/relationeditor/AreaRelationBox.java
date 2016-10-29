@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Insets;
 import java.awt.Rectangle;
 import org.terifan.ui.AbsoluteAreaLayout;
-import org.terifan.util.log.Log;
 
 
 public class AreaRelationBox extends AbstractRelationBox
@@ -39,8 +38,8 @@ public class AreaRelationBox extends AbstractRelationBox
 		Rectangle d = mContainer.getComponent(aRelationItemIndex).getBounds();
 		Rectangle e = mAbsoluteAreaLayout.getConstraints(aRelationItem.getComponent());
 
-		int xl = aBounds.x + d.x - 1;
-		int xr = aBounds.x + aBounds.width + 1;
+		int xl = aBounds.x + d.x;
+		int xr = aBounds.x + aBounds.width;
 		int y = Math.min(aBounds.y + aBounds.height - aBorderInsets.bottom - 5, aBounds.y + d.y + d.height / 2 + aBorderInsets.top);
 
 		if (e.x <= 0 && e.width >= 100)

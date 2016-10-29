@@ -103,11 +103,11 @@ public class RelationEditorPane extends JPanel implements Iterable<RelationBox>
 							r.grow(1, 1);
 							if (anchor.getOritentation() == Anchor.LEFT)
 							{
-								r.translate(-4, 0);
+								r.translate(2, 0);
 							}
 							else
 							{
-								r.translate(4, 0);
+								r.translate(-2, 0);
 							}
 							aGraphics.setColor(new Color(0xC7C729));
 							aGraphics.fillOval(r.x+1,r.y+1,r.width-1,r.height-1);

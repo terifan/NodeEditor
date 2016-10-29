@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.event.AdjustmentEvent;
@@ -14,13 +13,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import org.terifan.ui.resizablepanel.ResizablePanel;
-import org.terifan.util.log.Log;
 
 
 public abstract class AbstractRelationBox extends ResizablePanel implements RelationBox
 {
-	protected final static Color BACKGROUND_COLOR = new Color(58, 58, 58);
-	protected final static Color BACKGROUND_SELECTED_COLOR = new Color(200, 200, 200);
+	public final static Color BACKGROUND_COLOR = new Color(58, 58, 58);
+	public final static Color BACKGROUND_SELECTED_COLOR = new Color(200, 200, 200);
 
 	protected ArrayList<RelationItem> mRelationItems;
 	protected RelationItem mEditedItem;
@@ -120,25 +118,25 @@ public abstract class AbstractRelationBox extends ResizablePanel implements Rela
 	@Override
 	public void onSelectionChanged(RelationEditorPane aRelationEditor, boolean aSelected)
 	{
-		if (aSelected)
-		{
-			setBackground(BACKGROUND_SELECTED_COLOR);
-		}
-		else
-		{
-			setBackground(BACKGROUND_COLOR);
-		}
+//		if (aSelected)
+//		{
+//			setBackground(BACKGROUND_SELECTED_COLOR);
+//		}
+//		else
+//		{
+//			setBackground(BACKGROUND_COLOR);
+//		}
 	}
 
 
-	@Override
-	protected void paintComponent(Graphics aGraphics)
-	{
-		aGraphics.setColor(getBackground());
-		aGraphics.fillRect(0, 0, getWidth(), getHeight());
-
-		super.paintComponent(aGraphics);
-	}
+//	@Override
+//	protected void paintComponent(Graphics aGraphics)
+//	{
+//		aGraphics.setColor(getBackground());
+//		aGraphics.fillRect(0, 0, getWidth(), getHeight());
+//
+//		super.paintComponent(aGraphics);
+//	}
 
 
 	@Override

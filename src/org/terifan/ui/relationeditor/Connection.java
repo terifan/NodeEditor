@@ -1,7 +1,5 @@
 package org.terifan.ui.relationeditor;
 
-import java.awt.Graphics2D;
-
 
 public interface Connection
 {

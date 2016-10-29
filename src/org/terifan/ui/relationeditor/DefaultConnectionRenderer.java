@@ -14,10 +14,10 @@ public class DefaultConnectionRenderer implements ConnectionRenderer
 	private final static BasicStroke basicStroke = new BasicStroke(5, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL);
 	private final static BasicStroke basicStroke1 = new BasicStroke(5, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_BEVEL);
 	private final static BasicStroke basicStroke2 = new BasicStroke(3, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL);
-	private final static Color COLOR_DARK = new Color(128, 128, 128);
-	private final static Color COLOR_BRIGHT = new Color(192, 192, 192);
-	private static final Color COLOR_BRIGHT_SELECTED = new Color(192, 0, 0);
-	private static final Color COLOR_DARK_SELECTED = new Color(128, 0, 0);
+	public final static Color COLOR_DARK = new Color(128, 128, 128);
+	public final static Color COLOR_BRIGHT = new Color(192, 192, 192);
+	public static final Color COLOR_BRIGHT_SELECTED = new Color(192, 0, 0);
+	public static final Color COLOR_DARK_SELECTED = new Color(128, 0, 0);
 
 
 	@Override

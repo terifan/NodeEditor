@@ -159,7 +159,7 @@ public class Test
 			nodeBox0.setLocation(100, 50);
 			nodeBox1.setLocation(300, 100);
 			nodeBox2.setLocation(500, 150);
-			nodeBox3.setLocation(700, 150);
+			nodeBox3.setLocation(800, 350);
 			nodeBox4.setLocation(300, 200);
 			
 			boxA.setLocation(boxA.getLocation().x, 50);

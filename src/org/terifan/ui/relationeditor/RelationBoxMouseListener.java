@@ -7,7 +7,7 @@ import java.awt.event.MouseListener;
 
 class RelationBoxMouseListener extends MouseAdapter
 {
-	private final RelationBox mRelationBox;
+	private RelationBox mRelationBox;
 
 
 	public RelationBoxMouseListener(RelationBox aRelationBox)

@@ -18,8 +18,8 @@ import javax.swing.SwingUtilities;
 
 public class DefaultRelationItem extends JLabel implements RelationItem
 {
-	private final static Color BACKGROUND_COLOR = new Color(48,48,48);
-	private final static Color BACKGROUND_SELECTED_COLOR = new Color(128, 0, 0);
+	public final static Color BACKGROUND_COLOR = new Color(48,48,48);
+	public final static Color BACKGROUND_SELECTED_COLOR = new Color(128, 0, 0);
 
 	private UUID mIdentity;
 

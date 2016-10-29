@@ -73,7 +73,7 @@ public class ResizablePanelBorder implements Border
 	@Override
 	public void paintBorder(Component aComponent, Graphics aGraphics, int aX, int aY, int aWidth, int aHeight)
 	{
-		Border createEtchedBorder = BorderFactory.createBevelBorder(BevelBorder.RAISED,  ((BevelBorder)mBevelBorder).getHighlightOuterColor(aComponent), aComponent.getBackground(), ((BevelBorder)mBevelBorder).getShadowOuterColor(aComponent), aComponent.getBackground());
+		Border createEtchedBorder = BorderFactory.createBevelBorder(BevelBorder.RAISED, ((BevelBorder)mBevelBorder).getHighlightOuterColor(aComponent), aComponent.getBackground(), ((BevelBorder)mBevelBorder).getShadowOuterColor(aComponent), aComponent.getBackground());
 
 		Graphics2D g = (Graphics2D)aGraphics;
 
@@ -95,7 +95,6 @@ public class ResizablePanelBorder implements Border
 		new TextBox(panel.getTitle()).setAnchor(Anchor.WEST).setBounds(b).setMargins(0, 4, 0, 4).setForeground(aComponent.getForeground()).setMaxLineCount(1).render(g);
 
 		// button
-
 		b.x += b.width + 1;
 		b.y++;
 		b.width = mTitleHeight - 2;
@@ -107,16 +106,16 @@ public class ResizablePanelBorder implements Border
 
 		if (panel.isMinimized())
 		{
-			g.drawLine(b.x+3, b.y+4, b.x+b.width-4, b.y+4);
-			g.drawLine(b.x+3, b.y+5, b.x+b.width-4, b.y+5);
-			g.drawLine(b.x+3, b.y+10, b.x+b.width-4, b.y+10);
-			g.drawLine(b.x+3, b.y+4, b.x+3, b.y+10);
-			g.drawLine(b.x+b.width-4, b.y+4, b.x+b.width-4, b.y+10);
+			g.drawLine(b.x + 3, b.y + 4, b.x + b.width - 4, b.y + 4);
+			g.drawLine(b.x + 3, b.y + 5, b.x + b.width - 4, b.y + 5);
+			g.drawLine(b.x + 3, b.y + 10, b.x + b.width - 4, b.y + 10);
+			g.drawLine(b.x + 3, b.y + 4, b.x + 3, b.y + 10);
+			g.drawLine(b.x + b.width - 4, b.y + 4, b.x + b.width - 4, b.y + 10);
 		}
 		else
 		{
-			g.drawLine(b.x+3, b.y+8, b.x+b.width-4, b.y+8);
-			g.drawLine(b.x+3, b.y+9, b.x+b.width-4, b.y+9);
+			g.drawLine(b.x + 3, b.y + 8, b.x + b.width - 4, b.y + 8);
+			g.drawLine(b.x + 3, b.y + 9, b.x + b.width - 4, b.y + 9);
 		}
 	}
 }

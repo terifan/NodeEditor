@@ -44,8 +44,8 @@ public class ListRelationBox extends AbstractRelationBox
 
 		return new Anchor[]
 		{
-			new Anchor(new Rectangle(aBounds.x - 1 - 5, y - 5, 10, 10), Anchor.LEFT), 
-			new Anchor(new Rectangle(aBounds.x + aBounds.width + 1 - 5, y - 5, 10, 10), Anchor.RIGHT)
+			new Anchor(new Rectangle(aBounds.x - 5, y - 5, 10, 10), Anchor.LEFT), 
+			new Anchor(new Rectangle(aBounds.x + aBounds.width - 5, y - 5, 10, 10), Anchor.RIGHT)
 		};
 	}
 }
