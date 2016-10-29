@@ -1,13 +1,9 @@
 package org.terifan.ui.relationeditor;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.Rectangle;
-import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
 import java.util.ArrayList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -17,9 +13,6 @@ import org.terifan.ui.resizablepanel.ResizablePanel;
 
 public abstract class AbstractRelationBox extends ResizablePanel implements RelationBox
 {
-	public final static Color BACKGROUND_COLOR = new Color(58, 58, 58);
-	public final static Color BACKGROUND_SELECTED_COLOR = new Color(200, 200, 200);
-
 	protected ArrayList<RelationItem> mRelationItems;
 	protected RelationItem mEditedItem;
 	protected Component mEditorComponent;
@@ -27,33 +20,32 @@ public abstract class AbstractRelationBox extends ResizablePanel implements Rela
 	protected JScrollPane mContainerScrollPane;
 
 
-	public AbstractRelationBox(Rectangle aBounds)
+	public AbstractRelationBox(Rectangle aBounds, String aTitle)
 	{
-		super(aBounds);
+		super(aBounds, aTitle);
 
 		mContainer = new JPanel();
-		mContainer.setBackground(BACKGROUND_COLOR);
+		mContainer.setForeground(Styles.BOX_FOREGROUND_COLOR);
+		mContainer.setBackground(Styles.BOX_BACKGROUND_COLOR);
 
 		mContainerScrollPane = new JScrollPane(mContainer);
 		mContainerScrollPane.setBorder(null);
-//		mContainerScrollPane.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED, new Color(46,46,46), new Color(40,40,40)));
-		
+
 		mRelationItems = new ArrayList<>();
 		
-		mContainerScrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener()
+		mContainerScrollPane.getVerticalScrollBar().addAdjustmentListener(aEvent ->
 		{
-			@Override
-			public void adjustmentValueChanged(AdjustmentEvent aE)
-			{
-				// TODO: 
-				RelationEditorPane editor = (RelationEditorPane)SwingUtilities.getAncestorOfClass(RelationEditorPane.class, AbstractRelationBox.this);
-				editor.invalidate();
-				editor.repaint();
-			}
+			// TODO:
+			RelationEditorPane editor = (RelationEditorPane)SwingUtilities.getAncestorOfClass(RelationEditorPane.class, AbstractRelationBox.this);
+			editor.invalidate();
+			editor.repaint();
 		});
 
 		super.add(mContainerScrollPane);
 		super.addMouseListener(new RelationBoxMouseListener(this));
+		super.setForeground(Styles.BOX_FOREGROUND_COLOR);
+		super.setBackground(Styles.BOX_BACKGROUND_COLOR);
+		super.setOpaque(false);
 	}
 
 
@@ -118,25 +110,18 @@ public abstract class AbstractRelationBox extends ResizablePanel implements Rela
 	@Override
 	public void onSelectionChanged(RelationEditorPane aRelationEditor, boolean aSelected)
 	{
-//		if (aSelected)
-//		{
-//			setBackground(BACKGROUND_SELECTED_COLOR);
-//		}
-//		else
-//		{
-//			setBackground(BACKGROUND_COLOR);
-//		}
+		if (aSelected)
+		{
+			setBackground(Styles.BOX_BACKGROUND_SELECTED_COLOR);
+			setForeground(Styles.BOX_FOREGROUND_SELECTED_COLOR);
+		}
+		else
+		{
+			setBackground(Styles.BOX_BACKGROUND_COLOR);
+			setForeground(Styles.BOX_FOREGROUND_COLOR);
+		}
+		setOpaque(false);
 	}
-
-
-//	@Override
-//	protected void paintComponent(Graphics aGraphics)
-//	{
-//		aGraphics.setColor(getBackground());
-//		aGraphics.fillRect(0, 0, getWidth(), getHeight());
-//
-//		super.paintComponent(aGraphics);
-//	}
 
 
 	@Override

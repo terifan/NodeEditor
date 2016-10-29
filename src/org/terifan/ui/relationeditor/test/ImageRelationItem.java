@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import org.terifan.ui.relationeditor.DefaultRelationItem;
 import org.terifan.ui.relationeditor.RelationBox;
 import org.terifan.ui.relationeditor.RelationEditorPane;
+import org.terifan.ui.relationeditor.Styles;
 import org.terifan.ui.relationeditor.StackedRelationItem;
 
 
@@ -31,7 +32,7 @@ public class ImageRelationItem extends StackedRelationItem
 		@Override
 		protected void paintComponent(Graphics aGraphics)
 		{
-			aGraphics.setColor(DefaultRelationItem.BACKGROUND_COLOR);
+			aGraphics.setColor(Styles.BOX_BACKGROUND_COLOR);
 			aGraphics.fillRect(0, 0, getWidth(), getHeight());
 			aGraphics.setColor(Color.red);
 			aGraphics.fillRect(0, 0, 200, 200);

@@ -36,7 +36,8 @@ class RelationBoxMouseListener extends MouseAdapter
 	{
 		Point point = aEvent.getPoint();
 
-		if (point.x > mPanel.getWidth() - 4 - 16 && point.x < mPanel.getWidth() - 4 && point.y >= 4 && point.y < 4 + 16)
+//		if (point.x > mPanel.getWidth() - 4 - 16 && point.x < mPanel.getWidth() - 4 && point.y >= 4 && point.y < 4 + 16)
+		if (point.x >= 4 && point.x < 20 && point.y >= 4 && point.y < 4 + 18)
 		{
 			mPanel.setMinimized(!mPanel.isMinimized());
 		}

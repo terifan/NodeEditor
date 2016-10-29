@@ -15,7 +15,7 @@ public class ResizablePanel extends JPanel
 	private boolean mResizableHorizontal;
 
 
-	public ResizablePanel(Rectangle aBounds)
+	public ResizablePanel(Rectangle aBounds, String aTitle)
 	{
 		RelationBoxMouseListener relationBoxMouseListener = new RelationBoxMouseListener(this);
 
@@ -24,7 +24,9 @@ public class ResizablePanel extends JPanel
 		super.setBorder(new ResizablePanelBorder1());
 		super.setBounds(aBounds);
 		super.setLayout(new BorderLayout());
-		
+		super.setOpaque(false);
+
+		mTitle = aTitle;
 		mResizableVertical = true;
 		mResizableHorizontal = true;
 	}
@@ -51,7 +53,7 @@ public class ResizablePanel extends JPanel
 
 	public ResizablePanel setResizableHorizontal(boolean aResizableHorizontal)
 	{
-		this.mResizableHorizontal = aResizableHorizontal;
+		mResizableHorizontal = aResizableHorizontal;
 		return this;
 	}
 
@@ -94,7 +96,7 @@ public class ResizablePanel extends JPanel
 
 	public void setTitle(String aTitle)
 	{
-		this.mTitle = aTitle;
+		mTitle = aTitle;
 	}
 
 

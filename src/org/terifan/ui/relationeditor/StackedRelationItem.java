@@ -1,6 +1,5 @@
 package org.terifan.ui.relationeditor;
 
-import java.awt.Color;
 import java.awt.Component;
 import org.terifan.ui.DragAndDrop;
 import java.awt.Point;
@@ -12,9 +11,6 @@ import javax.swing.JLabel;
 
 public class StackedRelationItem extends AbstractRelationItem
 {
-	private final static Color BACKGROUND_COLOR = new Color(48,48,48);
-	private final static Color BACKGROUND_SELECTED_COLOR = new Color(128, 0, 0);
-
 	public enum Anchors
 	{
 		NONE,
@@ -45,8 +41,8 @@ public class StackedRelationItem extends AbstractRelationItem
 		mWeight = aWeight;
 
 		mComponent.setFocusable(true);
-		mComponent.setBackground(BACKGROUND_COLOR);
-		mComponent.setForeground(Color.WHITE);
+		mComponent.setBackground(Styles.BOX_BACKGROUND_COLOR);
+		mComponent.setForeground(Styles.BOX_FOREGROUND_COLOR);
 		mComponent.setOpaque(true);
 		mComponent.setBorder(BorderFactory.createEmptyBorder(2, 4, 2, 4));
 		mComponent.addMouseListener(new RelationItemMouseListener());
@@ -106,11 +102,11 @@ public class StackedRelationItem extends AbstractRelationItem
 	{
 		if (aSelected)
 		{
-			mComponent.setBackground(BACKGROUND_SELECTED_COLOR);
+			mComponent.setBackground(Styles.ITEM_BACKGROUND_SELECTED_COLOR);
 		}
 		else
 		{
-			mComponent.setBackground(BACKGROUND_COLOR);
+			mComponent.setBackground(Styles.ITEM_BACKGROUND_COLOR);
 		}
 	}
 

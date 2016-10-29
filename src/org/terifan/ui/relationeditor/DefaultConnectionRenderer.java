@@ -1,29 +1,33 @@
 package org.terifan.ui.relationeditor;
 
+import org.terifan.graphics.BSpline;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Stroke;
+import java.awt.geom.Point2D;
 import org.terifan.math.vec2;
+import org.terifan.ui.Utilities;
 
 
 public class DefaultConnectionRenderer implements ConnectionRenderer
 {
-	private final static BasicStroke basicStroke = new BasicStroke(5, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL);
-	private final static BasicStroke basicStroke1 = new BasicStroke(5, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_BEVEL);
-	private final static BasicStroke basicStroke2 = new BasicStroke(3, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL);
-	public final static Color COLOR_DARK = new Color(128, 128, 128);
-	public final static Color COLOR_BRIGHT = new Color(192, 192, 192);
-	public static final Color COLOR_BRIGHT_SELECTED = new Color(192, 0, 0);
-	public static final Color COLOR_DARK_SELECTED = new Color(128, 0, 0);
+	private final static BasicStroke STROKE_1 = new BasicStroke(3, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL);
+	private final static BasicStroke STROKE_3 = new BasicStroke(1, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL);
+	private final static Color COLOR_DARK = new Color(0, 0, 0, 128);
+	private final static Color COLOR_BRIGHT = new Color(255, 255, 255);
+	private static final Color COLOR_BRIGHT_SELECTED = new Color(192, 0, 0);
+	private static final Color COLOR_DARK_SELECTED = new Color(128, 0, 0);
 
 
 	@Override
 	public void render(Graphics aGraphics, Connection aConnection, Anchor aFromAnchor, Anchor aToAnchor, boolean aSelected)
 	{
 		Graphics2D g = (Graphics2D)aGraphics;
+		Utilities.enableAntialiasing(g);
 
 		Rectangle from = aFromAnchor.getBounds();
 		Rectangle to = aToAnchor.getBounds();
@@ -35,25 +39,107 @@ public class DefaultConnectionRenderer implements ConnectionRenderer
 		int d0 = aFromAnchor.getOritentation() == Anchor.LEFT ? -16 : 16;
 		int d1 = aToAnchor.getOritentation() == Anchor.LEFT ? -16 : 16;
 
+		BSpline spline = new BSpline(new double[]{x0, x0+d0, x1+d1, x1}, new double[]{y0, y0, y1, y1});
+
 		Stroke old = g.getStroke();
 
-		g.setStroke(basicStroke);
-		g.setColor(aSelected ? COLOR_DARK_SELECTED : COLOR_DARK);
-		g.drawLine(x0 + d0, y0, x1 + d1, y1);
-		g.setStroke(basicStroke1);
-		g.drawLine(x0, y0, x0 + d0, y0);
-		g.drawLine(x1, y1, x1 + d1, y1);
-		
-		g.setStroke(basicStroke2);
-		g.setColor(aSelected ? COLOR_BRIGHT_SELECTED : COLOR_BRIGHT);
-		g.drawLine(x0, y0, x0 + d0, y0);
-		g.drawLine(x0 + d0, y0, x1 + d1, y1);
-		g.drawLine(x1, y1, x1 + d1, y1);
+		g.setStroke(STROKE_1);
+		g.setColor(COLOR_DARK);
+		drawSpline(g, spline);
+
+		g.setStroke(STROKE_3);
+		g.setColor(COLOR_BRIGHT);
+		drawSpline(g, spline);
 
 		g.setStroke(old);
 	}
 
 
+	private void drawSpline(Graphics2D aGraphics, BSpline aSpline)
+	{
+		Point2D.Double prev = null;
+
+		for (double i = 0, s = 50; --s >= 0; i+=1.0/s)
+		{
+			Point2D.Double next = aSpline.getPoint(i);
+			if (prev != null)
+			{
+				aGraphics.drawLine((int)prev.x, (int)prev.y, (int)next.x, (int)next.y);
+			}
+			prev = next;
+		}
+	}
+
+
+//	private void drawLine(Graphics aGraphics, int x0, int y0, int x1, int y1)
+//	{
+//		int len = Math.max(Math.abs(x1-x0), Math.abs(y1-y0));
+//		double dx = 0;
+//		double dy = 0;
+//		
+//		if (Math.abs(x1-x0) > Math.abs(y1-y0))
+//		{
+//			if (x0 > x1)
+//			{
+//				int t = x1;
+//				x1 = x0;
+//				x0 = t;
+//				t = y1;
+//				y1 = y0;
+//				y0 = t;
+//			}
+//			dx = 1;
+//			dy = (y1 - y0) / (double)len;
+//		}
+//		else
+//		{
+//			if (y0 > y1)
+//			{
+//				int t = x1;
+//				x1 = x0;
+//				x0 = t;
+//				t = y1;
+//				y1 = y0;
+//				y0 = t;
+//			}
+//			dx = (x1 - x0) / (double)len;
+//			dy = 1;
+//		}
+//
+//		double x = x0;
+//		double y = y0;
+//
+//		for (int i = 0; i < len; i++)
+//		{
+//			calc(aGraphics, x0, y0, x1, y1, (int)x, (int)y);
+//			aGraphics.setColor(Color.WHITE);
+//			aGraphics.drawLine((int)x,(int)y,(int)x,(int)y);
+//			x += dx;
+//			y += dy;
+//		}
+//	}
+//
+
+//	private void calc(Graphics aGraphics, int startX, int startY, int endX, int endY, int x, int y)
+//	{
+//		// Calculate how far above or below the control point should be
+//		int centrePointX = x;
+//		int centrePointY = y;
+//
+//		// Calculate slopes and Y intersects
+//		double lineSlope = (endY - startY) / (double)(endX - startX);
+//		double perpendicularSlope = lineSlope == 0 ? -1 : -1 / lineSlope;
+//		double yIntersect = centrePointY - (centrePointX * perpendicularSlope);
+//
+////		aGraphics.setColor(Color.WHITE);
+////		aGraphics.drawOval(startX, startY, 4,4);
+//		aGraphics.setColor(Color.RED);
+//		
+////		y = (int)((perpendicularSlope * (x+5)) + yIntersect);
+//		y = (int)((perpendicularSlope * (x+5)) + yIntersect);
+//		aGraphics.drawLine(x, y, x, y);
+//	}
+	
 	@Override
 	public double distance(Connection aConnection, Anchor aFromAnchor, Anchor aToAnchor, int aX, int aY)
 	{

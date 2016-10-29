@@ -1,6 +1,5 @@
 package org.terifan.ui.relationeditor;
 
-import java.awt.Color;
 import java.awt.Component;
 import org.terifan.ui.DragAndDrop;
 import java.awt.Point;
@@ -18,9 +17,6 @@ import javax.swing.SwingUtilities;
 
 public class DefaultRelationItem extends JLabel implements RelationItem
 {
-	public final static Color BACKGROUND_COLOR = new Color(48,48,48);
-	public final static Color BACKGROUND_SELECTED_COLOR = new Color(128, 0, 0);
-
 	private UUID mIdentity;
 
 
@@ -31,8 +27,8 @@ public class DefaultRelationItem extends JLabel implements RelationItem
 		mIdentity = UUID.randomUUID();
 
 		super.setFocusable(true);
-		super.setBackground(BACKGROUND_COLOR);
-		super.setForeground(Color.WHITE);
+		super.setBackground(Styles.BOX_BACKGROUND_COLOR);
+		super.setForeground(Styles.BOX_FOREGROUND_COLOR);
 		super.setOpaque(true);
 		super.setBorder(BorderFactory.createEmptyBorder(2, 4, 2, 4));
 		super.addMouseListener(new RelationItemMouseListener());
@@ -130,11 +126,11 @@ public class DefaultRelationItem extends JLabel implements RelationItem
 	{
 		if (aSelected)
 		{
-			setBackground(BACKGROUND_SELECTED_COLOR);
+			setBackground(Styles.BOX_BACKGROUND_SELECTED_COLOR);
 		}
 		else
 		{
-			setBackground(BACKGROUND_COLOR);
+			setBackground(Styles.BOX_BACKGROUND_COLOR);
 		}
 	}
 }

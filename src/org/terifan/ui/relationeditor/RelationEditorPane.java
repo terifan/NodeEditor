@@ -21,8 +21,6 @@ public class RelationEditorPane extends JPanel implements Iterable<RelationBox>
 {
 	private final static long serialVersionUID = 1L;
 
-	protected final static Color BACKGROUND_COLOR = new Color(68, 68, 68);
-
 	private ArrayList<Connection> mConnections;
 	private ConnectionRenderer mConnectionRenderer;
 	private RelationItem mSelectedItem;
@@ -36,7 +34,7 @@ public class RelationEditorPane extends JPanel implements Iterable<RelationBox>
 		mConnectionRenderer = new DefaultConnectionRenderer();
 
 		setLayout(new NullLayout());
-		setBackground(BACKGROUND_COLOR);
+		setBackground(Styles.PANE_BACKGROUND_COLOR);
 		addMouseListener(new RelationEditorMouseListener(this));
 		addKeyListener(new RelationEditorKeyListener(this));
 	}
@@ -100,7 +98,7 @@ public class RelationEditorPane extends JPanel implements Iterable<RelationBox>
 						for (Anchor anchor : anchors)
 						{
 							Rectangle r = new Rectangle(anchor.getBounds());
-							r.grow(1, 1);
+//							r.grow(1, 1);
 							if (anchor.getOritentation() == Anchor.LEFT)
 							{
 								r.translate(2, 0);
@@ -110,9 +108,9 @@ public class RelationEditorPane extends JPanel implements Iterable<RelationBox>
 								r.translate(-2, 0);
 							}
 							aGraphics.setColor(new Color(0xC7C729));
-							aGraphics.fillOval(r.x+1,r.y+1,r.width-1,r.height-1);
+							aGraphics.fillOval(r.x+1,r.y+1,r.width-2,r.height-2);
 							aGraphics.setColor(Color.BLACK);
-							aGraphics.drawOval(r.x,r.y,r.width,r.height);
+							aGraphics.drawOval(r.x,r.y,r.width-1,r.height-1);
 						}
 					}
 				}

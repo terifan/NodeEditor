@@ -15,12 +15,7 @@ public class StackedRelationBox extends AbstractRelationBox
 	
 	public StackedRelationBox(String aTitle)
 	{
-		super(new Rectangle());
-
-		super.setTitle(aTitle);
-		super.setBackground(BACKGROUND_COLOR);
-		super.setForeground(Color.WHITE);
-		super.setOpaque(true);
+		super(new Rectangle(), aTitle);
 		
 		mAnchors = new HashMap<>();
 

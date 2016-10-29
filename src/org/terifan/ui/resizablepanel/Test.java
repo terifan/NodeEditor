@@ -14,12 +14,10 @@ public class Test
 	{
 		try
 		{
-			ResizablePanel panel1 = new ResizablePanel(new Rectangle(100,100,200,200));
-			panel1.setTitle("Enter some text");
+			ResizablePanel panel1 = new ResizablePanel(new Rectangle(100,100,200,200), "Enter some text");
 			panel1.add(new JScrollPane(new JTextArea()), BorderLayout.CENTER);
 
-			ResizablePanel panel2 = new ResizablePanel(new Rectangle(200,200,200,200));
-			panel2.setTitle("More text");
+			ResizablePanel panel2 = new ResizablePanel(new Rectangle(200,200,200,200), "More text");
 			panel2.add(new JScrollPane(new JTextArea()), BorderLayout.CENTER);
 
 			JFrame frame = new JFrame();

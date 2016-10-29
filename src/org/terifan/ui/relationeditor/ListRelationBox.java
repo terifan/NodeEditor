@@ -1,22 +1,17 @@
 package org.terifan.ui.relationeditor;
 
-import java.awt.Color;
 import java.awt.Insets;
 import java.awt.Rectangle;
 import org.terifan.ui.ColumnLayout;
-import org.terifan.util.log.Log;
 
 
 public class ListRelationBox extends AbstractRelationBox
 {
 	public ListRelationBox(String aTitle)
 	{
-		super(new Rectangle());
+		super(new Rectangle(), aTitle);
 
 		super.setTitle(aTitle);
-		super.setBackground(BACKGROUND_COLOR);
-		super.setForeground(Color.WHITE);
-		super.setOpaque(true);
 
 		mContainer.setLayout(new ColumnLayout(1, 0, 1));
 	}
