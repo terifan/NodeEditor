@@ -24,8 +24,8 @@ public class ResizablePanel extends JPanel
 	{
 		RelationBoxMouseListener relationBoxMouseListener = new RelationBoxMouseListener(this);
 
-//		mPanelBorder = new ResizablePanelBorder_Blender(this);
-		mPanelBorder = new ResizablePanelBorder_Regular(this);
+		mPanelBorder = new ResizablePanelBorder_Blender(this);
+//		mPanelBorder = new ResizablePanelBorder_Regular(this);
 
 		super.addMouseListener(relationBoxMouseListener);
 		super.addMouseMotionListener(relationBoxMouseListener);

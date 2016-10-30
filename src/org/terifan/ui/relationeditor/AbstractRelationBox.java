@@ -5,7 +5,6 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Graphics2D;
 import java.awt.Insets;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import javax.swing.JPanel;
@@ -35,10 +34,9 @@ public abstract class AbstractRelationBox extends ResizablePanel implements Rela
 		mContainerScrollPane.setBorder(null);
 
 		mRelationItems = new ArrayList<>();
-		
+
 		mContainerScrollPane.getVerticalScrollBar().addAdjustmentListener(aEvent ->
 		{
-			// TODO:
 			RelationEditorPane editor = (RelationEditorPane)SwingUtilities.getAncestorOfClass(RelationEditorPane.class, AbstractRelationBox.this);
 			editor.invalidate();
 			editor.repaint();

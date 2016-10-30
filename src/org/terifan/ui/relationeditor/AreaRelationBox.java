@@ -35,29 +35,29 @@ public class AreaRelationBox extends AbstractRelationBox
 		Rectangle e = mAbsoluteAreaLayout.getConstraints(aRelationItem.getComponent());
 
 		int xl = aBounds.x + d.x;
-		int xr = aBounds.x + aBounds.width;
-		int y = Math.min(aBounds.y + aBounds.height - aBorderInsets.bottom - 5, aBounds.y + d.y + d.height / 2 + aBorderInsets.top);
+		int xr = aBounds.x + aBounds.width - 10;
+		int y = Math.min(aBounds.y + aBounds.height - aBorderInsets.bottom - 5, aBounds.y + d.y + d.height / 2 + aBorderInsets.top) - 5;
 
 		if (e.x <= 0 && e.width >= 100)
 		{
 			return new Anchor[]
 			{
-				new Anchor(new Rectangle(xl - 5, y - 5, 10, 10), Anchor.LEFT),
-				new Anchor(new Rectangle(xr - 5, y - 5, 10, 10), Anchor.RIGHT)
+				new Anchor(new Rectangle(xl, y, 10, 10), Anchor.LEFT),
+				new Anchor(new Rectangle(xr, y, 10, 10), Anchor.RIGHT)
 			};
 		}
 		else if (e.x == 0)
 		{
 			return new Anchor[]
 			{
-				new Anchor(new Rectangle(xl - 5, y - 5, 10, 10), Anchor.LEFT)
+				new Anchor(new Rectangle(xl, y, 10, 10), Anchor.LEFT)
 			};
 		}
 		else if (e.x + e.width >= 100)
 		{
 			return new Anchor[]
 			{
-				new Anchor(new Rectangle(xr - 5, y - 5, 10, 10), Anchor.RIGHT)
+				new Anchor(new Rectangle(xr, y, 10, 10), Anchor.RIGHT)
 			};
 		}
 

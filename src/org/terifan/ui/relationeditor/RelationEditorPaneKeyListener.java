@@ -4,12 +4,12 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 
-class RelationEditorKeyListener extends KeyAdapter
+class RelationEditorPaneKeyListener extends KeyAdapter
 {
 	private RelationEditorPane mEditor;
 
 
-	public RelationEditorKeyListener(RelationEditorPane aEditor)
+	public RelationEditorPaneKeyListener(RelationEditorPane aEditor)
 	{
 		this.mEditor = aEditor;
 	}

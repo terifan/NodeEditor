@@ -165,9 +165,10 @@ class RelationBoxMouseListener extends MouseAdapter
 	{
 		int x = aEvent.getX();
 		int y = aEvent.getY();
-		int S = 8;
+		int SX = 8;
+		int SY = 4;
 
-		if (x > S && x < mPanel.getWidth() - S && y > S && y <= S + Styles.TITLE_HEIGHT - 6)
+		if (x > SX && x < mPanel.getWidth() - SX && y >= SY && y <= SY + Styles.TITLE_HEIGHT - 6)
 		{
 			return DRAG_BOX;
 		}
@@ -175,6 +176,6 @@ class RelationBoxMouseListener extends MouseAdapter
 		int lx = mPanel.isResizableHorizontal() ? 1 : 0;
 		int ly = mPanel.isResizableVertical() ? 1 : 0;
 		
-		return CURSORS[lx * (x < S ? 1 : 0) + ly * (y < S ? 2 : 0) + lx * (x >= mPanel.getWidth() - S ? 4 : 0) + ly * (y >= mPanel.getHeight() - S ? 8 : 0)];
+		return CURSORS[lx * (x < SX ? 1 : 0) + ly * (y < SY ? 2 : 0) + lx * (x >= mPanel.getWidth() - SX ? 4 : 0) + ly * (y >= mPanel.getHeight() - SY ? 8 : 0)];
 	}
 }

@@ -1,7 +1,6 @@
 package org.terifan.ui.relationeditor;
 
 import org.terifan.ui.NullLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -25,6 +24,7 @@ public class RelationEditorPane extends JPanel implements Iterable<RelationBox>
 	private RelationItem mSelectedItem;
 	private RelationBox mSelectedBox;
 	private Connection mSelectedConnection;
+	private RelationEditorPaneBackground mBackground;
 
 
 	public RelationEditorPane()
@@ -32,10 +32,15 @@ public class RelationEditorPane extends JPanel implements Iterable<RelationBox>
 		mConnections = new ArrayList<>();
 		mConnectionRenderer = new DefaultConnectionRenderer();
 
-		setLayout(new NullLayout());
-		setBackground(Styles.PANE_BACKGROUND_COLOR);
-		addMouseListener(new RelationEditorMouseListener(this));
-		addKeyListener(new RelationEditorKeyListener(this));
+		mBackground = new RelationEditorPaneBackground_Blender();
+
+		RelationEditorPaneMouseListener mouseListener = new RelationEditorPaneMouseListener(this);
+
+		super.setLayout(new NullLayout());
+		super.setBackground(Styles.PANE_BACKGROUND_COLOR);
+		super.addMouseListener(mouseListener);
+		super.addMouseMotionListener(mouseListener);
+		super.addKeyListener(new RelationEditorPaneKeyListener(this));
 	}
 
 
@@ -83,26 +88,7 @@ public class RelationEditorPane extends JPanel implements Iterable<RelationBox>
 		Utilities.enableTextAntialiasing(g);
 		Utilities.enableAntialiasing(g);
 
-		g.setColor(getBackground());
-		g.fillRect(0, 0, getWidth(), getHeight());
-		g.setColor(new Color(47,47,47));
-		for (int x = 0; x < getWidth(); x+=25)
-		{
-			g.drawLine(x, 0, x, getHeight());
-		}
-		for (int y = 0; y < getWidth(); y+=25)
-		{
-			g.drawLine(0, y, getWidth(), y);
-		}
-		g.setColor(new Color(41,41,41));
-		for (int x = 0; x < getWidth(); x+=5*25)
-		{
-			g.drawLine(x, 0, x, getHeight());
-		}
-		for (int y = 0; y < getWidth(); y+=5*25)
-		{
-			g.drawLine(0, y, getWidth(), y);
-		}
+		mBackground.drawPaneBackground(this, g);
 
 		for (Connection connection : mConnections)
 		{

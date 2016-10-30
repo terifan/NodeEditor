@@ -9,7 +9,7 @@ public class ListRelationBox extends AbstractRelationBox
 {
 	public ListRelationBox(String aTitle)
 	{
-		super(new Rectangle(), aTitle);
+		super(new Rectangle(), aTitle); 
 
 		super.setTitle(aTitle);
 
@@ -39,8 +39,8 @@ public class ListRelationBox extends AbstractRelationBox
 
 		return new Anchor[]
 		{
-			new Anchor(new Rectangle(aBounds.x - 5, y - 5, 10, 10), Anchor.LEFT), 
-			new Anchor(new Rectangle(aBounds.x + aBounds.width - 5, y - 5, 10, 10), Anchor.RIGHT)
+			new Anchor(new Rectangle(aBounds.x, y - 5, 10, 10), Anchor.LEFT), 
+			new Anchor(new Rectangle(aBounds.x + aBounds.width - 10, y - 5, 10, 10), Anchor.RIGHT)
 		};
 	}
 }
