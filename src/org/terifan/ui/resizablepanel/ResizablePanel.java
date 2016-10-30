@@ -3,25 +3,33 @@ package org.terifan.ui.resizablepanel;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Rectangle;
+import java.awt.event.MouseEvent;
 import javax.swing.JPanel;
+import org.terifan.ui.relationeditor.Styles;
 
 
 public class ResizablePanel extends JPanel
 {
+	private ResizablePanelBorder mPanelBorder;
 	private Dimension mRestoredDimension;
 	private boolean mMinimized;
 	private String mTitle;
 	private boolean mResizableVertical;
 	private boolean mResizableHorizontal;
+	private int mMinWidth;
+	private int mMinHeight;
 
 
 	public ResizablePanel(Rectangle aBounds, String aTitle)
 	{
 		RelationBoxMouseListener relationBoxMouseListener = new RelationBoxMouseListener(this);
 
+//		mPanelBorder = new ResizablePanelBorder_Blender(this);
+		mPanelBorder = new ResizablePanelBorder_Regular(this);
+
 		super.addMouseListener(relationBoxMouseListener);
 		super.addMouseMotionListener(relationBoxMouseListener);
-		super.setBorder(new ResizablePanelBorder1());
+		super.setBorder(mPanelBorder);
 		super.setBounds(aBounds);
 		super.setLayout(new BorderLayout());
 		super.setOpaque(false);
@@ -29,6 +37,8 @@ public class ResizablePanel extends JPanel
 		mTitle = aTitle;
 		mResizableVertical = true;
 		mResizableHorizontal = true;
+		mMinWidth = 80;
+		mMinHeight = 4 + Styles.TITLE_HEIGHT + 4;
 	}
 
 
@@ -55,6 +65,30 @@ public class ResizablePanel extends JPanel
 	{
 		mResizableHorizontal = aResizableHorizontal;
 		return this;
+	}
+
+
+	public int getMinWidth()
+	{
+		return mMinWidth;
+	}
+
+
+	public void setMinWidth(int aMinWidth)
+	{
+		mMinWidth = aMinWidth;
+	}
+
+
+	public int getMinHeight()
+	{
+		return mMinHeight;
+	}
+
+
+	public void setMinHeight(int aMinHeight)
+	{
+		mMinHeight = aMinHeight;
 	}
 
 
@@ -116,7 +150,7 @@ public class ResizablePanel extends JPanel
 		}
 
 		Dimension preferredSize = getPreferredSize();
-		preferredSize.width = Math.max(80, preferredSize.width);
+		preferredSize.width = Math.max(preferredSize.width, mMinWidth);
 
 		if (mMinimized)
 		{
@@ -146,5 +180,11 @@ public class ResizablePanel extends JPanel
 
 	protected void fireSelectedEvent()
 	{
+	}
+
+
+	public void mouseClicked(MouseEvent aEvent)
+	{
+		mPanelBorder.mouseClicked(aEvent);
 	}
 }

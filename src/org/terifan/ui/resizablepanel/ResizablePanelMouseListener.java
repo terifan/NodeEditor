@@ -1,12 +1,13 @@
 package org.terifan.ui.resizablepanel;
 
+import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.SwingUtilities;
-import org.terifan.util.log.Log;
+import org.terifan.ui.relationeditor.Styles;
 
 
 class RelationBoxMouseListener extends MouseAdapter
@@ -16,31 +17,28 @@ class RelationBoxMouseListener extends MouseAdapter
 		Cursor.DEFAULT_CURSOR, Cursor.NE_RESIZE_CURSOR, Cursor.DEFAULT_CURSOR, Cursor.S_RESIZE_CURSOR, Cursor.SW_RESIZE_CURSOR,
 		Cursor.DEFAULT_CURSOR, Cursor.DEFAULT_CURSOR, Cursor.SE_RESIZE_CURSOR};
 
+	private final static int DRAG_BOX = -10;
+
 	private ResizablePanel mPanel;
 	private Point mClickPoint;
 	private boolean mDragged;
 	private int mCursor;
 
+	private Point mStartPos;
 	private int mStartWidth;
 	private int mStartHeight;
 
 
-	public RelationBoxMouseListener(ResizablePanel aResizablePanel)
+	public RelationBoxMouseListener(ResizablePanel aPanel)
 	{
-		mPanel = aResizablePanel;
+		mPanel = aPanel;
 	}
 
 
 	@Override
 	public void mouseClicked(MouseEvent aEvent)
 	{
-		Point point = aEvent.getPoint();
-
-//		if (point.x > mPanel.getWidth() - 4 - 16 && point.x < mPanel.getWidth() - 4 && point.y >= 4 && point.y < 4 + 16)
-		if (point.x >= 4 && point.x < 20 && point.y >= 4 && point.y < 4 + 18)
-		{
-			mPanel.setMinimized(!mPanel.isMinimized());
-		}
+		mPanel.mouseClicked(aEvent);
 	}
 
 
@@ -49,11 +47,13 @@ class RelationBoxMouseListener extends MouseAdapter
 	{
 		mDragged = !mPanel.isMinimized();
 		mClickPoint = aEvent.getPoint();
+		mStartPos = mPanel.getLocation();
 		mStartWidth = mPanel.getWidth();
 		mStartHeight = mPanel.getHeight();
 
-		mPanel.getParent().setComponentZOrder(mPanel, 0);
-		mPanel.getParent().repaint();
+		Container parent = mPanel.getParent();
+		parent.setComponentZOrder(mPanel, 0);
+		parent.repaint();
 
 		mPanel.fireSelectedEvent();
 	}
@@ -70,7 +70,7 @@ class RelationBoxMouseListener extends MouseAdapter
 	@Override
 	public void mouseDragged(MouseEvent aEvent)
 	{
-		if (mCursor == -10)
+		if (mCursor == DRAG_BOX)
 		{
 			Point point = SwingUtilities.convertPoint(mPanel, new Point(), mPanel.getParent());
 
@@ -88,11 +88,11 @@ class RelationBoxMouseListener extends MouseAdapter
 			{
 				case Cursor.W_RESIZE_CURSOR:
 					b.width -= point.x - b.x;
-					b.x = point.x;
+					b.x = Math.min(point.x, mStartPos.x + mStartWidth - mPanel.getMinWidth());
 					break;
 				case Cursor.N_RESIZE_CURSOR:
 					b.height -= point.y - b.y;
-					b.y = point.y;
+					b.y = Math.min(point.y, mStartPos.y + mStartHeight - mPanel.getMinHeight());
 					break;
 				case Cursor.NW_RESIZE_CURSOR:
 					b.width -= point.x - b.x;
@@ -124,8 +124,8 @@ class RelationBoxMouseListener extends MouseAdapter
 					break;
 			}
 
-			b.width = Math.max(80, b.width);
-			b.height = Math.max(4+16+4, b.height);
+			b.width = Math.max(mPanel.getMinWidth(), b.width);
+			b.height = Math.max(mPanel.getMinHeight(), b.height);
 
 			mPanel.setBounds(b);
 			mPanel.invalidate();
@@ -165,11 +165,11 @@ class RelationBoxMouseListener extends MouseAdapter
 	{
 		int x = aEvent.getX();
 		int y = aEvent.getY();
-		int S = 4;
+		int S = 8;
 
-		if (x > S && x < mPanel.getWidth() - S && y > S && y <= S + 16)
+		if (x > S && x < mPanel.getWidth() - S && y > S && y <= S + Styles.TITLE_HEIGHT - 6)
 		{
-			return -10;
+			return DRAG_BOX;
 		}
 
 		int lx = mPanel.isResizableHorizontal() ? 1 : 0;

@@ -50,18 +50,18 @@ public class StackedRelationBox extends AbstractRelationBox
 			case LEFT:
 				return new Anchor[]
 				{
-					new Anchor(new Rectangle(aBounds.x - 5, y - 5, 10, 10), Anchor.LEFT)
+					new Anchor(new Rectangle(aBounds.x, y - 5, 10, 10), Anchor.LEFT)
 				};
 			case RIGHT:
 				return new Anchor[]
 				{
-					new Anchor(new Rectangle(aBounds.x + aBounds.width - 5, y - 5, 10, 10), Anchor.RIGHT)
+					new Anchor(new Rectangle(aBounds.x + aBounds.width - 10, y - 5, 10, 10), Anchor.RIGHT)
 				};
 			case BOTH:
 				return new Anchor[]
 				{
-					new Anchor(new Rectangle(aBounds.x - 5, y - 5, 10, 10), Anchor.LEFT), 
-					new Anchor(new Rectangle(aBounds.x + aBounds.width - 5, y - 5, 10, 10), Anchor.RIGHT)
+					new Anchor(new Rectangle(aBounds.x, y - 5, 10, 10), Anchor.LEFT), 
+					new Anchor(new Rectangle(aBounds.x + aBounds.width - 10, y - 5, 10, 10), Anchor.RIGHT)
 				};
 		}
 

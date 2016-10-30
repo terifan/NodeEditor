@@ -1,6 +1,8 @@
 package org.terifan.ui.relationeditor;
 
 import java.awt.Component;
+import java.awt.Graphics2D;
+import java.awt.Point;
 
 
 public interface RelationBox
@@ -20,4 +22,6 @@ public interface RelationBox
 	void cancelEditItem();
 
 	void finishEditItem();
+	
+	void drawAnchors(Graphics2D aGraphics);
 }

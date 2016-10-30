@@ -76,49 +76,6 @@ public class RelationEditorPane extends JPanel implements Iterable<RelationBox>
 
 
 	@Override
-	protected void paintChildren(Graphics aGraphics)
-	{
-		super.paintChildren(aGraphics);
-
-		for (int j = 0; j < getComponentCount(); j++)
-		{
-			Component o = getComponent(j);
-
-			if (o instanceof RelationBox)
-			{
-				RelationBox relationBox = (RelationBox)o;
-				
-				for (int i = 0; i < relationBox.getRelationItemCount(); i++)
-				{
-					RelationItem relationItem = relationBox.getRelationItem(i);
-					Anchor[] anchors = relationBox.getConnectionAnchors(relationItem);
-					if (anchors != null)
-					{
-						for (Anchor anchor : anchors)
-						{
-							Rectangle r = new Rectangle(anchor.getBounds());
-//							r.grow(1, 1);
-							if (anchor.getOritentation() == Anchor.LEFT)
-							{
-								r.translate(2, 0);
-							}
-							else
-							{
-								r.translate(-2, 0);
-							}
-							aGraphics.setColor(new Color(0xC7C729));
-							aGraphics.fillOval(r.x+1,r.y+1,r.width-2,r.height-2);
-							aGraphics.setColor(Color.BLACK);
-							aGraphics.drawOval(r.x,r.y,r.width-1,r.height-1);
-						}
-					}
-				}
-			}
-		}
-	}
-
-
-	@Override
 	protected void paintComponent(Graphics aGraphics)
 	{
 		Graphics2D g = (Graphics2D)aGraphics;
@@ -299,13 +256,13 @@ public class RelationEditorPane extends JPanel implements Iterable<RelationBox>
 	}
 
 
-	protected static RelationEditorPane findEditor(Component aComponent)
+	public static RelationEditorPane findEditor(Component aComponent)
 	{
 		return (RelationEditorPane)SwingUtilities.getAncestorOfClass(RelationEditorPane.class, aComponent);
 	}
 
 
-	protected static RelationBox findRelationBox(Component aComponent)
+	public static RelationBox findRelationBox(Component aComponent)
 	{
 		return findEditor(aComponent).findRelationBoxImpl(aComponent).getFirst();
 	}

@@ -1,8 +1,11 @@
 package org.terifan.ui.relationeditor;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Graphics2D;
 import java.awt.Insets;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import javax.swing.JPanel;
@@ -211,6 +214,29 @@ public abstract class AbstractRelationBox extends ResizablePanel implements Rela
 		}
 
 		return -1;
+	}
+
+
+	@Override
+	public void drawAnchors(Graphics2D aGraphics)
+	{
+		for (int i = 0; i < getRelationItemCount(); i++)
+		{
+			RelationItem relationItem = getRelationItem(i);
+			Anchor[] anchors = getConnectionAnchors(relationItem);
+
+			if (anchors != null)
+			{
+				for (Anchor anchor : anchors)
+				{
+					Rectangle r = new Rectangle(anchor.getBounds());
+					aGraphics.setColor(new Color(0xC7C729));
+					aGraphics.fillOval(r.x+1,r.y+1,r.width-2,r.height-2);
+					aGraphics.setColor(Color.BLACK);
+					aGraphics.drawOval(r.x,r.y,r.width-1,r.height-1);
+				}
+			}
+		}
 	}
 
 
