@@ -16,7 +16,7 @@ public class RelationItemMouseListener extends MouseAdapter
 
 		RelationEditorPane editor = RelationEditorPane.findEditor(comp);
 
-		editor.setSelectedComponent(comp);
+		editor.setSelectedComponent(comp, false);
 
 		editor.fireRelationBoxClicked(RelationEditorPane.findRelationBox(comp));
 	}

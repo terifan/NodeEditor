@@ -65,7 +65,7 @@ class RelationEditorPaneMouseListener extends MouseAdapter
 		
 		if (conn != null)
 		{
-			mRelationEditor.setSelectedComponent(conn);
+			mRelationEditor.setSelectedComponent(conn, false);
 			mRelationEditor.repaint();
 		}
 	}

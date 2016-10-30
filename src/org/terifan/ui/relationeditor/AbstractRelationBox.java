@@ -25,14 +25,15 @@ public abstract class AbstractRelationBox extends ResizablePanel implements Rela
 	{
 		super(aBounds, aTitle);
 
+		mRelationItems = new ArrayList<>();
+
 		mContainer = new JPanel();
 		mContainer.setForeground(Styles.BOX_FOREGROUND_COLOR);
 		mContainer.setBackground(Styles.BOX_BACKGROUND_COLOR);
 
 		mContainerScrollPane = new JScrollPane(mContainer);
+		mContainerScrollPane.addMouseListener(new RelationBoxMouseListener(this));
 		mContainerScrollPane.setBorder(null);
-
-		mRelationItems = new ArrayList<>();
 
 		mContainerScrollPane.getVerticalScrollBar().addAdjustmentListener(aEvent ->
 		{
@@ -42,7 +43,6 @@ public abstract class AbstractRelationBox extends ResizablePanel implements Rela
 		});
 
 		super.add(mContainerScrollPane);
-		super.addMouseListener(new RelationBoxMouseListener(this));
 		super.setForeground(Styles.BOX_FOREGROUND_COLOR);
 		super.setBackground(Styles.BOX_BACKGROUND_COLOR);
 		super.setOpaque(false);
@@ -103,7 +103,7 @@ public abstract class AbstractRelationBox extends ResizablePanel implements Rela
 	@Override
 	protected void fireSelectedEvent()
 	{
-		RelationEditorPane.findEditor(this).setSelectedComponent(this);
+		RelationEditorPane.findEditor(this).setSelectedComponent(this, false);
 	}
 
 

@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import org.terifan.ui.Utilities;
 import org.terifan.util.Tuple;
+import org.terifan.util.log.Log;
 
 
 public class RelationEditorPane extends JPanel implements Iterable<RelationBox>
@@ -119,7 +120,7 @@ public class RelationEditorPane extends JPanel implements Iterable<RelationBox>
 	}
 
 
-	protected void setSelectedComponent(Object aComponent)
+	protected void setSelectedComponent(Object aComponent, boolean aUnselectItem)
 	{
 		RelationBox relationBox = null;
 		RelationItem relationItem = null;
@@ -129,7 +130,7 @@ public class RelationEditorPane extends JPanel implements Iterable<RelationBox>
 		{
 			relationBox = (RelationBox)aComponent;
 
-			if (relationBox == mSelectedBox)
+			if (!aUnselectItem && relationBox == mSelectedBox)
 			{
 				relationItem = mSelectedItem;
 			}
@@ -175,7 +176,7 @@ public class RelationEditorPane extends JPanel implements Iterable<RelationBox>
 				}
 			}
 		}
-
+		
 		mSelectedBox = relationBox;
 		mSelectedConnection = connection;
 		mSelectedItem = relationItem;
