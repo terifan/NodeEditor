@@ -1,11 +1,10 @@
-package org.terifan.ui.resizablepanel;
+package org.terifan.ui.relationeditor;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import javax.swing.JPanel;
-import org.terifan.ui.relationeditor.Styles;
 
 
 public class ResizablePanel extends JPanel
@@ -22,13 +21,13 @@ public class ResizablePanel extends JPanel
 
 	public ResizablePanel(Rectangle aBounds, String aTitle)
 	{
-		RelationBoxMouseListener relationBoxMouseListener = new RelationBoxMouseListener(this);
+		ResizablePanelMouseListener mouseListener = new ResizablePanelMouseListener(this);
 
 		mPanelBorder = new ResizablePanelBorder_Blender(this);
 //		mPanelBorder = new ResizablePanelBorder_Regular(this);
 
-		super.addMouseListener(relationBoxMouseListener);
-		super.addMouseMotionListener(relationBoxMouseListener);
+		super.addMouseListener(mouseListener);
+		super.addMouseMotionListener(mouseListener);
 		super.setBorder(mPanelBorder);
 		super.setBounds(aBounds);
 		super.setLayout(new BorderLayout());

@@ -1,6 +1,5 @@
-package org.terifan.ui.resizablepanel;
+package org.terifan.ui.relationeditor;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Graphics;
@@ -15,10 +14,7 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.TextBox;
-import org.terifan.ui.relationeditor.Styles;
 import static org.terifan.ui.relationeditor.Styles.BOX_BACKGROUND_SELECTED_COLOR;
-import static org.terifan.ui.relationeditor.Styles.BOX_BORDER_COLOR;
-import static org.terifan.ui.relationeditor.Styles.BOX_BORDER_SELECTED_COLOR;
 import static org.terifan.ui.relationeditor.Styles.BOX_BORDER_TITLE_COLOR;
 import static org.terifan.ui.relationeditor.Styles.BOX_BORDER_TITLE_SHADOW_COLOR;
 import static org.terifan.ui.relationeditor.Styles.TITLE_HEIGHT;

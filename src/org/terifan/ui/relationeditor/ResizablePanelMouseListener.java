@@ -1,4 +1,4 @@
-package org.terifan.ui.resizablepanel;
+package org.terifan.ui.relationeditor;
 
 import java.awt.Container;
 import java.awt.Cursor;
@@ -7,10 +7,9 @@ import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.SwingUtilities;
-import org.terifan.ui.relationeditor.Styles;
 
 
-class RelationBoxMouseListener extends MouseAdapter
+class ResizablePanelMouseListener extends MouseAdapter
 {
 	private final static int[] CURSORS = {
 		Cursor.DEFAULT_CURSOR, Cursor.W_RESIZE_CURSOR, Cursor.N_RESIZE_CURSOR, Cursor.NW_RESIZE_CURSOR, Cursor.E_RESIZE_CURSOR,
@@ -29,7 +28,7 @@ class RelationBoxMouseListener extends MouseAdapter
 	private int mStartHeight;
 
 
-	public RelationBoxMouseListener(ResizablePanel aPanel)
+	public ResizablePanelMouseListener(ResizablePanel aPanel)
 	{
 		mPanel = aPanel;
 	}

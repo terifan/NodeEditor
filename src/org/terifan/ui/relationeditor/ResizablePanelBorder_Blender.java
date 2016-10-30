@@ -1,4 +1,4 @@
-package org.terifan.ui.resizablepanel;
+package org.terifan.ui.relationeditor;
 
 import java.awt.Component;
 import java.awt.Cursor;
@@ -12,8 +12,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.TextBox;
-import org.terifan.ui.relationeditor.RelationBox;
-import org.terifan.ui.relationeditor.Styles;
 import static org.terifan.ui.relationeditor.Styles.*;
 
 

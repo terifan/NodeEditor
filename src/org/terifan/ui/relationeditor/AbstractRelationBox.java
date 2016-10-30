@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
-import org.terifan.ui.resizablepanel.ResizablePanel;
 
 
 public abstract class AbstractRelationBox extends ResizablePanel implements RelationBox
