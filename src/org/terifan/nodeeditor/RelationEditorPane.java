@@ -31,7 +31,7 @@ public class RelationEditorPane extends JPanel implements Iterable<RelationBox>
 	public RelationEditorPane()
 	{
 		mConnections = new ArrayList<>();
-		mConnectionRenderer = new DefaultConnectionRenderer();
+		mConnectionRenderer = new ConnectionRenderer_Blender();
 
 		mBackground = new RelationEditorPaneBackground_Blender();
 
@@ -53,7 +53,7 @@ public class RelationEditorPane extends JPanel implements Iterable<RelationBox>
 
 	public void addConnection(RelationItem aFrom, RelationItem aTo)
 	{
-		mConnections.add(new DefaultConnection(aFrom, aTo));
+		mConnections.add(new Connection(aFrom, aTo));
 	}
 
 
@@ -176,7 +176,7 @@ public class RelationEditorPane extends JPanel implements Iterable<RelationBox>
 				}
 			}
 		}
-		
+
 		mSelectedBox = relationBox;
 		mSelectedConnection = connection;
 		mSelectedItem = relationItem;
@@ -214,7 +214,7 @@ public class RelationEditorPane extends JPanel implements Iterable<RelationBox>
 
 			Dimension d = box.getPreferredSize();
 
-			d.width = Math.max(d.width, 80);
+			d.width = Math.max(d.width, Styles.MIN_WIDTH);
 
 			box.setBounds(new Rectangle(x, y, d.width, d.height));
 
@@ -276,55 +276,29 @@ public class RelationEditorPane extends JPanel implements Iterable<RelationBox>
 
 	protected Anchor[] findConnectionAnchors(Connection aConnection)
 	{
-		RelationItem from = aConnection.getFrom();
-		RelationItem to = aConnection.getTo();
+		RelationItem out = aConnection.getOut();
+		RelationItem in = aConnection.getIn();
 
-		RelationBox fromBox = getRelationBox(from);
-		RelationBox toBox = getRelationBox(to);
+		RelationBox outBox = getRelationBox(out);
+		RelationBox inBox = getRelationBox(in);
 
-		if (fromBox == null || toBox == null)
+		if (outBox == null || inBox == null)
 		{
 			return null;
 		}
 
-		Anchor[] anchorsFrom = fromBox.getConnectionAnchors(from);
-		Anchor[] anchorsTo = toBox.getConnectionAnchors(to);
+		Anchor[] anchorsOut = outBox.getConnectionAnchors(out);
+		Anchor[] anchorsIn = inBox.getConnectionAnchors(in);
 
-		if (anchorsFrom == null || anchorsTo == null)
+		if (anchorsOut == null || anchorsIn == null)
 		{
 			return null;
 		}
 
-		Anchor bestFrom = null;
-		Anchor bestTo = null;
-		double dist = Integer.MAX_VALUE;
+		Anchor bestOut = anchorsOut[0];
+		Anchor bestIn = anchorsIn[0];
 
-		for (Anchor fromAnchor : anchorsFrom)
-		{
-			for (Anchor toAnchor : anchorsTo)
-			{
-				Rectangle fromRect = fromAnchor.getBounds();
-				Rectangle toRect = toAnchor.getBounds();
-
-				double dx = fromRect.getCenterX() - toRect.getCenterX();
-				double dy = fromRect.getCenterY() - toRect.getCenterY();
-				double dsqr = dx * dx + dy * dy;
-
-				if (dsqr < dist)
-				{
-					dist = dsqr;
-					bestFrom = fromAnchor;
-					bestTo = toAnchor;
-				}
-			}
-		}
-
-		if (bestFrom != null)
-		{
-			return new Anchor[]{bestFrom, bestTo};
-		}
-
-		return null;
+		return new Anchor[]{bestOut, bestIn};
 	}
 
 

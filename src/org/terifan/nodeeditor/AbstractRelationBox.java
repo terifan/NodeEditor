@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
@@ -243,18 +244,18 @@ public abstract class AbstractRelationBox extends ResizablePanel implements Rela
 		Insets borderInsets = getBorder().getBorderInsets(this);
 		Rectangle bounds = getBounds();
 
-		if (isMinimized() || aRelationItem == null)
-		{
-			int titleHeight = getInsets().top;
-			int x0 = bounds.x;
-			int y0 = bounds.y;
-
-			return new Anchor[]
-			{
-				new Anchor(new Rectangle(x0                - 1, y0, 0, titleHeight), Anchor.LEFT),
-				new Anchor(new Rectangle(x0 + bounds.width + 1, y0, 0, titleHeight), Anchor.RIGHT)
-			};
-		}
+//		if (aRelationItem == null)
+//		{
+//			int titleHeight = borderInsets.top;
+//			int x0 = bounds.x;
+//			int y0 = bounds.y;
+//
+//			return new Anchor[]
+//			{
+//				new Anchor(new Rectangle(x0                - 1, y0, 0, titleHeight), Anchor.LEFT),
+//				new Anchor(new Rectangle(x0 + bounds.width + 1, y0, 0, titleHeight), Anchor.RIGHT)
+//			};
+//		}
 
 		int index = mRelationItems.indexOf(aRelationItem);
 
@@ -271,6 +272,49 @@ public abstract class AbstractRelationBox extends ResizablePanel implements Rela
 	{
 		return 0;
 //		return mContainerScrollPane.getVerticalScrollBar().getValue();
+	}
+
+
+	public List<Connection> getConnections(boolean aInConnections, boolean aOutConnections)
+	{
+		ArrayList<Connection> list = new ArrayList<>();
+		RelationEditorPane editor = RelationEditorPane.findEditor(this);
+
+		for (RelationItem item : mRelationItems)
+		{
+			for (Connection c : editor.getConnections())
+			{
+				if (aOutConnections && c.mOut == item)
+				{
+					list.add(c);
+				}
+				if (aInConnections && c.mIn == item)
+				{
+					list.add(c);
+				}
+			}
+		}
+
+		return list;
+	}
+
+
+	public boolean isConnected(Connection aConnection, Direction aDirection)
+	{
+		RelationEditorPane editor = RelationEditorPane.findEditor(this);
+
+		for (RelationItem item : mRelationItems)
+		{
+			for (Connection connection : editor.getConnections())
+			{
+				if ((aDirection == null || aDirection == Direction.OUT && connection.mOut == item) || (aDirection == null || aDirection == Direction.IN && connection.mIn == item))
+				{
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 
 

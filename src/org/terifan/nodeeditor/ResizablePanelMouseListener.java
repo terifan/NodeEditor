@@ -77,7 +77,7 @@ class ResizablePanelMouseListener extends MouseAdapter
 
 			mPanel.getParent().repaint();
 		}
-		else if (mDragged)
+		else if (mDragged && !mPanel.isMinimized())
 		{
 			Rectangle b = mPanel.getBounds();
 
@@ -174,7 +174,7 @@ class ResizablePanelMouseListener extends MouseAdapter
 
 		int lx = mPanel.isResizableHorizontal() ? 1 : 0;
 		int ly = mPanel.isResizableVertical() ? 1 : 0;
-		
+
 		return CURSORS[lx * (x < SX ? 1 : 0) + ly * (y < SY ? 2 : 0) + lx * (x >= mPanel.getWidth() - SX ? 4 : 0) + ly * (y >= mPanel.getHeight() - SY ? 8 : 0)];
 	}
 }

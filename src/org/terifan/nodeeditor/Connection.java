@@ -1,9 +1,39 @@
 package org.terifan.nodeeditor;
 
 
-public interface Connection
+public class Connection
 {
-	RelationItem getFrom();
+	protected RelationItem mOut;
+	protected RelationItem mIn;
 
-	RelationItem getTo();
+
+	public Connection(RelationItem aOut, RelationItem aIn)
+	{
+		mOut = aOut;
+		mIn = aIn;
+	}
+
+
+	public RelationItem getOut()
+	{
+		return mOut;
+	}
+
+
+	public void setOut(RelationItem aOut)
+	{
+		mOut = aOut;
+	}
+
+
+	public RelationItem getIn()
+	{
+		return mIn;
+	}
+
+
+	public void setIn(RelationItem aIn)
+	{
+		mIn = aIn;
+	}
 }

@@ -36,8 +36,8 @@ public class ResizablePanel extends JPanel
 		mTitle = aTitle;
 		mResizableVertical = true;
 		mResizableHorizontal = true;
-		mMinWidth = 80;
-		mMinHeight = 4 + Styles.TITLE_HEIGHT + 4;
+		mMinWidth = Styles.MIN_WIDTH;
+		mMinHeight = 4 + Styles.TITLE_HEIGHT;
 	}
 
 
@@ -95,7 +95,7 @@ public class ResizablePanel extends JPanel
 	public Dimension getPreferredSize()
 	{
 		Dimension s = super.getPreferredSize();
-		s.width = Math.max(s.width, 80);
+		s.width = Math.max(s.width, Styles.MIN_WIDTH);
 		return s;
 	}
 
@@ -104,7 +104,7 @@ public class ResizablePanel extends JPanel
 	public Dimension getMinimumSize()
 	{
 		Dimension s = super.getMinimumSize();
-		s.width = Math.max(s.width, 80);
+		s.width = Math.max(s.width, Styles.MIN_WIDTH);
 		return s;
 	}
 

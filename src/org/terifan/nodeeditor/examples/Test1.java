@@ -2,6 +2,7 @@ package org.terifan.nodeeditor.examples;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
+import org.terifan.nodeeditor.Direction;
 import org.terifan.ui.Utilities;
 import org.terifan.nodeeditor.RelationEditorPane;
 import org.terifan.nodeeditor.StackedRelationBox;
@@ -18,17 +19,17 @@ public class Test1
 
 			RelationEditorPane editor = new RelationEditorPane();
 
-			StackedRelationItem node0 = new StackedRelationItem("node0", 20, StackedRelationItem.Anchors.RIGHT);
-			StackedRelationItem node1 = new StackedRelationItem("node1", 20, StackedRelationItem.Anchors.RIGHT);
-			StackedRelationItem node2 = new StackedRelationItem("node2", 20, StackedRelationItem.Anchors.LEFT);
-			StackedRelationItem node3 = new StackedRelationItem("node3", 20, StackedRelationItem.Anchors.RIGHT);
-			StackedRelationItem node4 = new StackedRelationItem("node4", 20, StackedRelationItem.Anchors.LEFT);
-			StackedRelationItem node5 = new StackedRelationItem("node5", 20, StackedRelationItem.Anchors.LEFT);
-			StackedRelationItem node6 = new StackedRelationItem("node6", 20, StackedRelationItem.Anchors.RIGHT);
-			StackedRelationItem node7 = new StackedRelationItem("node7", 20, StackedRelationItem.Anchors.LEFT);
-			StackedRelationItem node8 = new StackedRelationItem("node8", 20, StackedRelationItem.Anchors.RIGHT);
-			StackedRelationItem node9 = new StackedRelationItem("node9", 20, StackedRelationItem.Anchors.RIGHT);
-			StackedRelationItem node10 = new ImageRelationItem("node10", 100, StackedRelationItem.Anchors.NONE);
+			StackedRelationItem node0 = new StackedRelationItem("node0", 20, Direction.OUT);
+			StackedRelationItem node1 = new StackedRelationItem("node1", 20, Direction.OUT);
+			StackedRelationItem node2 = new StackedRelationItem("node2", 20, Direction.IN);
+			StackedRelationItem node3 = new StackedRelationItem("node3", 20, Direction.OUT);
+			StackedRelationItem node4 = new StackedRelationItem("node4", 20, Direction.IN);
+			StackedRelationItem node5 = new StackedRelationItem("node5", 20, Direction.IN);
+			StackedRelationItem node6 = new StackedRelationItem("node6", 20, Direction.OUT);
+			StackedRelationItem node7 = new StackedRelationItem("node7", 20, Direction.IN);
+			StackedRelationItem node8 = new StackedRelationItem("node8", 20, Direction.OUT);
+			StackedRelationItem node9 = new StackedRelationItem("node9", 20, Direction.OUT);
+			StackedRelationItem node10 = new ImageRelationItem("node10", 100, null);
 			StackedRelationBox nodeBox0 = new StackedRelationBox("nodeBox0");
 			StackedRelationBox nodeBox1 = new StackedRelationBox("nodeBox1");
 			StackedRelationBox nodeBox2 = new StackedRelationBox("nodeBox2");

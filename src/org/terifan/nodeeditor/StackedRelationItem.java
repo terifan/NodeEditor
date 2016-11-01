@@ -11,32 +11,24 @@ import javax.swing.JLabel;
 
 public class StackedRelationItem extends AbstractRelationItem
 {
-	public enum Anchors
-	{
-		NONE,
-		LEFT,
-		RIGHT,
-		BOTH
-	}
-
-	private Anchors mAnchors;
+	private Direction mDirection;
 	private int mHeight;
 	private double mWeight;
 
 	protected JComponent mComponent;
 
 
-	public StackedRelationItem(String aText, int aHeight, Anchors aAnchors)
+	public StackedRelationItem(String aText, int aHeight, Direction aDirection)
 	{
-		this(aText, aHeight, aAnchors, 0);
+		this(aText, aHeight, aDirection, 0);
 	}
-	
-	
-	public StackedRelationItem(String aText, int aHeight, Anchors aAnchors, double aWeight)
+
+
+	public StackedRelationItem(String aText, int aHeight, Direction aDirection, double aWeight)
 	{
 		mComponent = new JLabel(aText);
 
-		mAnchors = aAnchors;
+		mDirection = aDirection;
 		mHeight = aHeight;
 		mWeight = aWeight;
 
@@ -111,15 +103,15 @@ public class StackedRelationItem extends AbstractRelationItem
 	}
 
 
-	public Anchors getAnchors()
+	public Direction getDirection()
 	{
-		return mAnchors;
+		return mDirection;
 	}
 
 
-	public void setAnchors(Anchors aAnchors)
+	public void setDirection(Direction aDirection)
 	{
-		this.mAnchors = aAnchors;
+		mDirection = aDirection;
 	}
 
 
@@ -131,7 +123,7 @@ public class StackedRelationItem extends AbstractRelationItem
 
 	public void setHeight(int aHeight)
 	{
-		this.mHeight = aHeight;
+		mHeight = aHeight;
 	}
 
 
@@ -143,6 +135,6 @@ public class StackedRelationItem extends AbstractRelationItem
 
 	public void setWeight(double aWeight)
 	{
-		this.mWeight = aWeight;
+		mWeight = aWeight;
 	}
 }

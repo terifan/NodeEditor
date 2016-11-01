@@ -10,6 +10,8 @@ import javax.swing.SwingUtilities;
 
 class RelationEditorPaneMouseListener extends MouseAdapter
 {
+	private static final int CLICK_MAX_DISTANCE_FROM_CONNECTOR = 50;
+
 	private static final Cursor MOVE_CURSOR = Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR);
 	private static final Cursor DEFAULT_CURSOR = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR);
 
@@ -28,14 +30,14 @@ class RelationEditorPaneMouseListener extends MouseAdapter
 	public void mousePressed(MouseEvent aEvent)
 	{
 		mRelationEditor.requestFocus();
-		
+
 		mLastLocation = aEvent.getPoint();
 
 		if (SwingUtilities.isMiddleMouseButton(aEvent))
 		{
 			mDragged = true;
 			SwingUtilities.invokeLater(()->mRelationEditor.setCursor(MOVE_CURSOR));
-			
+
 			return;
 		}
 
@@ -58,11 +60,11 @@ class RelationEditorPaneMouseListener extends MouseAdapter
 			}
 		}
 
-		if (dist > 10)
+		if (dist > CLICK_MAX_DISTANCE_FROM_CONNECTOR)
 		{
 			return;
 		}
-		
+
 		if (conn != null)
 		{
 			mRelationEditor.setSelectedComponent(conn, false);

@@ -7,8 +7,8 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import org.terifan.ui.Utilities;
 import org.terifan.nodeeditor.DefaultRelationItem;
-import org.terifan.nodeeditor.DefaultConnection;
 import org.terifan.nodeeditor.AreaRelationBox;
+import org.terifan.nodeeditor.Direction;
 import org.terifan.nodeeditor.ListRelationBox;
 import org.terifan.nodeeditor.RelationEditorPane;
 import org.terifan.nodeeditor.StackedRelationBox;
@@ -36,10 +36,10 @@ public class Test2
 			DefaultRelationItem itemI1 = new DefaultRelationItem("cat1");
 			DefaultRelationItem itemI2 = new DefaultRelationItem("cat2");
 			DefaultRelationItem itemI3 = new DefaultRelationItem("cat3");
-			StackedRelationItem itemJ1 = new StackedRelationItem("stacked1", 20, StackedRelationItem.Anchors.NONE);
-			StackedRelationItem itemJ2 = new StackedRelationItem("stacked2", 20, StackedRelationItem.Anchors.LEFT);
-			StackedRelationItem itemJ3 = new StackedRelationItem("stacked3", 100, StackedRelationItem.Anchors.LEFT, 1.0);
-			StackedRelationItem itemJ4 = new StackedRelationItem("stacked4", 20, StackedRelationItem.Anchors.RIGHT);
+			StackedRelationItem itemJ1 = new StackedRelationItem("stacked1", 20, null);
+			StackedRelationItem itemJ2 = new StackedRelationItem("stacked2", 20, Direction.IN);
+			StackedRelationItem itemJ3 = new StackedRelationItem("stacked3", 100, Direction.IN, 1.0);
+			StackedRelationItem itemJ4 = new StackedRelationItem("stacked4", 20, Direction.OUT);
 			DefaultRelationItem itemK1 = new DefaultRelationItem("k1");
 			DefaultRelationItem itemK2 = new DefaultRelationItem("k2");
 
@@ -104,7 +104,7 @@ public class Test2
 			editor.add(boxJ);
 			editor.add(boxG);
 
-			editor.addConnection(new DefaultConnection(itemA, itemC));
+			editor.addConnection(itemA, itemC);
 			editor.addConnection(itemB, itemF);
 			editor.addConnection(itemD, itemG);
 			editor.addConnection(itemE, itemH1);

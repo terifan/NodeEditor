@@ -6,24 +6,24 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import org.terifan.nodeeditor.Direction;
 import org.terifan.nodeeditor.RelationBox;
 import org.terifan.nodeeditor.RelationEditorPane;
 import org.terifan.nodeeditor.Styles;
 import org.terifan.nodeeditor.StackedRelationItem;
-import org.terifan.util.log.Log;
 
 
 public class ImageRelationItem extends StackedRelationItem
 {
-	public ImageRelationItem(String aText, int aHeight, Anchors aAnchors)
+	public ImageRelationItem(String aText, int aHeight, Direction aDirection)
 	{
-		super(aText, aHeight, aAnchors);
+		super(aText, aHeight, aDirection);
 	}
 
 
-	public ImageRelationItem(String aText, int aHeight, Anchors aAnchors, double aWeight)
+	public ImageRelationItem(String aText, int aHeight, Direction aDirection, double aWeight)
 	{
-		super(aText, aHeight, aAnchors, aWeight);
+		super(aText, aHeight, aDirection, aWeight);
 	}
 
 

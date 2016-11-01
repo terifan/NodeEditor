@@ -20,8 +20,8 @@ public class ResizablePanelBorder_Blender implements Border, ResizablePanelBorde
 	public final static int BUTTON_WIDTH = 16;
 
 	private ResizablePanel mPanel;
-	
-	
+
+
 	public ResizablePanelBorder_Blender(ResizablePanel aPanel)
 	{
 		mPanel = aPanel;
@@ -56,7 +56,7 @@ public class ResizablePanelBorder_Blender implements Border, ResizablePanelBorde
 		g.fillRoundRect(aX + 1, aY + 1, aWidth - 2, aHeight - 2, 18, 18);
 
 		int th = TITLE_HEIGHT;
-		boolean minimized = aHeight <= 4 + 4 + th;
+		boolean minimized = mPanel.isMinimized() || aHeight <= 4 + 4 + th;
 
 		if (!minimized)
 		{
@@ -64,7 +64,7 @@ public class ResizablePanelBorder_Blender implements Border, ResizablePanelBorde
 			g.fillRoundRect(aX + 1, aY + 1 + 3 + th, aWidth - 2, aHeight - 2 - 3 - th, 18, 18);
 			g.fillRect(aX + 1, aY + 1 + 3 + th, aWidth - 2, Math.min(8, aHeight - (1 + 3 + th + 5)));
 		}
-		
+
 		int inset = 4 + 4 + BUTTON_WIDTH;
 
 		new TextBox(panel.getTitle())
@@ -84,7 +84,7 @@ public class ResizablePanelBorder_Blender implements Border, ResizablePanelBorde
 		int h = 5;
 
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		if (minimized)
+		if (mPanel.isMinimized())
 		{
 			g.fillPolygon(new int[]{aX, aX + w, aX}, new int[]{aY - h, aY, aY + h}, 3);
 		}
@@ -95,8 +95,8 @@ public class ResizablePanelBorder_Blender implements Border, ResizablePanelBorde
 
 		drawAnchors(aComponent, g);
 	}
-	
-	
+
+
 	private void drawAnchors(Component aComponent, Graphics2D aGraphics)
 	{
 		ResizablePanel panel = (ResizablePanel)aComponent;
