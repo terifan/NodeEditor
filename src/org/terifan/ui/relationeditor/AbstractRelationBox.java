@@ -8,7 +8,6 @@ import java.awt.Insets;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 
 
@@ -18,7 +17,7 @@ public abstract class AbstractRelationBox extends ResizablePanel implements Rela
 	protected RelationItem mEditedItem;
 	protected Component mEditorComponent;
 	protected JPanel mContainer;
-	protected JScrollPane mContainerScrollPane;
+//	protected JScrollPane mContainerScrollPane;
 
 
 	public AbstractRelationBox(Rectangle aBounds, String aTitle)
@@ -31,18 +30,19 @@ public abstract class AbstractRelationBox extends ResizablePanel implements Rela
 		mContainer.setForeground(Styles.BOX_FOREGROUND_COLOR);
 		mContainer.setBackground(Styles.BOX_BACKGROUND_COLOR);
 
-		mContainerScrollPane = new JScrollPane(mContainer);
-		mContainerScrollPane.addMouseListener(new RelationBoxMouseListener(this));
-		mContainerScrollPane.setBorder(null);
+//		mContainerScrollPane = new JScrollPane(mContainer);
+//		mContainerScrollPane.addMouseListener(new RelationBoxMouseListener(this));
+//		mContainerScrollPane.setBorder(null);
+//
+//		mContainerScrollPane.getVerticalScrollBar().addAdjustmentListener(aEvent ->
+//		{
+//			RelationEditorPane editor = (RelationEditorPane)SwingUtilities.getAncestorOfClass(RelationEditorPane.class, AbstractRelationBox.this);
+//			editor.invalidate();
+//			editor.repaint();
+//		});
 
-		mContainerScrollPane.getVerticalScrollBar().addAdjustmentListener(aEvent ->
-		{
-			RelationEditorPane editor = (RelationEditorPane)SwingUtilities.getAncestorOfClass(RelationEditorPane.class, AbstractRelationBox.this);
-			editor.invalidate();
-			editor.repaint();
-		});
-
-		super.add(mContainerScrollPane);
+//		super.add(mContainerScrollPane);
+		super.add(mContainer);
 		super.setForeground(Styles.BOX_FOREGROUND_COLOR);
 		super.setBackground(Styles.BOX_BACKGROUND_COLOR);
 		super.setOpaque(false);
@@ -262,8 +262,15 @@ public abstract class AbstractRelationBox extends ResizablePanel implements Rela
 		{
 			return null;
 		}
-		
+
 		return getConnectionAnchorsImpl(index, aRelationItem, bounds, borderInsets);
+	}
+
+
+	protected int getVerticalScrollValue()
+	{
+		return 0;
+//		return mContainerScrollPane.getVerticalScrollBar().getValue();
 	}
 
 

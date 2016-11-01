@@ -6,11 +6,11 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
-import org.terifan.ui.relationeditor.DefaultRelationItem;
 import org.terifan.ui.relationeditor.RelationBox;
 import org.terifan.ui.relationeditor.RelationEditorPane;
 import org.terifan.ui.relationeditor.Styles;
 import org.terifan.ui.relationeditor.StackedRelationItem;
+import org.terifan.util.log.Log;
 
 
 public class ImageRelationItem extends StackedRelationItem
@@ -26,7 +26,7 @@ public class ImageRelationItem extends StackedRelationItem
 		super(aText, aHeight, aAnchors, aWeight);
 	}
 
-	
+
 	private JComponent mComponent = new JPanel()
 	{
 		@Override
@@ -34,8 +34,17 @@ public class ImageRelationItem extends StackedRelationItem
 		{
 			aGraphics.setColor(Styles.BOX_BACKGROUND_COLOR);
 			aGraphics.fillRect(0, 0, getWidth(), getHeight());
-			aGraphics.setColor(Color.red);
+
+			aGraphics.setColor(new Color(200,200,200));
 			aGraphics.fillRect(0, 0, 200, 200);
+			aGraphics.setColor(new Color(220,220,220));
+			for (int y = 0; y < 10; y++)
+			{
+				for (int x = (y&1); x < 10; x+=2)
+				{
+					aGraphics.fillRect(x*20, y*20, 20, 20);
+				}
+			}
 		}
 
 
