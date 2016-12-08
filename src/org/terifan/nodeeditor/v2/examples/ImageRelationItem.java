@@ -2,7 +2,6 @@ package org.terifan.nodeeditor.v2.examples;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import org.terifan.nodeeditor.v2.Direction;
 import org.terifan.nodeeditor.v2.Styles;
 import org.terifan.nodeeditor.v2.RelationItem;
@@ -12,13 +11,7 @@ public class ImageRelationItem extends RelationItem
 {
 	public ImageRelationItem(String aText, int aWidth, int aHeight, Direction aDirection)
 	{
-		super(aText, aWidth, aHeight, aDirection, 0);
-	}
-
-
-	public ImageRelationItem(String aText, int aWidth, int aHeight, Direction aDirection, double aWeight)
-	{
-		super(aText, aWidth, aHeight, aDirection, aWeight);
+		super(aText, aWidth, aHeight);
 	}
 
 

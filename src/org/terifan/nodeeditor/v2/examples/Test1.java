@@ -1,9 +1,9 @@
 package org.terifan.nodeeditor.v2.examples;
 
 import javax.swing.JFrame;
-import javax.swing.JScrollPane;
-import org.terifan.ui.Utilities;
+import org.terifan.nodeeditor.v2.Connector;
 import org.terifan.nodeeditor.v2.Direction;
+import org.terifan.ui.Utilities;
 import org.terifan.nodeeditor.v2.RelationEditorPane;
 import org.terifan.nodeeditor.v2.RelationBox;
 import org.terifan.nodeeditor.v2.RelationItem;
@@ -19,16 +19,16 @@ public class Test1
 
 			RelationEditorPane editor = new RelationEditorPane();
 
-			RelationItem node0 = new RelationItem("node0", Direction.OUT);
-			RelationItem node1 = new RelationItem("node1", Direction.OUT);
-			RelationItem node2 = new RelationItem("node2", Direction.IN);
-			RelationItem node3 = new RelationItem("node3", Direction.OUT);
-			RelationItem node4 = new RelationItem("node4", Direction.IN);
-			RelationItem node5 = new RelationItem("node5", Direction.IN);
-			RelationItem node6 = new RelationItem("node6", Direction.OUT);
-			RelationItem node7 = new RelationItem("node7", Direction.IN);
-			RelationItem node8 = new RelationItem("node8", Direction.OUT);
-			RelationItem node9 = new RelationItem("node9", Direction.OUT);
+			RelationItem node0 = new RelationItem("node0", new Connector(Direction.OUT));
+			RelationItem node1 = new RelationItem("node1", new Connector(Direction.OUT));
+			RelationItem node2 = new RelationItem("node2", new Connector(Direction.IN));
+			RelationItem node3 = new RelationItem("node3", new Connector(Direction.OUT));
+			RelationItem node4 = new RelationItem("node4", new Connector(Direction.IN));
+			RelationItem node5 = new RelationItem("node5", new Connector(Direction.IN));
+			RelationItem node6 = new RelationItem("node6", new Connector(Direction.OUT));
+			RelationItem node7 = new RelationItem("node7", new Connector(Direction.IN), new Connector(Direction.OUT));
+			RelationItem node8 = new RelationItem("node8", new Connector(Direction.OUT));
+			RelationItem node9 = new RelationItem("node9", new Connector(Direction.OUT, Connector.PURPLE));
 			RelationItem node10 = new ImageRelationItem("node10", 200, 200, null);
 			RelationBox nodeBox0 = new RelationBox("nodeBox0");
 			RelationBox nodeBox1 = new RelationBox("nodeBox1");
@@ -55,15 +55,18 @@ public class Test1
 			editor.addConnection(node3, node4);
 			editor.addConnection(node8, node5);
 			editor.addConnection(node6, node7);
+			editor.addConnection(node1, node7);
 
 			nodeBox0.setLocation(100, 50);
 			nodeBox1.setLocation(300, 100);
 			nodeBox2.setLocation(500, 150);
-			nodeBox3.setLocation(800, 350);
+			nodeBox3.setLocation(800, 170);
 			nodeBox4.setLocation(300, 200);
+			
+			editor.setNodeSelected(nodeBox2, true);
 
 			JFrame frame = new JFrame();
-			frame.add(new JScrollPane(editor));
+			frame.add(editor);
 			frame.setSize(1600, 1000);
 			frame.setLocationRelativeTo(null);
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
