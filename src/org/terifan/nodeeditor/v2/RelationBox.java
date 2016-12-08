@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import org.terifan.util.log.Log;
 
 
 public class RelationBox
@@ -16,19 +17,14 @@ public class RelationBox
 	public RelationBox(String aName)
 	{
 		mName = aName;
-		mBounds = new Rectangle();
 		mItems = new ArrayList<>();
+		mBounds = new Rectangle(0, 30);
 	}
 
 
 	public void addItem(RelationItem aItem)
 	{
 		mItems.add(aItem);
-
-		Dimension size = aItem.getBounds().getSize();
-
-		mBounds.width = Math.max(mBounds.width, size.width);
-		mBounds.height += size.height;
 	}
 
 
@@ -40,35 +36,52 @@ public class RelationBox
 
 	protected void paintComponent(Graphics2D aGraphics)
 	{
+		layout();
+
 		aGraphics.setColor(Styles.BOX_BACKGROUND_COLOR);
 		aGraphics.fill(mBounds);
 		aGraphics.setColor(Styles.BOX_BORDER_COLOR);
 		aGraphics.draw(mBounds);
-
-		int y = 20;
-		for (RelationItem item : mItems)
-		{
-			Rectangle bounds = item.getBounds();
-			bounds.setLocation(0, y);
-			y += bounds.height;
-		}
+		aGraphics.setColor(Styles.BOX_FOREGROUND_COLOR);
+		aGraphics.drawString(mName, mBounds.x, mBounds.y + 15);
 
 		for (RelationItem item : mItems)
 		{
-			aGraphics.translate(item.mBounds.x, item.mBounds.y);
-
 			item.paintComponent(aGraphics);
-
-			aGraphics.translate(-item.mBounds.x, -item.mBounds.y);
 		}
 	}
 
 
-	protected Dimension getPreferredSize()
+	protected void layout()
 	{
-		Dimension d = mBounds.getSize();
-		d.width += 10;
-		d.height += 30;
-		return d;
+		mBounds.width = 0;
+		mBounds.height = 25;
+
+		for (RelationItem item : mItems)
+		{
+			Dimension size = item.getPreferredSize();
+
+			mBounds.width = Math.max(mBounds.width, size.width + 10);
+			mBounds.height += size.height;
+		}
+
+		int y = 20;
+
+		for (RelationItem item : mItems)
+		{
+			Rectangle bounds = item.getBounds();
+			Dimension size = item.getPreferredSize();
+
+			bounds.setSize(mBounds.width-10, size.height);
+			bounds.setLocation(mBounds.x + 5, mBounds.y + y);
+
+			y += bounds.height;
+		}
+	}
+
+
+	protected Rectangle getBounds()
+	{
+		return mBounds;
 	}
 }

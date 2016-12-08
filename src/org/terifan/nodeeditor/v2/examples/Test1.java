@@ -19,17 +19,17 @@ public class Test1
 
 			RelationEditorPane editor = new RelationEditorPane();
 
-			RelationItem node0 = new RelationItem("node0", 20, Direction.OUT);
-			RelationItem node1 = new RelationItem("node1", 20, Direction.OUT);
-			RelationItem node2 = new RelationItem("node2", 20, Direction.IN);
-			RelationItem node3 = new RelationItem("node3", 20, Direction.OUT);
-			RelationItem node4 = new RelationItem("node4", 20, Direction.IN);
-			RelationItem node5 = new RelationItem("node5", 20, Direction.IN);
-			RelationItem node6 = new RelationItem("node6", 20, Direction.OUT);
-			RelationItem node7 = new RelationItem("node7", 20, Direction.IN);
-			RelationItem node8 = new RelationItem("node8", 20, Direction.OUT);
-			RelationItem node9 = new RelationItem("node9", 20, Direction.OUT);
-			RelationItem node10 = new ImageRelationItem("node10", 100, null);
+			RelationItem node0 = new RelationItem("node0", Direction.OUT);
+			RelationItem node1 = new RelationItem("node1", Direction.OUT);
+			RelationItem node2 = new RelationItem("node2", Direction.IN);
+			RelationItem node3 = new RelationItem("node3", Direction.OUT);
+			RelationItem node4 = new RelationItem("node4", Direction.IN);
+			RelationItem node5 = new RelationItem("node5", Direction.IN);
+			RelationItem node6 = new RelationItem("node6", Direction.OUT);
+			RelationItem node7 = new RelationItem("node7", Direction.IN);
+			RelationItem node8 = new RelationItem("node8", Direction.OUT);
+			RelationItem node9 = new RelationItem("node9", Direction.OUT);
+			RelationItem node10 = new ImageRelationItem("node10", 200, 200, null);
 			RelationBox nodeBox0 = new RelationBox("nodeBox0");
 			RelationBox nodeBox1 = new RelationBox("nodeBox1");
 			RelationBox nodeBox2 = new RelationBox("nodeBox2");
