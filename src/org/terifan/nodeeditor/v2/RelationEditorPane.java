@@ -235,13 +235,18 @@ public class RelationEditorPane extends JComponent
 
 
 		@Override
-		public void mouseReleased(MouseEvent aE)
+		public void mouseReleased(MouseEvent aEvent)
 		{
+			mClickPoint = new Point((int)(aEvent.getX() / mScale), (int)(aEvent.getY() / mScale));
+
 			if (mDragConnector != null)
 			{
 				Connector nearestConnector = findNearestConnector(mClickPoint);
 
-				addConnection(mDragConnector, nearestConnector);
+				if (nearestConnector != null)
+				{
+					addConnection(mDragConnector, nearestConnector);
+				}
 
 				mDragConnector = null;
 				mDragEndLocation = null;
@@ -253,11 +258,12 @@ public class RelationEditorPane extends JComponent
 		@Override
 		public void mouseDragged(MouseEvent aEvent)
 		{
-			Point clickPoint = new Point((int)(aEvent.getX() / mScale), (int)(aEvent.getY() / mScale));
+			Point oldPoint = mClickPoint;
+			mClickPoint = new Point((int)(aEvent.getX() / mScale), (int)(aEvent.getY() / mScale));
 
 			if (mDragConnector != null)
 			{
-				mDragEndLocation = clickPoint;
+				mDragEndLocation = mClickPoint;
 
 				Connector shadowConnector = findNearestConnector(mDragEndLocation);
 				if (shadowConnector != null)
@@ -270,13 +276,12 @@ public class RelationEditorPane extends JComponent
 				for (RelationBox box : mSelectedNodes)
 				{
 					Point pt = box.getBounds().getLocation();
-					pt.x += clickPoint.x - mClickPoint.x;
-					pt.y += clickPoint.y - mClickPoint.y;
+					pt.x += mClickPoint.x - oldPoint.x;
+					pt.y += mClickPoint.y - oldPoint.y;
 					box.setLocation(pt.x, pt.y);
 				}
 			}
 
-			mClickPoint = clickPoint;
 			repaint();
 		}
 
