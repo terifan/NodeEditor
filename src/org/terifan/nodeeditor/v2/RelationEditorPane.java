@@ -3,6 +3,7 @@ package org.terifan.nodeeditor.v2;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
@@ -30,9 +31,9 @@ public class RelationEditorPane extends JComponent
 		mNodes = new ArrayList<>();
 		mConnections = new ArrayList<>();
 		mSelectedNodes = new ArrayList<>();
-		
+
 		mScale = 1;
-		
+
 		super.addMouseMotionListener(mMouseListener);
 		super.addMouseListener(mMouseListener);
 		super.addMouseWheelListener(mMouseListener);
@@ -57,7 +58,7 @@ public class RelationEditorPane extends JComponent
 		{
 			if (anchor.getDirection() == Direction.IN) in = anchor;
 		}
-		
+
 		addConnection(out, in);
 	}
 
@@ -80,7 +81,7 @@ public class RelationEditorPane extends JComponent
 
 		for (RelationBox box : mNodes)
 		{
-			box.layout(mScale);
+			box.layout();
 		}
 
 		for (Connection connection : mConnections)
@@ -90,22 +91,28 @@ public class RelationEditorPane extends JComponent
 
 		AffineTransform affineTransform = new AffineTransform();
 		affineTransform.scale(mScale, mScale);
-		
+
 		for (RelationBox box : mNodes)
 		{
+			boolean selected = mSelectedNodes.contains(box);
 			Rectangle bounds = box.getBounds();
 
-			BufferedImage image = new BufferedImage(bounds.width, bounds.height, BufferedImage.TYPE_INT_ARGB);
+			BufferedImage image = new BufferedImage((int)(bounds.width * mScale), (int)(bounds.height * mScale), BufferedImage.TYPE_INT_ARGB);
 			Graphics2D ig = image.createGraphics();
-			
-			ig.setTransform(affineTransform);
 
+			ig.setTransform(affineTransform);
 			ig.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-			box.paintComponent(ig, mSelectedNodes.contains(box));
-			
+			box.paintBorder(ig, 0, 0, bounds.width, bounds.height, selected);
+
+			box.paintComponent(ig, selected);
+
+			ig.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+
+			box.paintAnchors(ig);
+
 			ig.dispose();
-			
+
 			g.drawImage(image, (int)(bounds.x * mScale), (int)(bounds.y * mScale), null);
 		}
 	}
@@ -127,7 +134,7 @@ public class RelationEditorPane extends JComponent
 		aGraphics.fillRect(0, 0, w, h);
 
 		int step = (int)(25 * mScale);
-		
+
 		aGraphics.setColor(Styles.PANE_GRID_COLOR_1);
 		for (int x = 0; x < w; x+=step)
 		{
@@ -159,21 +166,76 @@ public class RelationEditorPane extends JComponent
 		}
 	}
 
-	
+
 	private MouseAdapter mMouseListener = new MouseAdapter()
 	{
+		private Point mClickPoint;
+		private boolean mHitBox;
+
 		@Override
 		public void mousePressed(MouseEvent aEvent)
 		{
+			mClickPoint = new Point((int)(aEvent.getX() / mScale), (int)(aEvent.getY() / mScale));
+			RelationBox newSelection = null;
+
+			for (RelationBox box : mNodes)
+			{
+				if (box.getBounds().contains(mClickPoint))
+				{
+					mHitBox = true;
+
+					boolean b = mSelectedNodes.contains(box);
+					if (aEvent.isControlDown())
+					{
+						if (b)
+						{
+							mSelectedNodes.remove(box);
+						}
+						else
+						{
+							newSelection = box;
+						}
+					}
+					else if (!b)
+					{
+						mSelectedNodes.clear();
+						newSelection = box;
+					}
+				}
+			}
+
+			if (newSelection != null)
+			{
+				mSelectedNodes.add(newSelection);
+				mNodes.remove(newSelection);
+				mNodes.add(newSelection);
+			}
+
+			repaint();
 		}
 
 
 		@Override
 		public void mouseDragged(MouseEvent aEvent)
 		{
+			Point clickPoint = new Point((int)(aEvent.getX() / mScale), (int)(aEvent.getY() / mScale));
+
+			if (mHitBox)
+			{
+				for (RelationBox box : mSelectedNodes)
+				{
+					Point pt = box.getBounds().getLocation();
+					pt.x += clickPoint.x - mClickPoint.x;
+					pt.y += clickPoint.y - mClickPoint.y;
+					box.setLocation(pt.x, pt.y);
+				}
+			}
+
+			mClickPoint = clickPoint;
+			repaint();
 		}
-	
-		
+
+
 		@Override
 		public void mouseWheelMoved(MouseWheelEvent aEvent)
 		{

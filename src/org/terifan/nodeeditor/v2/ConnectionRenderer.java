@@ -4,7 +4,6 @@ import org.terifan.graphics.BSpline;
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
@@ -14,15 +13,14 @@ import org.terifan.math.vec2;
 
 public class ConnectionRenderer
 {
-	private final static BasicStroke STROKE_WIDE = new BasicStroke(3, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND);
-	private final static BasicStroke STROKE_THIN = new BasicStroke(2, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND);
-
-
 	public void render(Graphics2D aGraphics, Connection aConnection, boolean aSelected, double aScale)
 	{
 		BSpline spline = createSpline(aConnection, aConnection.mOut, aConnection.mIn);
 
 		Stroke old = aGraphics.getStroke();
+
+		BasicStroke STROKE_WIDE = new BasicStroke(3.0f * (float)aScale, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND);
+		BasicStroke STROKE_THIN = new BasicStroke(1.4f * (float)aScale, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND);
 
 		aGraphics.setStroke(STROKE_WIDE);
 		aGraphics.setColor(aSelected ? Styles.CONNECTOR_COLOR_DARK_SELECTED : Styles.CONNECTOR_COLOR_DARK);
@@ -39,7 +37,7 @@ public class ConnectionRenderer
 	private void drawSpline(Graphics2D aGraphics, BSpline aSpline, double aScale)
 	{
 		int segments = Math.max(20, (int)aSpline.getPoint(0).distance(aSpline.getPoint(1)) / 4);
-		
+
 		Path2D.Double path = new Path2D.Double(Path2D.WIND_EVEN_ODD, segments);
 
 		for (int i = 0; i < segments; i++)
@@ -54,7 +52,7 @@ public class ConnectionRenderer
 				path.lineTo(pt.x, pt.y);
 			}
 		}
-		
+
 		AffineTransform affineTransform = new AffineTransform();
 		affineTransform.scale(aScale, aScale);
 		path.transform(affineTransform);
@@ -94,10 +92,13 @@ public class ConnectionRenderer
 		Rectangle from = aFromAnchor.getBounds();
 		Rectangle to = aToAnchor.getBounds();
 
-		int x0 = (int)from.getCenterX() + aConnection.mOut.mRelationItem.mRelationBox.getBounds().x;
-		int y0 = (int)from.getCenterY() + aConnection.mOut.mRelationItem.mRelationBox.getBounds().y;
-		int x1 = (int)to.getCenterX() + aConnection.mIn.mRelationItem.mRelationBox.getBounds().x;
-		int y1 = (int)to.getCenterY() + aConnection.mIn.mRelationItem.mRelationBox.getBounds().y;
+		Rectangle b0 = aConnection.mOut.mRelationItem.mRelationBox.getBounds();
+		Rectangle b1 = aConnection.mIn.mRelationItem.mRelationBox.getBounds();
+
+		int x0 = (int)from.getCenterX() + b0.x;
+		int y0 = (int)from.getCenterY() + b0.y;
+		int x1 = (int)to.getCenterX() + b1.x;
+		int y1 = (int)to.getCenterY() + b1.y;
 		int d0 = -16;
 		int d1 = 16;
 

@@ -21,7 +21,6 @@ public class RelationBox
 	private Rectangle mBounds;
 	private ArrayList<RelationItem> mItems;
 	private boolean mMinimized;
-	private double mScale;
 
 
 	public RelationBox(String aName)
@@ -35,7 +34,7 @@ public class RelationBox
 	public void addItem(RelationItem aItem)
 	{
 		mItems.add(aItem);
-		
+
 		aItem.mRelationBox = this;
 	}
 
@@ -48,11 +47,6 @@ public class RelationBox
 
 	protected void paintComponent(Graphics2D aGraphics, boolean aSelected)
 	{
-//		paintBorder(aGraphics, 0, 0, (int)(mBounds.width/mScale), (int)(mBounds.height/mScale), aSelected);
-		paintBorder(aGraphics, 0, 0, mBounds.width, mBounds.height, aSelected);
-
-		paintAnchors(aGraphics);
-
 		for (RelationItem item : mItems)
 		{
 			item.paintComponent(aGraphics);
@@ -60,9 +54,8 @@ public class RelationBox
 	}
 
 
-	protected void layout(double aScale)
+	protected void layout()
 	{
-		mScale = aScale;
 		mBounds.width = 0;
 		mBounds.height = 0;
 
@@ -73,8 +66,8 @@ public class RelationBox
 			mBounds.width = Math.max(mBounds.width, size.width);
 			mBounds.height += size.height;
 		}
-		
-		mBounds.width += 20;
+
+		mBounds.width += 28;
 		mBounds.height += TITLE_HEIGHT + 6;
 
 		int y = TITLE_HEIGHT + 4;
@@ -84,8 +77,8 @@ public class RelationBox
 			Rectangle bounds = item.getBounds();
 			Dimension size = item.getPreferredSize();
 
-			bounds.setSize(mBounds.width - 20, size.height);
-			bounds.setLocation(10, y);
+			bounds.setSize(mBounds.width - 26, size.height);
+			bounds.setLocation(14, y);
 
 			y += bounds.height;
 		}
@@ -96,13 +89,15 @@ public class RelationBox
 
 			for (Connector anchor : item.mAnchors)
 			{
+				int by = bounds.y + Math.min(bounds.height, 20) / 2 - 5;
+
 				if (anchor.getDirection() == Direction.IN)
 				{
-					anchor.getBounds().setBounds(0, bounds.y, 10, 10);
+					anchor.getBounds().setBounds(1, by, 9, 9);
 				}
 				else
 				{
-					anchor.getBounds().setBounds(mBounds.width - 10, bounds.y, 10, 10);
+					anchor.getBounds().setBounds(mBounds.width - 10, by, 9, 9);
 				}
 			}
 		}
@@ -111,17 +106,17 @@ public class RelationBox
 
 	protected Rectangle getBounds()
 	{
-		return new Rectangle(mBounds.x, mBounds.y, (int)(mScale * mBounds.width), (int)(mScale * mBounds.height));
+		return new Rectangle(mBounds);
 	}
-	
-	
+
+
 	protected void paintAnchors(Graphics2D aGraphics)
 	{
 		for (RelationItem relationItem : mItems)
 		{
 			for (Connector anchor : relationItem.mAnchors)
 			{
-				Rectangle r = new Rectangle(anchor.getBounds());
+				Rectangle r = anchor.getBounds();
 				aGraphics.setColor(anchor.getColor());
 				aGraphics.fillOval(r.x, r.y, r.width, r.height);
 				aGraphics.setColor(Color.BLACK);
@@ -130,7 +125,7 @@ public class RelationBox
 		}
 	}
 
-	
+
 	protected void paintBorder(Graphics2D aGraphics, int aX, int aY, int aWidth, int aHeight, boolean aSelected)
 	{
 		aX += 4;
@@ -175,5 +170,8 @@ public class RelationBox
 		{
 			aGraphics.fillPolygon(new int[]{aX, aX + w, aX + w / 2}, new int[]{aY - h, aY - h, aY + h}, 3);
 		}
+
+//		aGraphics.setColor(Color.YELLOW);
+//		aGraphics.drawRect(0,0,mBounds.width-1,mBounds.height-1);
 	}
 }

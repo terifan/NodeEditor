@@ -1,5 +1,6 @@
 package org.terifan.nodeeditor.v2;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -28,7 +29,7 @@ public class RelationItem
 		mSize = new Dimension(aWidth, aHeight);
 		mBounds = new Rectangle();
 		mAnchors = aAnchors;
-		
+
 		for (Connector anchor : mAnchors)
 		{
 			anchor.mRelationItem = this;
