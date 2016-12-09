@@ -14,9 +14,21 @@ import org.terifan.math.vec2;
 
 public class ConnectionRenderer
 {
+	public void render(Graphics2D aGraphics, Point aFrom, Point aTo, double aScale, boolean aSelected)
+	{
+		render(aGraphics, createSpline(aFrom, aTo), aScale, aSelected);
+	}
+
+
 	public void render(Graphics2D aGraphics, Connection aConnection, double aScale, boolean aSelected)
 	{
-		Path2D.Double spline = drawSpline(createSpline(aConnection, aConnection.mOut, aConnection.mIn), aScale);
+		render(aGraphics, createSpline(aConnection), aScale, aSelected);
+	}
+
+
+	private void render(Graphics2D aGraphics, BSpline aSpline, double aScale, boolean aSelected)
+	{
+		Path2D.Double spline = drawSpline(aSpline, aScale);
 
 		Stroke old = aGraphics.getStroke();
 
@@ -64,7 +76,7 @@ public class ConnectionRenderer
 
 	public double distance(Connection aConnection, Point aPoint)
 	{
-		BSpline spline = createSpline(aConnection, aConnection.mOut, aConnection.mIn);
+		BSpline spline = createSpline(aConnection);
 		Point2D.Double prev = null;
 		vec2 p = vec2.as(aPoint.x, aPoint.y);
 		int segments = Math.max(20, (int)spline.getPoint(0).distance(spline.getPoint(1)) / 4);
@@ -88,10 +100,10 @@ public class ConnectionRenderer
 	}
 
 
-	protected BSpline createSpline(Connection aConnection, Connector aFromAnchor, Connector aToAnchor)
+	protected BSpline createSpline(Connection aConnection)
 	{
-		Rectangle from = aFromAnchor.getBounds();
-		Rectangle to = aToAnchor.getBounds();
+		Rectangle from = aConnection.mOut.getBounds();
+		Rectangle to = aConnection.mIn.getBounds();
 
 		Rectangle b0 = aConnection.mOut.mRelationItem.mRelationBox.getBounds();
 		Rectangle b1 = aConnection.mIn.mRelationItem.mRelationBox.getBounds();
@@ -103,6 +115,19 @@ public class ConnectionRenderer
 		int d0 = -16;
 		int d1 = 16;
 
-		return new BSpline(new double[]{x0, x0+d0, x1+d1, x1}, new double[]{y0, y0, y1, y1});
+		return new BSpline(new double[]{x0, x0 + d0, x1 + d1, x1}, new double[]{y0, y0, y1, y1});
+	}
+
+
+	protected BSpline createSpline(Point aFrom, Point aTo)
+	{
+		int x0 = aFrom.x;
+		int y0 = aFrom.y;
+		int x1 = aTo.x;
+		int y1 = aTo.y;
+		int d0 = -16;
+		int d1 = 16;
+
+		return new BSpline(new double[]{x0, x0 + d0, x1 + d1, x1}, new double[]{y0, y0, y1, y1});
 	}
 }

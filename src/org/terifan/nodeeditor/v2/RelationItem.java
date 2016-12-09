@@ -1,6 +1,5 @@
 package org.terifan.nodeeditor.v2;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -14,25 +13,25 @@ public class RelationItem
 	protected RelationBox mRelationBox;
 	protected final Rectangle mBounds;
 	protected final Dimension mSize;
-	protected final Connector[] mAnchors;
+	protected final Connector[] mConnectors;
 
 
-	public RelationItem(String aName, Connector... aAnchors)
+	public RelationItem(String aName, Connector... aConnectors)
 	{
-		this(aName, 100, 20, aAnchors);
+		this(aName, 100, 20, aConnectors);
 	}
 
 
-	public RelationItem(String aName, int aWidth, int aHeight, Connector... aAnchors)
+	public RelationItem(String aName, int aWidth, int aHeight, Connector... aConnectors)
 	{
 		mName = aName;
 		mSize = new Dimension(aWidth, aHeight);
 		mBounds = new Rectangle();
-		mAnchors = aAnchors;
+		mConnectors = aConnectors;
 
-		for (Connector anchor : mAnchors)
+		for (Connector connector : mConnectors)
 		{
-			anchor.mRelationItem = this;
+			connector.mRelationItem = this;
 		}
 	}
 

@@ -17,10 +17,10 @@ import static org.terifan.nodeeditor.v2.Styles.BOX_TITLE_TEXT_SHADOW_COLOR;
 
 public class RelationBox
 {
-	private String mName;
-	private Rectangle mBounds;
-	private ArrayList<RelationItem> mItems;
-	private boolean mMinimized;
+	protected String mName;
+	protected Rectangle mBounds;
+	protected ArrayList<RelationItem> mItems;
+	protected boolean mMinimized;
 
 
 	public RelationBox(String aName)
@@ -87,17 +87,17 @@ public class RelationBox
 		{
 			Rectangle bounds = item.getBounds();
 
-			for (Connector anchor : item.mAnchors)
+			for (Connector connector : item.mConnectors)
 			{
 				int by = bounds.y + Math.min(bounds.height, 20) / 2 - 5;
 
-				if (anchor.getDirection() == Direction.IN)
+				if (connector.getDirection() == Direction.IN)
 				{
-					anchor.getBounds().setBounds(1, by, 9, 9);
+					connector.getBounds().setBounds(1, by, 9, 9);
 				}
 				else
 				{
-					anchor.getBounds().setBounds(mBounds.width - 10, by, 9, 9);
+					connector.getBounds().setBounds(mBounds.width - 10, by, 9, 9);
 				}
 			}
 		}
@@ -110,14 +110,14 @@ public class RelationBox
 	}
 
 
-	protected void paintAnchors(Graphics2D aGraphics)
+	protected void paintConnectors(Graphics2D aGraphics)
 	{
 		for (RelationItem relationItem : mItems)
 		{
-			for (Connector anchor : relationItem.mAnchors)
+			for (Connector connector : relationItem.mConnectors)
 			{
-				Rectangle r = anchor.getBounds();
-				aGraphics.setColor(anchor.getColor());
+				Rectangle r = connector.getBounds();
+				aGraphics.setColor(connector.getColor());
 				aGraphics.fillOval(r.x, r.y, r.width, r.height);
 				aGraphics.setColor(Color.BLACK);
 				aGraphics.drawOval(r.x, r.y, r.width, r.height);

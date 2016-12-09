@@ -32,6 +32,7 @@ public class Test1
 			RelationItem node10 = new ImageRelationItem("node10", 200, 200, null);
 			RelationItem node11 = new RelationItem("node11", new Connector(Direction.IN, Connector.YELLOW));
 			RelationItem node12 = new RelationItem("node12", new Connector(Direction.IN, Connector.PURPLE));
+			RelationItem node13 = new RelationItem("node13", new Connector(Direction.IN, Connector.YELLOW));
 			RelationBox nodeBox0 = new RelationBox("nodeBox0");
 			RelationBox nodeBox1 = new RelationBox("nodeBox1");
 			RelationBox nodeBox2 = new RelationBox("nodeBox2");
@@ -47,6 +48,7 @@ public class Test1
 			nodeBox2.addItem(node10);
 			nodeBox2.addItem(node6);
 			nodeBox3.addItem(node7);
+			nodeBox4.addItem(node13);
 			nodeBox4.addItem(node8);
 			nodeBox4.addItem(node9);
 			nodeBox5.addItem(node11);

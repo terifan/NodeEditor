@@ -25,6 +25,9 @@ public class RelationEditorPane extends JComponent
 	private ArrayList<RelationBox> mSelectedNodes;
 	private Connection mSelectedConnection;
 	private double mScale;
+	private Point mDragStartLocation;
+	private Point mDragEndLocation;
+	private Connector mDragConnector;
 
 
 	public RelationEditorPane()
@@ -51,22 +54,35 @@ public class RelationEditorPane extends JComponent
 	{
 		Connector out = null;
 		Connector in = null;
-		for (Connector anchor : aFromItem.mAnchors)
+		for (Connector connector : aFromItem.mConnectors)
 		{
-			if (anchor.getDirection() == Direction.OUT) out = anchor;
+			if (connector.getDirection() == Direction.OUT)
+			{
+				out = connector;
+			}
 		}
-		for (Connector anchor : aToItem.mAnchors)
+		for (Connector connector : aToItem.mConnectors)
 		{
-			if (anchor.getDirection() == Direction.IN) in = anchor;
+			if (connector.getDirection() == Direction.IN)
+			{
+				in = connector;
+			}
 		}
 
 		addConnection(out, in);
 	}
 
 
-	public void addConnection(Connector aAnchorOut, Connector aAnchorIn)
+	public void addConnection(Connector aConnectorOut, Connector aConnectorIn)
 	{
-		mConnections.add(new Connection(aAnchorOut, aAnchorIn));
+		if (aConnectorIn.getDirection() == Direction.OUT && aConnectorOut.getDirection() == Direction.IN)
+		{
+			Connector tmp = aConnectorIn;
+			aConnectorIn = aConnectorOut;
+			aConnectorOut = tmp;
+		}
+
+		mConnections.add(new Connection(aConnectorOut, aConnectorIn));
 	}
 
 
@@ -85,9 +101,23 @@ public class RelationEditorPane extends JComponent
 			box.layout();
 		}
 
+		ConnectionRenderer connectionRenderer = new ConnectionRenderer();
+
 		for (Connection connection : mConnections)
 		{
-			new ConnectionRenderer().render(g, connection, mScale, mSelectedConnection == connection);
+			connectionRenderer.render(g, connection, mScale, mSelectedConnection == connection);
+		}
+
+		if (mDragEndLocation != null)
+		{
+			if (mDragConnector.getDirection() == Direction.IN)
+			{
+				connectionRenderer.render(g, mDragStartLocation, mDragEndLocation, mScale, false);
+			}
+			else
+			{
+				connectionRenderer.render(g, mDragEndLocation, mDragStartLocation, mScale, false);
+			}
 		}
 
 		AffineTransform affineTransform = new AffineTransform();
@@ -95,26 +125,34 @@ public class RelationEditorPane extends JComponent
 
 		for (RelationBox box : mNodes)
 		{
-			boolean selected = mSelectedNodes.contains(box);
 			Rectangle bounds = box.getBounds();
+			int x = (int)(bounds.x * mScale);
+			int y = (int)(bounds.y * mScale);
+			int width = (int)(bounds.width * mScale);
+			int height = (int)(bounds.height * mScale);
 
-			BufferedImage image = new BufferedImage((int)(bounds.width * mScale), (int)(bounds.height * mScale), BufferedImage.TYPE_INT_ARGB);
-			Graphics2D ig = image.createGraphics();
+			if (g.hitClip(x, y, width, height))
+			{
+				boolean selected = mSelectedNodes.contains(box);
 
-			ig.setTransform(affineTransform);
-			ig.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+				BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
-			box.paintBorder(ig, 0, 0, bounds.width, bounds.height, selected);
+				Graphics2D ig = image.createGraphics();
+				ig.setTransform(affineTransform);
+				ig.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-			box.paintComponent(ig, selected);
+				box.paintBorder(ig, 0, 0, bounds.width, bounds.height, selected);
 
-			ig.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+				box.paintComponent(ig, selected);
 
-			box.paintAnchors(ig);
+				ig.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
-			ig.dispose();
+				box.paintConnectors(ig);
 
-			g.drawImage(image, (int)(bounds.x * mScale), (int)(bounds.y * mScale), null);
+				ig.dispose();
+
+				g.drawImage(image, x, y, null);
+			}
 		}
 	}
 
@@ -173,12 +211,42 @@ public class RelationEditorPane extends JComponent
 		private Point mClickPoint;
 		private boolean mHitBox;
 
+
 		@Override
 		public void mousePressed(MouseEvent aEvent)
 		{
 			mClickPoint = new Point((int)(aEvent.getX() / mScale), (int)(aEvent.getY() / mScale));
 
-			updateSelections(aEvent);
+			mDragConnector = findNearestConnector(mClickPoint);
+
+			if (mDragConnector != null)
+			{
+				mDragStartLocation = new Point(mDragConnector.mRelationItem.mRelationBox.getBounds().x + (int)mDragConnector.getBounds().getCenterX(), mDragConnector.mRelationItem.mRelationBox.getBounds().y + (int)mDragConnector.getBounds().getCenterY());
+				mDragEndLocation = null;
+			}
+			else
+			{
+				mDragStartLocation = null;
+				mDragEndLocation = null;
+
+				updateSelections(aEvent);
+			}
+		}
+
+
+		@Override
+		public void mouseReleased(MouseEvent aE)
+		{
+			if (mDragConnector != null)
+			{
+				Connector nearestConnector = findNearestConnector(mClickPoint);
+
+				addConnection(mDragConnector, nearestConnector);
+
+				mDragConnector = null;
+				mDragEndLocation = null;
+				repaint();
+			}
 		}
 
 
@@ -187,7 +255,17 @@ public class RelationEditorPane extends JComponent
 		{
 			Point clickPoint = new Point((int)(aEvent.getX() / mScale), (int)(aEvent.getY() / mScale));
 
-			if (mHitBox)
+			if (mDragConnector != null)
+			{
+				mDragEndLocation = clickPoint;
+
+				Connector shadowConnector = findNearestConnector(mDragEndLocation);
+				if (shadowConnector != null)
+				{
+					mDragEndLocation = new Point(shadowConnector.mRelationItem.mRelationBox.getBounds().x + (int)shadowConnector.getBounds().getCenterX(), shadowConnector.mRelationItem.mRelationBox.getBounds().y + (int)shadowConnector.getBounds().getCenterY());
+				}
+			}
+			else if (mHitBox)
 			{
 				for (RelationBox box : mSelectedNodes)
 				{
@@ -209,6 +287,36 @@ public class RelationEditorPane extends JComponent
 			mScale = Math.max(0.1, Math.min(100, mScale * (aEvent.getWheelRotation() == -1 ? 0.9 : 1.1)));
 
 			repaint();
+		}
+
+
+		private Connector findNearestConnector(Point aPoint)
+		{
+			Connector nearest = null;
+			double dist = 25; //Double.MAX_VALUE;
+
+			for (RelationBox box : mNodes)
+			{
+				int x = aPoint.x - box.getBounds().x;
+				int y = aPoint.y - box.getBounds().y;
+
+				for (RelationItem item : box.mItems)
+				{
+					for (Connector c : item.mConnectors)
+					{
+						double dx = x - c.getBounds().getCenterX();
+						double dy = y - c.getBounds().getCenterY();
+						double d = Math.sqrt(dx * dx + dy * dy);
+						if (d < dist)
+						{
+							nearest = c;
+							dist = d;
+						}
+					}
+				}
+			}
+
+			return nearest;
 		}
 
 
