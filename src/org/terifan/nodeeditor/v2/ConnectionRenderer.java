@@ -3,6 +3,7 @@ package org.terifan.nodeeditor.v2;
 import org.terifan.graphics.BSpline;
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Stroke;
 import java.awt.geom.AffineTransform;
@@ -13,9 +14,9 @@ import org.terifan.math.vec2;
 
 public class ConnectionRenderer
 {
-	public void render(Graphics2D aGraphics, Connection aConnection, boolean aSelected, double aScale)
+	public void render(Graphics2D aGraphics, Connection aConnection, double aScale, boolean aSelected)
 	{
-		BSpline spline = createSpline(aConnection, aConnection.mOut, aConnection.mIn);
+		Path2D.Double spline = drawSpline(createSpline(aConnection, aConnection.mOut, aConnection.mIn), aScale);
 
 		Stroke old = aGraphics.getStroke();
 
@@ -24,17 +25,17 @@ public class ConnectionRenderer
 
 		aGraphics.setStroke(STROKE_WIDE);
 		aGraphics.setColor(aSelected ? Styles.CONNECTOR_COLOR_DARK_SELECTED : Styles.CONNECTOR_COLOR_DARK);
-		drawSpline(aGraphics, spline, aScale);
+		aGraphics.draw(spline);
 
 		aGraphics.setStroke(STROKE_THIN);
 		aGraphics.setColor(aSelected ? Styles.CONNECTOR_COLOR_BRIGHT_SELECTED : Styles.CONNECTOR_COLOR_BRIGHT);
-		drawSpline(aGraphics, spline, aScale);
+		aGraphics.draw(spline);
 
 		aGraphics.setStroke(old);
 	}
 
 
-	private void drawSpline(Graphics2D aGraphics, BSpline aSpline, double aScale)
+	private Path2D.Double drawSpline(BSpline aSpline, double aScale)
 	{
 		int segments = Math.max(20, (int)aSpline.getPoint(0).distance(aSpline.getPoint(1)) / 4);
 
@@ -57,15 +58,15 @@ public class ConnectionRenderer
 		affineTransform.scale(aScale, aScale);
 		path.transform(affineTransform);
 
-		aGraphics.draw(path);
+		return path;
 	}
 
 
-	public double distance(Connection aConnection, Connector aFromAnchor, Connector aToAnchor, int aX, int aY)
+	public double distance(Connection aConnection, Point aPoint)
 	{
-		BSpline spline = createSpline(aConnection, aFromAnchor, aToAnchor);
+		BSpline spline = createSpline(aConnection, aConnection.mOut, aConnection.mIn);
 		Point2D.Double prev = null;
-		vec2 p = vec2.as(aX, aY);
+		vec2 p = vec2.as(aPoint.x, aPoint.y);
 		int segments = Math.max(20, (int)spline.getPoint(0).distance(spline.getPoint(1)) / 4);
 		double dist = Double.MAX_VALUE;
 

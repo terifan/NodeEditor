@@ -23,6 +23,7 @@ public class RelationEditorPane extends JComponent
 	private ArrayList<RelationBox> mNodes;
 	private ArrayList<Connection> mConnections;
 	private ArrayList<RelationBox> mSelectedNodes;
+	private Connection mSelectedConnection;
 	private double mScale;
 
 
@@ -86,7 +87,7 @@ public class RelationEditorPane extends JComponent
 
 		for (Connection connection : mConnections)
 		{
-			new ConnectionRenderer().render(g, connection, false, mScale);
+			new ConnectionRenderer().render(g, connection, mScale, mSelectedConnection == connection);
 		}
 
 		AffineTransform affineTransform = new AffineTransform();
@@ -176,42 +177,8 @@ public class RelationEditorPane extends JComponent
 		public void mousePressed(MouseEvent aEvent)
 		{
 			mClickPoint = new Point((int)(aEvent.getX() / mScale), (int)(aEvent.getY() / mScale));
-			RelationBox newSelection = null;
 
-			for (RelationBox box : mNodes)
-			{
-				if (box.getBounds().contains(mClickPoint))
-				{
-					mHitBox = true;
-
-					boolean b = mSelectedNodes.contains(box);
-					if (aEvent.isControlDown())
-					{
-						if (b)
-						{
-							mSelectedNodes.remove(box);
-						}
-						else
-						{
-							newSelection = box;
-						}
-					}
-					else if (!b)
-					{
-						mSelectedNodes.clear();
-						newSelection = box;
-					}
-				}
-			}
-
-			if (newSelection != null)
-			{
-				mSelectedNodes.add(newSelection);
-				mNodes.remove(newSelection);
-				mNodes.add(newSelection);
-			}
-
-			repaint();
+			updateSelections(aEvent);
 		}
 
 
@@ -240,6 +207,72 @@ public class RelationEditorPane extends JComponent
 		public void mouseWheelMoved(MouseWheelEvent aEvent)
 		{
 			mScale = Math.max(0.1, Math.min(100, mScale * (aEvent.getWheelRotation() == -1 ? 0.9 : 1.1)));
+
+			repaint();
+		}
+
+
+		private void updateSelections(MouseEvent aEvent)
+		{
+			RelationBox newSelection = null;
+			RelationBox clickedBox = null;
+
+			for (RelationBox box : mNodes)
+			{
+				if (box.getBounds().contains(mClickPoint))
+				{
+					mHitBox = true;
+					clickedBox = box;
+
+					boolean b = mSelectedNodes.contains(box);
+					if (aEvent.isControlDown())
+					{
+						if (b)
+						{
+							mSelectedNodes.remove(box);
+						}
+						else
+						{
+							newSelection = box;
+						}
+					}
+					else if (!b)
+					{
+						mSelectedNodes.clear();
+						newSelection = box;
+					}
+				}
+			}
+
+			if (newSelection != null)
+			{
+				mSelectedNodes.add(newSelection);
+			}
+			if (clickedBox != null)
+			{
+				mNodes.remove(clickedBox);
+				mNodes.add(clickedBox);
+				mSelectedConnection = null;
+			}
+			else
+			{
+				double dist = 50;
+				Connection nearest = null;
+				for (Connection c : mConnections)
+				{
+					double d = new ConnectionRenderer().distance(c, mClickPoint);
+					if (d < dist)
+					{
+						dist = d;
+						nearest = c;
+					}
+				}
+				if (nearest != null)
+				{
+					mSelectedConnection = nearest;
+					mSelectedNodes.clear();
+				}
+			}
 
 			repaint();
 		}
