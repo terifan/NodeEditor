@@ -25,5 +25,8 @@ public class Styles
 	public final static Color PANE_BACKGROUND_COLOR = new Color(58, 58, 58);
 	public final static Color PANE_GRID_COLOR_1 = new Color(47, 47, 47);
 	public final static Color PANE_GRID_COLOR_2 = new Color(41, 41, 41);
+	public final static Color PANE_GRID_COLOR_3 = new Color(0, 0, 0);
+	public final static Color PANE_SELECTION_RECTANGLE_LINE = new Color(255, 255, 255);
+	public final static Color PANE_SELECTION_RECTANGLE_BACKGROUND = new Color(255, 255, 255, 15);
 	public final static int MIN_WIDTH = 80;
 }

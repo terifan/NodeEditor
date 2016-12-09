@@ -1,5 +1,7 @@
 package org.terifan.nodeeditor.v2;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -13,6 +15,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import javax.swing.JComponent;
+import javax.swing.SwingUtilities;
 import org.terifan.util.log.Log;
 
 
@@ -28,6 +31,8 @@ public class RelationEditorPane extends JComponent
 	private Point mDragStartLocation;
 	private Point mDragEndLocation;
 	private Connector mDragConnector;
+	private Rectangle mSelectionRectangle;
+	private Point mPaneScroll;
 
 
 	public RelationEditorPane()
@@ -89,10 +94,23 @@ public class RelationEditorPane extends JComponent
 	@Override
 	protected void paintComponent(Graphics aGraphics)
 	{
+		if (mPaneScroll == null)
+		{
+//			mPaneScroll = new Point(getWidth() / 2, getHeight() / 2);
+			mPaneScroll = new Point();
+		}
+
 		Graphics2D g = (Graphics2D)aGraphics;
 
 		drawPaneBackground(g);
 
+		g.translate(mPaneScroll.x, mPaneScroll.y);
+		
+		AffineTransform oldTransform = g.getTransform();
+
+		AffineTransform affineTransform = new AffineTransform();
+		affineTransform.scale(mScale, mScale);
+		
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
@@ -120,9 +138,6 @@ public class RelationEditorPane extends JComponent
 			}
 		}
 
-		AffineTransform affineTransform = new AffineTransform();
-		affineTransform.scale(mScale, mScale);
-
 		for (RelationBox box : mNodes)
 		{
 			Rectangle bounds = box.getBounds();
@@ -141,11 +156,11 @@ public class RelationEditorPane extends JComponent
 				ig.setTransform(affineTransform);
 				ig.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
+				ig.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+
 				box.paintBorder(ig, 0, 0, bounds.width, bounds.height, selected);
 
 				box.paintComponent(ig, selected);
-
-				ig.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
 				box.paintConnectors(ig);
 
@@ -153,6 +168,18 @@ public class RelationEditorPane extends JComponent
 
 				g.drawImage(image, x, y, null);
 			}
+		}
+
+		g.setTransform(oldTransform);
+		g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_NORMALIZE);
+
+		if (mSelectionRectangle != null)
+		{
+			g.setColor(Styles.PANE_SELECTION_RECTANGLE_BACKGROUND);
+			g.fillRect(mSelectionRectangle.x, mSelectionRectangle.y, mSelectionRectangle.width + 1, mSelectionRectangle.height + 1);
+			g.setColor(Styles.PANE_SELECTION_RECTANGLE_LINE);
+			g.setStroke(new BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{3}, 0));
+			g.draw(mSelectionRectangle);
 		}
 	}
 
@@ -172,64 +199,84 @@ public class RelationEditorPane extends JComponent
 		aGraphics.setColor(Styles.PANE_BACKGROUND_COLOR);
 		aGraphics.fillRect(0, 0, w, h);
 
-		int step = (int)(25 * mScale);
+		int step = (int)(24 * mScale);
 
 		aGraphics.setColor(Styles.PANE_GRID_COLOR_1);
-		for (int x = 0; x < w; x+=step)
+		for (int x = mPaneScroll.x % step; x < w; x+=step)
 		{
 			aGraphics.drawLine(x, 0, x, h);
 		}
-		for (int y = 0; y < h; y+=step)
+		for (int y = mPaneScroll.y % step; y < h; y+=step)
 		{
 			aGraphics.drawLine(0, y, w, y);
 		}
 
 		aGraphics.setColor(Styles.PANE_GRID_COLOR_2);
-		for (int x = 0; x < w; x+=5*step)
+		for (int x = mPaneScroll.x % (5*step); x < w; x+=5*step)
 		{
 			aGraphics.drawLine(x, 0, x, h);
 		}
-		for (int y = 0; y < h; y+=5*step)
+		for (int y = mPaneScroll.y % (5*step); y < h; y+=5*step)
 		{
 			aGraphics.drawLine(0, y, w, y);
 		}
+
+		int w2 = mPaneScroll.x;
+		int h2 = mPaneScroll.y;
+		aGraphics.setColor(Styles.PANE_GRID_COLOR_3);
+		aGraphics.drawLine(0, h2, w, h2);
+		aGraphics.drawLine(w2, 0, w2, h);
 	}
 
 
-	public void setNodeSelected(RelationBox aNode, boolean aState)
-	{
-		mSelectedNodes.remove(aNode);
-		if (aState)
-		{
-			mSelectedNodes.add(aNode);
-		}
-	}
+//	public void setNodeSelected(RelationBox aNode, boolean aState)
+//	{
+//		mSelectedNodes.remove(aNode);
+//		if (aState)
+//		{
+//			mSelectedNodes.add(aNode);
+//		}
+//	}
 
 
 	private MouseAdapter mMouseListener = new MouseAdapter()
 	{
 		private Point mClickPoint;
 		private boolean mHitBox;
+		private Point mDragPoint;
 
 
 		@Override
 		public void mousePressed(MouseEvent aEvent)
 		{
-			mClickPoint = new Point((int)(aEvent.getX() / mScale), (int)(aEvent.getY() / mScale));
+			mDragPoint = aEvent.getPoint();
+			mClickPoint = calcMousePoint(aEvent);
+
+			for (RelationBox box : mNodes)
+			{
+				Rectangle b = box.getBounds();
+				if (b.contains(mClickPoint) && new Rectangle(b.x + 11, b.y + 7, 14, 16).contains(mClickPoint))
+				{
+					box.mMinimized ^= true;
+					updateSelections(aEvent);
+					return;
+				}
+			}
 
 			mDragConnector = findNearestConnector(mClickPoint);
 
 			if (mDragConnector != null)
 			{
-				mDragStartLocation = new Point(mDragConnector.mRelationItem.mRelationBox.getBounds().x + (int)mDragConnector.getBounds().getCenterX(), mDragConnector.mRelationItem.mRelationBox.getBounds().y + (int)mDragConnector.getBounds().getCenterY());
-				mDragEndLocation = null;
+				mDragStartLocation = mDragConnector.getConnectorPoint();
 			}
-			else
+			else if (SwingUtilities.isLeftMouseButton(aEvent))
 			{
-				mDragStartLocation = null;
-				mDragEndLocation = null;
-
 				updateSelections(aEvent);
+
+				if (!mHitBox && mDragConnector == null)
+				{
+					mSelectionRectangle = new Rectangle(mClickPoint);
+				}
 			}
 		}
 
@@ -237,7 +284,7 @@ public class RelationEditorPane extends JComponent
 		@Override
 		public void mouseReleased(MouseEvent aEvent)
 		{
-			mClickPoint = new Point((int)(aEvent.getX() / mScale), (int)(aEvent.getY() / mScale));
+			mClickPoint = calcMousePoint(aEvent);
 
 			if (mDragConnector != null)
 			{
@@ -249,36 +296,59 @@ public class RelationEditorPane extends JComponent
 				}
 
 				mDragConnector = null;
+				mDragStartLocation = null;
 				mDragEndLocation = null;
-				repaint();
 			}
+
+			mSelectionRectangle = null;
+			repaint();
 		}
 
 
 		@Override
 		public void mouseDragged(MouseEvent aEvent)
 		{
-			Point oldPoint = mClickPoint;
-			mClickPoint = new Point((int)(aEvent.getX() / mScale), (int)(aEvent.getY() / mScale));
+			Point newPoint = calcMousePoint(aEvent);
 
-			if (mDragConnector != null)
+			if (mSelectionRectangle != null)
 			{
-				mDragEndLocation = mClickPoint;
+				int x0 = (int)(Math.min(mClickPoint.x, newPoint.x) * mScale);
+				int y0 = (int)(Math.min(mClickPoint.y, newPoint.y) * mScale);
+				int x1 = (int)(Math.max(mClickPoint.x, newPoint.x) * mScale);
+				int y1 = (int)(Math.max(mClickPoint.y, newPoint.y) * mScale);
 
-				Connector shadowConnector = findNearestConnector(mDragEndLocation);
-				if (shadowConnector != null)
-				{
-					mDragEndLocation = new Point(shadowConnector.mRelationItem.mRelationBox.getBounds().x + (int)shadowConnector.getBounds().getCenterX(), shadowConnector.mRelationItem.mRelationBox.getBounds().y + (int)shadowConnector.getBounds().getCenterY());
-				}
+				mSelectionRectangle.setBounds(x0, y0, x1-x0, y1-y0);
 			}
-			else if (mHitBox)
+			else
 			{
-				for (RelationBox box : mSelectedNodes)
+				Point oldPoint = mClickPoint;
+				mClickPoint = newPoint;
+
+				if (SwingUtilities.isMiddleMouseButton(aEvent))
 				{
-					Point pt = box.getBounds().getLocation();
-					pt.x += mClickPoint.x - oldPoint.x;
-					pt.y += mClickPoint.y - oldPoint.y;
-					box.setLocation(pt.x, pt.y);
+					mPaneScroll.x += (aEvent.getX() - mDragPoint.x);
+					mPaneScroll.y += (aEvent.getY() - mDragPoint.y);
+					mDragPoint = aEvent.getPoint();
+				}
+				else if (mDragConnector != null)
+				{
+					mDragEndLocation = mClickPoint;
+
+					Connector connector = findNearestConnector(mDragEndLocation);
+					if (connector != null)
+					{
+						mDragEndLocation = connector.getConnectorPoint();
+					}
+				}
+				else if (mHitBox || SwingUtilities.isRightMouseButton(aEvent))
+				{
+					for (RelationBox box : mSelectedNodes)
+					{
+						Point pt = box.getBounds().getLocation();
+						pt.x += mClickPoint.x - oldPoint.x;
+						pt.y += mClickPoint.y - oldPoint.y;
+						box.setLocation(pt.x, pt.y);
+					}
 				}
 			}
 
@@ -289,7 +359,25 @@ public class RelationEditorPane extends JComponent
 		@Override
 		public void mouseWheelMoved(MouseWheelEvent aEvent)
 		{
-			mScale = Math.max(0.1, Math.min(100, mScale * (aEvent.getWheelRotation() == -1 ? 0.9 : 1.1)));
+			mPaneScroll.x -= aEvent.getX();
+			mPaneScroll.y -= aEvent.getY();
+
+			double d = 1.1;
+			if (aEvent.getWheelRotation() == 1)
+			{
+				mScale *= d;
+				mPaneScroll.x *= d;
+				mPaneScroll.y *= d;
+			}
+			else
+			{
+				mScale /= d;
+				mPaneScroll.x /= d;
+				mPaneScroll.y /= d;
+			}
+			
+			mPaneScroll.x += aEvent.getX();
+			mPaneScroll.y += aEvent.getY();
 
 			repaint();
 		}
@@ -298,10 +386,15 @@ public class RelationEditorPane extends JComponent
 		private Connector findNearestConnector(Point aPoint)
 		{
 			Connector nearest = null;
-			double dist = 25; //Double.MAX_VALUE;
+			double dist = 25;
 
 			for (RelationBox box : mNodes)
 			{
+				if (mDragConnector != null && mDragConnector.mRelationItem.mRelationBox == box)
+				{
+					continue;
+				}
+				
 				int x = aPoint.x - box.getBounds().x;
 				int y = aPoint.y - box.getBounds().y;
 
@@ -329,12 +422,11 @@ public class RelationEditorPane extends JComponent
 		{
 			RelationBox newSelection = null;
 			RelationBox clickedBox = null;
-
+			
 			for (RelationBox box : mNodes)
 			{
 				if (box.getBounds().contains(mClickPoint))
 				{
-					mHitBox = true;
 					clickedBox = box;
 
 					boolean b = mSelectedNodes.contains(box);
@@ -357,11 +449,13 @@ public class RelationEditorPane extends JComponent
 				}
 			}
 
+			mHitBox = clickedBox != null;
+			
 			if (newSelection != null)
 			{
 				mSelectedNodes.add(newSelection);
 			}
-			if (clickedBox != null)
+			if (mHitBox)
 			{
 				mNodes.remove(clickedBox);
 				mNodes.add(clickedBox);
@@ -390,4 +484,10 @@ public class RelationEditorPane extends JComponent
 			repaint();
 		}
 	};
+
+
+	private Point calcMousePoint(MouseEvent aEvent)
+	{
+		return new Point((int)((aEvent.getX() - mPaneScroll.x) / mScale), (int)((aEvent.getY() - mPaneScroll.y) / mScale));
+	}
 }

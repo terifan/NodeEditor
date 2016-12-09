@@ -33,6 +33,11 @@ public class Test1
 			RelationItem node11 = new RelationItem("node11", new Connector(Direction.IN, Connector.YELLOW));
 			RelationItem node12 = new RelationItem("node12", new Connector(Direction.IN, Connector.PURPLE));
 			RelationItem node13 = new RelationItem("node13", new Connector(Direction.IN, Connector.YELLOW));
+			RelationItem node14 = new RelationItem("node14", new Connector(Direction.IN, Connector.GRAY));
+			RelationItem node15 = new RelationItem("node15", new Connector(Direction.IN, Connector.GRAY));
+			RelationItem node16 = new RelationItem("node16", new Connector(Direction.IN, Connector.GRAY));
+			RelationItem node17 = new RelationItem("node17", new Connector(Direction.IN, Connector.GRAY));
+			RelationItem node18 = new RelationItem("node18", new Connector(Direction.IN, Connector.GRAY));
 			RelationBox nodeBox0 = new RelationBox("nodeBox0");
 			RelationBox nodeBox1 = new RelationBox("nodeBox1");
 			RelationBox nodeBox2 = new RelationBox("nodeBox2");
@@ -51,8 +56,13 @@ public class Test1
 			nodeBox4.addItem(node13);
 			nodeBox4.addItem(node8);
 			nodeBox4.addItem(node9);
+			nodeBox4.addItem(node15);
+			nodeBox4.addItem(node16);
+			nodeBox4.addItem(node17);
+			nodeBox4.addItem(node18);
 			nodeBox5.addItem(node11);
 			nodeBox5.addItem(node12);
+			nodeBox5.addItem(node14);
 			editor.add(nodeBox0);
 			editor.add(nodeBox1);
 			editor.add(nodeBox2);
@@ -73,8 +83,6 @@ public class Test1
 			nodeBox3.setLocation(800, 170);
 			nodeBox4.setLocation(300, 200);
 			nodeBox5.setLocation(1000, 200);
-
-			editor.setNodeSelected(nodeBox2, true);
 
 			JFrame frame = new JFrame();
 			frame.add(editor);

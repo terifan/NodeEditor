@@ -1,6 +1,7 @@
 package org.terifan.nodeeditor.v2;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.Rectangle;
 
 
@@ -45,5 +46,13 @@ public class Connector
 	public Rectangle getBounds()
 	{
 		return mBounds;
+	}
+
+
+	Point getConnectorPoint()
+	{
+		Rectangle bounds = mRelationItem.mRelationBox.getBounds();
+
+		return new Point(bounds.x + (int)mBounds.getCenterX(), bounds.y + (int)mBounds.getCenterY());
 	}
 }
