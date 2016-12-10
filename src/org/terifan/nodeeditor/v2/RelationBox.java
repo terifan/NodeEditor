@@ -14,10 +14,10 @@ import static org.terifan.nodeeditor.v2.Styles.*;
 
 public class RelationBox
 {
-	protected String mName;
 	protected Rectangle mBounds;
-	protected ArrayList<RelationItem> mItems;
 	protected boolean mMinimized;
+	protected String mName;
+	protected ArrayList<RelationItem> mItems;
 
 
 	public RelationBox(String aName)
@@ -25,6 +25,18 @@ public class RelationBox
 		mName = aName;
 		mItems = new ArrayList<>();
 		mBounds = new Rectangle(0, 30);
+	}
+
+
+	public boolean isMinimized()
+	{
+		return mMinimized;
+	}
+
+
+	public void setMinimized(boolean aMinimized)
+	{
+		mMinimized = aMinimized;
 	}
 
 
@@ -39,6 +51,12 @@ public class RelationBox
 	public void setLocation(int aX, int aY)
 	{
 		mBounds.setLocation(aX, aY);
+	}
+
+
+	protected ArrayList<RelationItem> getItems()
+	{
+		return mItems;
 	}
 
 
@@ -77,7 +95,6 @@ public class RelationBox
 				mBounds.height += size.height;
 			}
 
-//			mBounds.width += 28;
 			mBounds.width += 5 + 9 + 5 + 9;
 			mBounds.height += TITLE_HEIGHT_PADDED;
 		}

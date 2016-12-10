@@ -112,7 +112,7 @@ public class NodeEditorPane extends JComponent
 		for (RelationBox box : mNodes)
 		{
 			box.layout();
-			bounds.add(box.mBounds);
+			bounds.add(box.getBounds());
 		}
 		
 		int dx = -(int)bounds.getCenterX();
@@ -120,7 +120,7 @@ public class NodeEditorPane extends JComponent
 
 		for (RelationBox box : mNodes)
 		{
-			box.mBounds.translate(dx, dy);
+			box.getBounds().translate(dx, dy);
 		}
 
 		mPaneScroll = null; // will be centered when pane is repainted
@@ -238,7 +238,7 @@ public class NodeEditorPane extends JComponent
 		for (RelationBox box : mNodes)
 		{
 			box.layout();
-			bounds.add(box.mBounds);
+			bounds.add(box.getBounds());
 		}
 
 		return bounds.getSize();
@@ -311,7 +311,7 @@ public class NodeEditorPane extends JComponent
 				Rectangle b = box.getBounds();
 				if (b.contains(mClickPoint) && new Rectangle(b.x + 11, b.y + 7, 14, 16).contains(mClickPoint))
 				{
-					box.mMinimized ^= true;
+					box.setMinimized(!box.isMinimized());
 					updateSelections(aEvent);
 					return;
 				}
@@ -474,7 +474,7 @@ public class NodeEditorPane extends JComponent
 				int x = aPoint.x - box.getBounds().x;
 				int y = aPoint.y - box.getBounds().y;
 
-				for (RelationItem item : box.mItems)
+				for (RelationItem item : box.getItems())
 				{
 					for (Connector c : item.mConnectors)
 					{
