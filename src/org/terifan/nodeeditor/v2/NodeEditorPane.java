@@ -1,7 +1,6 @@
 package org.terifan.nodeeditor.v2;
 
 import java.awt.BasicStroke;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -16,13 +15,14 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
-import org.terifan.util.log.Log;
 
 
-public class RelationEditorPane extends JComponent
+public class NodeEditorPane extends JComponent
 {
 	private static final long serialVersionUID = 1L;
 
+	private static final BasicStroke SELECTION_RECTANGLE_STROKE = new BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{3}, 0);
+	
 	private ArrayList<RelationBox> mNodes;
 	private ArrayList<Connection> mConnections;
 	private ArrayList<RelationBox> mSelectedNodes;
@@ -33,19 +33,31 @@ public class RelationEditorPane extends JComponent
 	private Connector mDragConnector;
 	private Rectangle mSelectionRectangle;
 	private Point mPaneScroll;
+	private boolean mConnectorSelectionAllowed;
 
 
-	public RelationEditorPane()
+	public NodeEditorPane()
 	{
 		mNodes = new ArrayList<>();
 		mConnections = new ArrayList<>();
 		mSelectedNodes = new ArrayList<>();
-
 		mScale = 1;
 
 		super.addMouseMotionListener(mMouseListener);
 		super.addMouseListener(mMouseListener);
 		super.addMouseWheelListener(mMouseListener);
+	}
+
+
+	public boolean isConnectorSelectionAllowed()
+	{
+		return mConnectorSelectionAllowed;
+	}
+
+
+	public void setConnectorSelectionAllowed(boolean aConnectorSelectionAllowed)
+	{
+		mConnectorSelectionAllowed = aConnectorSelectionAllowed;
 	}
 
 
@@ -89,6 +101,30 @@ public class RelationEditorPane extends JComponent
 
 		mConnections.add(new Connection(aConnectorOut, aConnectorIn));
 	}
+	
+	
+	/**
+	 * Move all nodes to the center of the screen
+	 */
+	public void center()
+	{
+		Rectangle bounds = new Rectangle(mNodes.get(0).getBounds());
+		for (RelationBox box : mNodes)
+		{
+			box.layout();
+			bounds.add(box.mBounds);
+		}
+		
+		int dx = -(int)bounds.getCenterX();
+		int dy = -(int)bounds.getCenterY();
+
+		for (RelationBox box : mNodes)
+		{
+			box.mBounds.translate(dx, dy);
+		}
+
+		mPaneScroll = null; // will be centered when pane is repainted
+	}
 
 
 	@Override
@@ -96,21 +132,15 @@ public class RelationEditorPane extends JComponent
 	{
 		if (mPaneScroll == null)
 		{
-//			mPaneScroll = new Point(getWidth() / 2, getHeight() / 2);
-			mPaneScroll = new Point();
+			mPaneScroll = new Point(getWidth() / 2, getHeight() / 2);
 		}
 
 		Graphics2D g = (Graphics2D)aGraphics;
+		AffineTransform oldTransform = g.getTransform();
 
 		drawPaneBackground(g);
 
 		g.translate(mPaneScroll.x, mPaneScroll.y);
-		
-		AffineTransform oldTransform = g.getTransform();
-
-		AffineTransform affineTransform = new AffineTransform();
-		affineTransform.scale(mScale, mScale);
-		
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
@@ -119,25 +149,23 @@ public class RelationEditorPane extends JComponent
 			box.layout();
 		}
 
-		ConnectionRenderer connectionRenderer = new ConnectionRenderer();
-
 		for (Connection connection : mConnections)
 		{
-			connectionRenderer.render(g, connection, mScale, mSelectedConnection == connection);
+			SplineRenderer.drawSpline(g, connection, mScale, mSelectedConnection == connection);
 		}
 
 		if (mDragEndLocation != null)
 		{
 			if (mDragConnector.getDirection() == Direction.IN)
 			{
-				connectionRenderer.render(g, mDragStartLocation, mDragEndLocation, mScale, false);
+				SplineRenderer.drawSpline(g, mDragStartLocation, mDragEndLocation, mScale, false);
 			}
 			else
 			{
-				connectionRenderer.render(g, mDragEndLocation, mDragStartLocation, mScale, false);
+				SplineRenderer.drawSpline(g, mDragEndLocation, mDragStartLocation, mScale, false);
 			}
 		}
-
+		
 		for (RelationBox box : mNodes)
 		{
 			Rectangle bounds = box.getBounds();
@@ -150,27 +178,44 @@ public class RelationEditorPane extends JComponent
 			{
 				boolean selected = mSelectedNodes.contains(box);
 
-				BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+				boolean offscreen = false;
 
-				Graphics2D ig = image.createGraphics();
+				Graphics2D ig;
+				AffineTransform affineTransform;
+				BufferedImage offscreenBuffer = null;
+
+				if (offscreen)
+				{
+					offscreenBuffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+					ig = offscreenBuffer.createGraphics();
+					affineTransform = new AffineTransform();
+					affineTransform.scale(mScale, mScale);
+				}
+				else
+				{
+					ig = (Graphics2D)g.create(x, y, width, height);
+					affineTransform = new AffineTransform();
+					affineTransform.translate(mPaneScroll.x + x, mPaneScroll.y + y);
+					affineTransform.scale(mScale, mScale);
+				}
+
 				ig.setTransform(affineTransform);
 				ig.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
 				ig.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
 				box.paintBorder(ig, 0, 0, bounds.width, bounds.height, selected);
-
 				box.paintComponent(ig, selected);
-
 				box.paintConnectors(ig);
 
 				ig.dispose();
 
-				g.drawImage(image, x, y, null);
+				if (offscreen)
+				{
+					g.drawImage(offscreenBuffer, x, y, null);
+				}
 			}
 		}
 
-		g.setTransform(oldTransform);
 		g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_NORMALIZE);
 
 		if (mSelectionRectangle != null)
@@ -178,16 +223,25 @@ public class RelationEditorPane extends JComponent
 			g.setColor(Styles.PANE_SELECTION_RECTANGLE_BACKGROUND);
 			g.fillRect(mSelectionRectangle.x, mSelectionRectangle.y, mSelectionRectangle.width + 1, mSelectionRectangle.height + 1);
 			g.setColor(Styles.PANE_SELECTION_RECTANGLE_LINE);
-			g.setStroke(new BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{3}, 0));
+			g.setStroke(SELECTION_RECTANGLE_STROKE);
 			g.draw(mSelectionRectangle);
 		}
+
+		g.setTransform(oldTransform);
 	}
 
 
 	@Override
 	public Dimension getPreferredSize()
 	{
-		return new Dimension(100,100);
+		Rectangle bounds = new Rectangle(mNodes.get(0).getBounds());
+		for (RelationBox box : mNodes)
+		{
+			box.layout();
+			bounds.add(box.mBounds);
+		}
+
+		return bounds.getSize();
 	}
 
 
@@ -299,8 +353,29 @@ public class RelationEditorPane extends JComponent
 				mDragStartLocation = null;
 				mDragEndLocation = null;
 			}
+			if (mSelectionRectangle != null)
+			{
+				if (!aEvent.isControlDown())
+				{
+					mSelectedNodes.clear();
+				}
+				for (RelationBox box : mNodes)
+				{
+					if (mSelectionRectangle.intersects(box.getBounds()))
+					{
+						if (!mSelectedNodes.contains(box))
+						{
+							mSelectedNodes.add(box);
+						}
+						else if (aEvent.isControlDown())
+						{
+							mSelectedNodes.remove(box);
+						}
+					}
+				}
+				mSelectionRectangle = null;
+			}
 
-			mSelectionRectangle = null;
 			repaint();
 		}
 
@@ -387,6 +462,7 @@ public class RelationEditorPane extends JComponent
 		{
 			Connector nearest = null;
 			double dist = 25;
+			boolean hitBox = false;
 
 			for (RelationBox box : mNodes)
 			{
@@ -407,11 +483,17 @@ public class RelationEditorPane extends JComponent
 						double d = Math.sqrt(dx * dx + dy * dy);
 						if (d < dist)
 						{
+							hitBox = box.getBounds().contains(aPoint);
 							nearest = c;
 							dist = d;
 						}
 					}
 				}
+			}
+
+			if (hitBox && nearest != null && dist > 8)
+			{
+				nearest = null;
 			}
 
 			return nearest;
@@ -427,24 +509,30 @@ public class RelationEditorPane extends JComponent
 			{
 				if (box.getBounds().contains(mClickPoint))
 				{
-					clickedBox = box;
+					Rectangle shrunkBounds = new Rectangle(box.getBounds());
+					shrunkBounds.grow(-5, -4);
 
-					boolean b = mSelectedNodes.contains(box);
-					if (aEvent.isControlDown())
+					if (shrunkBounds.contains(mClickPoint))
 					{
-						if (b)
+						clickedBox = box;
+
+						boolean b = mSelectedNodes.contains(box);
+						if (aEvent.isControlDown())
 						{
-							mSelectedNodes.remove(box);
+							if (b)
+							{
+								mSelectedNodes.remove(box);
+							}
+							else
+							{
+								newSelection = box;
+							}
 						}
-						else
+						else if (!b)
 						{
+							mSelectedNodes.clear();
 							newSelection = box;
 						}
-					}
-					else if (!b)
-					{
-						mSelectedNodes.clear();
-						newSelection = box;
 					}
 				}
 			}
@@ -455,19 +543,20 @@ public class RelationEditorPane extends JComponent
 			{
 				mSelectedNodes.add(newSelection);
 			}
+
 			if (mHitBox)
 			{
 				mNodes.remove(clickedBox);
 				mNodes.add(clickedBox);
 				mSelectedConnection = null;
 			}
-			else
+			else if (mConnectorSelectionAllowed)
 			{
 				double dist = 50;
 				Connection nearest = null;
 				for (Connection c : mConnections)
 				{
-					double d = new ConnectionRenderer().distance(c, mClickPoint);
+					double d = SplineRenderer.distance(c, mClickPoint);
 					if (d < dist)
 					{
 						dist = d;

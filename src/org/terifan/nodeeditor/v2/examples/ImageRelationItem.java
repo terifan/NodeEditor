@@ -2,16 +2,16 @@ package org.terifan.nodeeditor.v2.examples;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import org.terifan.nodeeditor.v2.Direction;
+import org.terifan.nodeeditor.v2.Connector;
 import org.terifan.nodeeditor.v2.Styles;
 import org.terifan.nodeeditor.v2.RelationItem;
 
 
 public class ImageRelationItem extends RelationItem
 {
-	public ImageRelationItem(String aText, int aWidth, int aHeight, Direction aDirection)
+	public ImageRelationItem(String aText, int aWidth, int aHeight, Connector... aConnectors)
 	{
-		super(aText, aWidth, aHeight);
+		super(aText, aWidth, aHeight, aConnectors);
 	}
 
 

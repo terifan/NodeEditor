@@ -53,6 +53,6 @@ public class Connector
 	{
 		Rectangle bounds = mRelationItem.mRelationBox.getBounds();
 
-		return new Point(bounds.x + (int)mBounds.getCenterX(), bounds.y + (int)mBounds.getCenterY());
+		return new Point(bounds.x + mBounds.x + mBounds.width / 2, bounds.y + mBounds.y + mBounds.height / 2);
 	}
 }

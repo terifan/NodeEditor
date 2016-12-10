@@ -5,15 +5,11 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.Shape;
 import java.util.ArrayList;
-import static org.terifan.nodeeditor.ResizablePanelBorder_Blender.BUTTON_WIDTH;
-import static org.terifan.nodeeditor.v2.Styles.BOX_BORDER_COLOR;
-import static org.terifan.nodeeditor.v2.Styles.BOX_BORDER_SELECTED_COLOR;
-import static org.terifan.nodeeditor.v2.Styles.BOX_BORDER_TITLE_COLOR;
-import static org.terifan.nodeeditor.v2.Styles.TITLE_HEIGHT;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.TextBox;
-import static org.terifan.nodeeditor.v2.Styles.BOX_TITLE_TEXT_SHADOW_COLOR;
+import static org.terifan.nodeeditor.v2.Styles.*;
 
 
 public class RelationBox
@@ -60,11 +56,19 @@ public class RelationBox
 
 	protected void layout()
 	{
-		mBounds.width = 0;
-		mBounds.height = 0;
-
+		computeBounds();
+		layoutItems();
+		layoutConnectors();
+	}
+	
+	
+	protected void computeBounds()
+	{
 		if (!mMinimized)
 		{
+			mBounds.width = 0;
+			mBounds.height = 0;
+
 			for (RelationItem item : mItems)
 			{
 				Dimension size = item.getPreferredSize();
@@ -72,48 +76,63 @@ public class RelationBox
 				mBounds.width = Math.max(mBounds.width, size.width);
 				mBounds.height += size.height;
 			}
+
+//			mBounds.width += 28;
+			mBounds.width += 5 + 9 + 5 + 9;
+			mBounds.height += TITLE_HEIGHT_PADDED;
 		}
 		else
 		{
-			mBounds.width += 100;
+			mBounds.width = 100;
+			mBounds.height = TITLE_HEIGHT;
 		}
 
-		mBounds.width += 28;
-		mBounds.height += TITLE_HEIGHT + 6 + 2 * 4;
+		mBounds.height += 6 + 2 * 4;
+	}
 
-		int y = TITLE_HEIGHT + 4 + 4;
-
+	
+	protected void layoutItems()
+	{
 		if (!mMinimized)
 		{
+			int y = TITLE_HEIGHT_PADDED + 4 + 4;
+
 			for (RelationItem item : mItems)
 			{
 				Rectangle bounds = item.getBounds();
 				Dimension size = item.getPreferredSize();
 
-				bounds.setSize(mBounds.width - 26, size.height);
-				bounds.setLocation(14, y);
+				bounds.setSize(mBounds.width - (5 + 9 + 5 + 9), size.height);
+				bounds.setLocation(5 + 9, y);
 
 				y += bounds.height;
 			}
 		}
-
+	}
+	
+	
+	protected void layoutConnectors()
+	{
 		if (!mMinimized)
 		{
 			for (RelationItem item : mItems)
 			{
 				Rectangle bounds = item.getBounds();
 
+				int by0 = bounds.y + Math.min(bounds.height, TITLE_HEIGHT_PADDED + 4) / 2 - 5;
+				int by1 = by0;
+
 				for (Connector connector : item.mConnectors)
 				{
-					int by = bounds.y + Math.min(bounds.height, 20) / 2 - 5;
-
 					if (connector.getDirection() == Direction.IN)
 					{
-						connector.getBounds().setBounds(1, by, 9, 9);
+						connector.getBounds().setBounds(1, by0, 9, 9);
+						by0 += 15;
 					}
 					else
 					{
-						connector.getBounds().setBounds(mBounds.width - 10, by, 9, 9);
+						connector.getBounds().setBounds(mBounds.width - (1 + 9), by1, 9, 9);
+						by1 += 15;
 					}
 				}
 			}
@@ -154,7 +173,7 @@ public class RelationBox
 					else
 					{
 						Point pt = x(c1, n1);
-						connector.getBounds().setBounds(mBounds.width - 10 - 4 + pt.x, pt.y, 9, 9);
+						connector.getBounds().setBounds(mBounds.width - (1 + 9) - 4 + pt.x, pt.y, 9, 9);
 						c1++;
 					}
 				}
@@ -168,7 +187,7 @@ public class RelationBox
 		n--;
 		double r = n == 0 ? 0 : 2 * Math.PI * (-0.075 * Math.min(3, n) + Math.min(3, n) * 0.15 * c / (double)n);
 		double x = 5 * Math.cos(r);
-		double y = 4+9 + (n == 0 ? 0 : Math.min(n * 9, 26) * ((c / (double)n - 0.5)));
+		double y = 4 + 9 + (n == 0 ? 0 : Math.min(n * 9, TITLE_HEIGHT + 4) * ((c / (double)n - 0.5)));
 
 		return new Point((int)x, (int)y);
 	}
@@ -176,7 +195,7 @@ public class RelationBox
 
 	protected Rectangle getBounds()
 	{
-		return new Rectangle(mBounds);
+		return mBounds;
 	}
 
 
@@ -198,22 +217,34 @@ public class RelationBox
 
 	protected void paintBorder(Graphics2D aGraphics, int aX, int aY, int aWidth, int aHeight, boolean aSelected)
 	{
-		aX += 4;
+		aX += 5;
 		aY += 4;
-		aWidth -= 8;
+		aWidth -= 10;
 		aHeight -= 8;
 
-		aGraphics.setColor(BOX_BORDER_TITLE_COLOR);
-		aGraphics.fillRoundRect(aX + 1, aY + 1, aWidth - 2, aHeight - 2, 18, 18);
-
-		int th = TITLE_HEIGHT;
-		boolean minimized = mMinimized || aHeight <= 4 + 4 + th;
-
-		if (!minimized)
+		boolean minimized = mMinimized || aHeight <= 4 + 4 + TITLE_HEIGHT;
+		int th = minimized ? TITLE_HEIGHT : TITLE_HEIGHT_PADDED;
+		
+		if (minimized)
 		{
-			aGraphics.setColor(Styles.BOX_BACKGROUND_COLOR);
-			aGraphics.fillRoundRect(aX + 1, aY + 1 + 3 + th, aWidth - 2, aHeight - 2 - 3 - th, 18, 18);
-//			aGraphics.fillRect(aX + 1, aY + 1 + 3 + th, aWidth - 2, Math.min(8, aHeight - (1 + 3 + th + 5)));
+			aGraphics.setColor(BOX_BORDER_TITLE_COLOR);
+			aGraphics.fillRoundRect(aX, aY, aWidth, aHeight, BORDE_RADIUS, BORDE_RADIUS);
+		}
+		else
+		{
+			Shape c = aGraphics.getClip();
+
+			aGraphics.setColor(BOX_BORDER_TITLE_COLOR);
+			aGraphics.clipRect(aX, aY, aWidth, th);
+			aGraphics.fillRoundRect(aX, aY, aWidth, th + 3 + 12, BORDE_RADIUS, BORDE_RADIUS);
+
+			aGraphics.setClip(c);
+
+			aGraphics.setColor(BOX_BACKGROUND_COLOR);
+			aGraphics.clipRect(aX, aY + th, aWidth, aHeight - th);
+			aGraphics.fillRoundRect(aX, aY, aWidth, aHeight, BORDE_RADIUS, BORDE_RADIUS);
+
+			aGraphics.setClip(c);
 		}
 
 		int inset = 6 + 4 + BUTTON_WIDTH;
@@ -221,16 +252,16 @@ public class RelationBox
 		new TextBox(mName)
 			.setShadow(BOX_TITLE_TEXT_SHADOW_COLOR)
 			.setAnchor(Anchor.WEST)
-			.setBounds(aX + inset, aY + 3, aWidth - inset - 4, th)
-			.setForeground(Styles.BOX_FOREGROUND_COLOR)
+			.setBounds(aX + inset, aY + 3, aWidth - inset - 4, TITLE_HEIGHT)
+			.setForeground(BOX_FOREGROUND_COLOR)
 			.setMaxLineCount(1)
 			.render(aGraphics);
 
 		aGraphics.setColor(aSelected ? BOX_BORDER_SELECTED_COLOR : BOX_BORDER_COLOR);
-		aGraphics.drawRoundRect(aX, aY, aWidth - 1, aHeight - 1, 18, 18);
+		aGraphics.drawRoundRect(aX, aY, aWidth, aHeight, BORDE_RADIUS, BORDE_RADIUS);
 
 		aX += 10;
-		aY += 4 + th / 2;
+		aY += 3 + th / 2;
 		int w = 10;
 		int h = 5;
 

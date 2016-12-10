@@ -4,7 +4,7 @@ import javax.swing.JFrame;
 import org.terifan.nodeeditor.v2.Connector;
 import org.terifan.nodeeditor.v2.Direction;
 import org.terifan.ui.Utilities;
-import org.terifan.nodeeditor.v2.RelationEditorPane;
+import org.terifan.nodeeditor.v2.NodeEditorPane;
 import org.terifan.nodeeditor.v2.RelationBox;
 import org.terifan.nodeeditor.v2.RelationItem;
 
@@ -17,7 +17,7 @@ public class Test1
 		{
 			Utilities.setSystemLookAndFeel();
 
-			RelationEditorPane editor = new RelationEditorPane();
+			NodeEditorPane editor = new NodeEditorPane();
 
 			RelationItem node0 = new RelationItem("node0", new Connector(Direction.OUT));
 			RelationItem node1 = new RelationItem("node1", new Connector(Direction.OUT));
@@ -29,7 +29,7 @@ public class Test1
 			RelationItem node7 = new RelationItem("node7", new Connector(Direction.IN), new Connector(Direction.OUT));
 			RelationItem node8 = new RelationItem("node8", new Connector(Direction.OUT));
 			RelationItem node9 = new RelationItem("node9", new Connector(Direction.OUT, Connector.PURPLE));
-			RelationItem node10 = new ImageRelationItem("node10", 200, 200, null);
+			RelationItem node10 = new ImageRelationItem("node10", 200, 200, new Connector(Direction.OUT, Connector.PURPLE), new Connector(Direction.OUT, Connector.PURPLE), new Connector(Direction.OUT, Connector.PURPLE));
 			RelationItem node11 = new RelationItem("node11", new Connector(Direction.IN, Connector.YELLOW));
 			RelationItem node12 = new RelationItem("node12", new Connector(Direction.IN, Connector.PURPLE));
 			RelationItem node13 = new RelationItem("node13", new Connector(Direction.IN, Connector.YELLOW));
@@ -83,6 +83,7 @@ public class Test1
 			nodeBox3.setLocation(800, 170);
 			nodeBox4.setLocation(300, 200);
 			nodeBox5.setLocation(1000, 200);
+			editor.center();
 
 			JFrame frame = new JFrame();
 			frame.add(editor);
