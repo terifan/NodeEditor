@@ -1,4 +1,4 @@
-package org.terifan.nodeeditor.v2;
+package org.terifan.nodeeditor;
 
 import org.terifan.graphics.BSpline;
 import java.awt.BasicStroke;
@@ -110,8 +110,8 @@ public class SplineRenderer
 		Rectangle from = aConnection.mOut.getBounds();
 		Rectangle to = aConnection.mIn.getBounds();
 
-		Rectangle b0 = aConnection.mOut.mRelationItem.mRelationBox.getBounds();
-		Rectangle b1 = aConnection.mIn.mRelationItem.mRelationBox.getBounds();
+		Rectangle b0 = aConnection.mOut.mItem.mNodeBox.getBounds();
+		Rectangle b1 = aConnection.mIn.mItem.mNodeBox.getBounds();
 
 		int x0 = (int)from.getCenterX() + b0.x;
 		int y0 = (int)from.getCenterY() + b0.y;

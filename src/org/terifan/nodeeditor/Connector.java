@@ -1,4 +1,4 @@
-package org.terifan.nodeeditor.v2;
+package org.terifan.nodeeditor;
 
 import java.awt.Color;
 import java.awt.Point;
@@ -11,10 +11,10 @@ public class Connector
 	public final static Color GRAY = new Color(0xA1A1A1);
 	public final static Color YELLOW = new Color(0xC7C729);
 
-	private final Rectangle mBounds;
-	private final Direction mDirection;
-	private Color mColor;
-	protected RelationItem mRelationItem;
+	protected Rectangle mBounds = new Rectangle();
+	protected Direction mDirection;
+	protected Color mColor;
+	protected NodeItem mItem;
 
 
 	public Connector(Direction aDirection)
@@ -27,7 +27,6 @@ public class Connector
 	{
 		mDirection = aDirection;
 		mColor = aColor;
-		mBounds = new Rectangle();
 	}
 
 
@@ -51,7 +50,7 @@ public class Connector
 
 	Point getConnectorPoint()
 	{
-		Rectangle bounds = mRelationItem.mRelationBox.getBounds();
+		Rectangle bounds = mItem.mNodeBox.getBounds();
 
 		return new Point(bounds.x + mBounds.x + mBounds.width / 2, bounds.y + mBounds.y + mBounds.height / 2);
 	}

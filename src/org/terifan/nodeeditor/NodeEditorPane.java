@@ -1,4 +1,4 @@
-package org.terifan.nodeeditor.v2;
+package org.terifan.nodeeditor;
 
 import java.awt.BasicStroke;
 import java.awt.Dimension;
@@ -22,18 +22,18 @@ public class NodeEditorPane extends JComponent
 	private static final long serialVersionUID = 1L;
 
 	private static final BasicStroke SELECTION_RECTANGLE_STROKE = new BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{3}, 0);
-	
-	private ArrayList<RelationBox> mNodes;
+
 	private ArrayList<Connection> mConnections;
-	private ArrayList<RelationBox> mSelectedNodes;
+	private ArrayList<NodeBox> mNodes;
+	private ArrayList<NodeBox> mSelectedNodes;
 	private Connection mSelectedConnection;
-	private double mScale;
+	private Connector mDragConnector;
 	private Point mDragStartLocation;
 	private Point mDragEndLocation;
-	private Connector mDragConnector;
 	private Rectangle mSelectionRectangle;
 	private Point mPaneScroll;
 	private boolean mConnectorSelectionAllowed;
+	private double mScale;
 
 
 	public NodeEditorPane()
@@ -61,16 +61,27 @@ public class NodeEditorPane extends JComponent
 	}
 
 
-	public void add(RelationBox aBox)
+	public void add(NodeBox aNode)
 	{
-		mNodes.add(aBox);
+		mNodes.add(aNode);
+
+		aNode.mEditorPane = this;
+
+		for (NodeItem item : aNode.mItems)
+		{
+			for (Connector connector : item.mConnectors)
+			{
+				connector.mItem = item;
+			}
+		}
 	}
 
 
-	public void addConnection(RelationItem aFromItem, RelationItem aToItem)
+	public void addConnection(NodeItem aFromItem, NodeItem aToItem)
 	{
 		Connector out = null;
 		Connector in = null;
+
 		for (Connector connector : aFromItem.mConnectors)
 		{
 			if (connector.getDirection() == Direction.OUT)
@@ -101,24 +112,24 @@ public class NodeEditorPane extends JComponent
 
 		mConnections.add(new Connection(aConnectorOut, aConnectorIn));
 	}
-	
-	
+
+
 	/**
 	 * Move all nodes to the center of the screen
 	 */
 	public void center()
 	{
 		Rectangle bounds = new Rectangle(mNodes.get(0).getBounds());
-		for (RelationBox box : mNodes)
+		for (NodeBox box : mNodes)
 		{
 			box.layout();
 			bounds.add(box.getBounds());
 		}
-		
+
 		int dx = -(int)bounds.getCenterX();
 		int dy = -(int)bounds.getCenterY();
 
-		for (RelationBox box : mNodes)
+		for (NodeBox box : mNodes)
 		{
 			box.getBounds().translate(dx, dy);
 		}
@@ -144,7 +155,7 @@ public class NodeEditorPane extends JComponent
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
-		for (RelationBox box : mNodes)
+		for (NodeBox box : mNodes)
 		{
 			box.layout();
 		}
@@ -165,8 +176,8 @@ public class NodeEditorPane extends JComponent
 				SplineRenderer.drawSpline(g, mDragEndLocation, mDragStartLocation, mScale, false);
 			}
 		}
-		
-		for (RelationBox box : mNodes)
+
+		for (NodeBox box : mNodes)
 		{
 			Rectangle bounds = box.getBounds();
 			int x = (int)(bounds.x * mScale);
@@ -235,7 +246,7 @@ public class NodeEditorPane extends JComponent
 	public Dimension getPreferredSize()
 	{
 		Rectangle bounds = new Rectangle(mNodes.get(0).getBounds());
-		for (RelationBox box : mNodes)
+		for (NodeBox box : mNodes)
 		{
 			box.layout();
 			bounds.add(box.getBounds());
@@ -283,21 +294,11 @@ public class NodeEditorPane extends JComponent
 	}
 
 
-//	public void setNodeSelected(RelationBox aNode, boolean aState)
-//	{
-//		mSelectedNodes.remove(aNode);
-//		if (aState)
-//		{
-//			mSelectedNodes.add(aNode);
-//		}
-//	}
-
-
 	private MouseAdapter mMouseListener = new MouseAdapter()
 	{
 		private Point mClickPoint;
-		private boolean mHitBox;
 		private Point mDragPoint;
+		private boolean mHitBox;
 
 
 		@Override
@@ -306,7 +307,7 @@ public class NodeEditorPane extends JComponent
 			mDragPoint = aEvent.getPoint();
 			mClickPoint = calcMousePoint(aEvent);
 
-			for (RelationBox box : mNodes)
+			for (NodeBox box : mNodes)
 			{
 				Rectangle b = box.getBounds();
 				if (b.contains(mClickPoint) && new Rectangle(b.x + 11, b.y + 7, 14, 16).contains(mClickPoint))
@@ -359,7 +360,7 @@ public class NodeEditorPane extends JComponent
 				{
 					mSelectedNodes.clear();
 				}
-				for (RelationBox box : mNodes)
+				for (NodeBox box : mNodes)
 				{
 					if (mSelectionRectangle.intersects(box.getBounds()))
 					{
@@ -417,7 +418,7 @@ public class NodeEditorPane extends JComponent
 				}
 				else if (mHitBox || SwingUtilities.isRightMouseButton(aEvent))
 				{
-					for (RelationBox box : mSelectedNodes)
+					for (NodeBox box : mSelectedNodes)
 					{
 						Point pt = box.getBounds().getLocation();
 						pt.x += mClickPoint.x - oldPoint.x;
@@ -450,7 +451,7 @@ public class NodeEditorPane extends JComponent
 				mPaneScroll.x /= d;
 				mPaneScroll.y /= d;
 			}
-			
+
 			mPaneScroll.x += aEvent.getX();
 			mPaneScroll.y += aEvent.getY();
 
@@ -464,17 +465,17 @@ public class NodeEditorPane extends JComponent
 			double dist = 25;
 			boolean hitBox = false;
 
-			for (RelationBox box : mNodes)
+			for (NodeBox box : mNodes)
 			{
-				if (mDragConnector != null && mDragConnector.mRelationItem.mRelationBox == box)
+				if (mDragConnector != null && mDragConnector.mItem.mNodeBox == box)
 				{
 					continue;
 				}
-				
+
 				int x = aPoint.x - box.getBounds().x;
 				int y = aPoint.y - box.getBounds().y;
 
-				for (RelationItem item : box.getItems())
+				for (NodeItem item : box.getItems())
 				{
 					for (Connector c : item.mConnectors)
 					{
@@ -502,10 +503,10 @@ public class NodeEditorPane extends JComponent
 
 		private void updateSelections(MouseEvent aEvent)
 		{
-			RelationBox newSelection = null;
-			RelationBox clickedBox = null;
-			
-			for (RelationBox box : mNodes)
+			NodeBox newSelection = null;
+			NodeBox clickedBox = null;
+
+			for (NodeBox box : mNodes)
 			{
 				if (box.getBounds().contains(mClickPoint))
 				{
@@ -538,7 +539,7 @@ public class NodeEditorPane extends JComponent
 			}
 
 			mHitBox = clickedBox != null;
-			
+
 			if (newSelection != null)
 			{
 				mSelectedNodes.add(newSelection);

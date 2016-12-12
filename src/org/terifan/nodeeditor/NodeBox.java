@@ -1,4 +1,4 @@
-package org.terifan.nodeeditor.v2;
+package org.terifan.nodeeditor;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -7,24 +7,29 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.util.ArrayList;
+import java.util.HashMap;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.TextBox;
-import static org.terifan.nodeeditor.v2.Styles.*;
+import static org.terifan.nodeeditor.Styles.*;
 
 
-public class RelationBox
+public class NodeBox
 {
+	NodeEditorPane mEditorPane;
+
+	protected String mName;
 	protected Rectangle mBounds;
 	protected boolean mMinimized;
-	protected String mName;
-	protected ArrayList<RelationItem> mItems;
+	protected ArrayList<NodeItem> mItems;
+	protected HashMap<NodeItem,Rectangle> mItemBounds;
 
 
-	public RelationBox(String aName)
+	public NodeBox(String aName)
 	{
 		mName = aName;
 		mItems = new ArrayList<>();
 		mBounds = new Rectangle(0, 30);
+		mItemBounds = new HashMap<>();
 	}
 
 
@@ -40,11 +45,11 @@ public class RelationBox
 	}
 
 
-	public void addItem(RelationItem aItem)
+	public void addItem(NodeItem aItem)
 	{
 		mItems.add(aItem);
 
-		aItem.mRelationBox = this;
+		aItem.mNodeBox = this;
 	}
 
 
@@ -54,7 +59,7 @@ public class RelationBox
 	}
 
 
-	protected ArrayList<RelationItem> getItems()
+	protected ArrayList<NodeItem> getItems()
 	{
 		return mItems;
 	}
@@ -64,9 +69,9 @@ public class RelationBox
 	{
 		if (!mMinimized)
 		{
-			for (RelationItem item : mItems)
+			for (NodeItem item : mItems)
 			{
-				item.paintComponent(aGraphics);
+				item.paintComponent(aGraphics, mItemBounds.get(item));
 			}
 		}
 	}
@@ -78,8 +83,8 @@ public class RelationBox
 		layoutItems();
 		layoutConnectors();
 	}
-	
-	
+
+
 	protected void computeBounds()
 	{
 		if (!mMinimized)
@@ -87,9 +92,9 @@ public class RelationBox
 			mBounds.width = 0;
 			mBounds.height = 0;
 
-			for (RelationItem item : mItems)
+			for (NodeItem item : mItems)
 			{
-				Dimension size = item.getPreferredSize();
+				Dimension size = item.getSize();
 
 				mBounds.width = Math.max(mBounds.width, size.width);
 				mBounds.height += size.height;
@@ -107,34 +112,33 @@ public class RelationBox
 		mBounds.height += 6 + 2 * 4;
 	}
 
-	
+
 	protected void layoutItems()
 	{
 		if (!mMinimized)
 		{
 			int y = TITLE_HEIGHT_PADDED + 4 + 4;
 
-			for (RelationItem item : mItems)
+			for (NodeItem item : mItems)
 			{
-				Rectangle bounds = item.getBounds();
-				Dimension size = item.getPreferredSize();
+				Dimension size = item.getSize();
 
-				bounds.setSize(mBounds.width - (5 + 9 + 5 + 9), size.height);
-				bounds.setLocation(5 + 9, y);
+				Rectangle bounds = new Rectangle(5 + 9, y, mBounds.width - (5 + 9 + 5 + 9), size.height);
+				mItemBounds.put(item, bounds);
 
 				y += bounds.height;
 			}
 		}
 	}
-	
-	
+
+
 	protected void layoutConnectors()
 	{
 		if (!mMinimized)
 		{
-			for (RelationItem item : mItems)
+			for (NodeItem item : mItems)
 			{
-				Rectangle bounds = item.getBounds();
+				Rectangle bounds = mItemBounds.get(item);
 
 				int by0 = bounds.y + Math.min(bounds.height, TITLE_HEIGHT_PADDED + 4) / 2 - 5;
 				int by1 = by0;
@@ -159,7 +163,7 @@ public class RelationBox
 			int n0 = 0;
 			int n1 = 0;
 
-			for (RelationItem item : mItems)
+			for (NodeItem item : mItems)
 			{
 				for (Connector connector : item.mConnectors)
 				{
@@ -177,7 +181,7 @@ public class RelationBox
 			int c0 = 0;
 			int c1 = 0;
 
-			for (RelationItem item : mItems)
+			for (NodeItem item : mItems)
 			{
 				for (Connector connector : item.mConnectors)
 				{
@@ -197,8 +201,8 @@ public class RelationBox
 			}
 		}
 	}
-	
-	
+
+
 	protected Point x(int c, int n)
 	{
 		n--;
@@ -218,9 +222,9 @@ public class RelationBox
 
 	protected void paintConnectors(Graphics2D aGraphics)
 	{
-		for (RelationItem relationItem : mItems)
+		for (NodeItem item : mItems)
 		{
-			for (Connector connector : relationItem.mConnectors)
+			for (Connector connector : item.mConnectors)
 			{
 				Rectangle r = connector.getBounds();
 				aGraphics.setColor(connector.getColor());
@@ -241,7 +245,7 @@ public class RelationBox
 
 		boolean minimized = mMinimized || aHeight <= 4 + 4 + TITLE_HEIGHT;
 		int th = minimized ? TITLE_HEIGHT : TITLE_HEIGHT_PADDED;
-		
+
 		if (minimized)
 		{
 			aGraphics.setColor(BOX_BORDER_TITLE_COLOR);

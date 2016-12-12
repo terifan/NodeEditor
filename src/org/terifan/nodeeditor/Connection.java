@@ -3,36 +3,36 @@ package org.terifan.nodeeditor;
 
 public class Connection
 {
-	protected RelationItem mOut;
-	protected RelationItem mIn;
+	protected Connector mOut;
+	protected Connector mIn;
 
 
-	public Connection(RelationItem aOut, RelationItem aIn)
+	public Connection(Connector aIn, Connector aOut)
 	{
-		mOut = aOut;
 		mIn = aIn;
+		mOut = aOut;
 	}
 
 
-	public RelationItem getOut()
+	public Connector getOut()
 	{
 		return mOut;
 	}
 
 
-	public void setOut(RelationItem aOut)
+	public void setOut(Connector aOut)
 	{
 		mOut = aOut;
 	}
 
 
-	public RelationItem getIn()
+	public Connector getIn()
 	{
 		return mIn;
 	}
 
 
-	public void setIn(RelationItem aIn)
+	public void setIn(Connector aIn)
 	{
 		mIn = aIn;
 	}
