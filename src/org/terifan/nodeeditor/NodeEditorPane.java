@@ -61,7 +61,7 @@ public class NodeEditorPane extends JComponent
 	}
 
 
-	public void add(NodeBox aNode)
+	public NodeEditorPane add(NodeBox aNode)
 	{
 		mNodes.add(aNode);
 
@@ -74,10 +74,12 @@ public class NodeEditorPane extends JComponent
 				connector.mItem = item;
 			}
 		}
+
+		return this;
 	}
 
 
-	public void addConnection(NodeItem aFromItem, NodeItem aToItem)
+	public NodeEditorPane addConnection(NodeItem aFromItem, NodeItem aToItem)
 	{
 		Connector out = null;
 		Connector in = null;
@@ -97,7 +99,9 @@ public class NodeEditorPane extends JComponent
 			}
 		}
 
-		addConnection(out, in);
+		NodeEditorPane.this.addConnection(out, in);
+
+		return this;
 	}
 
 
@@ -347,7 +351,7 @@ public class NodeEditorPane extends JComponent
 
 				if (nearestConnector != null)
 				{
-					addConnection(mDragConnector, nearestConnector);
+					NodeEditorPane.this.addConnection(mDragConnector, nearestConnector);
 				}
 
 				mDragConnector = null;

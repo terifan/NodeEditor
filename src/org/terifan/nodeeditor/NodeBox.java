@@ -24,12 +24,17 @@ public class NodeBox
 	protected HashMap<NodeItem,Rectangle> mItemBounds;
 
 
-	public NodeBox(String aName)
+	public NodeBox(String aName, NodeItem... aItems)
 	{
 		mName = aName;
-		mItems = new ArrayList<>();
 		mBounds = new Rectangle(0, 30);
+		mItems = new ArrayList<>();
 		mItemBounds = new HashMap<>();
+
+		for (NodeItem item : aItems)
+		{
+			addItem(item);
+		}
 	}
 
 
