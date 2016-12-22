@@ -3,7 +3,6 @@ package org.terifan.nodeeditor.examples;
 import javax.swing.JFrame;
 import org.terifan.nodeeditor.Connector;
 import org.terifan.nodeeditor.Direction;
-import org.terifan.ui.Utilities;
 import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.NodeBox;
 import org.terifan.nodeeditor.NodeItem;
@@ -15,8 +14,6 @@ public class Test1
 	{
 		try
 		{
-			Utilities.setSystemLookAndFeel();
-
 			NodeEditorPane editor = new NodeEditorPane();
 
 			NodeItem node0 = new NodeItem("node0", new Connector(Direction.OUT));
