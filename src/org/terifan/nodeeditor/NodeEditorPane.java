@@ -79,6 +79,44 @@ public class NodeEditorPane extends JComponent
 	}
 
 
+	public NodeEditorPane addConnection(String aFromNodeItemName, String aToNodeItemName)
+	{
+		Connector out = null;
+		Connector in = null;
+
+		for (NodeBox box : mNodes)
+		{
+			for (NodeItem item : box.mItems)
+			{
+				if (item.getName().equals(aFromNodeItemName))
+				{
+					for (Connector connector : item.mConnectors)
+					{
+						if (connector.getDirection() == Direction.OUT)
+						{
+							in = connector;
+						}
+					}
+				}
+				if (item.getName().equals(aToNodeItemName))
+				{
+					for (Connector connector : item.mConnectors)
+					{
+						if (connector.getDirection() == Direction.IN)
+						{
+							out = connector;
+						}
+					}
+				}
+			}
+		}
+
+		NodeEditorPane.this.addConnection(out, in);
+
+		return this;
+	}
+
+
 	public NodeEditorPane addConnection(NodeItem aFromItem, NodeItem aToItem)
 	{
 		Connector out = null;
