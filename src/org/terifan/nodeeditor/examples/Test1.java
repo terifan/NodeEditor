@@ -34,12 +34,12 @@ public class Test1
 			NodeItem node15 = new NodeItem("node15", new Connector(Direction.IN, Connector.GRAY));
 			NodeItem node16 = new NodeItem("node16", new Connector(Direction.IN, Connector.GRAY));
 			NodeItem node17 = new NodeItem("node17", new Connector(Direction.IN, Connector.GRAY));
-			NodeItem node18 = new NodeItem("node18", new Connector(Direction.IN, Connector.GRAY));
+			NodeItem node18 = new NodeItem("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.");
 			NodeBox nodeBox0 = new NodeBox("nodeBox0", node0, node1);
 			NodeBox nodeBox1 = new NodeBox("nodeBox1", node2, node3);
 			NodeBox nodeBox2 = new NodeBox("nodeBox2", node4, node5, node10, node6);
 			NodeBox nodeBox3 = new NodeBox("nodeBox3", node7);
-			NodeBox nodeBox4 = new NodeBox("nodeBox4", node13, node8, node9, node15, node16, node17, node18);
+			NodeBox nodeBox4 = new NodeBox("nodeBox4", node13, node8, node9, node18, node15, node16, node17);
 			NodeBox nodeBox5 = new NodeBox("nodeBox5", node11, node12, node14);
 			editor.add(nodeBox0).addConnection(node0, node2).addConnection(node1, node7);
 			editor.add(nodeBox1).addConnection(node3, node4).addConnection(node9, node12);
@@ -52,7 +52,7 @@ public class Test1
 			nodeBox1.setLocation(300, 100);
 			nodeBox2.setLocation(500, 150);
 			nodeBox3.setLocation(800, 170);
-			nodeBox4.setLocation(300, 200);
+			nodeBox4.setLocation(100, 200);
 			nodeBox5.setLocation(1000, 200);
 			editor.center();
 

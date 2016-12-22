@@ -19,6 +19,10 @@ public class NodeItem
 	public NodeItem(String aName, Connector... aConnectors)
 	{
 		this(aName, 100, 20, aConnectors);
+
+		mSize = new TextBox(mName).setMaxWidth(300).measure().getSize();
+		mSize.width = Math.max(mSize.width, 100);
+		mSize.height = Math.max(mSize.height, 20);
 	}
 
 
