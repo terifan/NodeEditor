@@ -31,7 +31,7 @@ public class Styles
 	public final static Color BOX_BORDER_SELECTED_COLOR = new Color(208, 145, 66);
 	public final static Color BOX_BORDER_TITLE_COLOR = new Color(77, 77, 77, a);
 	public final static Color BOX_TITLE_TEXT_SHADOW_COLOR = new Color(90, 90, 90, a);
-	public final static Color PANE_BACKGROUND_COLOR = new Color(58, 58, 58);
+	public final static Color PANE_BACKGROUND_COLOR = new Color(57, 57, 57);
 	public final static Color PANE_GRID_COLOR_1 = new Color(47, 47, 47);
 	public final static Color PANE_GRID_COLOR_2 = new Color(41, 41, 41);
 	public final static Color PANE_GRID_COLOR_3 = new Color(30, 30, 30);

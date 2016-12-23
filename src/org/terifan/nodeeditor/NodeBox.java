@@ -192,13 +192,13 @@ public class NodeBox
 				{
 					if (connector.getDirection() == Direction.IN)
 					{
-						Point pt = x(c0, n0);
+						Point pt = calcPoint(c0, n0);
 						connector.getBounds().setBounds(1 + 4 - pt.x, pt.y, 9, 9);
 						c0++;
 					}
 					else
 					{
-						Point pt = x(c1, n1);
+						Point pt = calcPoint(c1, n1);
 						connector.getBounds().setBounds(mBounds.width - (1 + 9) - 4 + pt.x, pt.y, 9, 9);
 						c1++;
 					}
@@ -208,7 +208,7 @@ public class NodeBox
 	}
 
 
-	protected Point x(int c, int n)
+	protected Point calcPoint(int c, int n)
 	{
 		n--;
 		double r = n == 0 ? 0 : 2 * Math.PI * (-0.075 * Math.min(3, n) + Math.min(3, n) * 0.15 * c / (double)n);
@@ -250,6 +250,9 @@ public class NodeBox
 
 		boolean minimized = mMinimized || aHeight <= 4 + 4 + TITLE_HEIGHT;
 		int th = minimized ? TITLE_HEIGHT : TITLE_HEIGHT_PADDED;
+
+//		aGraphics.setColor(new Color(48, 48, 48, 128));
+//		aGraphics.fillRoundRect(aX-5, aY+10, aWidth+10, aHeight-5, BORDE_RADIUS, BORDE_RADIUS);
 
 		if (minimized)
 		{
@@ -299,8 +302,5 @@ public class NodeBox
 		{
 			aGraphics.fillPolygon(new int[]{aX, aX + w, aX + w / 2}, new int[]{aY - h, aY - h, aY + h}, 3);
 		}
-
-//		aGraphics.setColor(Color.YELLOW);
-//		aGraphics.drawRect(0,0,mBounds.width-1,mBounds.height-1);
 	}
 }

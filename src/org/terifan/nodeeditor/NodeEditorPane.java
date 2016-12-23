@@ -14,7 +14,6 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Random;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
@@ -36,6 +35,7 @@ public class NodeEditorPane extends JComponent
 	private Point mPaneScroll;
 	private boolean mConnectorSelectionAllowed;
 	private double mScale;
+	private boolean mRemoveInConnectionsOnDrop;
 
 
 	public NodeEditorPane()
@@ -44,10 +44,24 @@ public class NodeEditorPane extends JComponent
 		mConnections = new ArrayList<>();
 		mSelectedNodes = new ArrayList<>();
 		mScale = 1;
+		mRemoveInConnectionsOnDrop = true;
 
 		super.addMouseMotionListener(mMouseListener);
 		super.addMouseListener(mMouseListener);
 		super.addMouseWheelListener(mMouseListener);
+	}
+
+
+	public boolean isRemoveInConnectionsOnDrop()
+	{
+		return mRemoveInConnectionsOnDrop;
+	}
+
+
+	public NodeEditorPane setRemoveInConnectionsOnDrop(boolean aRemoveInConnectionsOnDrop)
+	{
+		mRemoveInConnectionsOnDrop = aRemoveInConnectionsOnDrop;
+		return this;
 	}
 
 
@@ -57,9 +71,23 @@ public class NodeEditorPane extends JComponent
 	}
 
 
-	public void setConnectorSelectionAllowed(boolean aConnectorSelectionAllowed)
+	public NodeEditorPane setConnectorSelectionAllowed(boolean aConnectorSelectionAllowed)
 	{
 		mConnectorSelectionAllowed = aConnectorSelectionAllowed;
+		return this;
+	}
+
+
+	public double getScale()
+	{
+		return mScale;
+	}
+
+
+	public NodeEditorPane setScale(double aScale)
+	{
+		mScale = aScale;
+		return this;
 	}
 
 
@@ -376,7 +404,26 @@ public class NodeEditorPane extends JComponent
 
 			if (mDragConnector != null)
 			{
-				mDragStartLocation = mDragConnector.getConnectorPoint();
+				boolean done = false;
+				if (mDragConnector.getDirection() == Direction.IN)
+				{
+					ArrayList<Connection> list = getConnectionsTo(mDragConnector.mItem);
+					if (list.size() == 1)
+					{
+						mDragEndLocation = mDragConnector.getConnectorPoint();
+						mDragConnector = list.get(0).getIn();
+						mDragStartLocation = mDragConnector.getConnectorPoint();
+						
+						mConnections.remove(list.get(0));
+						
+						done = true;
+					}
+				}
+				
+				if (!done)
+				{
+					mDragStartLocation = mDragConnector.getConnectorPoint();
+				}
 			}
 			else if (SwingUtilities.isLeftMouseButton(aEvent))
 			{
@@ -399,8 +446,20 @@ public class NodeEditorPane extends JComponent
 			{
 				Connector nearestConnector = findNearestConnector(mClickPoint);
 
-				if (nearestConnector != null)
+				if (nearestConnector != null && mDragConnector.getDirection() != nearestConnector.getDirection())
 				{
+					if (mRemoveInConnectionsOnDrop)
+					{
+						if (nearestConnector.getDirection() == Direction.IN)
+						{
+							mConnections.removeAll(getConnectionsTo(nearestConnector.mItem));
+						}
+						if (nearestConnector.getDirection() == Direction.OUT)
+						{
+							mConnections.removeAll(getConnectionsTo(mDragConnector.mItem));
+						}
+					}
+
 					NodeEditorPane.this.addConnection(mDragConnector, nearestConnector);
 				}
 
@@ -465,7 +524,7 @@ public class NodeEditorPane extends JComponent
 					mDragEndLocation = mClickPoint;
 
 					Connector connector = findNearestConnector(mDragEndLocation);
-					if (connector != null)
+					if (connector != null && mDragConnector.getDirection() != connector.getDirection())
 					{
 						mDragEndLocation = connector.getConnectorPoint();
 					}
@@ -633,5 +692,37 @@ public class NodeEditorPane extends JComponent
 	private Point calcMousePoint(MouseEvent aEvent)
 	{
 		return new Point((int)((aEvent.getX() - mPaneScroll.x) / mScale), (int)((aEvent.getY() - mPaneScroll.y) / mScale));
+	}
+
+
+	public ArrayList<Connection> getConnectionsTo(NodeItem aItem)
+	{
+		ArrayList<Connection> list = new ArrayList<>();
+		
+		for (Connection c : mConnections)
+		{
+			if (c.getOut().mItem == aItem)
+			{
+				list.add(c);
+			}
+		}
+		
+		return list;
+	}
+
+
+	public ArrayList<Connection> getConnectionsFrom(NodeItem aItem)
+	{
+		ArrayList<Connection> list = new ArrayList<>();
+		
+		for (Connection c : mConnections)
+		{
+			if (c.getIn().mItem == aItem)
+			{
+				list.add(c);
+			}
+		}
+		
+		return list;
 	}
 }

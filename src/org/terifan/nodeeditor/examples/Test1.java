@@ -55,10 +55,11 @@ public class Test1
 			nodeBox4.setLocation(100, 200);
 			nodeBox5.setLocation(1000, 200);
 			editor.center();
+			editor.setScale(2);
 
 			JFrame frame = new JFrame();
 			frame.add(editor);
-			frame.setSize(1600, 1000);
+			frame.setSize(2*1600, 2*1000);
 			frame.setLocationRelativeTo(null);
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			frame.setVisible(true);
