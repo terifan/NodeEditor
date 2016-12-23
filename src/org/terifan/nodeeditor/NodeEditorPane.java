@@ -1,6 +1,7 @@
 package org.terifan.nodeeditor;
 
 import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -13,6 +14,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Random;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
@@ -204,18 +206,28 @@ public class NodeEditorPane extends JComponent
 
 		for (Connection connection : mConnections)
 		{
-			SplineRenderer.drawSpline(g, connection, mScale, mSelectedConnection == connection);
+			if (mSelectedConnection == connection)
+			{
+				SplineRenderer.drawSpline(g, connection, mScale, Styles.CONNECTOR_COLOR_OUTER_SELECTED, Styles.CONNECTOR_COLOR_INNER_SELECTED, Styles.CONNECTOR_COLOR_INNER_SELECTED);
+			}
+			else
+			{
+				Color start = mSelectedNodes.contains(connection.mIn.mItem.mNodeBox) ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : Styles.CONNECTOR_COLOR_INNER;
+				Color end = mSelectedNodes.contains(connection.mOut.mItem.mNodeBox) ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : Styles.CONNECTOR_COLOR_INNER;
+
+				SplineRenderer.drawSpline(g, connection, mScale, Styles.CONNECTOR_COLOR_OUTER, start, end);
+			}
 		}
 
 		if (mDragEndLocation != null)
 		{
 			if (mDragConnector.getDirection() == Direction.IN)
 			{
-				SplineRenderer.drawSpline(g, mDragStartLocation, mDragEndLocation, mScale, false);
+				SplineRenderer.drawSpline(g, mDragStartLocation, mDragEndLocation, mScale, Styles.CONNECTOR_COLOR_OUTER, Styles.CONNECTOR_COLOR_INNER_DRAGGED, Styles.CONNECTOR_COLOR_INNER_DRAGGED);
 			}
 			else
 			{
-				SplineRenderer.drawSpline(g, mDragEndLocation, mDragStartLocation, mScale, false);
+				SplineRenderer.drawSpline(g, mDragEndLocation, mDragStartLocation, mScale, Styles.CONNECTOR_COLOR_OUTER, Styles.CONNECTOR_COLOR_INNER_DRAGGED, Styles.CONNECTOR_COLOR_INNER_DRAGGED);
 			}
 		}
 

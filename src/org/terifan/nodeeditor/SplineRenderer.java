@@ -2,6 +2,7 @@ package org.terifan.nodeeditor;
 
 import org.terifan.graphics.BSpline;
 import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -17,36 +18,63 @@ public class SplineRenderer
 	private SplineRenderer()
 	{
 	}
-	
-	
-	public static void drawSpline(Graphics2D aGraphics, Point aFrom, Point aTo, double aScale, boolean aSelected)
+
+
+	public static void drawSpline(Graphics2D aGraphics, Point aFrom, Point aTo, double aScale, Color aBackgroundColor, Color aStartColor, Color aEndColor)
 	{
-		drawSplineImpl(aGraphics, createSpline(aFrom, aTo), aScale, aSelected);
+		drawSplineImpl(aGraphics, createSpline(aFrom, aTo), aScale, aBackgroundColor, aStartColor, aEndColor);
 	}
 
 
-	public static void drawSpline(Graphics2D aGraphics, Connection aConnection, double aScale, boolean aSelected)
+	public static void drawSpline(Graphics2D aGraphics, Connection aConnection, double aScale, Color aBackgroundColor, Color aStartColor, Color aEndColor)
 	{
-		drawSplineImpl(aGraphics, createSpline(aConnection), aScale, aSelected);
+		drawSplineImpl(aGraphics, createSpline(aConnection), aScale, aBackgroundColor, aStartColor, aEndColor);
 	}
 
 
-	private static void drawSplineImpl(Graphics2D aGraphics, BSpline aSpline, double aScale, boolean aSelected)
+	private static void drawSplineImpl(Graphics2D aGraphics, BSpline aSpline, double aScale, Color aBackgroundColor, Color aStartColor, Color aEndColor)
 	{
-		Path2D.Double spline = createPath(aSpline, aScale);
-
 		Stroke old = aGraphics.getStroke();
 
-		BasicStroke STROKE_WIDE = new BasicStroke(3.0f * (float)aScale, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND);
-		BasicStroke STROKE_THIN = new BasicStroke(1.4f * (float)aScale, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND);
+		BasicStroke STROKE_WIDE = new BasicStroke(Styles.CONNECTOR_STROKE_WIDTH_OUTER * (float)aScale, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND);
+		BasicStroke STROKE_THIN = new BasicStroke(Styles.CONNECTOR_STROKE_WIDTH_INNER * (float)aScale, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND);
 
+		Path2D.Double spline = createPath(aSpline, aScale, 0.0, 1.0);
 		aGraphics.setStroke(STROKE_WIDE);
-		aGraphics.setColor(aSelected ? Styles.CONNECTOR_COLOR_DARK_SELECTED : Styles.CONNECTOR_COLOR_DARK);
+		aGraphics.setColor(aBackgroundColor);
 		aGraphics.draw(spline);
 
 		aGraphics.setStroke(STROKE_THIN);
-		aGraphics.setColor(aSelected ? Styles.CONNECTOR_COLOR_BRIGHT_SELECTED : Styles.CONNECTOR_COLOR_BRIGHT);
-		aGraphics.draw(spline);
+
+		if (aStartColor.equals(aEndColor))
+		{
+			aGraphics.setColor(aStartColor);
+			aGraphics.draw(spline);
+		}
+		else
+		{
+			int r0 = aStartColor.getRed();
+			int r1 = aEndColor.getRed();
+			int g0 = aStartColor.getGreen();
+			int g1 = aEndColor.getGreen();
+			int b0 = aStartColor.getBlue();
+			int b1 = aEndColor.getBlue();
+
+			int segments = Math.max(4, (int)Math.pow(aSpline.getPoint(0).distance(aSpline.getPoint(1)), 0.5));
+
+			for (int i = 0; i < segments; i++)
+			{
+				spline = createPath(aSpline, aScale, i / (double)segments, (i + 1) / (double)segments);
+
+				double a = i / (double)(segments - 1);
+				int r = (int)(a * r0 + (1 - a) * r1);
+				int g = (int)(a * g0 + (1 - a) * g1);
+				int b = (int)(a * b0 + (1 - a) * b1);
+
+				aGraphics.setColor(new Color(r, g, b));
+				aGraphics.draw(spline);
+			}
+		}
 
 		aGraphics.setStroke(old);
 	}
@@ -60,7 +88,7 @@ public class SplineRenderer
 		int segments = Math.max(20, (int)spline.getPoint(0).distance(spline.getPoint(1)) / 4);
 		double dist = Double.MAX_VALUE;
 
-		for (double i = 0, s = segments; --s >= 0; i+=1.0/s)
+		for (double i = 0, s = segments; --s >= 0; i += 1.0 / s)
 		{
 			Point2D.Double next = spline.getPoint(i);
 			if (prev != null)
@@ -78,17 +106,19 @@ public class SplineRenderer
 	}
 
 
-	private static Path2D.Double createPath(BSpline aSpline, double aScale)
+	private static Path2D.Double createPath(BSpline aSpline, double aScale, double aStart, double aEnd)
 	{
 		int segments = Math.max(20, (int)aSpline.getPoint(0).distance(aSpline.getPoint(1)) / 4);
 
 		Path2D.Double path = new Path2D.Double(Path2D.WIND_EVEN_ODD, segments);
 
-		for (int i = 0; i < segments; i++)
+		boolean first = true;
+		for (int i = (int)(segments * aStart); i < (int)(segments * aEnd) + 1; i++)
 		{
 			Point2D.Double pt = aSpline.getPoint(i / (double)(segments - 1));
-			if (i == 0)
+			if (first)
 			{
+				first = false;
 				path.moveTo(pt.x, pt.y);
 			}
 			else
@@ -120,7 +150,13 @@ public class SplineRenderer
 		int d0 = -16;
 		int d1 = 16;
 
-		return new BSpline(new double[]{x0, x0 + d0, x1 + d1, x1}, new double[]{y0, y0, y1, y1});
+		return new BSpline(new double[]
+		{
+			x0, x0 + d0, x1 + d1, x1
+		}, new double[]
+		{
+			y0, y0, y1, y1
+		});
 	}
 
 
@@ -133,6 +169,12 @@ public class SplineRenderer
 		int d0 = -16;
 		int d1 = 16;
 
-		return new BSpline(new double[]{x0, x0 + d0, x1 + d1, x1}, new double[]{y0, y0, y1, y1});
+		return new BSpline(new double[]
+		{
+			x0, x0 + d0, x1 + d1, x1
+		}, new double[]
+		{
+			y0, y0, y1, y1
+		});
 	}
 }
