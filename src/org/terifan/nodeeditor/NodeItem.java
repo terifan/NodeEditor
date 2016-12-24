@@ -9,8 +9,8 @@ import org.terifan.ui.TextBox;
 
 public class NodeItem
 {
-	NodeBox mNodeBox;
-	Connector[] mConnectors;
+	protected NodeBox mNodeBox;
+	protected Connector[] mConnectors;
 
 	protected String mName;
 	protected Dimension mSize;
@@ -58,8 +58,8 @@ public class NodeItem
 	}
 
 
-	protected void paintComponent(Graphics2D aGraphics, Rectangle aBounds)
+	protected void paintComponent(NodeEditorPane aEditorPane, Graphics2D aGraphics, Rectangle aBounds)
 	{
-		new TextBox(mName).setBounds(aBounds).setAnchor(Anchor.WEST).setForeground(Styles.BOX_FOREGROUND_COLOR).render(aGraphics);
+		new TextBox(mName).setBounds(aBounds).setAnchor(mConnectors.length == 0 || mConnectors[0].mDirection == Direction.IN ? Anchor.WEST : Anchor.EAST).setForeground(Styles.BOX_FOREGROUND_COLOR).render(aGraphics);
 	}
 }

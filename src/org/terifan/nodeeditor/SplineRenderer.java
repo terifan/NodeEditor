@@ -36,8 +36,9 @@ public class SplineRenderer
 	{
 		Stroke old = aGraphics.getStroke();
 
-		BasicStroke STROKE_WIDE = new BasicStroke(Styles.CONNECTOR_STROKE_WIDTH_OUTER * (float)aScale, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND);
-		BasicStroke STROKE_THIN = new BasicStroke(Styles.CONNECTOR_STROKE_WIDTH_INNER * (float)aScale, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND);
+		float strokeScale = (float)Math.sqrt(2 * aScale);
+		BasicStroke STROKE_WIDE = new BasicStroke(Styles.CONNECTOR_STROKE_WIDTH_OUTER * strokeScale, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND);
+		BasicStroke STROKE_THIN = new BasicStroke(Styles.CONNECTOR_STROKE_WIDTH_INNER * strokeScale, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND);
 
 		Path2D.Double spline = createPath(aSpline, aScale, 0.0, 1.0);
 		aGraphics.setStroke(STROKE_WIDE);

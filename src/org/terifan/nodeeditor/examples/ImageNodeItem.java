@@ -4,20 +4,21 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import org.terifan.nodeeditor.Connector;
+import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Styles;
 import org.terifan.nodeeditor.NodeItem;
 
 
-public class ImageRelationItem extends NodeItem
+public class ImageNodeItem extends NodeItem
 {
-	public ImageRelationItem(String aText, int aWidth, int aHeight, Connector... aConnectors)
+	public ImageNodeItem(String aText, int aWidth, int aHeight, Connector... aConnectors)
 	{
 		super(aText, aWidth, aHeight, aConnectors);
 	}
 
 
 	@Override
-	protected void paintComponent(Graphics2D aGraphics, Rectangle aBounds)
+	protected void paintComponent(NodeEditorPane aEditorPane, Graphics2D aGraphics, Rectangle aBounds)
 	{
 		aGraphics.setColor(Styles.BOX_BACKGROUND_COLOR);
 		aGraphics.fill(aBounds);
