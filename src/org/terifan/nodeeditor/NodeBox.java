@@ -76,7 +76,7 @@ public class NodeBox
 		{
 			for (NodeItem item : mItems)
 			{
-				item.paintComponent(mEditorPane, aGraphics, mItemBounds.get(item));
+				item.paintComponent(mEditorPane, aGraphics, mItemBounds.get(item), false, false);
 			}
 		}
 	}

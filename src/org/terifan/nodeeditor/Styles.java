@@ -24,6 +24,7 @@ public class Styles
 	public final static int BORDE_RADIUS = 18;
 	public final static int BUTTON_WIDTH = 16;
 	public final static Color BOX_FOREGROUND_COLOR = new Color(0, 0, 0, b);
+	public final static Color BOX_FOREGROUND_ARMED_COLOR = new Color(255,255,255);
 	public final static Color BOX_FOREGROUND_SELECTED_COLOR = new Color(0, 0, 0, b);
 	public final static Color BOX_BACKGROUND_COLOR = new Color(90, 90, 90, a);
 	public final static Color BOX_BACKGROUND_SELECTED_COLOR = new Color(90, 90, 90, a);
@@ -38,4 +39,26 @@ public class Styles
 	public final static Color PANE_SELECTION_RECTANGLE_LINE = new Color(255, 255, 255);
 	public final static Color PANE_SELECTION_RECTANGLE_BACKGROUND = new Color(255, 255, 255, 15);
 	public final static int MIN_WIDTH = 80;
+
+	public final static Color[][][] SLIDER_COLORS = 
+	{
+		// normal
+		{
+			new Color[]{new Color(159,159,159), new Color(179,179,179)},
+			new Color[]{new Color(126, 126, 126), new Color(107,107,107)},
+			new Color[]{BOX_FOREGROUND_COLOR, BOX_FOREGROUND_COLOR}
+		},
+		// hover
+		{
+			new Color[]{new Color(174,174,174), new Color(194,194,194)},
+			new Color[]{new Color(127,127,127), new Color(147,147,147)},
+			new Color[]{BOX_FOREGROUND_COLOR, BOX_FOREGROUND_COLOR}
+		},
+		// armed
+		{
+			new Color[]{new Color(132,132,132), new Color(152,152,152)},
+			new Color[]{new Color(107,107,107), new Color(127,127,127)},
+			new Color[]{BOX_FOREGROUND_ARMED_COLOR, BOX_FOREGROUND_ARMED_COLOR}
+		}
+	};
 }

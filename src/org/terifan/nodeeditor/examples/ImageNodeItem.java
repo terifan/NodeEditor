@@ -18,7 +18,7 @@ public class ImageNodeItem extends NodeItem
 
 
 	@Override
-	protected void paintComponent(NodeEditorPane aEditorPane, Graphics2D aGraphics, Rectangle aBounds)
+	protected void paintComponent(NodeEditorPane aEditorPane, Graphics2D aGraphics, Rectangle aBounds, boolean aHover, boolean aArmed)
 	{
 		aGraphics.setColor(Styles.BOX_BACKGROUND_COLOR);
 		aGraphics.fill(aBounds);

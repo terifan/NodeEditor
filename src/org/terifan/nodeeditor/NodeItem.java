@@ -58,7 +58,7 @@ public class NodeItem
 	}
 
 
-	protected void paintComponent(NodeEditorPane aEditorPane, Graphics2D aGraphics, Rectangle aBounds)
+	protected void paintComponent(NodeEditorPane aEditorPane, Graphics2D aGraphics, Rectangle aBounds, boolean aHover, boolean aArmed)
 	{
 		new TextBox(mName).setBounds(aBounds).setAnchor(mConnectors.length == 0 || mConnectors[0].mDirection == Direction.IN ? Anchor.WEST : Anchor.EAST).setForeground(Styles.BOX_FOREGROUND_COLOR).render(aGraphics);
 	}
