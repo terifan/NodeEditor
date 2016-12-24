@@ -61,7 +61,7 @@ public class SplineRenderer
 			int b0 = aStartColor.getBlue();
 			int b1 = aEndColor.getBlue();
 
-			int segments = Math.max(4, (int)Math.pow(aSpline.getPoint(0).distance(aSpline.getPoint(1)), 0.5));
+			int segments = Math.max(16, (int)Math.pow(aSpline.getPoint(0).distance(aSpline.getPoint(1)), 0.5));
 
 			for (int i = 0; i < segments; i++)
 			{

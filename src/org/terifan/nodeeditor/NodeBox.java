@@ -21,7 +21,6 @@ public class NodeBox
 	protected Rectangle mBounds;
 	protected boolean mMinimized;
 	protected ArrayList<NodeItem> mItems;
-	protected HashMap<NodeItem,Rectangle> mItemBounds;
 
 
 	public NodeBox(String aName, NodeItem... aItems)
@@ -29,7 +28,6 @@ public class NodeBox
 		mName = aName;
 		mBounds = new Rectangle(0, 30);
 		mItems = new ArrayList<>();
-		mItemBounds = new HashMap<>();
 
 		for (NodeItem item : aItems)
 		{
@@ -76,7 +74,7 @@ public class NodeBox
 		{
 			for (NodeItem item : mItems)
 			{
-				item.paintComponent(mEditorPane, aGraphics, mItemBounds.get(item), false, false);
+				item.paintComponent(mEditorPane, aGraphics, false, false);
 			}
 		}
 	}
@@ -127,11 +125,8 @@ public class NodeBox
 			for (NodeItem item : mItems)
 			{
 				Dimension size = item.getSize();
-
-				Rectangle bounds = new Rectangle(5 + 9, y, mBounds.width - (5 + 9 + 5 + 9), size.height);
-				mItemBounds.put(item, bounds);
-
-				y += bounds.height;
+				item.mBounds.setBounds(5 + 9, y, mBounds.width - (5 + 9 + 5 + 9), size.height);
+				y += item.mBounds.height;
 			}
 		}
 	}
@@ -143,9 +138,7 @@ public class NodeBox
 		{
 			for (NodeItem item : mItems)
 			{
-				Rectangle bounds = mItemBounds.get(item);
-
-				int by0 = bounds.y + Math.min(bounds.height, TITLE_HEIGHT_PADDED + 4) / 2 - 5;
+				int by0 = item.mBounds.y + Math.min(item.mBounds.height, TITLE_HEIGHT_PADDED + 4) / 2 - 5;
 				int by1 = by0;
 
 				for (Connector connector : item.mConnectors)
@@ -219,7 +212,7 @@ public class NodeBox
 	}
 
 
-	protected Rectangle getBounds()
+	public Rectangle getBounds()
 	{
 		return mBounds;
 	}
@@ -302,5 +295,19 @@ public class NodeBox
 		{
 			aGraphics.fillPolygon(new int[]{aX, aX + w, aX + w / 2}, new int[]{aY - h, aY - h, aY + h}, 3);
 		}
+	}
+
+
+	protected NodeItem mousePressed(Point aPoint)
+	{
+		for (NodeItem item : mItems)
+		{
+			if (item.mBounds.contains(aPoint.x - mBounds.x, aPoint.y - mBounds.y))
+			{
+				return item;
+			}
+		}
+
+		return null;
 	}
 }

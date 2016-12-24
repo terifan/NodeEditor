@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.LinearGradientPaint;
 import java.awt.Paint;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import org.terifan.nodeeditor.Connector;
@@ -21,6 +22,8 @@ public class SliderNodeItem extends NodeItem
 	private double mMin;
 	private double mMax;
 	private double mValue;
+	private double mStartValue;
+	private boolean mArmed;
 	
 	
 	public SliderNodeItem(String aText, double aMin, double aMax, double aValue, Connector... aConnectors)
@@ -34,28 +37,52 @@ public class SliderNodeItem extends NodeItem
 
 
 	@Override
-	protected void paintComponent(NodeEditorPane aEditorPane, Graphics2D aGraphics, Rectangle aBounds, boolean aHover, boolean aArmed)
+	protected void paintComponent(NodeEditorPane aEditorPane, Graphics2D aGraphics, boolean aHover, boolean aArmed)
 	{
-		int i = aHover ? 1 : aArmed ? 2 : 0;
+		int i = aHover ? 1 : mArmed ? 2 : 0;
 
 		Shape oldClip = aGraphics.getClip();
 		Paint oldPaint = aGraphics.getPaint();
 
 		aGraphics.setColor(new Color(48, 48, 48));
-		aGraphics.fillRoundRect(aBounds.x, aBounds.y, aBounds.width, aBounds.height - 1, 15, 15);
+		aGraphics.fillRoundRect(mBounds.x, mBounds.y, mBounds.width, mBounds.height - 1, 15, 15);
 
-		aGraphics.setPaint(new LinearGradientPaint(0, aBounds.y, 0, aBounds.y + aBounds.height, RANGES, Styles.SLIDER_COLORS[i][0]));
-		aGraphics.fillRoundRect(aBounds.x + 1, aBounds.y + 1, aBounds.width - 2, aBounds.height - 2 - 1, 15, 15);
+		aGraphics.setPaint(new LinearGradientPaint(0, mBounds.y, 0, mBounds.y + mBounds.height, RANGES, Styles.SLIDER_COLORS[i][0]));
+		aGraphics.fillRoundRect(mBounds.x + 1, mBounds.y + 1, mBounds.width - 2, mBounds.height - 2 - 1, 15, 15);
 
-		aGraphics.setClip(aBounds.x, aBounds.y, 7 + (int)((aBounds.width - 7) * mValue), aBounds.height);
-		aGraphics.setPaint(new LinearGradientPaint(0, aBounds.y, 0, aBounds.y + aBounds.height, RANGES, Styles.SLIDER_COLORS[i][1]));
-		aGraphics.fillRoundRect(aBounds.x + 1, aBounds.y + 1, aBounds.width - 2, aBounds.height - 2 - 1, 15, 15);
+		aGraphics.setClip(mBounds.x, mBounds.y, 7 + (int)((mBounds.width - 7) * mValue), mBounds.height);
+		aGraphics.setPaint(new LinearGradientPaint(0, mBounds.y, 0, mBounds.y + mBounds.height, RANGES, Styles.SLIDER_COLORS[i][1]));
+		aGraphics.fillRoundRect(mBounds.x + 1, mBounds.y + 1, mBounds.width - 2, mBounds.height - 2 - 1, 15, 15);
 
 		aGraphics.setClip(oldClip);
 		aGraphics.setPaint(oldPaint);
 
-		Rectangle m = new TextBox("" + mValue).setBounds(aBounds).setAnchor(Anchor.EAST).setMargins(0, 0, 0, 10).setForeground(Styles.SLIDER_COLORS[i][2][0]).setMaxLineCount(1).render(aGraphics).measure();
+		Rectangle m = new TextBox(String.format("%3.3f", mValue)).setBounds(mBounds).setAnchor(Anchor.EAST).setMargins(0, 0, 0, 10).setForeground(Styles.SLIDER_COLORS[i][2][0]).setMaxLineCount(1).render(aGraphics).measure();
 
-		new TextBox(mName).setSuffix(":").setBounds(aBounds).setAnchor(Anchor.WEST).setMargins(0, 10, 0, m.width).setForeground(Styles.SLIDER_COLORS[i][2][1]).setMaxLineCount(1).render(aGraphics);
+		new TextBox(mName).setSuffix(":").setBounds(mBounds).setAnchor(Anchor.WEST).setMargins(0, 10, 0, m.width).setForeground(Styles.SLIDER_COLORS[i][2][1]).setMaxLineCount(1).render(aGraphics);
+	}
+
+
+	@Override
+	protected void mouseClicked(NodeEditorPane aEditorPane, Point aClickPoint)
+	{
+		mStartValue = mValue;
+		mArmed = true;
+	}
+
+
+	@Override
+	protected void mouseReleased(NodeEditorPane aEditorPane, Point aClickPoint)
+	{
+		mArmed = false;
+		aEditorPane.repaint();
+	}
+
+
+	@Override
+	protected void mouseDragged(NodeEditorPane aEditorPane, Point aClickPoint, Point aDragPoint)
+	{
+		mValue = Math.max(mMin, Math.min(mMax, mStartValue + (aDragPoint.x - aClickPoint.x) / (double)mBounds.width));
+		aEditorPane.repaint();
 	}
 }

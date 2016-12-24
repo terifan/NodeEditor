@@ -36,6 +36,7 @@ public class NodeEditorPane extends JComponent
 	private boolean mConnectorSelectionAllowed;
 	private double mScale;
 	private boolean mRemoveInConnectionsOnDrop;
+	private NodeItem mClickedItem;
 
 
 	public NodeEditorPane()
@@ -383,20 +384,52 @@ public class NodeEditorPane extends JComponent
 		private boolean mHitBox;
 
 
+//		@Override
+//		public void mouseMoved(MouseEvent aEvent)
+//		{
+//			Point point = calcMousePoint(aEvent);
+//
+//			for (NodeBox box : mNodes)
+//			{
+//				Rectangle b = box.getBounds();
+//				if (b.contains(point))
+//				{
+//					return;
+//				}
+//			}
+//		}
+
+
 		@Override
 		public void mousePressed(MouseEvent aEvent)
 		{
 			mDragPoint = aEvent.getPoint();
 			mClickPoint = calcMousePoint(aEvent);
 
+			NodeBox clickedBox = null;
+			
 			for (NodeBox box : mNodes)
 			{
 				Rectangle b = box.getBounds();
-				if (b.contains(mClickPoint) && new Rectangle(b.x + 11, b.y + 7, 14, 16).contains(mClickPoint))
+
+				if (b.contains(mClickPoint))
 				{
-					box.setMinimized(!box.isMinimized());
-					updateSelections(aEvent);
-					return;
+					clickedBox = box;
+
+					if (new Rectangle(b.x + 11, b.y + 7, 14, 16).contains(mClickPoint))
+					{
+						box.setMinimized(!box.isMinimized());
+						updateSelections(aEvent, clickedBox);
+						return;
+					}
+
+					mClickedItem = box.mousePressed(mClickPoint);
+					if (mClickedItem != null)
+					{
+						mClickedItem.mouseClicked(NodeEditorPane.this, mClickPoint);
+						
+						return;
+					}
 				}
 			}
 
@@ -427,7 +460,7 @@ public class NodeEditorPane extends JComponent
 			}
 			else if (SwingUtilities.isLeftMouseButton(aEvent))
 			{
-				updateSelections(aEvent);
+				updateSelections(aEvent, clickedBox);
 
 				if (!mHitBox && mDragConnector == null)
 				{
@@ -442,6 +475,13 @@ public class NodeEditorPane extends JComponent
 		{
 			mClickPoint = calcMousePoint(aEvent);
 
+			if (mClickedItem != null)
+			{
+				mClickedItem.mouseReleased(NodeEditorPane.this, mClickPoint);
+				mClickedItem = null;
+				repaint();
+				return;
+			}
 			if (mDragConnector != null)
 			{
 				Connector nearestConnector = findNearestConnector(mClickPoint);
@@ -473,6 +513,12 @@ public class NodeEditorPane extends JComponent
 				{
 					mSelectedNodes.clear();
 				}
+
+				mSelectionRectangle.x /= mScale;
+				mSelectionRectangle.y /= mScale;
+				mSelectionRectangle.width /= mScale;
+				mSelectionRectangle.height /= mScale;
+
 				for (NodeBox box : mNodes)
 				{
 					if (mSelectionRectangle.intersects(box.getBounds()))
@@ -499,6 +545,11 @@ public class NodeEditorPane extends JComponent
 		{
 			Point newPoint = calcMousePoint(aEvent);
 
+			if (mClickedItem != null)
+			{
+				mClickedItem.mouseDragged(NodeEditorPane.this, mClickPoint, newPoint);
+				return;
+			}
 			if (mSelectionRectangle != null)
 			{
 				int x0 = (int)(Math.min(mClickPoint.x, newPoint.x) * mScale);
@@ -614,39 +665,36 @@ public class NodeEditorPane extends JComponent
 		}
 
 
-		private void updateSelections(MouseEvent aEvent)
+		private void updateSelections(MouseEvent aEvent, NodeBox aClickedBox)
 		{
 			NodeBox newSelection = null;
 			NodeBox clickedBox = null;
 
-			for (NodeBox box : mNodes)
+			if (aClickedBox != null)
 			{
-				if (box.getBounds().contains(mClickPoint))
+				Rectangle shrunkBounds = new Rectangle(aClickedBox.getBounds());
+				shrunkBounds.grow(-5, -4);
+
+				if (shrunkBounds.contains(mClickPoint))
 				{
-					Rectangle shrunkBounds = new Rectangle(box.getBounds());
-					shrunkBounds.grow(-5, -4);
+					clickedBox = aClickedBox;
 
-					if (shrunkBounds.contains(mClickPoint))
+					boolean b = mSelectedNodes.contains(aClickedBox);
+					if (aEvent.isControlDown())
 					{
-						clickedBox = box;
-
-						boolean b = mSelectedNodes.contains(box);
-						if (aEvent.isControlDown())
+						if (b)
 						{
-							if (b)
-							{
-								mSelectedNodes.remove(box);
-							}
-							else
-							{
-								newSelection = box;
-							}
+							mSelectedNodes.remove(aClickedBox);
 						}
-						else if (!b)
+						else
 						{
-							mSelectedNodes.clear();
-							newSelection = box;
+							newSelection = aClickedBox;
 						}
+					}
+					else if (!b)
+					{
+						mSelectedNodes.clear();
+						newSelection = aClickedBox;
 					}
 				}
 			}
