@@ -66,8 +66,9 @@ public class SliderNodeItem extends NodeItem
 	@Override
 	protected void mouseClicked(NodeEditorPane aEditorPane, Point aClickPoint)
 	{
-		mStartValue = mValue;
 		mArmed = true;
+		mStartValue = mValue;
+		aEditorPane.repaint();
 	}
 
 
