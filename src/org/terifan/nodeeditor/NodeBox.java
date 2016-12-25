@@ -21,6 +21,8 @@ public class NodeBox
 	protected Rectangle mBounds;
 	protected boolean mMinimized;
 	protected ArrayList<NodeItem> mItems;
+	protected int mVerticalSpacing;
+	protected int mMinWidth;
 
 
 	public NodeBox(String aName, NodeItem... aItems)
@@ -28,6 +30,9 @@ public class NodeBox
 		mName = aName;
 		mBounds = new Rectangle(0, 30);
 		mItems = new ArrayList<>();
+
+		mVerticalSpacing = 3;
+		mMinWidth = 100;
 
 		for (NodeItem item : aItems)
 		{
@@ -74,7 +79,7 @@ public class NodeBox
 		{
 			for (NodeItem item : mItems)
 			{
-				item.paintComponent(mEditorPane, aGraphics, false, false);
+				item.paintComponent(mEditorPane, aGraphics, false);
 			}
 		}
 	}
@@ -94,14 +99,16 @@ public class NodeBox
 		{
 			mBounds.width = 0;
 			mBounds.height = 0;
-
+			
 			for (NodeItem item : mItems)
 			{
 				Dimension size = item.getSize();
 
 				mBounds.width = Math.max(mBounds.width, size.width);
-				mBounds.height += size.height;
+				mBounds.height += size.height + mVerticalSpacing;
 			}
+			
+			mBounds.width = Math.max(mBounds.width, mMinWidth);
 
 			mBounds.width += 5 + 9 + 5 + 9;
 			mBounds.height += TITLE_HEIGHT_PADDED;
@@ -125,8 +132,10 @@ public class NodeBox
 			for (NodeItem item : mItems)
 			{
 				Dimension size = item.getSize();
+
 				item.mBounds.setBounds(5 + 9, y, mBounds.width - (5 + 9 + 5 + 9), size.height);
-				y += item.mBounds.height;
+
+				y += item.mBounds.height + mVerticalSpacing;
 			}
 		}
 	}
@@ -254,20 +263,23 @@ public class NodeBox
 		}
 		else
 		{
-			Shape c = aGraphics.getClip();
+			Shape oldClip = aGraphics.getClip();
 
 			aGraphics.setColor(BOX_BORDER_TITLE_COLOR);
 			aGraphics.clipRect(aX, aY, aWidth, th);
 			aGraphics.fillRoundRect(aX, aY, aWidth, th + 3 + 12, BORDE_RADIUS, BORDE_RADIUS);
 
-			aGraphics.setClip(c);
+			aGraphics.setClip(oldClip);
 
 			aGraphics.setColor(BOX_BACKGROUND_COLOR);
 			aGraphics.clipRect(aX, aY + th, aWidth, aHeight - th);
 			aGraphics.fillRoundRect(aX, aY, aWidth, aHeight, BORDE_RADIUS, BORDE_RADIUS);
 
-			aGraphics.setClip(c);
+			aGraphics.setClip(oldClip);
 		}
+
+		aGraphics.setColor(BOX_BORDER_TITLE_SEPARATOR_COLOR);
+		aGraphics.drawLine(aX, aY+th-1, aX+aWidth, aY+th-1);
 
 		int inset = 6 + 4 + BUTTON_WIDTH;
 
@@ -277,6 +289,7 @@ public class NodeBox
 			.setBounds(aX + inset, aY + 3, aWidth - inset - 4, TITLE_HEIGHT)
 			.setForeground(BOX_FOREGROUND_COLOR)
 			.setMaxLineCount(1)
+			.setFont(Styles.BOX_FONT)
 			.render(aGraphics);
 
 		aGraphics.setColor(aSelected ? BOX_BORDER_SELECTED_COLOR : BOX_BORDER_COLOR);
@@ -298,6 +311,9 @@ public class NodeBox
 	}
 
 
+	/**
+	 * Return item pressed
+	 */
 	protected NodeItem mousePressed(Point aPoint)
 	{
 		for (NodeItem item : mItems)

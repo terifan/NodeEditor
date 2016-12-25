@@ -405,6 +405,7 @@ public class NodeEditorPane extends JComponent
 		{
 			mDragPoint = aEvent.getPoint();
 			mClickPoint = calcMousePoint(aEvent);
+			mClickedItem = null;
 
 			NodeBox clickedBox = null;
 			
@@ -423,12 +424,20 @@ public class NodeEditorPane extends JComponent
 						return;
 					}
 
-					mClickedItem = box.mousePressed(mClickPoint);
-					if (mClickedItem != null)
+					NodeItem tmp = box.mousePressed(mClickPoint);
+					if (tmp != null)
 					{
-						mClickedItem.mouseClicked(NodeEditorPane.this, mClickPoint);
-						
-						return;
+						if (tmp.mousePressed(NodeEditorPane.this, mClickPoint))
+						{
+							mSelectedNodes.clear();
+							mSelectedNodes.add(box);
+							mClickedItem = tmp;
+							repaint();
+
+							tmp.actionPerformed(NodeEditorPane.this, mClickPoint);
+
+							return;
+						}
 					}
 				}
 			}

@@ -22,9 +22,7 @@ public class NodeItem
 	{
 		this(aName, 100, 20, aConnectors);
 
-		mSize = new TextBox(mName).setMaxWidth(300).measure().getSize();
-		mSize.width = Math.max(mSize.width, 100);
-		mSize.height = Math.max(mSize.height, 20);
+		mSize = new TextBox(mName).setMaxWidth(300).setFont(Styles.BOX_FONT).measure().getSize();
 	}
 
 
@@ -61,14 +59,26 @@ public class NodeItem
 	}
 
 
-	protected void paintComponent(NodeEditorPane aEditorPane, Graphics2D aGraphics, boolean aHover, boolean aArmed)
+	protected void paintComponent(NodeEditorPane aEditorPane, Graphics2D aGraphics, boolean aHover)
 	{
-		new TextBox(mName).setBounds(mBounds).setAnchor(mConnectors.length == 0 || mConnectors[0].mDirection == Direction.IN ? Anchor.WEST : Anchor.EAST).setForeground(Styles.BOX_FOREGROUND_COLOR).render(aGraphics);
+		new TextBox(mName).setBounds(mBounds).setAnchor(mConnectors.length == 0 || mConnectors[0].mDirection == Direction.IN ? Anchor.WEST : Anchor.EAST).setForeground(Styles.BOX_FOREGROUND_COLOR).setFont(Styles.BOX_ITEM_FONT).render(aGraphics);
 	}
 
 
-	protected void mouseClicked(NodeEditorPane aEditorPane, Point aClickPoint)
+	/**
+	 * Perform the action of this item, for instance after a mouse click.
+	 */
+	protected void actionPerformed(NodeEditorPane aEditorPane, Point aClickPoint)
 	{
+	}
+
+
+	/**
+	 * Return true if item was clicked.
+	 */
+	protected boolean mousePressed(NodeEditorPane aEditorPane, Point aClickPoint)
+	{
+		return false;
 	}
 
 
