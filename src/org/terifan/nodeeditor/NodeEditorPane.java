@@ -2,6 +2,7 @@ package org.terifan.nodeeditor;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -119,7 +120,14 @@ public class NodeEditorPane extends JComponent
 		{
 			for (NodeItem item : box.mItems)
 			{
-				if (item.getName().equals(aFromNodeItemName))
+				if (!(item instanceof TextNodeItem))
+				{
+					continue;
+				}
+
+				TextNodeItem textNodeItem = (TextNodeItem)item;
+				
+				if (textNodeItem.getText().equals(aFromNodeItemName))
 				{
 					for (Connector connector : item.mConnectors)
 					{
@@ -129,7 +137,7 @@ public class NodeEditorPane extends JComponent
 						}
 					}
 				}
-				if (item.getName().equals(aToNodeItemName))
+				if (textNodeItem.getText().equals(aToNodeItemName))
 				{
 					for (Connector connector : item.mConnectors)
 					{
@@ -142,7 +150,7 @@ public class NodeEditorPane extends JComponent
 			}
 		}
 
-		NodeEditorPane.this.addConnection(out, in);
+		addConnection(out, in);
 
 		return this;
 	}
@@ -195,7 +203,7 @@ public class NodeEditorPane extends JComponent
 		Rectangle bounds = new Rectangle(mNodes.get(0).getBounds());
 		for (NodeBox box : mNodes)
 		{
-			box.layout();
+			box.layout(null);
 			bounds.add(box.getBounds());
 		}
 
@@ -230,7 +238,7 @@ public class NodeEditorPane extends JComponent
 
 		for (NodeBox box : mNodes)
 		{
-			box.layout();
+			box.layout(g);
 		}
 
 		for (Connection connection : mConnections)
@@ -331,7 +339,7 @@ public class NodeEditorPane extends JComponent
 		Rectangle bounds = new Rectangle(mNodes.get(0).getBounds());
 		for (NodeBox box : mNodes)
 		{
-			box.layout();
+			box.layout(null);
 			bounds.add(box.getBounds());
 		}
 
@@ -382,22 +390,33 @@ public class NodeEditorPane extends JComponent
 		private Point mClickPoint;
 		private Point mDragPoint;
 		private boolean mHitBox;
+		private int mCursor;
+		private NodeBox mHoverBox;
+		private Rectangle mStartBounds;
+
+		{
+			mCursor = Cursor.DEFAULT_CURSOR;
+		}
 
 
-//		@Override
-//		public void mouseMoved(MouseEvent aEvent)
-//		{
-//			Point point = calcMousePoint(aEvent);
-//
-//			for (NodeBox box : mNodes)
-//			{
-//				Rectangle b = box.getBounds();
-//				if (b.contains(point))
-//				{
-//					return;
-//				}
-//			}
-//		}
+		@Override
+		public void mouseMoved(MouseEvent aEvent)
+		{
+			Point point = calcMousePoint(aEvent);
+
+			for (NodeBox box : mNodes)
+			{
+				Rectangle b = box.getBounds();
+				if (!box.isMinimized() && b.contains(point) && findNearestConnector(point, box) == null)
+				{
+					mHoverBox = box;
+					updateCursor(getCursor(point, box));
+					return;
+				}
+			}
+
+			updateCursor(Cursor.DEFAULT_CURSOR);
+		}
 
 
 		@Override
@@ -405,6 +424,19 @@ public class NodeEditorPane extends JComponent
 		{
 			mDragPoint = aEvent.getPoint();
 			mClickPoint = calcMousePoint(aEvent);
+			
+			if (mCursor != Cursor.DEFAULT_CURSOR)
+			{
+				mStartBounds = new Rectangle(mHoverBox.getBounds());
+				
+				mSelectedNodes.clear();
+				mSelectedNodes.add(mHoverBox);
+				mSelectedConnection = null;
+				repaint();
+
+				return;
+			}
+
 			mClickedItem = null;
 
 			NodeBox clickedBox = null;
@@ -484,6 +516,12 @@ public class NodeEditorPane extends JComponent
 		{
 			mClickPoint = calcMousePoint(aEvent);
 
+			if (mCursor != Cursor.DEFAULT_CURSOR)
+			{
+				updateCursor(Cursor.DEFAULT_CURSOR);
+				return;
+			}
+
 			if (mClickedItem != null)
 			{
 				mClickedItem.mouseReleased(NodeEditorPane.this, mClickPoint);
@@ -553,6 +591,12 @@ public class NodeEditorPane extends JComponent
 		public void mouseDragged(MouseEvent aEvent)
 		{
 			Point newPoint = calcMousePoint(aEvent);
+			
+			if (mCursor != Cursor.DEFAULT_CURSOR)
+			{
+				resizeBox(mHoverBox, newPoint);
+				return;
+			}
 
 			if (mClickedItem != null)
 			{
@@ -674,6 +718,45 @@ public class NodeEditorPane extends JComponent
 		}
 
 
+		private Connector findNearestConnector(Point aPoint, NodeBox box)
+		{
+			Connector nearest = null;
+			double dist = 25;
+			boolean hitBox = false;
+
+			if (mDragConnector != null && mDragConnector.mItem.mNodeBox == box)
+			{
+				return null;
+			}
+
+			int x = aPoint.x - box.getBounds().x;
+			int y = aPoint.y - box.getBounds().y;
+
+			for (NodeItem item : box.getItems())
+			{
+				for (Connector c : item.mConnectors)
+				{
+					double dx = x - c.getBounds().getCenterX();
+					double dy = y - c.getBounds().getCenterY();
+					double d = Math.sqrt(dx * dx + dy * dy);
+					if (d < dist)
+					{
+						hitBox = box.getBounds().contains(aPoint);
+						nearest = c;
+						dist = d;
+					}
+				}
+			}
+
+			if (hitBox && nearest != null && dist > 8)
+			{
+				nearest = null;
+			}
+
+			return nearest;
+		}
+
+
 		private void updateSelections(MouseEvent aEvent, NodeBox aClickedBox)
 		{
 			NodeBox newSelection = null;
@@ -741,6 +824,125 @@ public class NodeEditorPane extends JComponent
 				}
 			}
 
+			repaint();
+		}
+
+
+		protected void updateCursor(int aCursor)
+		{
+			if (mCursor != aCursor)
+			{
+				mCursor = aCursor;
+				SwingUtilities.invokeLater(()->setCursor(Cursor.getPredefinedCursor(aCursor < -1 ? Cursor.DEFAULT_CURSOR : aCursor)));
+			}
+		}
+
+
+		private int getCursor(Point aPoint, NodeBox aNodeBox)
+		{
+			boolean rx = aNodeBox.isResizableHorizontal();
+			boolean ry = aNodeBox.isResizableVertical();
+
+			if (!rx && !ry)
+			{
+				return Cursor.DEFAULT_CURSOR;
+			}
+
+			int PX = 5;
+			int PY = 4;
+			Rectangle bounds = aNodeBox.getBounds();
+
+			if (aPoint.y - PY < bounds.y + 2 * PY)
+			{
+				if (aPoint.x - PX < bounds.x + 2 * PX)
+				{
+					return rx ? ry ? Cursor.NW_RESIZE_CURSOR : Cursor.W_RESIZE_CURSOR : Cursor.N_RESIZE_CURSOR;
+				}
+				if (aPoint.x + PX >= bounds.x + bounds.width - 2 * PX)
+				{
+					return rx ? ry ? Cursor.NE_RESIZE_CURSOR : Cursor.E_RESIZE_CURSOR : Cursor.N_RESIZE_CURSOR;
+				}
+				if (aPoint.y - PY < bounds.y + PY && ry)
+				{
+					return Cursor.N_RESIZE_CURSOR;
+				}
+			}
+			else if (aPoint.y + PY >= bounds.y + bounds.height - 2 * PY)
+			{
+				if (aPoint.x - PX < bounds.x + 2 * PX)
+				{
+					return rx ? ry ? Cursor.SW_RESIZE_CURSOR : Cursor.W_RESIZE_CURSOR : Cursor.S_RESIZE_CURSOR;
+				}
+				if (aPoint.x + PX >= bounds.x + bounds.width - 2 * PX)
+				{
+					return rx ? ry ? Cursor.SE_RESIZE_CURSOR : Cursor.E_RESIZE_CURSOR : Cursor.S_RESIZE_CURSOR;
+				}
+				if (aPoint.y + PY >= bounds.y + bounds.height - PY && ry)
+				{
+					return Cursor.S_RESIZE_CURSOR;
+				}
+			}
+			else if (aPoint.x - PX < bounds.x + PX && rx)
+			{
+				return Cursor.W_RESIZE_CURSOR;
+			}
+			else if (aPoint.x + PX > bounds.x + bounds.width - PX && rx)
+			{
+				return Cursor.E_RESIZE_CURSOR;
+			}
+
+			return Cursor.DEFAULT_CURSOR;
+		}
+		
+		
+		private void resizeBox(NodeBox aNodeBox, Point aPoint)
+		{
+			Rectangle b = aNodeBox.getBounds();
+
+			switch (mCursor)
+			{
+				case Cursor.W_RESIZE_CURSOR:
+				case Cursor.NW_RESIZE_CURSOR:
+				case Cursor.SW_RESIZE_CURSOR:
+					int o = b.x;
+					b.x = Math.min(mStartBounds.x - mClickPoint.x + aPoint.x, mStartBounds.x + mStartBounds.width - aNodeBox.getMinSize().width);
+					b.width += o - b.x;
+					break;
+			}
+
+			switch (mCursor)
+			{
+				case Cursor.N_RESIZE_CURSOR:
+				case Cursor.NW_RESIZE_CURSOR:
+				case Cursor.NE_RESIZE_CURSOR:
+					int o = b.y;
+					b.y = Math.min(mStartBounds.y - mClickPoint.y + aPoint.y, mStartBounds.y + mStartBounds.height - aNodeBox.getMinSize().height);
+					b.height += o - b.y;
+					break;
+			}
+
+			switch (mCursor)
+			{
+				case Cursor.SW_RESIZE_CURSOR:
+				case Cursor.S_RESIZE_CURSOR:
+				case Cursor.SE_RESIZE_CURSOR:
+					b.height = mStartBounds.height - mClickPoint.y + aPoint.y;
+					break;
+			}
+
+			switch (mCursor)
+			{
+				case Cursor.E_RESIZE_CURSOR:
+				case Cursor.SE_RESIZE_CURSOR:
+				case Cursor.NE_RESIZE_CURSOR:
+					b.width = mStartBounds.width - mClickPoint.x + aPoint.x;
+					break;
+			}
+
+			b.width = Math.min(aNodeBox.getMaxSize().width, Math.max(aNodeBox.getMinSize().width, b.width));
+			b.height = Math.min(aNodeBox.getMaxSize().height, Math.max(aNodeBox.getMinSize().height, b.height));
+
+			aNodeBox.mBounds.setBounds(b);
 			repaint();
 		}
 	};

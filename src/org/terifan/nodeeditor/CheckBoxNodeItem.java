@@ -1,4 +1,4 @@
-package org.terifan.nodeeditor.examples;
+package org.terifan.nodeeditor;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -7,15 +7,10 @@ import java.awt.LinearGradientPaint;
 import java.awt.Paint;
 import java.awt.Point;
 import java.awt.Stroke;
-import org.terifan.nodeeditor.Connector;
-import org.terifan.nodeeditor.NodeEditorPane;
-import org.terifan.nodeeditor.Styles;
-import org.terifan.nodeeditor.NodeItem;
 import org.terifan.ui.Anchor;
-import org.terifan.ui.TextBox;
 
 
-public class CheckBoxNodeItem extends NodeItem
+public class CheckBoxNodeItem extends TextNodeItem
 {
 	private final static float[] RANGES = new float[]{0f,1f};
 	private boolean mState;
@@ -23,7 +18,7 @@ public class CheckBoxNodeItem extends NodeItem
 	
 	public CheckBoxNodeItem(String aText, boolean aState, Connector... aConnectors)
 	{
-		super(aText, 100, 16, aConnectors);
+		super(aText, aConnectors);
 
 		mState = aState;
 	}
@@ -62,7 +57,7 @@ public class CheckBoxNodeItem extends NodeItem
 		
 		aGraphics.setPaint(oldPaint);
 
-		new TextBox(mName)
+		mTextBox
 			.setBounds(mBounds)
 			.setAnchor(Anchor.WEST)
 			.setMargins(3, ss + 5, 0, 0)

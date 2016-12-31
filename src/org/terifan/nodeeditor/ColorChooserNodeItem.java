@@ -1,19 +1,14 @@
-package org.terifan.nodeeditor.examples;
+package org.terifan.nodeeditor;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import javax.swing.JColorChooser;
-import org.terifan.nodeeditor.Connector;
-import org.terifan.nodeeditor.NodeEditorPane;
-import org.terifan.nodeeditor.Styles;
-import org.terifan.nodeeditor.NodeItem;
 import org.terifan.ui.Anchor;
-import org.terifan.ui.TextBox;
 
 
-public class ColorChooserNodeItem extends NodeItem
+public class ColorChooserNodeItem extends TextNodeItem
 {
 	private static final int COLOR_BOX_WIDTH = 30;
 	private Color mColor;
@@ -24,7 +19,7 @@ public class ColorChooserNodeItem extends NodeItem
 		super(aText, aConnectors);
 
 		mColor = aColor;
-		mSize.height = 20;
+		mPreferredSize.height = 20;
 	}
 
 
@@ -37,7 +32,7 @@ public class ColorChooserNodeItem extends NodeItem
 		aGraphics.setColor(mColor);
 		aGraphics.fillRoundRect(mBounds.x + 1, mBounds.y + 1, COLOR_BOX_WIDTH - 2, mBounds.height - 2, 4, 4);
 
-		new TextBox(mName)
+		mTextBox
 			.setBounds(mBounds)
 			.setAnchor(Anchor.WEST)
 			.setMargins(0, COLOR_BOX_WIDTH + 10, 0, 0)
@@ -49,7 +44,7 @@ public class ColorChooserNodeItem extends NodeItem
 	@Override
 	protected void actionPerformed(NodeEditorPane aEditorPane, Point aClickPoint)
 	{
-		Color c = JColorChooser.showDialog(aEditorPane, mName, mColor);
+		Color c = JColorChooser.showDialog(aEditorPane, mTextBox.getText(), mColor);
 		if (c != null)
 		{
 			mColor = c;

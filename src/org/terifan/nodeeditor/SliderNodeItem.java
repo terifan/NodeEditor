@@ -1,21 +1,16 @@
-package org.terifan.nodeeditor.examples;
+package org.terifan.nodeeditor;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.LinearGradientPaint;
 import java.awt.Paint;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
-import org.terifan.nodeeditor.Connector;
-import org.terifan.nodeeditor.NodeEditorPane;
-import org.terifan.nodeeditor.Styles;
-import org.terifan.nodeeditor.NodeItem;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.TextBox;
 
 
-public class SliderNodeItem extends NodeItem
+public class SliderNodeItem extends TextNodeItem
 {
 	private final static float[] RANGES = new float[]{0f,1f};
 
@@ -32,7 +27,6 @@ public class SliderNodeItem extends NodeItem
 		this(aText, Double.MIN_VALUE, Double.MAX_VALUE, aValue, aConnectors);
 
 		mStepSize = aStepSize;
-		mSize.height = 20;
 	}
 
 
@@ -43,7 +37,7 @@ public class SliderNodeItem extends NodeItem
 		mMin = aMin;
 		mMax = aMax;
 		mValue = aValue;
-		mSize.height = 20;
+		mPreferredSize.height = 20;
 	}
 
 
@@ -89,7 +83,7 @@ public class SliderNodeItem extends NodeItem
 
 		Rectangle m = new TextBox(String.format("%3.3f", mValue)).setBounds(mBounds).setAnchor(Anchor.EAST).setMargins(0, 0, 0, 15).setForeground(Styles.SLIDER_COLORS[i][2][0]).setMaxLineCount(1).setFont(Styles.SLIDER_FONT).render(aGraphics).measure();
 
-		new TextBox(mName).setSuffix(":").setBounds(mBounds).setAnchor(Anchor.WEST).setMargins(0, 15, 0, m.width).setForeground(Styles.SLIDER_COLORS[i][2][1]).setMaxLineCount(1).setFont(Styles.SLIDER_FONT).render(aGraphics);
+		mTextBox.setSuffix(":").setBounds(mBounds).setAnchor(Anchor.WEST).setMargins(0, 15, 0, m.width).setForeground(Styles.SLIDER_COLORS[i][2][1]).setMaxLineCount(1).setFont(Styles.SLIDER_FONT).render(aGraphics);
 	}
 
 

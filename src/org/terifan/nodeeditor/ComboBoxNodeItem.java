@@ -1,18 +1,13 @@
-package org.terifan.nodeeditor.examples;
+package org.terifan.nodeeditor;
 
 import java.awt.Graphics2D;
 import java.awt.LinearGradientPaint;
 import java.awt.Paint;
 import java.awt.Point;
-import org.terifan.nodeeditor.Connector;
-import org.terifan.nodeeditor.NodeEditorPane;
-import org.terifan.nodeeditor.Styles;
-import org.terifan.nodeeditor.NodeItem;
 import org.terifan.ui.Anchor;
-import org.terifan.ui.TextBox;
 
 
-public class ComboBoxNodeItem extends NodeItem
+public class ComboBoxNodeItem extends TextNodeItem
 {
 	private final static float[] RANGES = new float[]{0f,1f};
 	private boolean mArmed;
@@ -21,8 +16,8 @@ public class ComboBoxNodeItem extends NodeItem
 	public ComboBoxNodeItem(String aText, Connector... aConnectors)
 	{
 		super(aText, aConnectors);
-		
-		mSize.height = 21;
+
+		mPreferredSize.height = 21;
 	}
 
 
@@ -54,7 +49,7 @@ public class ComboBoxNodeItem extends NodeItem
 		
 		aGraphics.setPaint(oldPaint);
 
-		new TextBox(mName).setBounds(mBounds).setAnchor(Anchor.WEST).setMargins(0, 8, 0, 15).setForeground(Styles.BOX_FOREGROUND_SELECTED_COLOR).setMaxLineCount(1).setFont(Styles.SLIDER_FONT).render(aGraphics);
+		mTextBox.setBounds(mBounds).setAnchor(Anchor.WEST).setMargins(0, 8, 0, 15).setForeground(Styles.BOX_FOREGROUND_SELECTED_COLOR).setMaxLineCount(1).setFont(Styles.SLIDER_FONT).render(aGraphics);
 	}
 
 

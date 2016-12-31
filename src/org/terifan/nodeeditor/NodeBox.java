@@ -7,7 +7,6 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.util.ArrayList;
-import java.util.HashMap;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.TextBox;
 import static org.terifan.nodeeditor.Styles.*;
@@ -22,22 +21,77 @@ public class NodeBox
 	protected boolean mMinimized;
 	protected ArrayList<NodeItem> mItems;
 	protected int mVerticalSpacing;
-	protected int mMinWidth;
+	protected Dimension mMinSize;
+	protected Dimension mMaxSize;
+	protected Dimension mRestoredSize;
+	protected boolean mResizableHorizontal;
+	protected boolean mResizableVertical;
 
 
 	public NodeBox(String aName, NodeItem... aItems)
 	{
 		mName = aName;
-		mBounds = new Rectangle(0, 30);
+		mBounds = new Rectangle();
 		mItems = new ArrayList<>();
 
 		mVerticalSpacing = 3;
-		mMinWidth = 100;
+		mMinSize = new Dimension(100, 0);
+		mMaxSize = new Dimension(Short.MAX_VALUE, Short.MAX_VALUE);
+		mResizableHorizontal = true;
+		mResizableVertical = true;
 
 		for (NodeItem item : aItems)
 		{
 			addItem(item);
 		}
+	}
+
+
+	public boolean isResizableHorizontal()
+	{
+		return mResizableHorizontal;
+	}
+
+
+	public void setResizableHorizontal(boolean aResizableHorizontal)
+	{
+		mResizableHorizontal = aResizableHorizontal;
+	}
+
+
+	public boolean isResizableVertical()
+	{
+		return mResizableVertical;
+	}
+
+
+	public void setResizableVertical(boolean aResizableVertical)
+	{
+		mResizableVertical = aResizableVertical;
+	}
+
+
+	public Dimension getMinSize()
+	{
+		return mMinSize;
+	}
+
+
+	public void setMinSize(Dimension aMinSize)
+	{
+		mMinSize = aMinSize;
+	}
+
+
+	public Dimension getMaxSize()
+	{
+		return mMaxSize;
+	}
+
+
+	public void setMaxSize(Dimension aMaxSize)
+	{
+		mMaxSize = aMaxSize;
 	}
 
 
@@ -50,6 +104,15 @@ public class NodeBox
 	public void setMinimized(boolean aMinimized)
 	{
 		mMinimized = aMinimized;
+		
+		if (!mMinimized && mRestoredSize != null)
+		{
+			mBounds.setSize(mRestoredSize);
+		}
+		else
+		{
+			mRestoredSize = mBounds.getSize();
+		}
 	}
 
 
@@ -85,45 +148,50 @@ public class NodeBox
 	}
 
 
-	protected void layout()
+	protected void layout(Graphics2D aGraphics)
 	{
-		computeBounds();
-		layoutItems();
+		computeBounds(aGraphics);
+		layoutItems(aGraphics);
 		layoutConnectors();
 	}
 
 
-	protected void computeBounds()
+	protected void computeBounds(Graphics2D aGraphics)
 	{
 		if (!mMinimized)
 		{
-			mBounds.width = 0;
-			mBounds.height = 0;
-			
-			for (NodeItem item : mItems)
+			if (mBounds.width == 0)
 			{
-				Dimension size = item.getSize();
+				mBounds.width = 0;
+				mBounds.height = 0;
 
-				mBounds.width = Math.max(mBounds.width, size.width);
-				mBounds.height += size.height + mVerticalSpacing;
+				for (NodeItem item : mItems)
+				{
+					Dimension size = item.getPreferredSize(aGraphics, mBounds);
+
+					mBounds.width = Math.max(mBounds.width, Math.min(mMaxSize.width, size.width) + 5 + 9 + 5 + 9);
+					mBounds.height += size.height + mVerticalSpacing;
+				}
+
+				mBounds.width = Math.max(mBounds.width, mMinSize.width);
+				mBounds.height = Math.max(mBounds.height, mMinSize.height);
+
+				mBounds.height += TITLE_HEIGHT_PADDED;
+
+				mBounds.height += 6 + 2 * 4;
 			}
-			
-			mBounds.width = Math.max(mBounds.width, mMinWidth);
-
-			mBounds.width += 5 + 9 + 5 + 9;
-			mBounds.height += TITLE_HEIGHT_PADDED;
 		}
 		else
 		{
-			mBounds.width = 100;
+			mBounds.width = mMinSize.width;
 			mBounds.height = TITLE_HEIGHT;
-		}
 
-		mBounds.height += 6 + 2 * 4;
+			mBounds.height += 6 + 2 * 4;
+		}
 	}
 
 
-	protected void layoutItems()
+	protected void layoutItems(Graphics2D aGraphics)
 	{
 		if (!mMinimized)
 		{
@@ -131,11 +199,20 @@ public class NodeBox
 
 			for (NodeItem item : mItems)
 			{
-				Dimension size = item.getSize();
+				Dimension size = item.getPreferredSize(aGraphics, mBounds);
 
 				item.mBounds.setBounds(5 + 9, y, mBounds.width - (5 + 9 + 5 + 9), size.height);
 
 				y += item.mBounds.height + mVerticalSpacing;
+			}
+
+			y += 6;
+			
+			if (y >= mBounds.height)
+			{
+				mMinSize.height = y;
+				computeBounds(aGraphics);
+				mMinSize.height = mBounds.height;
 			}
 		}
 	}
@@ -245,6 +322,9 @@ public class NodeBox
 
 	protected void paintBorder(Graphics2D aGraphics, int aX, int aY, int aWidth, int aHeight, boolean aSelected)
 	{
+//		aGraphics.setColor(Color.YELLOW);
+//		aGraphics.drawRect(aX, aY, aWidth, aHeight);
+
 		aX += 5;
 		aY += 4;
 		aWidth -= 10;
