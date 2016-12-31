@@ -57,6 +57,7 @@ public class Test1
 			NodeBox nodeBox3 = new NodeBox("nodeBox3", node7);
 			NodeBox nodeBox4 = new NodeBox("nodeBox4", node13, node8, node9, node18, node15, node16, node17);
 			NodeBox nodeBox5 = new NodeBox("nodeBox5", node11, node12, node14);
+			nodeBox2.setMinSize(new Dimension(230,0));
 			editor.add(nodeBox0).addConnection(node0, node2).addConnection(node1, node7);
 			editor.add(nodeBox1).addConnection(node3, node4).addConnection(node9, node12);
 			editor.add(nodeBox2).addConnection(node6, node7);

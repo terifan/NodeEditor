@@ -428,7 +428,10 @@ public class NodeEditorPane extends JComponent
 			if (mCursor != Cursor.DEFAULT_CURSOR)
 			{
 				mStartBounds = new Rectangle(mHoverBox.getBounds());
-				
+
+				mNodes.remove(mHoverBox);
+				mNodes.add(mHoverBox);
+
 				mSelectedNodes.clear();
 				mSelectedNodes.add(mHoverBox);
 				mSelectedConnection = null;
