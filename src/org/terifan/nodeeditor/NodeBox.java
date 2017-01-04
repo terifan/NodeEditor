@@ -53,9 +53,10 @@ public class NodeBox
 	}
 
 
-	public void setResizableHorizontal(boolean aResizableHorizontal)
+	public NodeBox setResizableHorizontal(boolean aResizableHorizontal)
 	{
 		mResizableHorizontal = aResizableHorizontal;
+		return this;
 	}
 
 
@@ -65,9 +66,10 @@ public class NodeBox
 	}
 
 
-	public void setResizableVertical(boolean aResizableVertical)
+	public NodeBox setResizableVertical(boolean aResizableVertical)
 	{
 		mResizableVertical = aResizableVertical;
+		return this;
 	}
 
 
@@ -77,9 +79,10 @@ public class NodeBox
 	}
 
 
-	public void setMinSize(Dimension aMinSize)
+	public NodeBox setMinSize(Dimension aMinSize)
 	{
 		mMinSize = aMinSize;
+		return this;
 	}
 
 
@@ -89,9 +92,10 @@ public class NodeBox
 	}
 
 
-	public void setMaxSize(Dimension aMaxSize)
+	public NodeBox setMaxSize(Dimension aMaxSize)
 	{
 		mMaxSize = aMaxSize;
+		return this;
 	}
 
 
@@ -100,8 +104,15 @@ public class NodeBox
 		return mMinimized;
 	}
 
+	
+	public NodeBox setSize(Dimension aSize)
+	{
+		mBounds.setSize(aSize);
+		return this;
+	}
+	
 
-	public void setMinimized(boolean aMinimized)
+	public NodeBox setMinimized(boolean aMinimized)
 	{
 		mMinimized = aMinimized;
 		
@@ -113,20 +124,23 @@ public class NodeBox
 		{
 			mRestoredSize = mBounds.getSize();
 		}
+		return this;
 	}
 
 
-	public void addItem(NodeItem aItem)
+	public NodeBox addItem(NodeItem aItem)
 	{
 		mItems.add(aItem);
 
 		aItem.mNodeBox = this;
+		return this;
 	}
 
 
-	public void setLocation(int aX, int aY)
+	public NodeBox setLocation(int aX, int aY)
 	{
 		mBounds.setLocation(aX, aY);
+		return this;
 	}
 
 
@@ -179,6 +193,11 @@ public class NodeBox
 				mBounds.height += TITLE_HEIGHT_PADDED;
 
 				mBounds.height += 6 + 2 * 4;
+			}
+			else
+			{
+				mBounds.width = Math.max(mBounds.width, mMinSize.width);
+				mBounds.height = Math.max(mBounds.height, mMinSize.height);
 			}
 		}
 		else

@@ -200,6 +200,11 @@ public class NodeEditorPane extends JComponent
 	 */
 	public void center()
 	{
+		if (mNodes.isEmpty())
+		{
+			return;
+		}
+		
 		Rectangle bounds = new Rectangle(mNodes.get(0).getBounds());
 		for (NodeBox box : mNodes)
 		{
