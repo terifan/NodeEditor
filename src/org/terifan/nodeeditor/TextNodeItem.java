@@ -13,6 +13,7 @@ public class TextNodeItem extends NodeItem
 	protected final TextBox mTextBox;
 	protected boolean mFixedSize;
 	protected OnInputChangeListener mOnInputChangeListener;
+	private ValueProvider mValueProvider;
 
 
 	public TextNodeItem(String aText, Connector... aConnectors)
@@ -31,6 +32,19 @@ public class TextNodeItem extends NodeItem
 		mTextBox = new TextBox(aText).setFont(Styles.BOX_ITEM_FONT).setForeground(Styles.BOX_FOREGROUND_COLOR);
 		mPreferredSize.setSize(aWidth, aHeight);
 		mFixedSize = true;
+	}
+
+
+	public ValueProvider getValueProvider()
+	{
+		return mValueProvider;
+	}
+
+
+	public TextNodeItem setValueProvider(ValueProvider aValueProvider)
+	{
+		mValueProvider = aValueProvider;
+		return this;
 	}
 
 
@@ -85,6 +99,13 @@ public class TextNodeItem extends NodeItem
 	public interface OnInputChangeListener
 	{
 		void onInputChange(NodeItem aSource);
+	}
+
+
+	@FunctionalInterface
+	public interface ValueProvider
+	{
+		Object getValue(NodeItem aSource);
 	}
 
 
