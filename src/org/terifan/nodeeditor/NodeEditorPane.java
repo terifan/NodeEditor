@@ -15,6 +15,9 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
@@ -176,24 +179,33 @@ public class NodeEditorPane extends JComponent
 			}
 		}
 
+		if (out == null)
+		{
+			throw new IllegalArgumentException("The 'FromItem' has no connectors.");
+		}
+		if (in == null)
+		{
+			throw new IllegalArgumentException("The 'ToItem' has no connectors.");
+		}
+		
 		addConnection(out, in);
 
 		return this;
 	}
 
 
-	public void addConnection(Connector aConnectorOut, Connector aConnectorIn)
+	public void addConnection(Connector aFromConnector, Connector aToConnector)
 	{
-		if (aConnectorIn.getDirection() != Direction.IN)
+		if (aToConnector.getDirection() != Direction.IN)
 		{
-			throw new IllegalArgumentException("Expected in connector, found: " + aConnectorIn.getDirection());
+			throw new IllegalArgumentException("Expected in connector, found: " + aToConnector.getDirection());
 		}
-		if (aConnectorOut.getDirection() != Direction.OUT)
+		if (aFromConnector.getDirection() != Direction.OUT)
 		{
-			throw new IllegalArgumentException("Expected out connector, found: " + aConnectorOut.getDirection());
+			throw new IllegalArgumentException("Expected out connector, found: " + aFromConnector.getDirection());
 		}
 
-		mConnections.add(new Connection(aConnectorOut, aConnectorIn));
+		mConnections.add(new Connection(aFromConnector, aToConnector));
 	}
 
 
@@ -429,9 +441,13 @@ public class NodeEditorPane extends JComponent
 		@Override
 		public void mousePressed(MouseEvent aEvent)
 		{
+			boolean left = SwingUtilities.isLeftMouseButton(aEvent);
+
 			mDragPoint = aEvent.getPoint();
 			mClickPoint = calcMousePoint(aEvent);
 
+			if (!left) return;
+			
 			if (mCursor != Cursor.DEFAULT_CURSOR)
 			{
 				mStartBounds = new Rectangle(mHoverBox.getBounds());
@@ -491,7 +507,7 @@ public class NodeEditorPane extends JComponent
 				boolean done = false;
 				if (mDragConnector.getDirection() == Direction.IN)
 				{
-					ArrayList<Connection> list = getConnectionsTo(mDragConnector.mItem);
+					List<Connection> list = getConnectionsTo(mDragConnector.mItem).collect(Collectors.toList());
 					if (list.size() == 1)
 					{
 						mDragEndLocation = mDragConnector.getConnectorPoint();
@@ -509,7 +525,7 @@ public class NodeEditorPane extends JComponent
 					mDragStartLocation = mDragConnector.getConnectorPoint();
 				}
 			}
-			else if (SwingUtilities.isLeftMouseButton(aEvent))
+			else if (left)
 			{
 				updateSelections(aEvent, clickedBox);
 
@@ -549,11 +565,11 @@ public class NodeEditorPane extends JComponent
 					{
 						if (nearestConnector.getDirection() == Direction.IN)
 						{
-							mConnections.removeAll(getConnectionsTo(nearestConnector.mItem));
+							mConnections.removeAll(getConnectionsTo(nearestConnector.mItem).collect(Collectors.toList()));
 						}
 						if (nearestConnector.getDirection() == Direction.OUT)
 						{
-							mConnections.removeAll(getConnectionsTo(mDragConnector.mItem));
+							mConnections.removeAll(getConnectionsTo(mDragConnector.mItem).collect(Collectors.toList()));
 						}
 					}
 
@@ -964,34 +980,26 @@ public class NodeEditorPane extends JComponent
 	}
 
 
-	public ArrayList<Connection> getConnectionsTo(NodeItem aItem)
+	public Stream<Connection> getConnectionsTo(NodeItem aItem)
 	{
-		ArrayList<Connection> list = new ArrayList<>();
-
-		for (Connection c : mConnections)
-		{
-			if (c.getOut().mItem == aItem)
-			{
-				list.add(c);
-			}
-		}
-
-		return list;
+		return mConnections.stream().filter(e->e.getOut().mItem == aItem);
 	}
 
 
-	public ArrayList<Connection> getConnectionsFrom(NodeItem aItem)
+	public Stream<Connection> getConnectionsFrom(NodeItem aItem)
 	{
-		ArrayList<Connection> list = new ArrayList<>();
+		return mConnections.stream().filter(e->e.getIn().mItem == aItem);
+	}
 
-		for (Connection c : mConnections)
-		{
-			if (c.getIn().mItem == aItem)
-			{
-				list.add(c);
-			}
-		}
 
-		return list;
+	public Stream<NodeItem> getConnectionsTo(Connector aConnector)
+	{
+		return mConnections.stream().filter(e->e.getOut() == aConnector).map(e->e.getOut().mItem);
+	}
+
+
+	public Stream<NodeItem> getConnectionsFrom(Connector aConnector)
+	{
+		return mConnections.stream().filter(e->e.getIn() == aConnector).map(e->e.getIn().mItem);
 	}
 }

@@ -447,11 +447,10 @@ public class NodeBox
 
 		for (NodeItem item : mItems)
 		{
-			for (Connection cc : mEditorPane.getConnectionsFrom(item))
-			{
-				cc.mOut.mItem.inputWasChanged(aNodeItem);
-				cc.mOut.mItem.mNodeBox.fireInputChange(aNodeItem);
-			}
+			mEditorPane.getConnectionsFrom(item).forEach(c->{
+				c.mOut.mItem.inputWasChanged(aNodeItem);
+				c.mOut.mItem.mNodeBox.fireInputChange(aNodeItem);
+			});
 		}
 	}
 

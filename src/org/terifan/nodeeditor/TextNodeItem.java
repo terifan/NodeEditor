@@ -1,6 +1,5 @@
 package org.terifan.nodeeditor;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -90,7 +89,7 @@ public class TextNodeItem extends NodeItem
 	{
 		mTextBox
 			.setBounds(mBounds)
-			.setAnchor(mConnectors.length == 0 || mConnectors[0].mDirection == Direction.IN ? Anchor.WEST : Anchor.EAST)
+			.setAnchor(mConnectors.isEmpty() || mConnectors.get(0).mDirection == Direction.IN ? Anchor.WEST : Anchor.EAST)
 			.render(aGraphics);
 	}
 

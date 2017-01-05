@@ -4,12 +4,16 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.stream.Stream;
 
 
 public abstract class NodeItem
 {
 	protected NodeBox mNodeBox;
-	protected Connector[] mConnectors;
+	protected ArrayList<Connector> mConnectors;
 	protected final Dimension mPreferredSize;
 	protected final Rectangle mBounds;
 	protected boolean mContinuousLayout;
@@ -17,7 +21,7 @@ public abstract class NodeItem
 
 	public NodeItem(Connector... aConnectors)
 	{
-		mConnectors = aConnectors;
+		mConnectors = new ArrayList<>(Arrays.asList(aConnectors));
 		mBounds = new Rectangle();
 		mPreferredSize = new Dimension();
 	}
@@ -85,5 +89,24 @@ public abstract class NodeItem
 	public void fireOnChange()
 	{
 		mNodeBox.fireOutputChange(this);
+	}
+
+
+	public ArrayList<Connector> getConnectors()
+	{
+		return mConnectors;
+	}
+	
+	
+	public Stream<Connector> getConnectors(Direction aDirection)
+	{
+		return mConnectors.stream().filter(e->e.mDirection == aDirection);
+	}
+
+
+	protected long countConnections(Direction aDirection)
+	{
+		Connector c = getConnectors(aDirection).findFirst().orElse(null);
+		return c == null ? 0 : c.getConnectedItems().count();
 	}
 }

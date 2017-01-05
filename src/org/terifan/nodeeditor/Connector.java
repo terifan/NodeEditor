@@ -3,6 +3,7 @@ package org.terifan.nodeeditor;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.util.stream.Stream;
 
 
 public class Connector
@@ -53,5 +54,11 @@ public class Connector
 		Rectangle bounds = mItem.mNodeBox.getBounds();
 
 		return new Point(bounds.x + mBounds.x + mBounds.width / 2, bounds.y + mBounds.y + mBounds.height / 2);
+	}
+	
+	
+	public Stream<NodeItem> getConnectedItems()
+	{
+		return mItem.mNodeBox.mEditorPane.getConnectionsTo(this);
 	}
 }
