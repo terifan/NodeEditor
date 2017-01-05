@@ -20,6 +20,7 @@ public class SliderNodeItem extends TextNodeItem
 	private double mStartValue;
 	private boolean mArmed;
 	private Double mStepSize;
+	private OnChangeListener mOnChangeListener;
 
 
 	public SliderNodeItem(String aText, double aValue, double aStepSize, Connector... aConnectors)
@@ -38,6 +39,26 @@ public class SliderNodeItem extends TextNodeItem
 		mMax = aMax;
 		mValue = aValue;
 		mPreferredSize.height = 20;
+	}
+
+
+	public double getValue()
+	{
+		return mValue;
+	}
+
+
+	public SliderNodeItem setValue(double aValue)
+	{
+		mValue = aValue;
+		return this;
+	}
+
+
+	public SliderNodeItem setOnChange(OnChangeListener aOnChangeListener)
+	{
+		mOnChangeListener = aOnChangeListener;
+		return this;
 	}
 
 
@@ -101,6 +122,17 @@ public class SliderNodeItem extends TextNodeItem
 	protected void mouseReleased(NodeEditorPane aEditorPane, Point aClickPoint)
 	{
 		mArmed = false;
+		if (mStartValue != mValue)
+		{
+			if (mOnChangeListener != null)
+			{
+				mOnChangeListener.onChange(this, false);
+			}
+			else
+			{
+				fireOnChange();
+			}
+		}
 		aEditorPane.repaint();
 	}
 
@@ -118,6 +150,23 @@ public class SliderNodeItem extends TextNodeItem
 			double delta = (aDragPoint.x - aClickPoint.x) * mStepSize;
 			mValue = mStartValue + delta;
 		}
+
+		if (mOnChangeListener != null)
+		{
+			mOnChangeListener.onChange(this, true);
+		}
+		else
+		{
+			fireOnChange();
+		}
+
 		aEditorPane.repaint();
+	}
+
+
+	@FunctionalInterface
+	public interface OnChangeListener
+	{
+		void onChange(SliderNodeItem aItem, boolean aValueIsAdjusting);
 	}
 }

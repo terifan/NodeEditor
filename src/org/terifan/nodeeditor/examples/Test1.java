@@ -7,6 +7,7 @@ import org.terifan.nodeeditor.CheckBoxNodeItem;
 import org.terifan.nodeeditor.ColorChooserNodeItem;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.image.BufferedImage;
 import javax.swing.JFrame;
 import org.terifan.nodeeditor.Connector;
 import org.terifan.nodeeditor.Direction;
@@ -33,7 +34,7 @@ public class Test1
 			TextNodeItem node7 = new TextNodeItem("node7", new Connector(Direction.IN), new Connector(Direction.OUT));
 			TextNodeItem node8 = new TextNodeItem("node8", new Connector(Direction.OUT));
 			TextNodeItem node9 = new TextNodeItem("node9", new Connector(Direction.OUT, Connector.PURPLE));
-			TextNodeItem node10 = new ImageNodeItem("node10", 200, 200, new Connector(Direction.OUT, Connector.PURPLE), new Connector(Direction.OUT, Connector.PURPLE), new Connector(Direction.OUT, Connector.PURPLE));
+			TextNodeItem node10 = new ImageNodeItem("node10", new BufferedImage(200, 200, BufferedImage.TYPE_INT_RGB), 200, 200, new Connector(Direction.OUT, Connector.PURPLE), new Connector(Direction.OUT, Connector.PURPLE), new Connector(Direction.OUT, Connector.PURPLE));
 			TextNodeItem node11 = new ColorChooserNodeItem("node11", new Color(255,255,255), new Connector(Direction.IN, Connector.YELLOW));
 			TextNodeItem node12 = new TextNodeItem("node12", new Connector(Direction.IN, Connector.PURPLE));
 			TextNodeItem node13 = new TextNodeItem("node13", new Connector(Direction.IN, Connector.YELLOW));

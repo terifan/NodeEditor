@@ -6,7 +6,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 
 
-public abstract class NodeItem 
+public abstract class NodeItem
 {
 	protected NodeBox mNodeBox;
 	protected Connector[] mConnectors;
@@ -74,5 +74,16 @@ public abstract class NodeItem
 	public void setContinuousLayout(boolean aContinuousLayout)
 	{
 		mContinuousLayout = aContinuousLayout;
+	}
+
+
+	protected void inputWasChanged(NodeItem aSource)
+	{
+	}
+
+
+	public void fireOnChange()
+	{
+		mNodeBox.fireOutputChange(this);
 	}
 }

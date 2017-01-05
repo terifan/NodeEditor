@@ -126,7 +126,7 @@ public class NodeEditorPane extends JComponent
 				}
 
 				TextNodeItem textNodeItem = (TextNodeItem)item;
-				
+
 				if (textNodeItem.getText().equals(aFromNodeItemName))
 				{
 					for (Connector connector : item.mConnectors)
@@ -176,7 +176,7 @@ public class NodeEditorPane extends JComponent
 			}
 		}
 
-		NodeEditorPane.this.addConnection(out, in);
+		addConnection(out, in);
 
 		return this;
 	}
@@ -184,11 +184,13 @@ public class NodeEditorPane extends JComponent
 
 	public void addConnection(Connector aConnectorOut, Connector aConnectorIn)
 	{
-		if (aConnectorIn.getDirection() == Direction.OUT && aConnectorOut.getDirection() == Direction.IN)
+		if (aConnectorIn.getDirection() != Direction.IN)
 		{
-			Connector tmp = aConnectorIn;
-			aConnectorIn = aConnectorOut;
-			aConnectorOut = tmp;
+			throw new IllegalArgumentException("Expected in connector, found: " + aConnectorIn.getDirection());
+		}
+		if (aConnectorOut.getDirection() != Direction.OUT)
+		{
+			throw new IllegalArgumentException("Expected out connector, found: " + aConnectorOut.getDirection());
 		}
 
 		mConnections.add(new Connection(aConnectorOut, aConnectorIn));
@@ -204,7 +206,7 @@ public class NodeEditorPane extends JComponent
 		{
 			return;
 		}
-		
+
 		Rectangle bounds = new Rectangle(mNodes.get(0).getBounds());
 		for (NodeBox box : mNodes)
 		{
@@ -429,7 +431,7 @@ public class NodeEditorPane extends JComponent
 		{
 			mDragPoint = aEvent.getPoint();
 			mClickPoint = calcMousePoint(aEvent);
-			
+
 			if (mCursor != Cursor.DEFAULT_CURSOR)
 			{
 				mStartBounds = new Rectangle(mHoverBox.getBounds());
@@ -448,7 +450,7 @@ public class NodeEditorPane extends JComponent
 			mClickedItem = null;
 
 			NodeBox clickedBox = null;
-			
+
 			for (NodeBox box : mNodes)
 			{
 				Rectangle b = box.getBounds();
@@ -495,13 +497,13 @@ public class NodeEditorPane extends JComponent
 						mDragEndLocation = mDragConnector.getConnectorPoint();
 						mDragConnector = list.get(0).getIn();
 						mDragStartLocation = mDragConnector.getConnectorPoint();
-						
+
 						mConnections.remove(list.get(0));
-						
+
 						done = true;
 					}
 				}
-				
+
 				if (!done)
 				{
 					mDragStartLocation = mDragConnector.getConnectorPoint();
@@ -599,7 +601,7 @@ public class NodeEditorPane extends JComponent
 		public void mouseDragged(MouseEvent aEvent)
 		{
 			Point newPoint = calcMousePoint(aEvent);
-			
+
 			if (mCursor != Cursor.DEFAULT_CURSOR)
 			{
 				resizeBox(mHoverBox, newPoint);
@@ -901,8 +903,8 @@ public class NodeEditorPane extends JComponent
 
 			return Cursor.DEFAULT_CURSOR;
 		}
-		
-		
+
+
 		private void resizeBox(NodeBox aNodeBox, Point aPoint)
 		{
 			Rectangle b = aNodeBox.getBounds();
@@ -965,7 +967,7 @@ public class NodeEditorPane extends JComponent
 	public ArrayList<Connection> getConnectionsTo(NodeItem aItem)
 	{
 		ArrayList<Connection> list = new ArrayList<>();
-		
+
 		for (Connection c : mConnections)
 		{
 			if (c.getOut().mItem == aItem)
@@ -973,7 +975,7 @@ public class NodeEditorPane extends JComponent
 				list.add(c);
 			}
 		}
-		
+
 		return list;
 	}
 
@@ -981,7 +983,7 @@ public class NodeEditorPane extends JComponent
 	public ArrayList<Connection> getConnectionsFrom(NodeItem aItem)
 	{
 		ArrayList<Connection> list = new ArrayList<>();
-		
+
 		for (Connection c : mConnections)
 		{
 			if (c.getIn().mItem == aItem)
@@ -989,7 +991,7 @@ public class NodeEditorPane extends JComponent
 				list.add(c);
 			}
 		}
-		
+
 		return list;
 	}
 }

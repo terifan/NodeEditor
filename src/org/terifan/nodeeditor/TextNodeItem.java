@@ -12,6 +12,7 @@ public class TextNodeItem extends NodeItem
 {
 	protected final TextBox mTextBox;
 	protected boolean mFixedSize;
+	protected OnInputChangeListener mOnInputChangeListener;
 
 
 	public TextNodeItem(String aText, Connector... aConnectors)
@@ -30,6 +31,13 @@ public class TextNodeItem extends NodeItem
 		mTextBox = new TextBox(aText).setFont(Styles.BOX_ITEM_FONT).setForeground(Styles.BOX_FOREGROUND_COLOR);
 		mPreferredSize.setSize(aWidth, aHeight);
 		mFixedSize = true;
+	}
+
+
+	public TextNodeItem setOnInputChange(OnInputChangeListener aOnInputChangeListener)
+	{
+		mOnInputChangeListener = aOnInputChangeListener;
+		return this;
 	}
 
 
@@ -70,5 +78,22 @@ public class TextNodeItem extends NodeItem
 			.setBounds(mBounds)
 			.setAnchor(mConnectors.length == 0 || mConnectors[0].mDirection == Direction.IN ? Anchor.WEST : Anchor.EAST)
 			.render(aGraphics);
+	}
+
+
+	@FunctionalInterface
+	public interface OnInputChangeListener
+	{
+		void onInputChange(NodeItem aSource);
+	}
+
+
+	@Override
+	protected void inputWasChanged(NodeItem aSource)
+	{
+		if (mOnInputChangeListener != null)
+		{
+			mOnInputChangeListener.onInputChange(aSource);
+		}
 	}
 }

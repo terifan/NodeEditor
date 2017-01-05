@@ -26,6 +26,7 @@ public class NodeBox
 	protected Dimension mRestoredSize;
 	protected boolean mResizableHorizontal;
 	protected boolean mResizableVertical;
+	protected OnInputChangeListener mOnInputChangeListener;
 
 
 	public NodeBox(String aName, NodeItem... aItems)
@@ -44,6 +45,13 @@ public class NodeBox
 		{
 			addItem(item);
 		}
+	}
+
+
+	public NodeBox setOnInputChange(OnInputChangeListener aOnInputChangeListener)
+	{
+		mOnInputChangeListener = aOnInputChangeListener;
+		return this;
 	}
 
 
@@ -104,18 +112,18 @@ public class NodeBox
 		return mMinimized;
 	}
 
-	
+
 	public NodeBox setSize(Dimension aSize)
 	{
 		mBounds.setSize(aSize);
 		return this;
 	}
-	
+
 
 	public NodeBox setMinimized(boolean aMinimized)
 	{
 		mMinimized = aMinimized;
-		
+
 		if (!mMinimized && mRestoredSize != null)
 		{
 			mBounds.setSize(mRestoredSize);
@@ -226,7 +234,7 @@ public class NodeBox
 			}
 
 			y += 6;
-			
+
 			if (y >= mBounds.height)
 			{
 				mMinSize.height = y;
@@ -424,5 +432,45 @@ public class NodeBox
 		}
 
 		return null;
+	}
+
+
+	/**
+	 * Child NodeItems call this when their values are changed
+	 */
+	public void fireOutputChange(NodeItem aNodeItem)
+	{
+		if (mOnInputChangeListener != null)
+		{
+			mOnInputChangeListener.onInputChange(aNodeItem, true);
+		}
+
+		for (NodeItem item : mItems)
+		{
+			for (Connection cc : mEditorPane.getConnectionsFrom(item))
+			{
+				cc.mOut.mItem.inputWasChanged(aNodeItem);
+				cc.mOut.mItem.mNodeBox.fireInputChange(aNodeItem);
+			}
+		}
+	}
+
+
+	/**
+	 * Other NodeBoxes call this when an item of theirs have changed value.
+	 */
+	public void fireInputChange(NodeItem aNodeItem)
+	{
+		if (mOnInputChangeListener != null)
+		{
+			mOnInputChangeListener.onInputChange(aNodeItem, false);
+		}
+	}
+
+
+	@FunctionalInterface
+	public interface OnInputChangeListener
+	{
+		void onInputChange(NodeItem aSource, boolean aSelf);
 	}
 }

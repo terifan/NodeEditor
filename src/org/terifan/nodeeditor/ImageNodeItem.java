@@ -2,13 +2,32 @@ package org.terifan.nodeeditor;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 
 
 public class ImageNodeItem extends TextNodeItem
 {
-	public ImageNodeItem(String aText, int aWidth, int aHeight, Connector... aConnectors)
+	private BufferedImage mImage;
+
+
+	public ImageNodeItem(String aText, BufferedImage aImage, int aWidth, int aHeight, Connector... aConnectors)
 	{
 		super(aText, aWidth, aHeight, aConnectors);
+
+		mImage = aImage;
+	}
+
+
+	public BufferedImage getImage()
+	{
+		return mImage;
+	}
+
+
+	public ImageNodeItem setImage(BufferedImage aImage)
+	{
+		mImage = aImage;
+		return this;
 	}
 
 
@@ -29,5 +48,7 @@ public class ImageNodeItem extends TextNodeItem
 				aGraphics.fillRect(mBounds.x + x * s, mBounds.y + y * s, s, s);
 			}
 		}
+
+		aGraphics.drawImage(mImage, mBounds.x, mBounds.y, mBounds.width, mBounds.height, null);
 	}
 }
