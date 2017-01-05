@@ -138,11 +138,11 @@ public class SplineRenderer
 
 	private static BSpline createSpline(Connection aConnection)
 	{
-		Rectangle from = aConnection.mOut.getBounds();
-		Rectangle to = aConnection.mIn.getBounds();
+		Rectangle from = aConnection.getOut().getBounds();
+		Rectangle to = aConnection.getIn().getBounds();
 
-		Rectangle b0 = aConnection.mOut.mItem.mNodeBox.getBounds();
-		Rectangle b1 = aConnection.mIn.mItem.mNodeBox.getBounds();
+		Rectangle b0 = aConnection.getOut().getNodeItem().getNodeBox().getBounds();
+		Rectangle b1 = aConnection.getIn().getNodeItem().getNodeBox().getBounds();
 
 		int x0 = (int)from.getCenterX() + b0.x;
 		int y0 = (int)from.getCenterY() + b0.y;

@@ -1,68 +1,21 @@
 package org.terifan.nodeeditor;
 
-import java.awt.Dimension;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.TextBox;
 
 
-public class TextNodeItem extends NodeItem
+public class TextNodeItem extends AbstractNodeItem<TextNodeItem>
 {
-	protected final TextBox mTextBox;
-	protected boolean mFixedSize;
-	protected OnInputChangeListener mOnInputChangeListener;
-	private ValueProvider mValueProvider;
-
-
 	public TextNodeItem(String aText, Connector... aConnectors)
 	{
-		this(aText, 0, 0, aConnectors);
-
-		mPreferredSize.setSize(mTextBox.measure().getSize());
-		mFixedSize = false;
+		super(aText, aConnectors);
 	}
 
 
 	public TextNodeItem(String aText, int aWidth, int aHeight, Connector... aConnectors)
 	{
-		super(aConnectors);
-
-		mTextBox = new TextBox(aText).setFont(Styles.BOX_ITEM_FONT).setForeground(Styles.BOX_FOREGROUND_COLOR);
-		mPreferredSize.setSize(aWidth, aHeight);
-		mFixedSize = true;
-	}
-
-
-	public ValueProvider getValueProvider()
-	{
-		return mValueProvider;
-	}
-
-
-	public TextNodeItem setValueProvider(ValueProvider aValueProvider)
-	{
-		mValueProvider = aValueProvider;
-		return this;
-	}
-
-
-	public TextNodeItem setOnInputChange(OnInputChangeListener aOnInputChangeListener)
-	{
-		mOnInputChangeListener = aOnInputChangeListener;
-		return this;
-	}
-
-
-	@Override
-	public Dimension getPreferredSize(Graphics2D aGraphics, Rectangle aBounds)
-	{
-		if (!mFixedSize && mTextBox.isLayoutRequired())
-		{
-			mPreferredSize.setSize(mTextBox.measure(aGraphics == null ? null : aGraphics.getFontRenderContext()).getSize());
-		}
-
-		return super.getPreferredSize(aGraphics, aBounds);
+		super(aText, aWidth, aHeight, aConnectors);
 	}
 
 
@@ -78,9 +31,10 @@ public class TextNodeItem extends NodeItem
 	}
 
 
-	public void setText(String aText)
+	public TextNodeItem setText(String aText)
 	{
 		mTextBox.setText(aText);
+		return this;
 	}
 
 
@@ -91,29 +45,5 @@ public class TextNodeItem extends NodeItem
 			.setBounds(mBounds)
 			.setAnchor(mConnectors.isEmpty() || mConnectors.get(0).mDirection == Direction.IN ? Anchor.WEST : Anchor.EAST)
 			.render(aGraphics);
-	}
-
-
-	@FunctionalInterface
-	public interface OnInputChangeListener
-	{
-		void onInputChange(NodeItem aSource);
-	}
-
-
-	@FunctionalInterface
-	public interface ValueProvider
-	{
-		Object getValue(NodeItem aSource);
-	}
-
-
-	@Override
-	protected void inputWasChanged(NodeItem aSource)
-	{
-		if (mOnInputChangeListener != null)
-		{
-			mOnInputChangeListener.onInputChange(aSource);
-		}
 	}
 }

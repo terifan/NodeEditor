@@ -12,10 +12,10 @@ public class Connector
 	public final static Color GRAY = new Color(0xA1A1A1);
 	public final static Color YELLOW = new Color(0xC7C729);
 
-	protected Rectangle mBounds = new Rectangle();
-	protected Direction mDirection;
+	protected final Rectangle mBounds = new Rectangle();
+	protected final Direction mDirection;
+	protected NodeItem mNodeItem;
 	protected Color mColor;
-	protected NodeItem mItem;
 
 
 	public Connector(Direction aDirection)
@@ -28,6 +28,18 @@ public class Connector
 	{
 		mDirection = aDirection;
 		mColor = aColor;
+	}
+	
+	
+	void bind(NodeItem aNodeItem)
+	{
+		mNodeItem = aNodeItem;
+	}
+	
+	
+	public NodeItem getNodeItem()
+	{
+		return mNodeItem;
 	}
 
 
@@ -51,7 +63,7 @@ public class Connector
 
 	Point getConnectorPoint()
 	{
-		Rectangle bounds = mItem.mNodeBox.getBounds();
+		Rectangle bounds = mNodeItem.getNodeBox().getBounds();
 
 		return new Point(bounds.x + mBounds.x + mBounds.width / 2, bounds.y + mBounds.y + mBounds.height / 2);
 	}
@@ -59,6 +71,6 @@ public class Connector
 	
 	public Stream<NodeItem> getConnectedItems()
 	{
-		return mItem.mNodeBox.mEditorPane.getConnectionsTo(this);
+		return mNodeItem.getNodeBox().getEditorPane().getConnectionsTo(this);
 	}
 }

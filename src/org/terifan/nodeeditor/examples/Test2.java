@@ -17,55 +17,55 @@ public class Test2
 			NodeEditorPane editor = new NodeEditorPane();
 
 			editor.add(new NodeBox("nodeBox0",
-					new TextNodeItem("node0-0", new Connector(Direction.IN)),
 					new TextNodeItem("node0-1", new Connector(Direction.OUT)),
-					new TextNodeItem("node0-2", new Connector(Direction.OUT))
+					new TextNodeItem("node0-2", new Connector(Direction.OUT)),
+					new TextNodeItem("node0-0", new Connector(Direction.IN))
 				)
 			);
 			editor.add(new NodeBox("nodeBox1",
-					new TextNodeItem("node1-0", new Connector(Direction.IN)),
 					new TextNodeItem("node1-1", new Connector(Direction.OUT)),
-					new TextNodeItem("node1-2", new Connector(Direction.OUT))
+					new TextNodeItem("node1-2", new Connector(Direction.OUT)),
+					new TextNodeItem("node1-0", new Connector(Direction.IN))
 				)
 			);
 			editor.add(new NodeBox("nodeBox2",
-					new TextNodeItem("node2-0", new Connector(Direction.IN)),
 					new TextNodeItem("node2-1", new Connector(Direction.OUT)),
-					new TextNodeItem("node2-2", new Connector(Direction.OUT))
+					new TextNodeItem("node2-2", new Connector(Direction.OUT)),
+					new TextNodeItem("node2-0", new Connector(Direction.IN))
 				)
 			);
 			editor.add(new NodeBox("nodeBox3",
-					new TextNodeItem("node3-0", new Connector(Direction.IN)),
 					new TextNodeItem("node3-1", new Connector(Direction.OUT)),
-					new TextNodeItem("node3-2", new Connector(Direction.OUT))
+					new TextNodeItem("node3-2", new Connector(Direction.OUT)),
+					new TextNodeItem("node3-0", new Connector(Direction.IN))
 				)
 			);
 			editor.add(new NodeBox("nodeBox4",
-					new TextNodeItem("node4-0", new Connector(Direction.IN)),
 					new TextNodeItem("node4-1", new Connector(Direction.OUT)),
-					new TextNodeItem("node4-2", new Connector(Direction.OUT))
+					new TextNodeItem("node4-2", new Connector(Direction.OUT)),
+					new TextNodeItem("node4-0", new Connector(Direction.IN))
 				)
 			);
 			editor.add(new NodeBox("nodeBox5",
-					new TextNodeItem("node5-0", new Connector(Direction.IN)),
 					new TextNodeItem("node5-1", new Connector(Direction.OUT)),
-					new TextNodeItem("node5-2", new Connector(Direction.OUT))
+					new TextNodeItem("node5-2", new Connector(Direction.OUT)),
+					new TextNodeItem("node5-0", new Connector(Direction.IN))
 				)
 			);
 			editor.add(new NodeBox("nodeBox6",
-					new TextNodeItem("node6-0", new Connector(Direction.IN)),
 					new TextNodeItem("node6-1", new Connector(Direction.OUT)),
-					new TextNodeItem("node6-2", new Connector(Direction.OUT))
+					new TextNodeItem("node6-2", new Connector(Direction.OUT)),
+					new TextNodeItem("node6-0", new Connector(Direction.IN))
 				)
 			);
 
-			editor.addConnection("node0-1", "node1-0");
-			editor.addConnection("node1-1", "node2-0");
-			editor.addConnection("node2-1", "node3-0");
-			editor.addConnection("node2-2", "node4-0");
-			editor.addConnection("node4-1", "node5-0");
-			editor.addConnection("node1-2", "node6-0");
-			editor.addConnection("node6-1", "node4-0");
+//			editor.addConnection("node0-1", "node1-0");
+//			editor.addConnection("node1-1", "node2-0");
+//			editor.addConnection("node2-1", "node3-0");
+//			editor.addConnection("node2-2", "node4-0");
+//			editor.addConnection("node4-1", "node5-0");
+//			editor.addConnection("node1-2", "node6-0");
+//			editor.addConnection("node6-1", "node4-0");
 
 			editor.center();
 

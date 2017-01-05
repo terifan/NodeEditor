@@ -5,7 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 
-public class ImageNodeItem extends TextNodeItem
+public class ImageNodeItem extends AbstractNodeItem<ImageNodeItem>
 {
 	private BufferedImage mImage;
 

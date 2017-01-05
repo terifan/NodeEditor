@@ -10,7 +10,7 @@ import java.awt.Stroke;
 import org.terifan.ui.Anchor;
 
 
-public class CheckBoxNodeItem extends TextNodeItem
+public class CheckBoxNodeItem extends AbstractNodeItem
 {
 	private final static float[] RANGES = new float[]{0f,1f};
 	private boolean mState;

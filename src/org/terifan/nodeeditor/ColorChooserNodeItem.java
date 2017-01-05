@@ -8,7 +8,7 @@ import javax.swing.JColorChooser;
 import org.terifan.ui.Anchor;
 
 
-public class ColorChooserNodeItem extends TextNodeItem
+public class ColorChooserNodeItem extends AbstractNodeItem<ColorChooserNodeItem>
 {
 	private static final int COLOR_BOX_WIDTH = 30;
 	private Color mColor;

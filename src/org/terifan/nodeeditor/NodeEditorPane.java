@@ -100,13 +100,13 @@ public class NodeEditorPane extends JComponent
 	{
 		mNodes.add(aNode);
 
-		aNode.mEditorPane = this;
+		aNode.bind(this);
 
 		for (NodeItem item : aNode.mItems)
 		{
 			for (Connector connector : item.mConnectors)
 			{
-				connector.mItem = item;
+				connector.bind(item);
 			}
 		}
 
@@ -114,49 +114,49 @@ public class NodeEditorPane extends JComponent
 	}
 
 
-	public NodeEditorPane addConnection(String aFromNodeItemName, String aToNodeItemName)
-	{
-		Connector out = null;
-		Connector in = null;
-
-		for (NodeBox box : mNodes)
-		{
-			for (NodeItem item : box.mItems)
-			{
-				if (!(item instanceof TextNodeItem))
-				{
-					continue;
-				}
-
-				TextNodeItem textNodeItem = (TextNodeItem)item;
-
-				if (textNodeItem.getText().equals(aFromNodeItemName))
-				{
-					for (Connector connector : item.mConnectors)
-					{
-						if (connector.getDirection() == Direction.OUT)
-						{
-							in = connector;
-						}
-					}
-				}
-				if (textNodeItem.getText().equals(aToNodeItemName))
-				{
-					for (Connector connector : item.mConnectors)
-					{
-						if (connector.getDirection() == Direction.IN)
-						{
-							out = connector;
-						}
-					}
-				}
-			}
-		}
-
-		addConnection(out, in);
-
-		return this;
-	}
+//	public NodeEditorPane addConnection(String aFromNodeItemName, String aToNodeItemName)
+//	{
+//		Connector out = null;
+//		Connector in = null;
+//
+//		for (NodeBox box : mNodes)
+//		{
+//			for (NodeItem item : box.mItems)
+//			{
+//				if (!(item instanceof AbstractNodeItem))
+//				{
+//					continue;
+//				}
+//
+//				AbstractNodeItem textNodeItem = (AbstractNodeItem)item;
+//
+//				if (textNodeItem.getText().equals(aFromNodeItemName))
+//				{
+//					for (Connector connector : item.mConnectors)
+//					{
+//						if (connector.getDirection() == Direction.OUT)
+//						{
+//							out = connector;
+//						}
+//					}
+//				}
+//				if (textNodeItem.getText().equals(aToNodeItemName))
+//				{
+//					for (Connector connector : item.mConnectors)
+//					{
+//						if (connector.getDirection() == Direction.IN)
+//						{
+//							in = connector;
+//						}
+//					}
+//				}
+//			}
+//		}
+//
+//		addConnection(out, in);
+//
+//		return this;
+//	}
 
 
 	public NodeEditorPane addConnection(NodeItem aFromItem, NodeItem aToItem)
@@ -268,8 +268,8 @@ public class NodeEditorPane extends JComponent
 			}
 			else
 			{
-				Color start = mSelectedNodes.contains(connection.mIn.mItem.mNodeBox) ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : Styles.CONNECTOR_COLOR_INNER;
-				Color end = mSelectedNodes.contains(connection.mOut.mItem.mNodeBox) ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : Styles.CONNECTOR_COLOR_INNER;
+				Color start = mSelectedNodes.contains(connection.getIn().getNodeItem().getNodeBox()) ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : Styles.CONNECTOR_COLOR_INNER;
+				Color end = mSelectedNodes.contains(connection.getOut().getNodeItem().getNodeBox()) ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : Styles.CONNECTOR_COLOR_INNER;
 
 				SplineRenderer.drawSpline(g, connection, mScale, Styles.CONNECTOR_COLOR_OUTER, start, end);
 			}
@@ -507,7 +507,7 @@ public class NodeEditorPane extends JComponent
 				boolean done = false;
 				if (mDragConnector.getDirection() == Direction.IN)
 				{
-					List<Connection> list = getConnectionsTo(mDragConnector.mItem).collect(Collectors.toList());
+					List<Connection> list = getConnectionsTo(mDragConnector.getNodeItem()).collect(Collectors.toList());
 					if (list.size() == 1)
 					{
 						mDragEndLocation = mDragConnector.getConnectorPoint();
@@ -565,11 +565,11 @@ public class NodeEditorPane extends JComponent
 					{
 						if (nearestConnector.getDirection() == Direction.IN)
 						{
-							mConnections.removeAll(getConnectionsTo(nearestConnector.mItem).collect(Collectors.toList()));
+							mConnections.removeAll(getConnectionsTo(nearestConnector.getNodeItem()).collect(Collectors.toList()));
 						}
 						if (nearestConnector.getDirection() == Direction.OUT)
 						{
-							mConnections.removeAll(getConnectionsTo(mDragConnector.mItem).collect(Collectors.toList()));
+							mConnections.removeAll(getConnectionsTo(mDragConnector.getNodeItem()).collect(Collectors.toList()));
 						}
 					}
 
@@ -710,7 +710,7 @@ public class NodeEditorPane extends JComponent
 
 			for (NodeBox box : mNodes)
 			{
-				if (mDragConnector != null && mDragConnector.mItem.mNodeBox == box)
+				if (mDragConnector != null && mDragConnector.getNodeItem().getNodeBox() == box)
 				{
 					continue;
 				}
@@ -750,7 +750,7 @@ public class NodeEditorPane extends JComponent
 			double dist = 25;
 			boolean hitBox = false;
 
-			if (mDragConnector != null && mDragConnector.mItem.mNodeBox == box)
+			if (mDragConnector != null && mDragConnector.getNodeItem().getNodeBox() == box)
 			{
 				return null;
 			}
@@ -982,24 +982,24 @@ public class NodeEditorPane extends JComponent
 
 	public Stream<Connection> getConnectionsTo(NodeItem aItem)
 	{
-		return mConnections.stream().filter(e->e.getOut().mItem == aItem);
+		return mConnections.stream().filter(e->e.getOut().getNodeItem() == aItem);
 	}
 
 
 	public Stream<Connection> getConnectionsFrom(NodeItem aItem)
 	{
-		return mConnections.stream().filter(e->e.getIn().mItem == aItem);
+		return mConnections.stream().filter(e->e.getIn().getNodeItem() == aItem);
 	}
 
 
 	public Stream<NodeItem> getConnectionsTo(Connector aConnector)
 	{
-		return mConnections.stream().filter(e->e.getOut() == aConnector).map(e->e.getOut().mItem);
+		return mConnections.stream().filter(e->e.getOut() == aConnector).map(e->e.getOut().getNodeItem());
 	}
 
 
 	public Stream<NodeItem> getConnectionsFrom(Connector aConnector)
 	{
-		return mConnections.stream().filter(e->e.getIn() == aConnector).map(e->e.getIn().mItem);
+		return mConnections.stream().filter(e->e.getIn() == aConnector).map(e->e.getIn().getNodeItem());
 	}
 }

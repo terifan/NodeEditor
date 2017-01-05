@@ -6,17 +6,17 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.stream.Stream;
 
 
 public abstract class NodeItem
 {
 	protected NodeBox mNodeBox;
-	protected ArrayList<Connector> mConnectors;
+	protected final ArrayList<Connector> mConnectors;
 	protected final Dimension mPreferredSize;
 	protected final Rectangle mBounds;
-	protected boolean mContinuousLayout;
+	protected OnInputChangeListener mOnInputChangeListener;
+	protected boolean mFixedSize;
 
 
 	public NodeItem(Connector... aConnectors)
@@ -27,13 +27,25 @@ public abstract class NodeItem
 	}
 
 
-	public Dimension getPreferredSize(Graphics2D aGraphics, Rectangle aBounds)
+	void bind(NodeBox aNodeBox)
+	{
+		mNodeBox = aNodeBox;
+	}
+
+
+	public NodeBox getNodeBox()
+	{
+		return mNodeBox;
+	}
+
+
+	protected Dimension getPreferredSize(Graphics2D aGraphics, Rectangle aBounds)
 	{
 		return mPreferredSize;
 	}
 
 
-	public void setPreferredSize(Dimension aPreferredSize)
+	protected void setPreferredSize(Dimension aPreferredSize)
 	{
 		mPreferredSize.setSize(aPreferredSize);
 	}
@@ -51,7 +63,7 @@ public abstract class NodeItem
 
 
 	/**
-	 * Should return true if the clicked point will perform an action.
+	 * Should return true if the clicked point will perform an action. This method return false.
 	 */
 	protected boolean mousePressed(NodeEditorPane aEditorPane, Point aClickPoint)
 	{
@@ -65,23 +77,6 @@ public abstract class NodeItem
 
 
 	protected void mouseDragged(NodeEditorPane aEditorPane, Point aClickPoint, Point aDragPoint)
-	{
-	}
-
-
-	public boolean isContinuousLayout()
-	{
-		return mContinuousLayout;
-	}
-
-
-	public void setContinuousLayout(boolean aContinuousLayout)
-	{
-		mContinuousLayout = aContinuousLayout;
-	}
-
-
-	protected void inputWasChanged(NodeItem aSource)
 	{
 	}
 
@@ -108,5 +103,21 @@ public abstract class NodeItem
 	{
 		Connector c = getConnectors(aDirection).findFirst().orElse(null);
 		return c == null ? 0 : c.getConnectedItems().count();
+	}
+
+
+	protected void inputWasChanged(NodeItem aSource)
+	{
+		if (mOnInputChangeListener != null)
+		{
+			mOnInputChangeListener.onInputChange(aSource);
+		}
+	}
+
+
+	@FunctionalInterface
+	public interface OnInputChangeListener
+	{
+		void onInputChange(NodeItem aSource);
 	}
 }

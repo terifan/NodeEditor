@@ -10,7 +10,7 @@ import org.terifan.ui.Anchor;
 import org.terifan.ui.TextBox;
 
 
-public class SliderNodeItem extends TextNodeItem
+public class SliderNodeItem extends AbstractNodeItem<SliderNodeItem>
 {
 	private final static float[] RANGES = new float[]{0f,1f};
 

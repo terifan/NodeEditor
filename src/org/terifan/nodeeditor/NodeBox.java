@@ -14,8 +14,7 @@ import static org.terifan.nodeeditor.Styles.*;
 
 public class NodeBox
 {
-	NodeEditorPane mEditorPane;
-
+	protected NodeEditorPane mEditorPane;
 	protected String mName;
 	protected Rectangle mBounds;
 	protected boolean mMinimized;
@@ -45,6 +44,18 @@ public class NodeBox
 		{
 			addItem(item);
 		}
+	}
+
+
+	void bind(NodeEditorPane aEditorPane)
+	{
+		mEditorPane = aEditorPane;
+	}
+
+
+	public NodeEditorPane getEditorPane()
+	{
+		return mEditorPane;
 	}
 
 
@@ -140,7 +151,7 @@ public class NodeBox
 	{
 		mItems.add(aItem);
 
-		aItem.mNodeBox = this;
+		aItem.bind(this);
 		return this;
 	}
 
@@ -448,8 +459,8 @@ public class NodeBox
 		for (NodeItem item : mItems)
 		{
 			mEditorPane.getConnectionsFrom(item).forEach(c->{
-				c.mOut.mItem.inputWasChanged(aNodeItem);
-				c.mOut.mItem.mNodeBox.fireInputChange(aNodeItem);
+				c.getOut().getNodeItem().inputWasChanged(aNodeItem);
+				c.getOut().getNodeItem().getNodeBox().fireInputChange(aNodeItem);
 			});
 		}
 	}

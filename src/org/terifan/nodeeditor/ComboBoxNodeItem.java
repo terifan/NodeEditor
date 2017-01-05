@@ -7,7 +7,7 @@ import java.awt.Point;
 import org.terifan.ui.Anchor;
 
 
-public class ComboBoxNodeItem extends TextNodeItem
+public class ComboBoxNodeItem extends AbstractNodeItem
 {
 	private final static float[] RANGES = new float[]{0f,1f};
 	private boolean mArmed;
