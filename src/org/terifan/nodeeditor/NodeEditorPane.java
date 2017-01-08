@@ -374,7 +374,7 @@ public class NodeEditorPane extends JComponent
 		aGraphics.setColor(Styles.PANE_BACKGROUND_COLOR);
 		aGraphics.fillRect(0, 0, w, h);
 
-		int step = (int)(24 * mScale);
+		int step = Math.max((int)(24 * mScale), 1);
 
 		aGraphics.setColor(Styles.PANE_GRID_COLOR_1);
 		for (int x = mPaneScroll.x % step; x < w; x+=step)
