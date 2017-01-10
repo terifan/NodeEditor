@@ -41,7 +41,6 @@ public class NodeBox implements Iterable<NodeItem>
 		mMinSize = new Dimension(100, 0);
 		mMaxSize = new Dimension(Short.MAX_VALUE, Short.MAX_VALUE);
 		mResizableHorizontal = true;
-		mResizableVertical = true;
 
 		for (NodeItem item : aItems)
 		{

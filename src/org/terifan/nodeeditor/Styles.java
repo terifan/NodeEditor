@@ -48,8 +48,8 @@ public class Styles
 	public final static Color SLIDER_BORDER_COLOR = new Color(48, 48, 48);
 	public final static Color SLIDER_ARROW_COLOR = new Color(118, 118, 118);
 	public final static Color COMBOBOX_ARROW_COLOR = new Color(190,190,190);
-	
-	public final static Color[][][] SLIDER_COLORS = 
+
+	public final static Color[][][] SLIDER_COLORS =
 	{
 		// normal
 		{
@@ -70,12 +70,19 @@ public class Styles
 			new Color[]{BOX_FOREGROUND_ARMED_COLOR, BOX_FOREGROUND_ARMED_COLOR}
 		}
 	};
-	
-	public final static Color[][] CHECKBOX_COLORS = 
+
+	public final static Color[][] CHECKBOX_COLORS =
 	{
 		// normal
 		new Color[]{new Color(83,83,83),new Color(55,55,55)},
 		// selected
 		new Color[]{new Color(55,55,55),new Color(83,83,83)}
+	};
+
+	static Color[][] BUTTON_COLORS =
+	{
+		new Color[]{new Color(166,166,166),new Color(137,137,137)},
+		new Color[]{new Color(181,181,181),new Color(153,153,153)},
+		new Color[]{new Color(85,85,85),new Color(113,113,113)}
 	};
 }
