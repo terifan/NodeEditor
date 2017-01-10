@@ -114,7 +114,7 @@ public class NodeEditorPane extends JComponent
 	}
 
 
-	public NodeBox getNodeBoxByName(String aPath)
+	public NodeBox getNode(String aPath)
 	{
 		String boxId = aPath.contains(".") ? aPath.split("\\.")[0] : aPath;
 		NodeBox box = null;
@@ -138,23 +138,23 @@ public class NodeEditorPane extends JComponent
 
 		if (box == null)
 		{
-			throw new IllegalArgumentException("Failed to find NodeBox: " + aPath);
+			throw new IllegalArgumentException("Failed to find NodeBox, ensure name or identity is set: " + aPath);
 		}
 
 		return box;
 	}
 
 
+	public NodeItem getItem(String aPath)
+	{
+		return getNode(aPath).getItem(aPath);
+	}
+
+
 	public NodeEditorPane addConnection(String aFromPath, String aToPath)
 	{
-		NodeBox fromBox = getNodeBoxByName(aFromPath);
-		NodeItem fromItem = fromBox.getNodeItemByName(aFromPath);
-		Connector out = fromItem.getConnectors(Direction.OUT).findFirst().get();
-
-		NodeBox toBox = getNodeBoxByName(aToPath);
-		NodeItem toItem = toBox.getNodeItemByName(aToPath);
-		Connector in = toItem.getConnectors(Direction.IN).findFirst().get();
-
+		Connector out = getItem(aFromPath).getConnectors(Direction.OUT).findFirst().get();
+		Connector in = getItem(aToPath).getConnectors(Direction.IN).findFirst().get();
 		addConnection(out, in);
 
 		return this;

@@ -1,5 +1,6 @@
 package org.terifan.nodeeditor;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -104,6 +105,12 @@ public abstract class NodeItem
 	{
 		mConnectors.add(aConnector);
 		return this;
+	}
+
+
+	public NodeItem addConnector(Direction aDirection, Color aColor)
+	{
+		return add(new Connector(aDirection, aColor));
 	}
 
 

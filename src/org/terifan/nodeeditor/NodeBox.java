@@ -521,7 +521,7 @@ public class NodeBox implements Iterable<NodeItem>
 	}
 
 
-	public NodeItem getNodeItemByName(String aPath)
+	public NodeItem getItem(String aPath)
 	{
 		String id = aPath.contains(".") ? aPath.split("\\.")[1] : aPath;
 		NodeItem item = null;
@@ -550,7 +550,7 @@ public class NodeBox implements Iterable<NodeItem>
 
 		if (item == null)
 		{
-			throw new IllegalArgumentException("Failed to find NodeItem: " + aPath);
+			throw new IllegalArgumentException("Failed to find NodeItem, ensure text or identity is set: " + aPath);
 		}
 
 		return item;
