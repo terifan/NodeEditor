@@ -23,17 +23,17 @@ public class SliderNodeItem extends AbstractNodeItem<SliderNodeItem>
 	private OnChangeListener mOnChangeListener;
 
 
-	public SliderNodeItem(String aText, double aValue, double aStepSize, Connector... aConnectors)
+	public SliderNodeItem(String aText, double aValue, double aStepSize)
 	{
-		this(aText, Double.MIN_VALUE, Double.MAX_VALUE, aValue, aConnectors);
+		this(aText, Double.MIN_VALUE, Double.MAX_VALUE, aValue);
 
 		mStepSize = aStepSize;
 	}
 
 
-	public SliderNodeItem(String aText, double aMin, double aMax, double aValue, Connector... aConnectors)
+	public SliderNodeItem(String aText, double aMin, double aMax, double aValue)
 	{
-		super(aText, aConnectors);
+		super(aText);
 
 		mMin = aMin;
 		mMax = aMax;

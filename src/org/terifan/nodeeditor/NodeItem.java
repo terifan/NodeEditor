@@ -5,12 +5,12 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.stream.Stream;
 
 
 public abstract class NodeItem
 {
+	protected String mIdentity;
 	protected NodeBox mNodeBox;
 	protected final ArrayList<Connector> mConnectors;
 	protected final Dimension mPreferredSize;
@@ -19,9 +19,9 @@ public abstract class NodeItem
 	protected boolean mFixedSize;
 
 
-	public NodeItem(Connector... aConnectors)
+	public NodeItem()
 	{
-		mConnectors = new ArrayList<>(Arrays.asList(aConnectors));
+		mConnectors = new ArrayList<>();
 		mBounds = new Rectangle();
 		mPreferredSize = new Dimension();
 	}
@@ -36,6 +36,19 @@ public abstract class NodeItem
 	public NodeBox getNodeBox()
 	{
 		return mNodeBox;
+	}
+
+
+	public String getIdentity()
+	{
+		return mIdentity;
+	}
+
+
+	public NodeItem setIdentity(String aIdentity)
+	{
+		mIdentity = aIdentity;
+		return this;
 	}
 
 
@@ -87,12 +100,19 @@ public abstract class NodeItem
 	}
 
 
+	public NodeItem add(Connector aConnector)
+	{
+		mConnectors.add(aConnector);
+		return this;
+	}
+
+
 	public ArrayList<Connector> getConnectors()
 	{
 		return mConnectors;
 	}
-	
-	
+
+
 	public Stream<Connector> getConnectors(Direction aDirection)
 	{
 		return mConnectors.stream().filter(e->e.mDirection == aDirection);
@@ -103,6 +123,13 @@ public abstract class NodeItem
 	{
 		Connector c = getConnectors(aDirection).findFirst().orElse(null);
 		return c == null ? 0 : c.getConnectedItems().count();
+	}
+
+
+	public NodeItem setOnInputChange(OnInputChangeListener aOnInputChangeListener)
+	{
+		mOnInputChangeListener = aOnInputChangeListener;
+		return this;
 	}
 
 

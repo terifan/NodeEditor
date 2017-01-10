@@ -96,7 +96,7 @@ public class NodeEditorPane extends JComponent
 	}
 
 
-	public NodeEditorPane add(NodeBox aNode)
+	public NodeBox add(NodeBox aNode)
 	{
 		mNodes.add(aNode);
 
@@ -110,53 +110,55 @@ public class NodeEditorPane extends JComponent
 			}
 		}
 
-		return this;
+		return aNode;
 	}
 
 
-//	public NodeEditorPane addConnection(String aFromNodeItemName, String aToNodeItemName)
-//	{
-//		Connector out = null;
-//		Connector in = null;
-//
-//		for (NodeBox box : mNodes)
-//		{
-//			for (NodeItem item : box.mItems)
-//			{
-//				if (!(item instanceof AbstractNodeItem))
-//				{
-//					continue;
-//				}
-//
-//				AbstractNodeItem textNodeItem = (AbstractNodeItem)item;
-//
-//				if (textNodeItem.getText().equals(aFromNodeItemName))
-//				{
-//					for (Connector connector : item.mConnectors)
-//					{
-//						if (connector.getDirection() == Direction.OUT)
-//						{
-//							out = connector;
-//						}
-//					}
-//				}
-//				if (textNodeItem.getText().equals(aToNodeItemName))
-//				{
-//					for (Connector connector : item.mConnectors)
-//					{
-//						if (connector.getDirection() == Direction.IN)
-//						{
-//							in = connector;
-//						}
-//					}
-//				}
-//			}
-//		}
-//
-//		addConnection(out, in);
-//
-//		return this;
-//	}
+	public NodeBox getNodeBoxByName(String aPath)
+	{
+		String boxId = aPath.contains(".") ? aPath.split("\\.")[0] : aPath;
+		NodeBox box = null;
+
+		for (NodeBox b : mNodes)
+		{
+			if (b.getIdentity() != null && b.getIdentity().equals(boxId))
+			{
+				box = b;
+				break;
+			}
+			else if (b.getName().equalsIgnoreCase(boxId))
+			{
+				if (box != null)
+				{
+					throw new IllegalStateException("More than one NodeBox have the same name, provide an Identity to either of them: " + b.getName());
+				}
+				box = b;
+			}
+		}
+
+		if (box == null)
+		{
+			throw new IllegalArgumentException("Failed to find NodeBox: " + aPath);
+		}
+
+		return box;
+	}
+
+
+	public NodeEditorPane addConnection(String aFromPath, String aToPath)
+	{
+		NodeBox fromBox = getNodeBoxByName(aFromPath);
+		NodeItem fromItem = fromBox.getNodeItemByName(aFromPath);
+		Connector out = fromItem.getConnectors(Direction.OUT).findFirst().get();
+
+		NodeBox toBox = getNodeBoxByName(aToPath);
+		NodeItem toItem = toBox.getNodeItemByName(aToPath);
+		Connector in = toItem.getConnectors(Direction.IN).findFirst().get();
+
+		addConnection(out, in);
+
+		return this;
+	}
 
 
 	public NodeEditorPane addConnection(NodeItem aFromItem, NodeItem aToItem)
@@ -187,7 +189,7 @@ public class NodeEditorPane extends JComponent
 		{
 			throw new IllegalArgumentException("The 'ToItem' has no connectors.");
 		}
-		
+
 		addConnection(out, in);
 
 		return this;
@@ -447,7 +449,7 @@ public class NodeEditorPane extends JComponent
 			mClickPoint = calcMousePoint(aEvent);
 
 			if (!left) return;
-			
+
 			if (mCursor != Cursor.DEFAULT_CURSOR)
 			{
 				mStartBounds = new Rectangle(mHoverBox.getBounds());
@@ -718,7 +720,7 @@ public class NodeEditorPane extends JComponent
 				int x = aPoint.x - box.getBounds().x;
 				int y = aPoint.y - box.getBounds().y;
 
-				for (NodeItem item : box.getItems())
+				for (NodeItem item : box)
 				{
 					for (Connector c : item.mConnectors)
 					{
@@ -758,7 +760,7 @@ public class NodeEditorPane extends JComponent
 			int x = aPoint.x - box.getBounds().x;
 			int y = aPoint.y - box.getBounds().y;
 
-			for (NodeItem item : box.getItems())
+			for (NodeItem item : box)
 			{
 				for (Connector c : item.mConnectors)
 				{

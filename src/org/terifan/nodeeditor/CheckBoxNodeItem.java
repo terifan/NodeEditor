@@ -14,11 +14,11 @@ public class CheckBoxNodeItem extends AbstractNodeItem
 {
 	private final static float[] RANGES = new float[]{0f,1f};
 	private boolean mState;
-	
-	
-	public CheckBoxNodeItem(String aText, boolean aState, Connector... aConnectors)
+
+
+	public CheckBoxNodeItem(String aText, boolean aState)
 	{
-		super(aText, aConnectors);
+		super(aText);
 
 		mState = aState;
 	}
@@ -48,13 +48,13 @@ public class CheckBoxNodeItem extends AbstractNodeItem
 
 			aGraphics.setColor(new Color(188,188,188));
 			aGraphics.setStroke(new BasicStroke(2));
-			
+
 			aGraphics.drawLine(sx + ss / 4, sy + ss * 2 / 3 - ss / 4, sx + ss / 4 *2, sy + ss * 2 / 3);
 			aGraphics.drawLine(sx + ss / 4 * 2, sy + ss * 2 / 3, sx + ss - 1, sy);
 
 			aGraphics.setStroke(stroke);
 		}
-		
+
 		aGraphics.setPaint(oldPaint);
 
 		mTextBox

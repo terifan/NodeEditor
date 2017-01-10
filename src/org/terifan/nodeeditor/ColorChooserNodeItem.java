@@ -12,11 +12,11 @@ public class ColorChooserNodeItem extends AbstractNodeItem<ColorChooserNodeItem>
 {
 	private static final int COLOR_BOX_WIDTH = 30;
 	private Color mColor;
-	
-	
-	public ColorChooserNodeItem(String aText, Color aColor, Connector... aConnectors)
+
+
+	public ColorChooserNodeItem(String aText, Color aColor)
 	{
-		super(aText, aConnectors);
+		super(aText);
 
 		mColor = aColor;
 		mPreferredSize.height = 20;

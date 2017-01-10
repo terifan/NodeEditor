@@ -7,13 +7,16 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.stream.Stream;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.TextBox;
 import static org.terifan.nodeeditor.Styles.*;
 
 
-public class NodeBox
+public class NodeBox implements Iterable<NodeItem>
 {
+	protected String mIdentity;
 	protected NodeEditorPane mEditorPane;
 	protected String mName;
 	protected Rectangle mBounds;
@@ -42,7 +45,7 @@ public class NodeBox
 
 		for (NodeItem item : aItems)
 		{
-			addItem(item);
+			add(item);
 		}
 	}
 
@@ -50,6 +53,25 @@ public class NodeBox
 	void bind(NodeEditorPane aEditorPane)
 	{
 		mEditorPane = aEditorPane;
+	}
+
+
+	public String getIdentity()
+	{
+		return mIdentity;
+	}
+
+
+	public NodeBox setIdentity(String aIdentity)
+	{
+		mIdentity = aIdentity;
+		return this;
+	}
+
+
+	public String getName()
+	{
+		return mName;
 	}
 
 
@@ -124,6 +146,13 @@ public class NodeBox
 	}
 
 
+	public NodeBox setSize(int aWidth, int aHeight)
+	{
+		mBounds.setSize(aWidth, aHeight);
+		return this;
+	}
+
+
 	public NodeBox setSize(Dimension aSize)
 	{
 		mBounds.setSize(aSize);
@@ -147,7 +176,7 @@ public class NodeBox
 	}
 
 
-	public NodeBox addItem(NodeItem aItem)
+	public NodeBox add(NodeItem aItem)
 	{
 		mItems.add(aItem);
 
@@ -163,9 +192,16 @@ public class NodeBox
 	}
 
 
-	protected ArrayList<NodeItem> getItems()
+	public Stream<NodeItem> getItems()
 	{
-		return mItems;
+		return mItems.stream();
+	}
+
+
+	@Override
+	public Iterator<NodeItem> iterator()
+	{
+		return mItems.iterator();
 	}
 
 
@@ -482,5 +518,41 @@ public class NodeBox
 	public interface OnInputChangeListener
 	{
 		void onInputChange(NodeItem aSource, boolean aSelf);
+	}
+
+
+	public NodeItem getNodeItemByName(String aPath)
+	{
+		String id = aPath.contains(".") ? aPath.split("\\.")[1] : aPath;
+		NodeItem item = null;
+
+		for (NodeItem b : mItems)
+		{
+			if (b.getIdentity() != null && b.getIdentity().equals(id))
+			{
+				item = b;
+				break;
+			}
+			else if (b instanceof AbstractNodeItem)
+			{
+				AbstractNodeItem ab = (AbstractNodeItem)b;
+
+				if (ab.getText().equalsIgnoreCase(id))
+				{
+					if (item != null)
+					{
+						throw new IllegalStateException("More than one NodeItem have the same name, provide an Identity to either of them: " + ab.getText());
+					}
+					item = b;
+				}
+			}
+		}
+
+		if (item == null)
+		{
+			throw new IllegalArgumentException("Failed to find NodeItem: " + aPath);
+		}
+
+		return item;
 	}
 }

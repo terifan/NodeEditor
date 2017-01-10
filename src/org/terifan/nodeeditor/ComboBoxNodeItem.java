@@ -13,9 +13,9 @@ public class ComboBoxNodeItem extends AbstractNodeItem
 	private boolean mArmed;
 
 
-	public ComboBoxNodeItem(String aText, Connector... aConnectors)
+	public ComboBoxNodeItem(String aText)
 	{
-		super(aText, aConnectors);
+		super(aText);
 
 		mPreferredSize.height = 21;
 	}
@@ -46,7 +46,7 @@ public class ComboBoxNodeItem extends AbstractNodeItem
 		aGraphics.setColor(Styles.COMBOBOX_ARROW_COLOR);
 		aGraphics.fillPolygon(px, new int[]{ay-1, ay-ph, ay-1}, 3);
 		aGraphics.fillPolygon(px, new int[]{ay+1, ay+ph, ay+1}, 3);
-		
+
 		aGraphics.setPaint(oldPaint);
 
 		mTextBox.setBounds(mBounds).setAnchor(Anchor.WEST).setMargins(0, 8, 0, 15).setForeground(Styles.BOX_FOREGROUND_SELECTED_COLOR).setMaxLineCount(1).setFont(Styles.SLIDER_FONT).render(aGraphics);

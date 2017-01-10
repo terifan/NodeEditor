@@ -7,33 +7,29 @@ import org.terifan.ui.TextBox;
 
 public class TextNodeItem extends AbstractNodeItem<TextNodeItem>
 {
-	public TextNodeItem(String aText, Connector... aConnectors)
+	public TextNodeItem(String aText)
 	{
-		super(aText, aConnectors);
+		super(aText);
 	}
 
 
-	public TextNodeItem(String aText, int aWidth, int aHeight, Connector... aConnectors)
+	public TextNodeItem(String aText, int aWidth, int aHeight)
 	{
-		super(aText, aWidth, aHeight, aConnectors);
+		super(aText, aWidth, aHeight);
 	}
 
 
+	@Override
 	public TextBox getTextBox()
 	{
-		return mTextBox;
+		return super.getTextBox();
 	}
 
 
-	public String getText()
-	{
-		return mTextBox.getText();
-	}
-
-
+	@Override
 	public TextNodeItem setText(String aText)
 	{
-		mTextBox.setText(aText);
+		super.setText(aText);
 		return this;
 	}
 

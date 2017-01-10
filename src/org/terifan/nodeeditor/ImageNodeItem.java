@@ -10,9 +10,9 @@ public class ImageNodeItem extends AbstractNodeItem<ImageNodeItem>
 	private BufferedImage mImage;
 
 
-	public ImageNodeItem(String aText, BufferedImage aImage, int aWidth, int aHeight, Connector... aConnectors)
+	public ImageNodeItem(String aText, BufferedImage aImage, int aWidth, int aHeight)
 	{
-		super(aText, aWidth, aHeight, aConnectors);
+		super(aText, aWidth, aHeight);
 
 		mImage = aImage;
 	}

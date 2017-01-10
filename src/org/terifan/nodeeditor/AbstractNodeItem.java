@@ -11,27 +11,61 @@ public abstract class AbstractNodeItem<T extends AbstractNodeItem> extends NodeI
 	protected final TextBox mTextBox;
 
 
-	public AbstractNodeItem(String aText, Connector... aConnectors)
+	public AbstractNodeItem(String aText)
 	{
-		this(aText, 0, 0, aConnectors);
+		this(aText, 0, 0);
 
 		mPreferredSize.setSize(mTextBox.measure().getSize());
 	}
 
 
-	public AbstractNodeItem(String aText, int aWidth, int aHeight, Connector... aConnectors)
+	public AbstractNodeItem(String aText, int aWidth, int aHeight)
 	{
-		super(aConnectors);
-
 		mTextBox = new TextBox(aText).setFont(Styles.BOX_ITEM_FONT).setForeground(Styles.BOX_FOREGROUND_COLOR);
 		mPreferredSize.setSize(aWidth, aHeight);
 		mFixedSize = true;
 	}
 
 
+	protected TextBox getTextBox()
+	{
+		return mTextBox;
+	}
+
+
+	protected String getText()
+	{
+		return mTextBox.getText();
+	}
+
+
+	protected T setText(String aText)
+	{
+		mTextBox.setText(aText);
+		return (T)this;
+	}
+
+
+	@Override
+	public T setIdentity(String aIdentity)
+	{
+		super.setIdentity(aIdentity);
+		return (T)this;
+	}
+
+
+	@Override
+	public T add(Connector aConnector)
+	{
+		super.add(aConnector);
+		return (T)this;
+	}
+
+
+	@Override
 	public T setOnInputChange(OnInputChangeListener aOnInputChangeListener)
 	{
-		mOnInputChangeListener = aOnInputChangeListener;
+		super.setOnInputChange(aOnInputChangeListener);
 		return (T)this;
 	}
 
@@ -45,12 +79,5 @@ public abstract class AbstractNodeItem<T extends AbstractNodeItem> extends NodeI
 		}
 
 		return super.getPreferredSize(aGraphics, aBounds);
-	}
-
-
-	public T addConnector(Connector aConnector)
-	{
-		mConnectors.add(aConnector);
-		return (T)this;
 	}
 }
