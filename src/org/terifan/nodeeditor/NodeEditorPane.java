@@ -41,6 +41,7 @@ public class NodeEditorPane extends JComponent
 	private double mScale;
 	private boolean mRemoveInConnectionsOnDrop;
 	private NodeItem mClickedItem;
+	private Popup mPopup;
 
 
 	public NodeEditorPane()
@@ -261,6 +262,10 @@ public class NodeEditorPane extends JComponent
 		{
 			box.layout(g);
 		}
+		if (mPopup != null)
+		{
+			mPopup.layout(g);
+		}
 
 		for (Connection connection : mConnections)
 		{
@@ -291,52 +296,12 @@ public class NodeEditorPane extends JComponent
 
 		for (NodeBox box : mNodes)
 		{
-			Rectangle bounds = box.getBounds();
-			int x = (int)(bounds.x * mScale);
-			int y = (int)(bounds.y * mScale);
-			int width = (int)(bounds.width * mScale);
-			int height = (int)(bounds.height * mScale);
+			paintBox(g, box, mSelectedNodes.contains(box));
+		}
 
-			if (g.hitClip(x, y, width, height))
-			{
-				boolean selected = mSelectedNodes.contains(box);
-
-				boolean offscreen = false;
-
-				Graphics2D ig;
-				AffineTransform affineTransform;
-				BufferedImage offscreenBuffer = null;
-
-				if (offscreen)
-				{
-					offscreenBuffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-					ig = offscreenBuffer.createGraphics();
-					affineTransform = new AffineTransform();
-					affineTransform.scale(mScale, mScale);
-				}
-				else
-				{
-					ig = (Graphics2D)g.create(x, y, width, height);
-					affineTransform = new AffineTransform();
-					affineTransform.translate(mPaneScroll.x + x, mPaneScroll.y + y);
-					affineTransform.scale(mScale, mScale);
-				}
-
-				ig.setTransform(affineTransform);
-				ig.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-				ig.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
-
-				box.paintBorder(ig, 0, 0, bounds.width, bounds.height, selected);
-				box.paintComponent(ig, selected);
-				box.paintConnectors(ig);
-
-				ig.dispose();
-
-				if (offscreen)
-				{
-					g.drawImage(offscreenBuffer, x, y, null);
-				}
-			}
+		if (mPopup != null)
+		{
+			paintBox(g, mPopup, false);
 		}
 
 		g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_NORMALIZE);
@@ -351,6 +316,53 @@ public class NodeEditorPane extends JComponent
 		}
 
 		g.setTransform(oldTransform);
+	}
+
+
+	private void paintBox(Graphics2D aGraphics, Renderable aRenderable, boolean aSelected)
+	{
+		Rectangle bounds = aRenderable.getBounds();
+		int x = (int)(bounds.x * mScale);
+		int y = (int)(bounds.y * mScale);
+		int width = (int)(bounds.width * mScale);
+		int height = (int)(bounds.height * mScale);
+
+		if (aGraphics.hitClip(x, y, width, height))
+		{
+			boolean offscreen = false;
+
+			Graphics2D ig;
+			AffineTransform affineTransform;
+			BufferedImage offscreenBuffer = null;
+
+			if (offscreen)
+			{
+				offscreenBuffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+				ig = offscreenBuffer.createGraphics();
+				affineTransform = new AffineTransform();
+				affineTransform.scale(mScale, mScale);
+			}
+			else
+			{
+				ig = (Graphics2D)aGraphics.create(x, y, width, height);
+				affineTransform = new AffineTransform();
+				affineTransform.translate(mPaneScroll.x + x, mPaneScroll.y + y);
+				affineTransform.scale(mScale, mScale);
+			}
+
+			ig.setTransform(affineTransform);
+			ig.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			ig.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+
+			aRenderable.paintComponent(ig, bounds.width, bounds.height, aSelected);
+
+			ig.dispose();
+
+			if (offscreen)
+			{
+				aGraphics.drawImage(offscreenBuffer, x, y, null);
+			}
+		}
 	}
 
 
@@ -414,6 +426,7 @@ public class NodeEditorPane extends JComponent
 		private int mCursor;
 		private NodeBox mHoverBox;
 		private Rectangle mStartBounds;
+		private boolean mIgnoreNextMouseRelease;
 
 		{
 			mCursor = Cursor.DEFAULT_CURSOR;
@@ -424,6 +437,12 @@ public class NodeEditorPane extends JComponent
 		public void mouseMoved(MouseEvent aEvent)
 		{
 			Point point = calcMousePoint(aEvent);
+
+			if (mPopup != null)
+			{
+				mPopup.mouseMoved(aEvent);
+				return;
+			}
 
 			for (NodeBox box : mNodes)
 			{
@@ -445,10 +464,24 @@ public class NodeEditorPane extends JComponent
 		{
 			boolean left = SwingUtilities.isLeftMouseButton(aEvent);
 
+			if (mPopup != null)
+			{
+				mIgnoreNextMouseRelease = true;
+				mPopup.mousePressed(aEvent);
+				return;
+			}
+
 			mDragPoint = aEvent.getPoint();
 			mClickPoint = calcMousePoint(aEvent);
 
-			if (!left) return;
+			if (SwingUtilities.isMiddleMouseButton(aEvent))
+			{
+				updateCursor(Cursor.MOVE_CURSOR);
+			}
+			if (!left)
+			{
+				return;
+			}
 
 			if (mCursor != Cursor.DEFAULT_CURSOR)
 			{
@@ -542,6 +575,18 @@ public class NodeEditorPane extends JComponent
 		@Override
 		public void mouseReleased(MouseEvent aEvent)
 		{
+			if (mPopup != null)
+			{
+				if (mIgnoreNextMouseRelease)
+				{
+					mPopup.mouseReleased(aEvent);
+				}
+				mIgnoreNextMouseRelease = false;
+				mClickedItem = null;
+				mSelectionRectangle = null;
+				return;
+			}
+
 			mClickPoint = calcMousePoint(aEvent);
 
 			if (mCursor != Cursor.DEFAULT_CURSOR)
@@ -618,9 +663,14 @@ public class NodeEditorPane extends JComponent
 		@Override
 		public void mouseDragged(MouseEvent aEvent)
 		{
+			if (mPopup != null)
+			{
+				return;
+			}
+
 			Point newPoint = calcMousePoint(aEvent);
 
-			if (mCursor != Cursor.DEFAULT_CURSOR)
+			if (mCursor != Cursor.DEFAULT_CURSOR && SwingUtilities.isLeftMouseButton(aEvent))
 			{
 				resizeBox(mHoverBox, newPoint);
 				return;
@@ -680,6 +730,12 @@ public class NodeEditorPane extends JComponent
 		@Override
 		public void mouseWheelMoved(MouseWheelEvent aEvent)
 		{
+			if (mPopup != null)
+			{
+				mPopup.mouseWheelMoved(aEvent);
+				return;
+			}
+
 			mPaneScroll.x -= aEvent.getX();
 			mPaneScroll.y -= aEvent.getY();
 
@@ -1003,5 +1059,17 @@ public class NodeEditorPane extends JComponent
 	public Stream<NodeItem> getConnectionsFrom(Connector aConnector)
 	{
 		return mConnections.stream().filter(e->e.getIn() == aConnector).map(e->e.getIn().getNodeItem());
+	}
+
+
+	public Popup getPopup()
+	{
+		return mPopup;
+	}
+
+
+	public void setPopup(Popup aPopup)
+	{
+		this.mPopup = aPopup;
 	}
 }

@@ -14,7 +14,7 @@ import org.terifan.ui.TextBox;
 import static org.terifan.nodeeditor.Styles.*;
 
 
-public class NodeBox implements Iterable<NodeItem>
+public class NodeBox implements Iterable<NodeItem>, Renderable
 {
 	protected String mIdentity;
 	protected NodeEditorPane mEditorPane;
@@ -204,8 +204,11 @@ public class NodeBox implements Iterable<NodeItem>
 	}
 
 
-	protected void paintComponent(Graphics2D aGraphics, boolean aSelected)
+	@Override
+	public void paintComponent(Graphics2D aGraphics, int aWidth, int aHeight, boolean aSelected)
 	{
+		paintBorder(aGraphics, 0, 0, aWidth, aHeight, aSelected);
+
 		if (!mMinimized)
 		{
 			for (NodeItem item : mItems)
@@ -213,10 +216,13 @@ public class NodeBox implements Iterable<NodeItem>
 				item.paintComponent(mEditorPane, aGraphics, false);
 			}
 		}
+
+		paintConnectors(aGraphics);
 	}
 
 
-	protected void layout(Graphics2D aGraphics)
+	@Override
+	public void layout(Graphics2D aGraphics)
 	{
 		computeBounds(aGraphics);
 		layoutItems(aGraphics);
@@ -371,6 +377,7 @@ public class NodeBox implements Iterable<NodeItem>
 	}
 
 
+	@Override
 	public Rectangle getBounds()
 	{
 		return mBounds;

@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.LinearGradientPaint;
 import java.awt.Paint;
 import java.awt.Point;
+import java.awt.Rectangle;
 import org.terifan.ui.Anchor;
 
 
@@ -24,23 +25,18 @@ public class ComboBoxNodeItem extends AbstractNodeItem
 	@Override
 	protected void paintComponent(NodeEditorPane aEditorPane, Graphics2D aGraphics, boolean aHover)
 	{
-		int x = mBounds.x;
-		int y = mBounds.y;
-		int h = mBounds.height;
-		int w = mBounds.width;
-
 		Paint oldPaint = aGraphics.getPaint();
 
 		aGraphics.setColor(Styles.SLIDER_BORDER_COLOR);
-		aGraphics.fillRoundRect(x, y, w, h, 4, 4);
+		aGraphics.fillRoundRect(mBounds.x, mBounds.y, mBounds.width, mBounds.height, 4, 4);
 
-		aGraphics.setPaint(new LinearGradientPaint(0, y + 1, 0, y + h - 2, RANGES, Styles.CHECKBOX_COLORS[mArmed ? 1 : 0]));
-		aGraphics.fillRoundRect(x + 1, y + 1, w - 2, h - 2, 4, 4);
+		aGraphics.setPaint(new LinearGradientPaint(0, mBounds.y + 1, 0, mBounds.y + mBounds.height - 2, RANGES, Styles.CHECKBOX_COLORS[mArmed ? 1 : 0]));
+		aGraphics.fillRoundRect(mBounds.x + 1, mBounds.y + 1, mBounds.width - 2, mBounds.height - 2, 4, 4);
 
 		int pw = 2;
 		int ph = 4;
-		int ax = x + w - 7;
-		int ay = y + h / 2;
+		int ax = mBounds.x + mBounds.width - 7;
+		int ay = mBounds.y + mBounds.height / 2;
 		int[] px = new int[]{ax - pw, ax, ax + pw};
 
 		aGraphics.setColor(Styles.COMBOBOX_ARROW_COLOR);
@@ -57,7 +53,10 @@ public class ComboBoxNodeItem extends AbstractNodeItem
 	protected boolean mousePressed(NodeEditorPane aEditorPane, Point aClickPoint)
 	{
 		mArmed = true;
+
+		aEditorPane.setPopup(new Popup(this, new Rectangle(mBounds.x, mBounds.y, mBounds.width, 0)));
 		aEditorPane.repaint();
+
 		return true;
 	}
 
@@ -66,6 +65,8 @@ public class ComboBoxNodeItem extends AbstractNodeItem
 	protected void mouseReleased(NodeEditorPane aEditorPane, Point aClickPoint)
 	{
 		mArmed = false;
+
+		aEditorPane.setPopup(null);
 		aEditorPane.repaint();
 	}
 }
