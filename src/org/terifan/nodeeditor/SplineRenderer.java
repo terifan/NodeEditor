@@ -36,7 +36,7 @@ public class SplineRenderer
 	{
 		Stroke old = aGraphics.getStroke();
 
-		float strokeScale = (float)Math.sqrt(2 * aScale);
+		float strokeScale = (float)Math.sqrt(aScale);
 		BasicStroke STROKE_WIDE = new BasicStroke(Styles.CONNECTOR_STROKE_WIDTH_OUTER * strokeScale, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND);
 		BasicStroke STROKE_THIN = new BasicStroke(Styles.CONNECTOR_STROKE_WIDTH_INNER * strokeScale, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND);
 
