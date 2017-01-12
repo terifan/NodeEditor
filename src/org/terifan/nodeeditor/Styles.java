@@ -85,4 +85,14 @@ public class Styles
 		new Color[]{new Color(181,181,181),new Color(153,153,153)},
 		new Color[]{new Color(85,85,85),new Color(113,113,113)}
 	};
+
+	public static int POPUP_FOOTER_HEIGHT = 5;
+	public static int POPUP_HEADER_HEIGHT = 35;
+	public static int POPUP_DEFAULT_OPTION_HEIGHT = 20;
+	public static int POPUP_EXTRA_HORIZONTAL_HOVER = 50;
+	static Color POPUP_FOREGROUND = new Color(255, 255, 255);
+	static Color POPUP_HEADER_FOREGROUND = new Color(128,128,128);
+	static Color POPUP_SELECTION_BACKGROUND = new Color(255, 0, 0, 128);
+	static Color POPUP_HEADER_LINE = new Color(55, 55, 55);
+	static Color POPUP_BACKGROUND = new Color(16,16,16, 220);
 }

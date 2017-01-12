@@ -1,6 +1,5 @@
 package org.terifan.nodeeditor;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -18,7 +17,7 @@ public class Popup implements Renderable
 	protected final NodeItem mOwner;
 	protected final boolean mAboveField;
 	protected int mIndex;
-
+	protected Rectangle[] mOptionBounds;
 	protected String[] mOptions =
 	{
 		"Absolute", "Modulo", "Greater Than"
@@ -31,12 +30,19 @@ public class Popup implements Renderable
 		mOwner = aOwner;
 
 		mIndex = -1;
-		mAboveField = false;
+		mAboveField = !false;
 
-		Rectangle pb = mOwner.getNodeBox().getBounds();
-		mBounds.translate(pb.x, pb.y);
+		mOptionBounds = new Rectangle[mOptions.length];
 
-		mBounds.height = 35 + 20 * mOptions.length + 2;
+		mBounds.translate(mOwner.getNodeBox().getBounds().x, mOwner.getNodeBox().getBounds().y);
+
+		mBounds.height = Styles.POPUP_HEADER_HEIGHT + Styles.POPUP_FOOTER_HEIGHT;
+		for (int i = 0; i < mOptions.length; i++)
+		{
+			mOptionBounds[i] = new Rectangle();
+
+			mBounds.height += optionHeight(i);
+		}
 
 		if (mAboveField)
 		{
@@ -93,27 +99,45 @@ public class Popup implements Renderable
 			path.lineTo(0, 0);
 		}
 
-		aGraphics.setColor(new Color(0, 0, 0, 160));
+		aGraphics.setColor(Styles.POPUP_BACKGROUND);
 		aGraphics.fill(path);
+
+		int ly = Styles.POPUP_HEADER_HEIGHT * 6 / 7;
+		TextBox textBox = new TextBox("Operation").setAnchor(Anchor.WEST).setForeground(Styles.POPUP_HEADER_FOREGROUND);
+
+		aGraphics.setColor(Styles.POPUP_HEADER_LINE);
+		if (mAboveField)
+		{
+			aGraphics.drawLine(0, ly, aWidth, ly);
+			textBox.setBounds(10, 0, aWidth-10, ly).render(aGraphics);
+		}
+		else
+		{
+			aGraphics.drawLine(0, aHeight - ly, aWidth, aHeight - ly);
+			textBox.setBounds(10, aHeight - ly, aWidth-10, ly).render(aGraphics);
+		}
 
 		aGraphics.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
-		aGraphics.setColor(new Color(55, 55, 55));
-		aGraphics.drawLine(0, 30, aWidth, 30);
+		int offset = mAboveField ? Styles.POPUP_HEADER_HEIGHT : Styles.POPUP_FOOTER_HEIGHT;
 
-		new TextBox("Operation").setMargins(0, 10, 0, 10).setAnchor(Anchor.WEST).setBounds(0, 0, aWidth, 30).setForeground(new Color(208, 208, 208)).render(aGraphics);
-
-		if (mIndex >= 0)
-		{
-			aGraphics.setColor(new Color(255, 0, 0, 128));
-			aGraphics.fillRect(0, 35 + mIndex * 20, aWidth, 20);
-		}
-
-		TextBox text = new TextBox().setAnchor(Anchor.WEST).setForeground(new Color(255, 255, 255));
+		TextBox text = new TextBox().setAnchor(Anchor.WEST).setForeground(Styles.POPUP_FOREGROUND).setMargins(0,10,0,0);
 
 		for (int i = 0; i < mOptions.length; i++)
 		{
-			text.setText(mOptions[i]).setBounds(10, 35 + i * 20, aWidth, 20).render(aGraphics);
+			int ih = optionHeight(i);
+
+			mOptionBounds[i].setBounds(0, offset, aWidth, ih);
+
+			if (i == mIndex)
+			{
+				aGraphics.setColor(Styles.POPUP_SELECTION_BACKGROUND);
+				aGraphics.fill(mOptionBounds[i]);
+			}
+
+			text.setText(mOptions[i]).setBounds(mOptionBounds[i]).render(aGraphics);
+
+			offset += ih;
 		}
 	}
 
@@ -121,18 +145,28 @@ public class Popup implements Renderable
 	protected void mouseMoved(Point aPoint)
 	{
 		int x = aPoint.x - mBounds.x;
-		int y = aPoint.y - mBounds.y - 35;
+		int y = aPoint.y - mBounds.y;
+		int s = -1;
 
-		int i = y / 20;
-
-		if (x < -50 || x > mBounds.width + 50 || y < 0 || mIndex >= mOptions.length)
+		if (x < -Styles.POPUP_EXTRA_HORIZONTAL_HOVER || x > mBounds.width + Styles.POPUP_EXTRA_HORIZONTAL_HOVER || y < 0)
 		{
-			i = -1;
+			s = -1;
+		}
+		else
+		{
+			for (int i = 0; i < mOptionBounds.length; i++)
+			{
+				if (mOptionBounds[i].contains(x,y))
+				{
+					s = i;
+					break;
+				}
+			}
 		}
 
-		if (mIndex != i)
+		if (mIndex != s)
 		{
-			mIndex = i;
+			mIndex = s;
 			mOwner.getNodeBox().getEditorPane().repaint();
 		}
 	}
@@ -151,5 +185,11 @@ public class Popup implements Renderable
 
 	protected void mouseWheelMoved(MouseWheelEvent aEvent)
 	{
+	}
+
+
+	protected int optionHeight(int aIndex)
+	{
+		return Styles.POPUP_DEFAULT_OPTION_HEIGHT;
 	}
 }
