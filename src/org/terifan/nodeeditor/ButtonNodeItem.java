@@ -4,7 +4,9 @@ import java.awt.Graphics2D;
 import java.awt.LinearGradientPaint;
 import java.awt.Paint;
 import java.awt.Point;
+import java.awt.image.BufferedImage;
 import org.terifan.ui.Anchor;
+import org.terifan.ui.ImageResizer;
 import org.terifan.ui.TextBox;
 
 
@@ -12,15 +14,17 @@ public class ButtonNodeItem extends AbstractNodeItem<ButtonNodeItem>
 {
 	private final static float[] RANGES = new float[]{0f,1f};
 
+	private final ButtonAction mButtonAction;
+	private final BufferedImage mIcon;
 	private boolean mArmed;
-	private ButtonAction mButtonAction;
 
 
-	public ButtonNodeItem(String aText, ButtonAction aButtonAction)
+	public ButtonNodeItem(String aText, BufferedImage aIcon, ButtonAction aButtonAction)
 	{
 		super(aText);
 
 		mButtonAction = aButtonAction;
+		mIcon = aIcon;
 		mPreferredSize.height = 22;
 		mTextBox.setAnchor(Anchor.CENTER).setMargins(0, 0, 0, 0).setMaxLineCount(1).setFont(Styles.SLIDER_FONT);
 	}
@@ -56,6 +60,13 @@ public class ButtonNodeItem extends AbstractNodeItem<ButtonNodeItem>
 
 		aGraphics.setPaint(new LinearGradientPaint(0, y, 0, y + h, RANGES, Styles.BUTTON_COLORS[mArmed ? 2 : aHover ? 1 : 0]));
 		aGraphics.fillRoundRect(x + 1, y + 1, w - 2, h - 2, 4, 4);
+
+		if (mIcon != null)
+		{
+			int t = h - 4;
+			int s = (int)(t * mNodeBox.getEditorPane().getScale());
+			aGraphics.drawImage(ImageResizer.getScaledImageAspect(mIcon, s, s, true), x + 4, y + 2, t, t, null);
+		}
 
 		aGraphics.setPaint(oldPaint);
 

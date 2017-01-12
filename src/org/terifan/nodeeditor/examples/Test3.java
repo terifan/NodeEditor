@@ -2,6 +2,7 @@ package org.terifan.nodeeditor.examples;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
 import org.terifan.nodeeditor.SliderNodeItem;
 import org.terifan.nodeeditor.ImageNodeItem;
 import javax.swing.JFrame;
@@ -47,7 +48,7 @@ public class Test3
 					.addConnector(OUT, YELLOW))
 				.add(new TextNodeItem("Alpha")
 					.addConnector(OUT, GRAY))
-				.add(new ButtonNodeItem("Open", System.out::println))
+				.add(new ButtonNodeItem("Open", ImageIO.read(Test3.class.getResource("directory.png")), System.out::println))
 				.add(new ImageNodeItem("image", image, 200, 200))
 				.add(new TextNodeItem("Vector")
 					.addConnector(IN, PURPLE))
