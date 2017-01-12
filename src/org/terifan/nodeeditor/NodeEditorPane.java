@@ -440,7 +440,7 @@ public class NodeEditorPane extends JComponent
 
 			if (mPopup != null)
 			{
-				mPopup.mouseMoved(aEvent);
+				mPopup.mouseMoved(point);
 				return;
 			}
 
