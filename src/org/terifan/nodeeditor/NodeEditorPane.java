@@ -620,7 +620,14 @@ public class NodeEditorPane extends JComponent
 						}
 					}
 
-					NodeEditorPane.this.addConnection(mDragConnector, nearestConnector);
+					if (mDragConnector.getDirection() == Direction.IN)
+					{
+						NodeEditorPane.this.addConnection(nearestConnector, mDragConnector);
+					}
+					else
+					{
+						NodeEditorPane.this.addConnection(mDragConnector, nearestConnector);
+					}
 				}
 
 				mDragConnector = null;

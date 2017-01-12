@@ -7,8 +7,10 @@ import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Path2D;
+import java.util.List;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.TextBox;
+import org.terifan.util.Strings;
 
 
 public class Popup implements Renderable
@@ -16,32 +18,45 @@ public class Popup implements Renderable
 	protected final Rectangle mBounds;
 	protected final NodeItem mOwner;
 	protected final boolean mAboveField;
-	protected int mIndex;
-	protected Rectangle[] mOptionBounds;
-	protected String[] mOptions =
-	{
-		"Absolute", "Modulo", "Greater Than"
-	};
+	protected final ResultReceiver mResultReceiver;
+	protected List<Option> mOptions;
+	protected Option mSelectedOption;
+	protected String mHeader;
 
 
-	public Popup(NodeItem aOwner, Rectangle aBounds)
+	/**
+	 * Constructs a new Pop-up.
+	 * 
+	 * @param aOwner
+	 * @param aHeader
+	 *   optional text header
+	 * @param aBounds
+	 *   with and heigh will be ignored if the options list contain any elements
+	 * @param aOptions
+	 *   list of selectable options, can be empty
+	 * @param aResultReceiver
+	 */
+	public Popup(NodeItem aOwner, String aHeader, Rectangle aBounds, List<Option> aOptions, ResultReceiver aResultReceiver)
 	{
-		mBounds = aBounds;
+		mHeader = aHeader;
 		mOwner = aOwner;
+		mOptions = aOptions;
+		mResultReceiver = aResultReceiver;
 
-		mIndex = -1;
-		mAboveField = !false;
+		mSelectedOption = null;
+		mAboveField = false;
 
-		mOptionBounds = new Rectangle[mOptions.length];
+		mBounds = new Rectangle(mOwner.getNodeBox().getBounds().x + aBounds.x, mOwner.getNodeBox().getBounds().y + aBounds.y, aBounds.width, aBounds.height);
 
-		mBounds.translate(mOwner.getNodeBox().getBounds().x, mOwner.getNodeBox().getBounds().y);
-
-		mBounds.height = Styles.POPUP_HEADER_HEIGHT + Styles.POPUP_FOOTER_HEIGHT;
-		for (int i = 0; i < mOptions.length; i++)
+		if (!mOptions.isEmpty())
 		{
-			mOptionBounds[i] = new Rectangle();
-
-			mBounds.height += optionHeight(i);
+			Rectangle b = new Rectangle();
+			for (Option option : mOptions)
+			{
+				b.add(option.getBounds());
+			}
+			mBounds.width = b.width;
+			mBounds.height = headerHeight() + Styles.POPUP_FOOTER_HEIGHT + b.height;
 		}
 
 		if (mAboveField)
@@ -52,6 +67,12 @@ public class Popup implements Renderable
 		{
 			mBounds.y += aOwner.mBounds.height;
 		}
+	}
+
+
+	protected int headerHeight()
+	{
+		return Strings.isEmptyOrNull(mHeader) ? Styles.POPUP_FOOTER_HEIGHT : Styles.POPUP_HEADER_HEIGHT;
 	}
 
 
@@ -102,78 +123,75 @@ public class Popup implements Renderable
 		aGraphics.setColor(Styles.POPUP_BACKGROUND);
 		aGraphics.fill(path);
 
-		int ly = Styles.POPUP_HEADER_HEIGHT * 6 / 7;
-		TextBox textBox = new TextBox("Operation").setAnchor(Anchor.WEST).setForeground(Styles.POPUP_HEADER_FOREGROUND);
+		if (!Strings.isEmptyOrNull(mHeader))
+		{
+			int ly = headerHeight() * 6 / 7;
+			TextBox textBox = new TextBox(mHeader).setAnchor(Anchor.WEST).setForeground(Styles.POPUP_HEADER_FOREGROUND);
 
-		aGraphics.setColor(Styles.POPUP_HEADER_LINE);
-		if (mAboveField)
-		{
-			aGraphics.drawLine(0, ly, aWidth, ly);
-			textBox.setBounds(10, 0, aWidth-10, ly).render(aGraphics);
-		}
-		else
-		{
-			aGraphics.drawLine(0, aHeight - ly, aWidth, aHeight - ly);
-			textBox.setBounds(10, aHeight - ly, aWidth-10, ly).render(aGraphics);
+			aGraphics.setColor(Styles.POPUP_HEADER_LINE);
+			if (mAboveField)
+			{
+				aGraphics.drawLine(0, ly, aWidth, ly);
+				textBox.setBounds(10, 0, aWidth-10, ly).render(aGraphics);
+			}
+			else
+			{
+				aGraphics.drawLine(0, aHeight - ly, aWidth, aHeight - ly);
+				textBox.setBounds(10, aHeight - ly, aWidth-10, ly).render(aGraphics);
+			}
 		}
 
 		aGraphics.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
-		int offset = mAboveField ? Styles.POPUP_HEADER_HEIGHT : Styles.POPUP_FOOTER_HEIGHT;
-
-		TextBox text = new TextBox().setAnchor(Anchor.WEST).setForeground(Styles.POPUP_FOREGROUND).setMargins(0,10,0,0);
-
-		for (int i = 0; i < mOptions.length; i++)
+		if (!mOptions.isEmpty())
 		{
-			int ih = optionHeight(i);
+			aGraphics.translate(0, mAboveField ? headerHeight() : Styles.POPUP_FOOTER_HEIGHT);
 
-			mOptionBounds[i].setBounds(0, offset, aWidth, ih);
-
-			if (i == mIndex)
+			for (Option option : mOptions)
 			{
-				aGraphics.setColor(Styles.POPUP_SELECTION_BACKGROUND);
-				aGraphics.fill(mOptionBounds[i]);
+				option.paintOption(aGraphics, option == mSelectedOption);
 			}
 
-			text.setText(mOptions[i]).setBounds(mOptionBounds[i]).render(aGraphics);
-
-			offset += ih;
+			aGraphics.translate(0, mAboveField ? -headerHeight() : -Styles.POPUP_FOOTER_HEIGHT);
 		}
 	}
 
 
 	protected void mouseMoved(Point aPoint)
 	{
-		int x = aPoint.x - mBounds.x;
-		int y = aPoint.y - mBounds.y;
-		int s = -1;
+		if (!mOptions.isEmpty())
+		{
+			int x = aPoint.x - mBounds.x;
+			int y = aPoint.y - mBounds.y - (mAboveField ? headerHeight() : Styles.POPUP_FOOTER_HEIGHT);
+			Option s = null;
 
-		if (x < -Styles.POPUP_EXTRA_HORIZONTAL_HOVER || x > mBounds.width + Styles.POPUP_EXTRA_HORIZONTAL_HOVER || y < 0)
-		{
-			s = -1;
-		}
-		else
-		{
-			for (int i = 0; i < mOptionBounds.length; i++)
+			if (x >= 0 && x < mBounds.width && y > 0)
 			{
-				if (mOptionBounds[i].contains(x,y))
+				for (Option option : mOptions)
 				{
-					s = i;
-					break;
+					if (option.getBounds().contains(x, y))
+					{
+						s = option;
+						break;
+					}
 				}
 			}
-		}
 
-		if (mIndex != s)
-		{
-			mIndex = s;
-			mOwner.getNodeBox().getEditorPane().repaint();
+			if (mSelectedOption != s)
+			{
+				mSelectedOption = s;
+				mOwner.getNodeBox().getEditorPane().repaint();
+			}
 		}
 	}
 
 
 	protected void mousePressed(MouseEvent aEvent)
 	{
+		if (mSelectedOption != null)
+		{
+			mResultReceiver.popupResult(mSelectedOption);
+		}
 	}
 
 
@@ -187,9 +205,21 @@ public class Popup implements Renderable
 	{
 	}
 
-
-	protected int optionHeight(int aIndex)
+	
+	@FunctionalInterface
+	public interface ResultReceiver
 	{
-		return Styles.POPUP_DEFAULT_OPTION_HEIGHT;
+		void popupResult(Option aSelectedOption);
+	}
+	
+	
+	public interface Option
+	{
+		/**
+		 * Return the bounds of the item within the popup. The popup size will be equal to the combined size of all options.
+		 */
+		Rectangle getBounds();
+
+		void paintOption(Graphics2D aGraphics, boolean aSelected);
 	}
 }

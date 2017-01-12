@@ -5,18 +5,31 @@ import java.awt.LinearGradientPaint;
 import java.awt.Paint;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.util.ArrayList;
+import org.terifan.nodeeditor.Popup.Option;
 import org.terifan.ui.Anchor;
+import org.terifan.ui.TextBox;
 
 
 public class ComboBoxNodeItem extends AbstractNodeItem
 {
 	private final static float[] RANGES = new float[]{0f,1f};
-	private boolean mArmed;
+
+	protected boolean mArmed;
+	protected int mSelectedIndex;
+	protected String mHeader;
+	protected ResultReceiver mResultReceiver;
+	protected String[] mOptions;
 
 
-	public ComboBoxNodeItem(String aText)
+	public ComboBoxNodeItem(String aText, ResultReceiver aResultReceiver, int aSelectedIndex, String... aOptions)
 	{
-		super(aText);
+		super(aOptions[aSelectedIndex]);
+		
+		mHeader = aText;
+		mResultReceiver = aResultReceiver;
+		mSelectedIndex = aSelectedIndex;
+		mOptions = aOptions;
 
 		mPreferredSize.height = 21;
 	}
@@ -54,7 +67,39 @@ public class ComboBoxNodeItem extends AbstractNodeItem
 	{
 		mArmed = true;
 
-		aEditorPane.setPopup(new Popup(this, new Rectangle(mBounds.x, mBounds.y, mBounds.width, 0)));
+		ArrayList<Option> options = new ArrayList<>();
+		for (String option : mOptions)
+		{
+			options.add(new Option()
+			{
+				Rectangle bounds = new Rectangle(0, options.size()*Styles.POPUP_DEFAULT_OPTION_HEIGHT, mBounds.width, Styles.POPUP_DEFAULT_OPTION_HEIGHT);
+
+
+				@Override
+				public Rectangle getBounds()
+				{
+					return bounds;
+				}
+
+
+				@Override
+				public void paintOption(Graphics2D aGraphics, boolean aSelected)
+				{
+					if (aSelected)
+					{
+						aGraphics.setColor(Styles.POPUP_SELECTION_BACKGROUND);
+						aGraphics.fill(bounds);
+					}
+					new TextBox().setAnchor(Anchor.WEST).setForeground(Styles.POPUP_FOREGROUND).setMargins(0, 10, 0, 0).setText(option).setBounds(bounds).render(aGraphics);
+				}
+			});
+		}
+
+//		Popup popup = new Popup(this, "", new Rectangle(mBounds.x, mBounds.y, 340, 520), options, e->setSelectedIndex(options.indexOf(e)));
+
+		Popup popup = new Popup(this, mHeader, mBounds, options, e->setSelectedIndex(options.indexOf(e)));
+
+		aEditorPane.setPopup(popup);
 		aEditorPane.repaint();
 
 		return true;
@@ -68,5 +113,32 @@ public class ComboBoxNodeItem extends AbstractNodeItem
 
 		aEditorPane.setPopup(null);
 		aEditorPane.repaint();
+	}
+
+
+	public int getSelectedIndex()
+	{
+		return mSelectedIndex;
+	}
+
+
+	public ComboBoxNodeItem setSelectedIndex(int aSelectedIndex)
+	{
+		mSelectedIndex = aSelectedIndex;
+		setText(mOptions[mSelectedIndex]);
+
+		if (mResultReceiver != null)
+		{
+			mResultReceiver.selectionChanged(mSelectedIndex);
+		}
+
+		return this;
+	}
+
+	
+	@FunctionalInterface
+	public interface ResultReceiver
+	{
+		void selectionChanged(int aSelectedIndex);
 	}
 }

@@ -50,8 +50,8 @@ public class Test1
 			SliderNodeItem slider4 = new SliderNodeItem("Roughness", 0.0, 0.1);
 			CheckBoxNodeItem checkbox1 = new CheckBoxNodeItem("Inverted", false);
 			CheckBoxNodeItem checkbox2 = new CheckBoxNodeItem("Inverted", true);
-			ComboBoxNodeItem comboBoxNodeItem1 = new ComboBoxNodeItem("GCX");
-			ComboBoxNodeItem comboBoxNodeItem2 = new ComboBoxNodeItem("Beckmann");
+			ComboBoxNodeItem comboBoxNodeItem1 = new ComboBoxNodeItem("A", System.out::println, 0, "GCX", "Beckmann");
+			ComboBoxNodeItem comboBoxNodeItem2 = new ComboBoxNodeItem("B", System.out::println, 1, "Alpha", "Beta");
 			NodeBox nodeBox0 = new NodeBox("nodeBox0", node0, node1, comboBoxNodeItem1, comboBoxNodeItem2);
 			NodeBox nodeBox1 = new NodeBox("nodeBox1", node2, slider1, slider2, slider3, slider4, checkbox1, checkbox2, node3);
 			NodeBox nodeBox2 = new NodeBox("nodeBox2", node4, node5, node10, node6);

@@ -89,7 +89,6 @@ public class Styles
 	public static int POPUP_FOOTER_HEIGHT = 5;
 	public static int POPUP_HEADER_HEIGHT = 35;
 	public static int POPUP_DEFAULT_OPTION_HEIGHT = 20;
-	public static int POPUP_EXTRA_HORIZONTAL_HOVER = 50;
 	public static Color POPUP_FOREGROUND = new Color(255, 255, 255);
 	public static Color POPUP_HEADER_FOREGROUND = new Color(128,128,128);
 	public static Color POPUP_SELECTION_BACKGROUND = new Color(255, 0, 0, 128);

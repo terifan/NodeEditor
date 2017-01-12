@@ -79,7 +79,7 @@ public class Test3
 				.add(new TextNodeItem("Value")
 					.setIdentity("result")
 					.addConnector(OUT, GRAY))
-				.add(new ComboBoxNodeItem("Multiply"))
+				.add(new ComboBoxNodeItem("Operation", System.out::println, 2, "Add", "Subtract", "Multiply", "Divide", "Absolute", "Modulo", "Greater Than"))
 				.add(new CheckBoxNodeItem("Clamp", false))
 				.add(new SliderNodeItem("Value", 0.5, 0.01)
 					.setIdentity("value1")
@@ -121,7 +121,7 @@ public class Test3
 			editor.getNode("math").setLocation(-300, -200);
 
 			editor.center();
-			editor.setScale(1);
+			editor.setScale(2);
 
 			JFrame frame = new JFrame();
 			frame.add(editor);
