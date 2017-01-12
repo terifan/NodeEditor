@@ -90,9 +90,9 @@ public class Styles
 	public static int POPUP_HEADER_HEIGHT = 35;
 	public static int POPUP_DEFAULT_OPTION_HEIGHT = 20;
 	public static int POPUP_EXTRA_HORIZONTAL_HOVER = 50;
-	static Color POPUP_FOREGROUND = new Color(255, 255, 255);
-	static Color POPUP_HEADER_FOREGROUND = new Color(128,128,128);
-	static Color POPUP_SELECTION_BACKGROUND = new Color(255, 0, 0, 128);
-	static Color POPUP_HEADER_LINE = new Color(55, 55, 55);
-	static Color POPUP_BACKGROUND = new Color(16,16,16, 220);
+	public static Color POPUP_FOREGROUND = new Color(255, 255, 255);
+	public static Color POPUP_HEADER_FOREGROUND = new Color(128,128,128);
+	public static Color POPUP_SELECTION_BACKGROUND = new Color(255, 0, 0, 128);
+	public static Color POPUP_HEADER_LINE = new Color(55, 55, 55);
+	public static Color POPUP_BACKGROUND = new Color(16,16,16, 220);
 }
