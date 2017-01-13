@@ -23,7 +23,7 @@ public abstract class NodeItem implements Externalizable
 	protected final Dimension mPreferredSize;
 	protected final Rectangle mBounds;
 	protected final TextBox mTextBox;
-	protected NodeBox mNodeBox;
+	protected Node mNode;
 	protected String mIdentity;
 	protected boolean mFixedSize;
 	protected OnInputChangeListener mOnInputChangeListener;
@@ -38,15 +38,15 @@ public abstract class NodeItem implements Externalizable
 	}
 
 
-	void bind(NodeBox aNodeBox)
+	void bind(Node aNode)
 	{
-		mNodeBox = aNodeBox;
+		mNode = aNode;
 	}
 
 
-	public NodeBox getNodeBox()
+	public Node getNode()
 	{
-		return mNodeBox;
+		return mNode;
 	}
 
 
@@ -94,13 +94,13 @@ public abstract class NodeItem implements Externalizable
 	}
 
 
-	protected abstract void paintComponent(NodeEditorPane aEditorPane, Graphics2D aGraphics, boolean aHover);
+	protected abstract void paintComponent(NodeEditor aEditor, Graphics2D aGraphics, boolean aHover);
 
 
 	/**
 	 * Perform the action of this item, for instance after a mouse click.
 	 */
-	protected void actionPerformed(NodeEditorPane aEditorPane, Point aClickPoint)
+	protected void actionPerformed(NodeEditor aEditor, Point aClickPoint)
 	{
 	}
 
@@ -108,26 +108,26 @@ public abstract class NodeItem implements Externalizable
 	/**
 	 * Should return true if the clicked point will perform an action. This method return false.
 	 */
-	protected boolean mousePressed(NodeEditorPane aEditorPane, Point aClickPoint)
+	protected boolean mousePressed(NodeEditor aEditor, Point aClickPoint)
 	{
 		return false;
 	}
 
 
-	protected void mouseReleased(NodeEditorPane aEditorPane, Point aClickPoint)
+	protected void mouseReleased(NodeEditor aEditor, Point aClickPoint)
 	{
 	}
 
 
-	protected void mouseDragged(NodeEditorPane aEditorPane, Point aClickPoint, Point aDragPoint)
+	protected void mouseDragged(NodeEditor aEditor, Point aClickPoint, Point aDragPoint)
 	{
 	}
 
 
-	public void fireOnChange()
-	{
-		mNodeBox.fireOutputChange(this);
-	}
+//	public void fireOnChange()
+//	{
+//		mNode.fireOutputChange(this);
+//	}
 
 
 	public NodeItem add(Connector aConnector)

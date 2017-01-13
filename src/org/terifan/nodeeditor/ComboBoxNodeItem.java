@@ -38,7 +38,7 @@ public class ComboBoxNodeItem extends AbstractNodeItem
 
 
 	@Override
-	protected void paintComponent(NodeEditorPane aEditorPane, Graphics2D aGraphics, boolean aHover)
+	protected void paintComponent(NodeEditor aEditor, Graphics2D aGraphics, boolean aHover)
 	{
 		Paint oldPaint = aGraphics.getPaint();
 
@@ -65,7 +65,7 @@ public class ComboBoxNodeItem extends AbstractNodeItem
 
 
 	@Override
-	protected boolean mousePressed(NodeEditorPane aEditorPane, Point aClickPoint)
+	protected boolean mousePressed(NodeEditor aEditor, Point aClickPoint)
 	{
 		mArmed = true;
 
@@ -99,22 +99,22 @@ public class ComboBoxNodeItem extends AbstractNodeItem
 
 //		Popup popup = new Popup(this, "", new Rectangle(mBounds.x, mBounds.y, 340, 520), options, e->setSelectedIndex(options.indexOf(e)));
 
-		Popup popup = new Popup(this, mHeader, mBounds, options, e->setSelectedIndex(options.indexOf(e)));
+		Popup popup = new Popup(aEditor, this, mHeader, mBounds, options, e->setSelectedIndex(options.indexOf(e)));
 
-		aEditorPane.setPopup(popup);
-		aEditorPane.repaint();
+		aEditor.setPopup(popup);
+		aEditor.repaint();
 
 		return true;
 	}
 
 
 	@Override
-	protected void mouseReleased(NodeEditorPane aEditorPane, Point aClickPoint)
+	protected void mouseReleased(NodeEditor aEditor, Point aClickPoint)
 	{
 		mArmed = false;
 
-		aEditorPane.setPopup(null);
-		aEditorPane.repaint();
+		aEditor.setPopup(null);
+		aEditor.repaint();
 	}
 
 

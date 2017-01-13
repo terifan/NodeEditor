@@ -19,11 +19,11 @@ import static org.terifan.nodeeditor.Styles.*;
 import org.terifan.util.Strings;
 
 
-public class NodeBox implements Iterable<NodeItem>, Renderable, Externalizable
+public class Node implements Iterable<NodeItem>, Renderable, Externalizable
 {
 	private static final long serialVersionUID = 1L;
 
-	protected NodeEditorPane mEditorPane;
+	protected NodeModel mModel;
 	protected ArrayList<NodeItem> mItems;
 	protected String mIdentity;
 	protected String mName;
@@ -39,7 +39,7 @@ public class NodeBox implements Iterable<NodeItem>, Renderable, Externalizable
 	protected OnInputChangeListener mOnInputChangeListener;
 
 
-	public NodeBox(String aName, NodeItem... aItems)
+	public Node(String aName, NodeItem... aItems)
 	{
 		mName = aName;
 		mBounds = new Rectangle();
@@ -57,9 +57,9 @@ public class NodeBox implements Iterable<NodeItem>, Renderable, Externalizable
 	}
 
 
-	void bind(NodeEditorPane aEditorPane)
+	void bind(NodeModel aEditor)
 	{
-		mEditorPane = aEditorPane;
+		mModel = aEditor;
 	}
 
 
@@ -69,7 +69,7 @@ public class NodeBox implements Iterable<NodeItem>, Renderable, Externalizable
 	}
 
 
-	public NodeBox setIdentity(String aIdentity)
+	public Node setIdentity(String aIdentity)
 	{
 		mIdentity = aIdentity;
 		return this;
@@ -94,13 +94,13 @@ public class NodeBox implements Iterable<NodeItem>, Renderable, Externalizable
 	}
 
 
-	public NodeEditorPane getEditorPane()
+	public NodeModel getModel()
 	{
-		return mEditorPane;
+		return mModel;
 	}
 
 
-	public NodeBox setOnInputChange(OnInputChangeListener aOnInputChangeListener)
+	public Node setOnInputChange(OnInputChangeListener aOnInputChangeListener)
 	{
 		mOnInputChangeListener = aOnInputChangeListener;
 		return this;
@@ -113,7 +113,7 @@ public class NodeBox implements Iterable<NodeItem>, Renderable, Externalizable
 	}
 
 
-	public NodeBox setResizableHorizontal(boolean aResizableHorizontal)
+	public Node setResizableHorizontal(boolean aResizableHorizontal)
 	{
 		mResizableHorizontal = aResizableHorizontal;
 		return this;
@@ -126,7 +126,7 @@ public class NodeBox implements Iterable<NodeItem>, Renderable, Externalizable
 	}
 
 
-	public NodeBox setResizableVertical(boolean aResizableVertical)
+	public Node setResizableVertical(boolean aResizableVertical)
 	{
 		mResizableVertical = aResizableVertical;
 		return this;
@@ -139,7 +139,7 @@ public class NodeBox implements Iterable<NodeItem>, Renderable, Externalizable
 	}
 
 
-	public NodeBox setMinSize(Dimension aMinSize)
+	public Node setMinSize(Dimension aMinSize)
 	{
 		mMinSize = aMinSize;
 		return this;
@@ -152,7 +152,7 @@ public class NodeBox implements Iterable<NodeItem>, Renderable, Externalizable
 	}
 
 
-	public NodeBox setMaxSize(Dimension aMaxSize)
+	public Node setMaxSize(Dimension aMaxSize)
 	{
 		mMaxSize = aMaxSize;
 		return this;
@@ -165,21 +165,21 @@ public class NodeBox implements Iterable<NodeItem>, Renderable, Externalizable
 	}
 
 
-	public NodeBox setSize(int aWidth, int aHeight)
+	public Node setSize(int aWidth, int aHeight)
 	{
 		mBounds.setSize(aWidth, aHeight);
 		return this;
 	}
 
 
-	public NodeBox setSize(Dimension aSize)
+	public Node setSize(Dimension aSize)
 	{
 		mBounds.setSize(aSize);
 		return this;
 	}
 
 
-	public NodeBox setMinimized(boolean aMinimized)
+	public Node setMinimized(boolean aMinimized)
 	{
 		mMinimized = aMinimized;
 
@@ -195,7 +195,7 @@ public class NodeBox implements Iterable<NodeItem>, Renderable, Externalizable
 	}
 
 
-	public NodeBox add(NodeItem aItem)
+	public Node add(NodeItem aItem)
 	{
 		mItems.add(aItem);
 
@@ -204,7 +204,7 @@ public class NodeBox implements Iterable<NodeItem>, Renderable, Externalizable
 	}
 
 
-	public NodeBox setLocation(int aX, int aY)
+	public Node setLocation(int aX, int aY)
 	{
 		mBounds.setLocation(aX, aY);
 		return this;
@@ -225,7 +225,7 @@ public class NodeBox implements Iterable<NodeItem>, Renderable, Externalizable
 
 
 	@Override
-	public void paintComponent(Graphics2D aGraphics, int aWidth, int aHeight, boolean aSelected)
+	public void paintComponent(NodeEditor aEditor, Graphics2D aGraphics, int aWidth, int aHeight, boolean aSelected)
 	{
 		paintBorder(aGraphics, 0, 0, aWidth, aHeight, aSelected);
 
@@ -233,7 +233,7 @@ public class NodeBox implements Iterable<NodeItem>, Renderable, Externalizable
 		{
 			for (NodeItem item : mItems)
 			{
-				item.paintComponent(mEditorPane, aGraphics, false);
+				item.paintComponent(aEditor, aGraphics, false);
 			}
 		}
 
@@ -511,25 +511,25 @@ public class NodeBox implements Iterable<NodeItem>, Renderable, Externalizable
 	/**
 	 * Child NodeItems call this when their values are changed
 	 */
-	public void fireOutputChange(NodeItem aNodeItem)
-	{
-		if (mOnInputChangeListener != null)
-		{
-			mOnInputChangeListener.onInputChange(aNodeItem, true);
-		}
-
-		for (NodeItem item : mItems)
-		{
-			mEditorPane.getConnectionsFrom(item).forEach(c->{
-				c.getOut().getNodeItem().inputWasChanged(aNodeItem);
-				c.getOut().getNodeItem().getNodeBox().fireInputChange(aNodeItem);
-			});
-		}
-	}
+//	public void fireOutputChange(NodeItem aNodeItem)
+//	{
+//		if (mOnInputChangeListener != null)
+//		{
+//			mOnInputChangeListener.onInputChange(aNodeItem, true);
+//		}
+//
+//		for (NodeItem item : mItems)
+//		{
+//			mModel.getConnectionsFrom(item).forEach(c->{
+//				c.getOut().getNodeItem().inputWasChanged(aNodeItem);
+//				c.getOut().getNodeItem().getNode().fireInputChange(aNodeItem);
+//			});
+//		}
+//	}
 
 
 	/**
-	 * Other NodeBoxes call this when an item of theirs have changed value.
+	 * Other Nodes call this when an item of theirs have changed value.
 	 */
 	public void fireInputChange(NodeItem aNodeItem)
 	{

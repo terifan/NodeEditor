@@ -38,7 +38,7 @@ public class TextNodeItem extends AbstractNodeItem<TextNodeItem>
 
 
 	@Override
-	protected void paintComponent(NodeEditorPane aEditorPane, Graphics2D aGraphics, boolean aHover)
+	protected void paintComponent(NodeEditor aEditor, Graphics2D aGraphics, boolean aHover)
 	{
 		mTextBox
 			.setBounds(mBounds)

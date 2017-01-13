@@ -74,7 +74,7 @@ public class SliderNodeItem extends AbstractNodeItem<SliderNodeItem>
 
 
 	@Override
-	protected void paintComponent(NodeEditorPane aEditorPane, Graphics2D aGraphics, boolean aHover)
+	protected void paintComponent(NodeEditor aEditor, Graphics2D aGraphics, boolean aHover)
 	{
 		if (countConnections(Direction.IN) > 0)
 		{
@@ -129,13 +129,13 @@ public class SliderNodeItem extends AbstractNodeItem<SliderNodeItem>
 
 
 	@Override
-	protected boolean mousePressed(NodeEditorPane aEditorPane, Point aClickPoint)
+	protected boolean mousePressed(NodeEditor aEditor, Point aClickPoint)
 	{
 		if (countConnections(Direction.IN) == 0)
 		{
 			mArmed = true;
 			mStartValue = mValue;
-			aEditorPane.repaint();
+			aEditor.repaint();
 			return true;
 		}
 
@@ -144,7 +144,7 @@ public class SliderNodeItem extends AbstractNodeItem<SliderNodeItem>
 
 
 	@Override
-	protected void mouseReleased(NodeEditorPane aEditorPane, Point aClickPoint)
+	protected void mouseReleased(NodeEditor aEditor, Point aClickPoint)
 	{
 		if (countConnections(Direction.IN) == 0)
 		{
@@ -157,16 +157,16 @@ public class SliderNodeItem extends AbstractNodeItem<SliderNodeItem>
 				}
 				else
 				{
-					fireOnChange();
+//					fireOnChange();
 				}
 			}
-			aEditorPane.repaint();
+			aEditor.repaint();
 		}
 	}
 
 
 	@Override
-	protected void mouseDragged(NodeEditorPane aEditorPane, Point aClickPoint, Point aDragPoint)
+	protected void mouseDragged(NodeEditor aEditor, Point aClickPoint, Point aDragPoint)
 	{
 		if (countConnections(Direction.IN) == 0)
 		{
@@ -187,10 +187,10 @@ public class SliderNodeItem extends AbstractNodeItem<SliderNodeItem>
 			}
 			else
 			{
-				fireOnChange();
+//				fireOnChange();
 			}
 
-			aEditorPane.repaint();
+			aEditor.repaint();
 		}
 	}
 

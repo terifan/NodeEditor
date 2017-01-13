@@ -15,6 +15,7 @@ import org.terifan.util.Strings;
 
 public class Popup implements Renderable
 {
+	protected final NodeEditor mEditor;
 	protected final Rectangle mBounds;
 	protected final NodeItem mOwner;
 	protected final boolean mAboveField;
@@ -26,7 +27,7 @@ public class Popup implements Renderable
 
 	/**
 	 * Constructs a new Pop-up.
-	 * 
+	 *
 	 * @param aOwner
 	 * @param aHeader
 	 *   optional text header
@@ -36,7 +37,7 @@ public class Popup implements Renderable
 	 *   list of selectable options, can be empty
 	 * @param aResultReceiver
 	 */
-	public Popup(NodeItem aOwner, String aHeader, Rectangle aBounds, List<Option> aOptions, ResultReceiver aResultReceiver)
+	public Popup(NodeEditor aEditor, NodeItem aOwner, String aHeader, Rectangle aBounds, List<Option> aOptions, ResultReceiver aResultReceiver)
 	{
 		mHeader = aHeader;
 		mOwner = aOwner;
@@ -46,7 +47,7 @@ public class Popup implements Renderable
 		mSelectedOption = null;
 		mAboveField = false;
 
-		mBounds = new Rectangle(mOwner.getNodeBox().getBounds().x + aBounds.x, mOwner.getNodeBox().getBounds().y + aBounds.y, aBounds.width, aBounds.height);
+		mBounds = new Rectangle(mOwner.getNode().getBounds().x + aBounds.x, mOwner.getNode().getBounds().y + aBounds.y, aBounds.width, aBounds.height);
 
 		if (!mOptions.isEmpty())
 		{
@@ -67,6 +68,7 @@ public class Popup implements Renderable
 		{
 			mBounds.y += aOwner.mBounds.height;
 		}
+		this.mEditor = aEditor;
 	}
 
 
@@ -90,7 +92,7 @@ public class Popup implements Renderable
 
 
 	@Override
-	public void paintComponent(Graphics2D aGraphics, int aWidth, int aHeight, boolean aSelected)
+	public void paintComponent(NodeEditor aEditor, Graphics2D aGraphics, int aWidth, int aHeight, boolean aSelected)
 	{
 		int w = aWidth;
 		int h = aHeight;
@@ -180,7 +182,7 @@ public class Popup implements Renderable
 			if (mSelectedOption != s)
 			{
 				mSelectedOption = s;
-				mOwner.getNodeBox().getEditorPane().repaint();
+				mEditor.repaint();
 			}
 		}
 	}
@@ -197,7 +199,7 @@ public class Popup implements Renderable
 
 	protected void mouseReleased(MouseEvent aEvent)
 	{
-		mOwner.mouseReleased(mOwner.getNodeBox().getEditorPane(), aEvent.getPoint());
+		mOwner.mouseReleased(mEditor, aEvent.getPoint());
 	}
 
 
@@ -205,14 +207,14 @@ public class Popup implements Renderable
 	{
 	}
 
-	
+
 	@FunctionalInterface
 	public interface ResultReceiver
 	{
 		void popupResult(Option aSelectedOption);
 	}
-	
-	
+
+
 	public interface Option
 	{
 		/**

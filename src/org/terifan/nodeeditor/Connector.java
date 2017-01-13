@@ -69,7 +69,7 @@ public class Connector implements Externalizable
 
 	Point getConnectorPoint()
 	{
-		Rectangle bounds = mNodeItem.getNodeBox().getBounds();
+		Rectangle bounds = mNodeItem.getNode().getBounds();
 
 		return new Point(bounds.x + mBounds.x + mBounds.width / 2, bounds.y + mBounds.y + mBounds.height / 2);
 	}
@@ -77,7 +77,7 @@ public class Connector implements Externalizable
 
 	public Stream<NodeItem> getConnectedItems()
 	{
-		return mNodeItem.getNodeBox().getEditorPane().getConnectionsTo(this);
+		return mNodeItem.getNode().getModel().getConnectionsTo(this);
 	}
 
 
@@ -89,7 +89,7 @@ public class Connector implements Externalizable
 		aOutput.writeInt(mColor.getGreen());
 		aOutput.writeInt(mColor.getBlue());
 		aOutput.writeInt(mColor.getAlpha());
-		aOutput.writeUTF(mNodeItem.getNodeBox().getIdentityOrName());
+		aOutput.writeUTF(mNodeItem.getNode().getIdentityOrName());
 		aOutput.writeUTF(mNodeItem.getIdentityOrName());
 	}
 

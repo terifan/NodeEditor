@@ -34,7 +34,7 @@ public class ImageNodeItem extends AbstractNodeItem<ImageNodeItem>
 
 
 	@Override
-	protected void paintComponent(NodeEditorPane aEditorPane, Graphics2D aGraphics, boolean aHover)
+	protected void paintComponent(NodeEditor aEditor, Graphics2D aGraphics, boolean aHover)
 	{
 		int s = 20;
 		int t = 10;

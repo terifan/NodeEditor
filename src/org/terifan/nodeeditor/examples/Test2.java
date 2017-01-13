@@ -4,8 +4,9 @@ import javax.swing.JFrame;
 import static org.terifan.nodeeditor.Connector.YELLOW;
 import static org.terifan.nodeeditor.Direction.IN;
 import static org.terifan.nodeeditor.Direction.OUT;
-import org.terifan.nodeeditor.NodeEditorPane;
-import org.terifan.nodeeditor.NodeBox;
+import org.terifan.nodeeditor.NodeEditor;
+import org.terifan.nodeeditor.Node;
+import org.terifan.nodeeditor.NodeModel;
 import org.terifan.nodeeditor.TextNodeItem;
 
 
@@ -15,10 +16,12 @@ public class Test2
 	{
 		try
 		{
-			NodeEditorPane editor = new NodeEditorPane();
+			NodeModel model = new NodeModel();
+
+			NodeEditor editor = new NodeEditor(model);
 
 			editor.addFactory("trip", e->
-				new NodeBox(e)
+				new Node(e)
 					.setSize(200, 0)
 					.add(new TextNodeItem("CLOSED"))
 					.add(new TextNodeItem("stops")
@@ -26,7 +29,7 @@ public class Test2
 				);
 
 			editor.addFactory("stop", e->
-				new NodeBox(e)
+				new Node(e)
 					.setSize(200, 0)
 					.add(new TextNodeItem("trip")
 						.addConnector(IN, YELLOW))
@@ -36,7 +39,7 @@ public class Test2
 				);
 
 			editor.addFactory("activity", e->
-				new NodeBox(e)
+				new Node(e)
 					.setSize(200, 0)
 					.add(new TextNodeItem("stop")
 						.addConnector(IN, YELLOW))

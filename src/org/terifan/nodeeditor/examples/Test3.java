@@ -15,8 +15,9 @@ import static org.terifan.nodeeditor.Connector.PURPLE;
 import static org.terifan.nodeeditor.Connector.YELLOW;
 import static org.terifan.nodeeditor.Direction.IN;
 import static org.terifan.nodeeditor.Direction.OUT;
-import org.terifan.nodeeditor.NodeEditorPane;
-import org.terifan.nodeeditor.NodeBox;
+import org.terifan.nodeeditor.NodeEditor;
+import org.terifan.nodeeditor.Node;
+import org.terifan.nodeeditor.NodeModel;
 import org.terifan.nodeeditor.TextNodeItem;
 
 
@@ -26,9 +27,9 @@ public class Test3
 	{
 		try
 		{
-			NodeEditorPane editor = new NodeEditorPane();
+			NodeModel model = new NodeModel();
 
-			editor.add(new NodeBox("Color")
+			model.add(new Node("Color")
 				.setSize(200, 0)
 				.add(new TextNodeItem("Color")
 					.addConnector(OUT, YELLOW))
@@ -43,7 +44,7 @@ public class Test3
 			);
 
 			BufferedImage image = new BufferedImage(200, 200, BufferedImage.TYPE_INT_ARGB);
-			editor.add(new NodeBox("Texture")
+			model.add(new Node("Texture")
 				.add(new TextNodeItem("Color")
 					.addConnector(OUT, YELLOW))
 				.add(new TextNodeItem("Alpha")
@@ -54,26 +55,26 @@ public class Test3
 					.addConnector(IN, PURPLE))
 			);
 
-			editor.add(new NodeBox("Output")
+			model.add(new Node("Output")
 				.add(new ColorChooserNodeItem("Surface", new Color(0, 0, 0))
 					.addConnector(IN, YELLOW))
 				.add(new SliderNodeItem("Alpha", 0, 1, 0.75)
 					.addConnector(IN, GRAY))
 			);
 
-			editor.add(new NodeBox("Alpha")
+			model.add(new Node("Alpha")
 				.setSize(200, 0)
 				.add(new SliderNodeItem("Alpha", 0, 1, 0.75)
 					.addConnector(OUT, GRAY))
 			);
 
-			editor.add(new NodeBox("TextureCoordinate")
+			model.add(new Node("TextureCoordinate")
 				.setSize(200, 0)
 				.add(new TextNodeItem("UV")
 					.addConnector(OUT, PURPLE))
 			);
 
-			editor.add(new NodeBox("Multiply")
+			model.add(new Node("Multiply")
 				.setSize(200, 0)
 				.setIdentity("math")
 				.add(new TextNodeItem("Value")
@@ -89,7 +90,7 @@ public class Test3
 					.addConnector(IN, GRAY))
 			);
 
-			editor.add(new NodeBox("Mix")
+			model.add(new Node("Mix")
 				.setSize(200, 0)
 				.add(new TextNodeItem("Color")
 					.setIdentity("colorOut")
@@ -104,21 +105,23 @@ public class Test3
 					.addConnector(IN, YELLOW))
 			);
 
-			editor.addConnection("texture.color", "mix.colorIn1");
-			editor.addConnection("color.color", "mix.colorIn2");
-			editor.addConnection("mix.colorOut", "output.surface");
-			editor.addConnection("alpha.alpha", "output.alpha");
-			editor.addConnection("alpha.alpha", "mix.fac");
-			editor.addConnection("texturecoordinate.uv", "math.value1");
-			editor.addConnection("math.result", "texture.vector");
+			model.addConnection("texture.color", "mix.colorIn1");
+			model.addConnection("color.color", "mix.colorIn2");
+			model.addConnection("mix.colorOut", "output.surface");
+			model.addConnection("alpha.alpha", "output.alpha");
+			model.addConnection("alpha.alpha", "mix.fac");
+			model.addConnection("texturecoordinate.uv", "math.value1");
+			model.addConnection("math.result", "texture.vector");
 
-			editor.getNode("color").setLocation(0, 0);
-			editor.getNode("mix").setLocation(300, -50);
-			editor.getNode("alpha").setLocation(0, 200);
-			editor.getNode("output").setLocation(600, 100);
-			editor.getNode("texture").setLocation(0, -350);
-			editor.getNode("texturecoordinate").setLocation(-600, -200);
-			editor.getNode("math").setLocation(-300, -200);
+			model.getNode("color").setLocation(0, 0);
+			model.getNode("mix").setLocation(300, -50);
+			model.getNode("alpha").setLocation(0, 200);
+			model.getNode("output").setLocation(600, 100);
+			model.getNode("texture").setLocation(0, -350);
+			model.getNode("texturecoordinate").setLocation(-600, -200);
+			model.getNode("math").setLocation(-300, -200);
+
+			NodeEditor editor = new NodeEditor(model);
 
 			editor.center();
 			editor.setScale(1);

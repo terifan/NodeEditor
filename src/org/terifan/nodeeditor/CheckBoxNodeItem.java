@@ -31,7 +31,7 @@ public class CheckBoxNodeItem extends AbstractNodeItem
 
 
 	@Override
-	protected void paintComponent(NodeEditorPane aEditorPane, Graphics2D aGraphics, boolean aHover)
+	protected void paintComponent(NodeEditor aEditor, Graphics2D aGraphics, boolean aHover)
 	{
 		int x = mBounds.x;
 		int y = mBounds.y;
@@ -74,15 +74,15 @@ public class CheckBoxNodeItem extends AbstractNodeItem
 
 
 	@Override
-	protected void actionPerformed(NodeEditorPane aEditorPane, Point aClickPoint)
+	protected void actionPerformed(NodeEditor aEditor, Point aClickPoint)
 	{
 		mState = !mState;
-		aEditorPane.repaint();
+		aEditor.repaint();
 	}
 
 
 	@Override
-	protected boolean mousePressed(NodeEditorPane aEditorPane, Point aClickPoint)
+	protected boolean mousePressed(NodeEditor aEditor, Point aClickPoint)
 	{
 		return true;
 	}

@@ -26,15 +26,13 @@ import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
 
-public class NodeEditorPane extends JComponent
+public class NodeEditor extends JComponent
 {
 	private static final long serialVersionUID = 1L;
 
 	private static final BasicStroke SELECTION_RECTANGLE_STROKE = new BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{3}, 0);
 
-	private ArrayList<Connection> mConnections;
-	private ArrayList<NodeBox> mNodes;
-	private ArrayList<NodeBox> mSelectedNodes;
+	private ArrayList<Node> mSelectedNodes;
 	private Connection mSelectedConnection;
 	private Connector mDragConnector;
 	private Point mDragStartLocation;
@@ -47,11 +45,12 @@ public class NodeEditorPane extends JComponent
 	private NodeItem mClickedItem;
 	private Popup mPopup;
 
+	private NodeModel mModel;
 
-	public NodeEditorPane()
+
+	public NodeEditor(NodeModel aModel)
 	{
-		mNodes = new ArrayList<>();
-		mConnections = new ArrayList<>();
+		mModel = aModel;
 		mSelectedNodes = new ArrayList<>();
 		mScale = 1;
 		mRemoveInConnectionsOnDrop = true;
@@ -62,13 +61,19 @@ public class NodeEditorPane extends JComponent
 	}
 
 
+	public NodeModel getModel()
+	{
+		return mModel;
+	}
+
+
 	public boolean isRemoveInConnectionsOnDrop()
 	{
 		return mRemoveInConnectionsOnDrop;
 	}
 
 
-	public NodeEditorPane setRemoveInConnectionsOnDrop(boolean aRemoveInConnectionsOnDrop)
+	public NodeEditor setRemoveInConnectionsOnDrop(boolean aRemoveInConnectionsOnDrop)
 	{
 		mRemoveInConnectionsOnDrop = aRemoveInConnectionsOnDrop;
 		return this;
@@ -81,7 +86,7 @@ public class NodeEditorPane extends JComponent
 	}
 
 
-	public NodeEditorPane setConnectorSelectionAllowed(boolean aConnectorSelectionAllowed)
+	public NodeEditor setConnectorSelectionAllowed(boolean aConnectorSelectionAllowed)
 	{
 		mConnectorSelectionAllowed = aConnectorSelectionAllowed;
 		return this;
@@ -94,125 +99,10 @@ public class NodeEditorPane extends JComponent
 	}
 
 
-	public NodeEditorPane setScale(double aScale)
+	public NodeEditor setScale(double aScale)
 	{
 		mScale = aScale;
 		return this;
-	}
-
-
-	public NodeBox add(NodeBox aNode)
-	{
-		mNodes.add(aNode);
-
-		aNode.bind(this);
-
-		for (NodeItem item : aNode.mItems)
-		{
-			for (Connector connector : item.mConnectors)
-			{
-				connector.bind(item);
-			}
-		}
-
-		return aNode;
-	}
-
-
-	public NodeBox getNode(String aPath)
-	{
-		String boxId = aPath.contains(".") ? aPath.split("\\.")[0] : aPath;
-		NodeBox box = null;
-
-		for (NodeBox b : mNodes)
-		{
-			if (b.getIdentity() != null && b.getIdentity().equals(boxId))
-			{
-				box = b;
-				break;
-			}
-			else if (b.getName().equalsIgnoreCase(boxId))
-			{
-				if (box != null)
-				{
-					throw new IllegalStateException("More than one NodeBox have the same name, provide an Identity to either of them: " + b.getName());
-				}
-				box = b;
-			}
-		}
-
-		if (box == null)
-		{
-			throw new IllegalArgumentException("Failed to find NodeBox, ensure name or identity is set: " + aPath);
-		}
-
-		return box;
-	}
-
-
-	public NodeItem getItem(String aPath)
-	{
-		return getNode(aPath).getItem(aPath);
-	}
-
-
-	public NodeEditorPane addConnection(String aFromPath, String aToPath)
-	{
-		Connector out = getItem(aFromPath).getConnectors(Direction.OUT).findFirst().get();
-		Connector in = getItem(aToPath).getConnectors(Direction.IN).findFirst().get();
-		addConnection(out, in);
-
-		return this;
-	}
-
-
-	public NodeEditorPane addConnection(NodeItem aFromItem, NodeItem aToItem)
-	{
-		Connector out = null;
-		Connector in = null;
-
-		for (Connector connector : aFromItem.mConnectors)
-		{
-			if (connector.getDirection() == Direction.OUT)
-			{
-				out = connector;
-			}
-		}
-		for (Connector connector : aToItem.mConnectors)
-		{
-			if (connector.getDirection() == Direction.IN)
-			{
-				in = connector;
-			}
-		}
-
-		if (out == null)
-		{
-			throw new IllegalArgumentException("The 'FromItem' has no connectors.");
-		}
-		if (in == null)
-		{
-			throw new IllegalArgumentException("The 'ToItem' has no connectors.");
-		}
-
-		addConnection(out, in);
-
-		return this;
-	}
-
-
-	public void addConnection(Connector aFromConnector, Connector aToConnector)
-	{
-		if (aToConnector.getDirection() != Direction.IN)
-		{
-			throw new IllegalArgumentException("Expected in connector, found: " + aToConnector.getDirection());
-		}
-		if (aFromConnector.getDirection() != Direction.OUT)
-		{
-			throw new IllegalArgumentException("Expected out connector, found: " + aFromConnector.getDirection());
-		}
-
-		mConnections.add(new Connection(aFromConnector, aToConnector));
 	}
 
 
@@ -221,13 +111,13 @@ public class NodeEditorPane extends JComponent
 	 */
 	public void center()
 	{
-		if (mNodes.isEmpty())
+		if (mModel.getNodes().isEmpty())
 		{
 			return;
 		}
 
-		Rectangle bounds = new Rectangle(mNodes.get(0).getBounds());
-		for (NodeBox box : mNodes)
+		Rectangle bounds = new Rectangle(mModel.getNodes().get(0).getBounds());
+		for (Node box : mModel.getNodes())
 		{
 			box.layout(null);
 			bounds.add(box.getBounds());
@@ -236,7 +126,7 @@ public class NodeEditorPane extends JComponent
 		int dx = -(int)bounds.getCenterX();
 		int dy = -(int)bounds.getCenterY();
 
-		for (NodeBox box : mNodes)
+		for (Node box : mModel.getNodes())
 		{
 			box.getBounds().translate(dx, dy);
 		}
@@ -262,7 +152,7 @@ public class NodeEditorPane extends JComponent
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
-		for (NodeBox box : mNodes)
+		for (Node box : mModel.getNodes())
 		{
 			box.layout(g);
 		}
@@ -271,7 +161,7 @@ public class NodeEditorPane extends JComponent
 			mPopup.layout(g);
 		}
 
-		for (Connection connection : mConnections)
+		for (Connection connection : mModel.getConnections())
 		{
 			if (mSelectedConnection == connection)
 			{
@@ -279,8 +169,8 @@ public class NodeEditorPane extends JComponent
 			}
 			else
 			{
-				Color start = mSelectedNodes.contains(connection.getIn().getNodeItem().getNodeBox()) ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : Styles.CONNECTOR_COLOR_INNER;
-				Color end = mSelectedNodes.contains(connection.getOut().getNodeItem().getNodeBox()) ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : Styles.CONNECTOR_COLOR_INNER;
+				Color start = mSelectedNodes.contains(connection.getIn().getNodeItem().getNode()) ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : Styles.CONNECTOR_COLOR_INNER;
+				Color end = mSelectedNodes.contains(connection.getOut().getNodeItem().getNode()) ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : Styles.CONNECTOR_COLOR_INNER;
 
 				SplineRenderer.drawSpline(g, connection, mScale, Styles.CONNECTOR_COLOR_OUTER, start, end);
 			}
@@ -298,7 +188,7 @@ public class NodeEditorPane extends JComponent
 			}
 		}
 
-		for (NodeBox box : mNodes)
+		for (Node box : mModel.getNodes())
 		{
 			paintBox(g, box, mSelectedNodes.contains(box));
 		}
@@ -358,7 +248,7 @@ public class NodeEditorPane extends JComponent
 			ig.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			ig.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
-			aRenderable.paintComponent(ig, bounds.width, bounds.height, aSelected);
+			aRenderable.paintComponent(this, ig, bounds.width, bounds.height, aSelected);
 
 			ig.dispose();
 
@@ -373,8 +263,8 @@ public class NodeEditorPane extends JComponent
 	@Override
 	public Dimension getPreferredSize()
 	{
-		Rectangle bounds = new Rectangle(mNodes.get(0).getBounds());
-		for (NodeBox box : mNodes)
+		Rectangle bounds = new Rectangle(mModel.getNodes().get(0).getBounds());
+		for (Node box : mModel.getNodes())
 		{
 			box.layout(null);
 			bounds.add(box.getBounds());
@@ -428,7 +318,7 @@ public class NodeEditorPane extends JComponent
 		private Point mDragPoint;
 		private boolean mHitBox;
 		private int mCursor;
-		private NodeBox mHoverBox;
+		private Node mHoverBox;
 		private Rectangle mStartBounds;
 		private boolean mIgnoreNextMouseRelease;
 
@@ -448,7 +338,7 @@ public class NodeEditorPane extends JComponent
 				return;
 			}
 
-			for (NodeBox box : mNodes)
+			for (Node box : mModel.getNodes())
 			{
 				Rectangle b = box.getBounds();
 				if (!box.isMinimized() && b.contains(point) && findNearestConnector(point, box) == null)
@@ -491,8 +381,8 @@ public class NodeEditorPane extends JComponent
 			{
 				mStartBounds = new Rectangle(mHoverBox.getBounds());
 
-				mNodes.remove(mHoverBox);
-				mNodes.add(mHoverBox);
+				mModel.getNodes().remove(mHoverBox);
+				mModel.getNodes().add(mHoverBox);
 
 				mSelectedNodes.clear();
 				mSelectedNodes.add(mHoverBox);
@@ -504,9 +394,9 @@ public class NodeEditorPane extends JComponent
 
 			mClickedItem = null;
 
-			NodeBox clickedBox = null;
+			Node clickedBox = null;
 
-			for (NodeBox box : mNodes)
+			for (Node box : mModel.getNodes())
 			{
 				Rectangle b = box.getBounds();
 
@@ -524,14 +414,14 @@ public class NodeEditorPane extends JComponent
 					NodeItem tmp = box.mousePressed(mClickPoint);
 					if (tmp != null)
 					{
-						if (tmp.mousePressed(NodeEditorPane.this, mClickPoint))
+						if (tmp.mousePressed(NodeEditor.this, mClickPoint))
 						{
 							mSelectedNodes.clear();
 							mSelectedNodes.add(box);
 							mClickedItem = tmp;
 							repaint();
 
-							tmp.actionPerformed(NodeEditorPane.this, mClickPoint);
+							tmp.actionPerformed(NodeEditor.this, mClickPoint);
 
 							return;
 						}
@@ -546,14 +436,14 @@ public class NodeEditorPane extends JComponent
 				boolean done = false;
 				if (mDragConnector.getDirection() == Direction.IN)
 				{
-					List<Connection> list = getConnectionsTo(mDragConnector.getNodeItem()).collect(Collectors.toList());
+					List<Connection> list = mModel.getConnectionsTo(mDragConnector.getNodeItem()).collect(Collectors.toList());
 					if (list.size() == 1)
 					{
 						mDragEndLocation = mDragConnector.getConnectorPoint();
 						mDragConnector = list.get(0).getIn();
 						mDragStartLocation = mDragConnector.getConnectorPoint();
 
-						mConnections.remove(list.get(0));
+						mModel.getConnections().remove(list.get(0));
 
 						done = true;
 					}
@@ -601,7 +491,7 @@ public class NodeEditorPane extends JComponent
 
 			if (mClickedItem != null)
 			{
-				mClickedItem.mouseReleased(NodeEditorPane.this, mClickPoint);
+				mClickedItem.mouseReleased(NodeEditor.this, mClickPoint);
 				mClickedItem = null;
 				repaint();
 				return;
@@ -616,21 +506,21 @@ public class NodeEditorPane extends JComponent
 					{
 						if (nearestConnector.getDirection() == Direction.IN)
 						{
-							mConnections.removeAll(getConnectionsTo(nearestConnector.getNodeItem()).collect(Collectors.toList()));
+							mModel.getConnections().removeAll(mModel.getConnectionsTo(nearestConnector.getNodeItem()).collect(Collectors.toList()));
 						}
 						if (nearestConnector.getDirection() == Direction.OUT)
 						{
-							mConnections.removeAll(getConnectionsTo(mDragConnector.getNodeItem()).collect(Collectors.toList()));
+							mModel.getConnections().removeAll(mModel.getConnectionsTo(mDragConnector.getNodeItem()).collect(Collectors.toList()));
 						}
 					}
 
 					if (mDragConnector.getDirection() == Direction.IN)
 					{
-						NodeEditorPane.this.addConnection(nearestConnector, mDragConnector);
+						mModel.addConnection(nearestConnector, mDragConnector);
 					}
 					else
 					{
-						NodeEditorPane.this.addConnection(mDragConnector, nearestConnector);
+						mModel.addConnection(mDragConnector, nearestConnector);
 					}
 				}
 
@@ -650,7 +540,7 @@ public class NodeEditorPane extends JComponent
 				mSelectionRectangle.width /= mScale;
 				mSelectionRectangle.height /= mScale;
 
-				for (NodeBox box : mNodes)
+				for (Node box : mModel.getNodes())
 				{
 					if (mSelectionRectangle.intersects(box.getBounds()))
 					{
@@ -689,7 +579,7 @@ public class NodeEditorPane extends JComponent
 
 			if (mClickedItem != null)
 			{
-				mClickedItem.mouseDragged(NodeEditorPane.this, mClickPoint, newPoint);
+				mClickedItem.mouseDragged(NodeEditor.this, mClickPoint, newPoint);
 				return;
 			}
 			if (mSelectionRectangle != null)
@@ -724,7 +614,7 @@ public class NodeEditorPane extends JComponent
 				}
 				else if (mHitBox || SwingUtilities.isRightMouseButton(aEvent))
 				{
-					for (NodeBox box : mSelectedNodes)
+					for (Node box : mSelectedNodes)
 					{
 						Point pt = box.getBounds().getLocation();
 						pt.x += mClickPoint.x - oldPoint.x;
@@ -777,9 +667,9 @@ public class NodeEditorPane extends JComponent
 			double dist = 25;
 			boolean hitBox = false;
 
-			for (NodeBox box : mNodes)
+			for (Node box : mModel.getNodes())
 			{
-				if (mDragConnector != null && mDragConnector.getNodeItem().getNodeBox() == box)
+				if (mDragConnector != null && mDragConnector.getNodeItem().getNode() == box)
 				{
 					continue;
 				}
@@ -813,13 +703,13 @@ public class NodeEditorPane extends JComponent
 		}
 
 
-		private Connector findNearestConnector(Point aPoint, NodeBox box)
+		private Connector findNearestConnector(Point aPoint, Node box)
 		{
 			Connector nearest = null;
 			double dist = 25;
 			boolean hitBox = false;
 
-			if (mDragConnector != null && mDragConnector.getNodeItem().getNodeBox() == box)
+			if (mDragConnector != null && mDragConnector.getNodeItem().getNode() == box)
 			{
 				return null;
 			}
@@ -852,10 +742,10 @@ public class NodeEditorPane extends JComponent
 		}
 
 
-		private void updateSelections(MouseEvent aEvent, NodeBox aClickedBox)
+		private void updateSelections(MouseEvent aEvent, Node aClickedBox)
 		{
-			NodeBox newSelection = null;
-			NodeBox clickedBox = null;
+			Node newSelection = null;
+			Node clickedBox = null;
 
 			if (aClickedBox != null)
 			{
@@ -895,15 +785,15 @@ public class NodeEditorPane extends JComponent
 
 			if (mHitBox)
 			{
-				mNodes.remove(clickedBox);
-				mNodes.add(clickedBox);
+				mModel.getNodes().remove(clickedBox);
+				mModel.getNodes().add(clickedBox);
 				mSelectedConnection = null;
 			}
 			else if (mConnectorSelectionAllowed)
 			{
 				double dist = 50;
 				Connection nearest = null;
-				for (Connection c : mConnections)
+				for (Connection c : mModel.getConnections())
 				{
 					double d = SplineRenderer.distance(c, mClickPoint);
 					if (d < dist)
@@ -933,10 +823,10 @@ public class NodeEditorPane extends JComponent
 		}
 
 
-		private int getCursor(Point aPoint, NodeBox aNodeBox)
+		private int getCursor(Point aPoint, Node aNode)
 		{
-			boolean rx = aNodeBox.isResizableHorizontal();
-			boolean ry = aNodeBox.isResizableVertical();
+			boolean rx = aNode.isResizableHorizontal();
+			boolean ry = aNode.isResizableVertical();
 
 			if (!rx && !ry)
 			{
@@ -945,7 +835,7 @@ public class NodeEditorPane extends JComponent
 
 			int PX = 5;
 			int PY = 4;
-			Rectangle bounds = aNodeBox.getBounds();
+			Rectangle bounds = aNode.getBounds();
 
 			if (aPoint.y - PY < bounds.y + 2 * PY)
 			{
@@ -990,9 +880,9 @@ public class NodeEditorPane extends JComponent
 		}
 
 
-		private void resizeBox(NodeBox aNodeBox, Point aPoint)
+		private void resizeBox(Node aNode, Point aPoint)
 		{
-			Rectangle b = aNodeBox.getBounds();
+			Rectangle b = aNode.getBounds();
 
 			switch (mCursor)
 			{
@@ -1000,7 +890,7 @@ public class NodeEditorPane extends JComponent
 				case Cursor.NW_RESIZE_CURSOR:
 				case Cursor.SW_RESIZE_CURSOR:
 					int o = b.x;
-					b.x = Math.min(mStartBounds.x - mClickPoint.x + aPoint.x, mStartBounds.x + mStartBounds.width - aNodeBox.getMinSize().width);
+					b.x = Math.min(mStartBounds.x - mClickPoint.x + aPoint.x, mStartBounds.x + mStartBounds.width - aNode.getMinSize().width);
 					b.width += o - b.x;
 					break;
 			}
@@ -1011,7 +901,7 @@ public class NodeEditorPane extends JComponent
 				case Cursor.NW_RESIZE_CURSOR:
 				case Cursor.NE_RESIZE_CURSOR:
 					int o = b.y;
-					b.y = Math.min(mStartBounds.y - mClickPoint.y + aPoint.y, mStartBounds.y + mStartBounds.height - aNodeBox.getMinSize().height);
+					b.y = Math.min(mStartBounds.y - mClickPoint.y + aPoint.y, mStartBounds.y + mStartBounds.height - aNode.getMinSize().height);
 					b.height += o - b.y;
 					break;
 			}
@@ -1034,10 +924,10 @@ public class NodeEditorPane extends JComponent
 					break;
 			}
 
-			b.width = Math.min(aNodeBox.getMaxSize().width, Math.max(aNodeBox.getMinSize().width, b.width));
-			b.height = Math.min(aNodeBox.getMaxSize().height, Math.max(aNodeBox.getMinSize().height, b.height));
+			b.width = Math.min(aNode.getMaxSize().width, Math.max(aNode.getMinSize().width, b.width));
+			b.height = Math.min(aNode.getMaxSize().height, Math.max(aNode.getMinSize().height, b.height));
 
-			aNodeBox.mBounds.setBounds(b);
+			aNode.mBounds.setBounds(b);
 			repaint();
 		}
 	};
@@ -1049,28 +939,6 @@ public class NodeEditorPane extends JComponent
 	}
 
 
-	public Stream<Connection> getConnectionsTo(NodeItem aItem)
-	{
-		return mConnections.stream().filter(e->e.getOut().getNodeItem() == aItem);
-	}
-
-
-	public Stream<Connection> getConnectionsFrom(NodeItem aItem)
-	{
-		return mConnections.stream().filter(e->e.getIn().getNodeItem() == aItem);
-	}
-
-
-	public Stream<NodeItem> getConnectionsTo(Connector aConnector)
-	{
-		return mConnections.stream().filter(e->e.getOut() == aConnector).map(e->e.getOut().getNodeItem());
-	}
-
-
-	public Stream<NodeItem> getConnectionsFrom(Connector aConnector)
-	{
-		return mConnections.stream().filter(e->e.getIn() == aConnector).map(e->e.getIn().getNodeItem());
-	}
 
 
 	public Popup getPopup()
@@ -1091,13 +959,13 @@ public class NodeEditorPane extends JComponent
 
 		try (ObjectOutputStream dos = new ObjectOutputStream(baos))
 		{
-			dos.writeInt(mNodes.size());
-			for (NodeBox box : mNodes)
+			dos.writeInt(mModel.getNodes().size());
+			for (Node box : mModel.getNodes())
 			{
 				dos.writeObject(box);
 			}
-			dos.writeInt(mConnections.size());
-			for (Connection connection : mConnections)
+			dos.writeInt(mModel.getConnections().size());
+			for (Connection connection : mModel.getConnections())
 			{
 				dos.writeObject(connection);
 			}
@@ -1114,16 +982,16 @@ public class NodeEditorPane extends JComponent
 		mFactories.put(aPrototype, aFactory);
 	}
 
-	public NodeBox attachNode(String aPrototype, String aName)
+	public Node attachNode(String aPrototype, String aName)
 	{
-		NodeBox box = mFactories.get(aPrototype).create(aName);
+		Node box = mFactories.get(aPrototype).create(aName);
 		box.setPrototype(aPrototype);
-		return add(box);
+		return mModel.add(box);
 	}
 
 	@FunctionalInterface
 	public interface Factory
 	{
-		NodeBox create(String aName);
+		Node create(String aName);
 	}
 }

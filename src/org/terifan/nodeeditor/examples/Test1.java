@@ -11,8 +11,9 @@ import java.awt.image.BufferedImage;
 import javax.swing.JFrame;
 import org.terifan.nodeeditor.Connector;
 import org.terifan.nodeeditor.Direction;
-import org.terifan.nodeeditor.NodeEditorPane;
-import org.terifan.nodeeditor.NodeBox;
+import org.terifan.nodeeditor.NodeEditor;
+import org.terifan.nodeeditor.Node;
+import org.terifan.nodeeditor.NodeModel;
 import org.terifan.nodeeditor.TextNodeItem;
 
 
@@ -22,8 +23,6 @@ public class Test1
 	{
 		try
 		{
-			NodeEditorPane editor = new NodeEditorPane();
-
 			TextNodeItem node0 = new TextNodeItem("node0").add(new Connector(Direction.OUT));
 			TextNodeItem node1 = new TextNodeItem("node1").add(new Connector(Direction.OUT));
 			TextNodeItem node2 = new TextNodeItem("node2").add(new Connector(Direction.IN));
@@ -52,25 +51,31 @@ public class Test1
 			CheckBoxNodeItem checkbox2 = new CheckBoxNodeItem("Inverted", true);
 			ComboBoxNodeItem comboBoxNodeItem1 = new ComboBoxNodeItem("A", System.out::println, 0, "GCX", "Beckmann");
 			ComboBoxNodeItem comboBoxNodeItem2 = new ComboBoxNodeItem("B", System.out::println, 1, "Alpha", "Beta");
-			NodeBox nodeBox0 = new NodeBox("nodeBox0", node0, node1, comboBoxNodeItem1, comboBoxNodeItem2);
-			NodeBox nodeBox1 = new NodeBox("nodeBox1", node2, slider1, slider2, slider3, slider4, checkbox1, checkbox2, node3);
-			NodeBox nodeBox2 = new NodeBox("nodeBox2", node4, node5, node10, node6);
-			NodeBox nodeBox3 = new NodeBox("nodeBox3", node7);
-			NodeBox nodeBox4 = new NodeBox("nodeBox4", node13, node8, node9, node18, node15, node16, node17);
-			NodeBox nodeBox5 = new NodeBox("nodeBox5", node11, node12, node14);
+			Node nodeBox0 = new Node("nodeBox0", node0, node1, comboBoxNodeItem1, comboBoxNodeItem2);
+			Node nodeBox1 = new Node("nodeBox1", node2, slider1, slider2, slider3, slider4, checkbox1, checkbox2, node3);
+			Node nodeBox2 = new Node("nodeBox2", node4, node5, node10, node6);
+			Node nodeBox3 = new Node("nodeBox3", node7);
+			Node nodeBox4 = new Node("nodeBox4", node13, node8, node9, node18, node15, node16, node17);
+			Node nodeBox5 = new Node("nodeBox5", node11, node12, node14);
 			nodeBox2.setMinSize(new Dimension(230,0));
 
-			editor.add(nodeBox0);
-			editor.add(nodeBox1);
-			editor.add(nodeBox2);
-			editor.add(nodeBox3);
-			editor.add(nodeBox4);
-			editor.add(nodeBox5);
-			editor.addConnection(node0, node2).addConnection(node1, node7);
-			editor.addConnection(node3, node4).addConnection(node9, node12);
-			editor.addConnection(node6, node7);
-			editor.addConnection(node7, node11);
-			editor.addConnection(node8, node5);
+			NodeModel model = new NodeModel();
+
+			model.add(nodeBox0);
+			model.add(nodeBox1);
+			model.add(nodeBox2);
+			model.add(nodeBox3);
+			model.add(nodeBox4);
+			model.add(nodeBox5);
+			model.addConnection(node0, node2);
+			model.addConnection(node1, node7);
+			model.addConnection(node3, node4);
+			model.addConnection(node9, node12);
+			model.addConnection(node6, node7);
+			model.addConnection(node7, node11);
+			model.addConnection(node8, node5);
+
+			NodeEditor editor = new NodeEditor(model);
 
 			nodeBox0.setLocation(100, 50);
 			nodeBox1.setLocation(300, 0);

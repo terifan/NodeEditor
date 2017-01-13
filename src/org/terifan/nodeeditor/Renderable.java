@@ -10,5 +10,5 @@ public interface Renderable
 
 	void layout(Graphics2D aGraphics);
 
-	void paintComponent(Graphics2D aGraphics, int aWidth, int aHeight, boolean aSelected);
+	void paintComponent(NodeEditor aEditor, Graphics2D aGraphics, int aWidth, int aHeight, boolean aSelected);
 }
