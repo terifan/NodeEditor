@@ -13,6 +13,8 @@ import org.terifan.ui.TextBox;
 
 public class ComboBoxNodeItem extends AbstractNodeItem
 {
+	private static final long serialVersionUID = 1L;
+
 	private final static float[] RANGES = new float[]{0f,1f};
 
 	protected boolean mArmed;
@@ -25,7 +27,7 @@ public class ComboBoxNodeItem extends AbstractNodeItem
 	public ComboBoxNodeItem(String aText, ResultReceiver aResultReceiver, int aSelectedIndex, String... aOptions)
 	{
 		super(aOptions[aSelectedIndex]);
-		
+
 		mHeader = aText;
 		mResultReceiver = aResultReceiver;
 		mSelectedIndex = aSelectedIndex;
@@ -135,7 +137,7 @@ public class ComboBoxNodeItem extends AbstractNodeItem
 		return this;
 	}
 
-	
+
 	@FunctionalInterface
 	public interface ResultReceiver
 	{

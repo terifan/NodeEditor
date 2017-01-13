@@ -14,7 +14,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -1078,5 +1082,48 @@ public class NodeEditorPane extends JComponent
 	public void setPopup(Popup aPopup)
 	{
 		this.mPopup = aPopup;
+	}
+
+
+	public void marshal() throws IOException
+	{
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+		try (ObjectOutputStream dos = new ObjectOutputStream(baos))
+		{
+			dos.writeInt(mNodes.size());
+			for (NodeBox box : mNodes)
+			{
+				dos.writeObject(box);
+			}
+			dos.writeInt(mConnections.size());
+			for (Connection connection : mConnections)
+			{
+				dos.writeObject(connection);
+			}
+		}
+
+		System.out.println(baos.toString());
+	}
+
+
+	private HashMap<String,Factory> mFactories = new HashMap<>();
+
+	public void addFactory(String aPrototype, Factory aFactory)
+	{
+		mFactories.put(aPrototype, aFactory);
+	}
+
+	public NodeBox attachNode(String aPrototype, String aName)
+	{
+		NodeBox box = mFactories.get(aPrototype).create(aName);
+		box.setPrototype(aPrototype);
+		return add(box);
+	}
+
+	@FunctionalInterface
+	public interface Factory
+	{
+		NodeBox create(String aName);
 	}
 }

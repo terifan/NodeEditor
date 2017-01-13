@@ -14,6 +14,8 @@ public class ButtonNodeItem extends AbstractNodeItem<ButtonNodeItem>
 {
 	private final static float[] RANGES = new float[]{0f,1f};
 
+	private static final long serialVersionUID = 1L;
+
 	private final ButtonAction mButtonAction;
 	private final BufferedImage mIcon;
 	private boolean mArmed;

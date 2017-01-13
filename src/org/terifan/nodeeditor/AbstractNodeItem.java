@@ -3,12 +3,11 @@ package org.terifan.nodeeditor;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import org.terifan.ui.TextBox;
 
 
 public abstract class AbstractNodeItem<T extends AbstractNodeItem> extends NodeItem
 {
-	protected final TextBox mTextBox;
+	private static final long serialVersionUID = 1L;
 
 
 	public AbstractNodeItem(String aText)
@@ -21,52 +20,39 @@ public abstract class AbstractNodeItem<T extends AbstractNodeItem> extends NodeI
 
 	public AbstractNodeItem(String aText, int aWidth, int aHeight)
 	{
-		mTextBox = new TextBox(aText).setFont(Styles.BOX_ITEM_FONT).setForeground(Styles.BOX_FOREGROUND_COLOR);
+		super(aText);
+
+		mTextBox.setFont(Styles.BOX_ITEM_FONT).setForeground(Styles.BOX_FOREGROUND_COLOR);
 		mPreferredSize.setSize(aWidth, aHeight);
 		mFixedSize = true;
 	}
 
 
-	protected TextBox getTextBox()
-	{
-		return mTextBox;
-	}
-
-
-	protected String getText()
-	{
-		return mTextBox.getText();
-	}
-
-
+	@Override
 	protected T setText(String aText)
 	{
-		mTextBox.setText(aText);
-		return (T)this;
+		return (T)super.setText(aText);
 	}
 
 
 	@Override
 	public T setIdentity(String aIdentity)
 	{
-		super.setIdentity(aIdentity);
-		return (T)this;
+		return (T)super.setIdentity(aIdentity);
 	}
 
 
 	@Override
 	public T add(Connector aConnector)
 	{
-		super.add(aConnector);
-		return (T)this;
+		return (T)super.add(aConnector);
 	}
 
 
 	@Override
 	public T setOnInputChange(OnInputChangeListener aOnInputChangeListener)
 	{
-		super.setOnInputChange(aOnInputChangeListener);
-		return (T)this;
+		return (T)super.setOnInputChange(aOnInputChangeListener);
 	}
 
 

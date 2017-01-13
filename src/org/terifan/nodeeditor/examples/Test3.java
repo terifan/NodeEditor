@@ -121,7 +121,9 @@ public class Test3
 			editor.getNode("math").setLocation(-300, -200);
 
 			editor.center();
-			editor.setScale(2);
+			editor.setScale(1);
+
+			editor.marshal();
 
 			JFrame frame = new JFrame();
 			frame.add(editor);

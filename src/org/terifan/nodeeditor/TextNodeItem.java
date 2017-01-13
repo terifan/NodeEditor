@@ -7,6 +7,9 @@ import org.terifan.ui.TextBox;
 
 public class TextNodeItem extends AbstractNodeItem<TextNodeItem>
 {
+	private static final long serialVersionUID = 1L;
+
+
 	public TextNodeItem(String aText)
 	{
 		super(aText);

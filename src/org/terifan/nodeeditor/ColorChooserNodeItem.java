@@ -4,12 +4,17 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import javax.swing.JColorChooser;
 import org.terifan.ui.Anchor;
 
 
 public class ColorChooserNodeItem extends AbstractNodeItem<ColorChooserNodeItem>
 {
+	private static final long serialVersionUID = 1L;
+
 	private static final int COLOR_BOX_WIDTH = 30;
 	private Color mColor;
 
@@ -73,5 +78,24 @@ public class ColorChooserNodeItem extends AbstractNodeItem<ColorChooserNodeItem>
 		}
 
 		return false;
+	}
+
+
+	@Override
+	public void writeExternal(ObjectOutput aOutput) throws IOException
+	{
+		super.writeExternal(aOutput);
+
+		aOutput.writeInt(mColor.getRed());
+		aOutput.writeInt(mColor.getGreen());
+		aOutput.writeInt(mColor.getBlue());
+		aOutput.writeInt(mColor.getAlpha());
+	}
+
+
+	@Override
+	public void readExternal(ObjectInput aIn) throws IOException, ClassNotFoundException
+	{
+		super.readExternal(aIn);
 	}
 }

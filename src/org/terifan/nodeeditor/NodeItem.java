@@ -5,23 +5,33 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.util.ArrayList;
 import java.util.stream.Stream;
+import org.terifan.ui.TextBox;
+import org.terifan.util.Strings;
 
 
-public abstract class NodeItem
+public abstract class NodeItem implements Externalizable
 {
-	protected String mIdentity;
-	protected NodeBox mNodeBox;
+	private static final long serialVersionUID = 1L;
+
 	protected final ArrayList<Connector> mConnectors;
 	protected final Dimension mPreferredSize;
 	protected final Rectangle mBounds;
-	protected OnInputChangeListener mOnInputChangeListener;
+	protected final TextBox mTextBox;
+	protected NodeBox mNodeBox;
+	protected String mIdentity;
 	protected boolean mFixedSize;
+	protected OnInputChangeListener mOnInputChangeListener;
 
 
-	public NodeItem()
+	public NodeItem(String aText)
 	{
+		mTextBox = new TextBox(aText);
 		mConnectors = new ArrayList<>();
 		mBounds = new Rectangle();
 		mPreferredSize = new Dimension();
@@ -49,6 +59,25 @@ public abstract class NodeItem
 	public NodeItem setIdentity(String aIdentity)
 	{
 		mIdentity = aIdentity;
+		return this;
+	}
+
+
+	protected TextBox getTextBox()
+	{
+		return mTextBox;
+	}
+
+
+	protected String getText()
+	{
+		return mTextBox.getText();
+	}
+
+
+	protected NodeItem setText(String aText)
+	{
+		mTextBox.setText(aText);
 		return this;
 	}
 
@@ -153,5 +182,39 @@ public abstract class NodeItem
 	public interface OnInputChangeListener
 	{
 		void onInputChange(NodeItem aSource);
+	}
+
+
+	protected String getIdentityOrName()
+	{
+		return Strings.isEmptyOrNull(mIdentity) ? getText() : mIdentity;
+	}
+
+
+	@Override
+	public void writeExternal(ObjectOutput aOutput) throws IOException
+	{
+		aOutput.writeUTF(getClass().getName());
+		aOutput.writeUTF(getText());
+		aOutput.writeUTF(Strings.nullToEmpty(mIdentity));
+		aOutput.writeInt(mBounds.x);
+		aOutput.writeInt(mBounds.y);
+		aOutput.writeInt(mBounds.width);
+		aOutput.writeInt(mBounds.height);
+		aOutput.writeInt(mPreferredSize.width);
+		aOutput.writeInt(mPreferredSize.height);
+		aOutput.writeBoolean(mFixedSize);
+		aOutput.writeInt(mConnectors.size());
+		for (Connector connector : mConnectors)
+		{
+			aOutput.writeObject(connector);
+		}
+	}
+
+
+	@Override
+	public void readExternal(ObjectInput aIn) throws IOException, ClassNotFoundException
+	{
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 }

@@ -3,12 +3,17 @@ package org.terifan.nodeeditor;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.util.ArrayList;
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.util.stream.Stream;
 
 
-public class Connector
+public class Connector implements Externalizable
 {
+	private static final long serialVersionUID = 1L;
+
 	public final static Color PURPLE = new Color(0x6363C7);
 	public final static Color GRAY = new Color(0xA1A1A1);
 	public final static Color YELLOW = new Color(0xC7C729);
@@ -73,5 +78,25 @@ public class Connector
 	public Stream<NodeItem> getConnectedItems()
 	{
 		return mNodeItem.getNodeBox().getEditorPane().getConnectionsTo(this);
+	}
+
+
+	@Override
+	public void writeExternal(ObjectOutput aOutput) throws IOException
+	{
+		aOutput.writeUTF(mDirection.name());
+		aOutput.writeInt(mColor.getRed());
+		aOutput.writeInt(mColor.getGreen());
+		aOutput.writeInt(mColor.getBlue());
+		aOutput.writeInt(mColor.getAlpha());
+		aOutput.writeUTF(mNodeItem.getNodeBox().getIdentityOrName());
+		aOutput.writeUTF(mNodeItem.getIdentityOrName());
+	}
+
+
+	@Override
+	public void readExternal(ObjectInput aIn) throws IOException, ClassNotFoundException
+	{
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 }

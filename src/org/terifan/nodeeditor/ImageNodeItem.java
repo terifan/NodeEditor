@@ -7,6 +7,8 @@ import java.awt.image.BufferedImage;
 
 public class ImageNodeItem extends AbstractNodeItem<ImageNodeItem>
 {
+	private static final long serialVersionUID = 1L;
+
 	private BufferedImage mImage;
 
 

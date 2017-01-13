@@ -6,22 +6,30 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.stream.Stream;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.TextBox;
 import static org.terifan.nodeeditor.Styles.*;
+import org.terifan.util.Strings;
 
 
-public class NodeBox implements Iterable<NodeItem>, Renderable
+public class NodeBox implements Iterable<NodeItem>, Renderable, Externalizable
 {
-	protected String mIdentity;
+	private static final long serialVersionUID = 1L;
+
 	protected NodeEditorPane mEditorPane;
+	protected ArrayList<NodeItem> mItems;
+	protected String mIdentity;
 	protected String mName;
+	protected String mPrototype;
 	protected Rectangle mBounds;
 	protected boolean mMinimized;
-	protected ArrayList<NodeItem> mItems;
 	protected int mVerticalSpacing;
 	protected Dimension mMinSize;
 	protected Dimension mMaxSize;
@@ -71,6 +79,18 @@ public class NodeBox implements Iterable<NodeItem>, Renderable
 	public String getName()
 	{
 		return mName;
+	}
+
+
+	public String getPrototype()
+	{
+		return mPrototype;
+	}
+
+
+	public void setPrototype(String aPrototype)
+	{
+		this.mPrototype = aPrototype;
 	}
 
 
@@ -560,5 +580,38 @@ public class NodeBox implements Iterable<NodeItem>, Renderable
 		}
 
 		return item;
+	}
+
+
+	protected String getIdentityOrName()
+	{
+		return Strings.isEmptyOrNull(mIdentity) ? mName : mIdentity;
+	}
+
+
+	@Override
+	public void writeExternal(ObjectOutput aOutput) throws IOException
+	{
+		aOutput.writeInt(mBounds.x);
+		aOutput.writeInt(mBounds.y);
+		aOutput.writeInt(mBounds.width);
+		aOutput.writeInt(mBounds.height);
+		aOutput.writeUTF(Strings.nullToEmpty(mPrototype));
+		aOutput.writeUTF(Strings.nullToEmpty(mIdentity));
+		aOutput.writeUTF(mName);
+		aOutput.writeBoolean(mMinimized);
+		aOutput.writeBoolean(mResizableHorizontal);
+		aOutput.writeBoolean(mResizableVertical);
+		for (NodeItem item : mItems)
+		{
+			aOutput.writeObject(item);
+		}
+	}
+
+
+	@Override
+	public void readExternal(ObjectInput aIn) throws IOException, ClassNotFoundException
+	{
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 }

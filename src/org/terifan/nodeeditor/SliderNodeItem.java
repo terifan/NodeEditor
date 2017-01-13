@@ -6,12 +6,17 @@ import java.awt.Paint;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.TextBox;
 
 
 public class SliderNodeItem extends AbstractNodeItem<SliderNodeItem>
 {
+	private static final long serialVersionUID = 1L;
+
 	private final static float[] RANGES = new float[]{0f,1f};
 
 	private double mMin;
@@ -19,8 +24,14 @@ public class SliderNodeItem extends AbstractNodeItem<SliderNodeItem>
 	private double mValue;
 	private double mStartValue;
 	private boolean mArmed;
-	private Double mStepSize;
+	private double mStepSize;
 	private OnChangeListener mOnChangeListener;
+
+
+	protected SliderNodeItem(String aText)
+	{
+		super(null);
+	}
 
 
 	public SliderNodeItem(String aText, double aValue, double aStepSize)
@@ -87,7 +98,7 @@ public class SliderNodeItem extends AbstractNodeItem<SliderNodeItem>
 			aGraphics.setPaint(new LinearGradientPaint(0, y, 0, y + h, RANGES, Styles.SLIDER_COLORS[i][0]));
 			aGraphics.fillRoundRect(x + 1, y + 1, w - 2, h - 2, 18, 18);
 
-			if (mStepSize == null)
+			if (mStepSize == 0)
 			{
 				Shape oldClip = aGraphics.getClip();
 
@@ -159,7 +170,7 @@ public class SliderNodeItem extends AbstractNodeItem<SliderNodeItem>
 	{
 		if (countConnections(Direction.IN) == 0)
 		{
-			if (mStepSize == null)
+			if (mStepSize == 0)
 			{
 				double delta = (aDragPoint.x - aClickPoint.x) / (double)mBounds.width;
 				mValue = Math.max(mMin, Math.min(mMax, mStartValue + delta));
@@ -188,5 +199,24 @@ public class SliderNodeItem extends AbstractNodeItem<SliderNodeItem>
 	public interface OnChangeListener
 	{
 		void onChange(SliderNodeItem aItem, boolean aValueIsAdjusting);
+	}
+
+
+	@Override
+	public void writeExternal(ObjectOutput aOutput) throws IOException
+	{
+		super.writeExternal(aOutput);
+
+		aOutput.writeDouble(mMin);
+		aOutput.writeDouble(mMax);
+		aOutput.writeDouble(mValue);
+		aOutput.writeDouble(mStepSize);
+	}
+
+
+	@Override
+	public void readExternal(ObjectInput aIn) throws IOException, ClassNotFoundException
+	{
+		super.readExternal(aIn);
 	}
 }
