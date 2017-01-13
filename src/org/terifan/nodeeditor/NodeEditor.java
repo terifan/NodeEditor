@@ -986,7 +986,7 @@ public class NodeEditor extends JComponent
 	{
 		Node box = mFactories.get(aPrototype).create(aName);
 		box.setPrototype(aPrototype);
-		return mModel.add(box);
+		return mModel.addNode(box);
 	}
 
 	@FunctionalInterface

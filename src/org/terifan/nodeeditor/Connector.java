@@ -89,8 +89,6 @@ public class Connector implements Externalizable
 		aOutput.writeInt(mColor.getGreen());
 		aOutput.writeInt(mColor.getBlue());
 		aOutput.writeInt(mColor.getAlpha());
-		aOutput.writeUTF(mNodeItem.getNode().getIdentityOrName());
-		aOutput.writeUTF(mNodeItem.getIdentityOrName());
 	}
 
 

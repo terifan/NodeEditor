@@ -30,10 +30,12 @@ public class NodeModel
 	}
 
 
-	public Node add(Node aNode)
+	public Node addNode(Node aNode)
 	{
 		mNodes.add(aNode);
+
 		aNode.bind(this);
+
 		for (NodeItem item : aNode.mItems)
 		{
 			for (Connector connector : item.mConnectors)
@@ -41,6 +43,7 @@ public class NodeModel
 				connector.bind(item);
 			}
 		}
+
 		return aNode;
 	}
 
@@ -48,7 +51,9 @@ public class NodeModel
 	public Node getNode(String aPath)
 	{
 		String boxId = aPath.contains(".") ? aPath.split("\\.")[0] : aPath;
+
 		Node box = null;
+
 		for (Node b : mNodes)
 		{
 			if (b.getIdentity() != null && b.getIdentity().equals(boxId))
@@ -65,24 +70,21 @@ public class NodeModel
 				box = b;
 			}
 		}
+
 		if (box == null)
 		{
 			throw new IllegalArgumentException("Failed to find Node, ensure name or identity is set: " + aPath);
 		}
+
 		return box;
-	}
-
-
-	public NodeItem getItem(String aPath)
-	{
-		return getNode(aPath).getItem(aPath);
 	}
 
 
 	public void addConnection(String aFromPath, String aToPath)
 	{
-		Connector out = getItem(aFromPath).getConnectors(Direction.OUT).findFirst().get();
-		Connector in = getItem(aToPath).getConnectors(Direction.IN).findFirst().get();
+		Connector out = getNodeItem(aFromPath).getConnectors(Direction.OUT).findFirst().get();
+		Connector in = getNodeItem(aToPath).getConnectors(Direction.IN).findFirst().get();
+
 		addConnection(out, in);
 	}
 
@@ -91,6 +93,7 @@ public class NodeModel
 	{
 		Connector out = null;
 		Connector in = null;
+
 		for (Connector connector : aFromItem.mConnectors)
 		{
 			if (connector.getDirection() == Direction.OUT)
@@ -98,6 +101,7 @@ public class NodeModel
 				out = connector;
 			}
 		}
+
 		for (Connector connector : aToItem.mConnectors)
 		{
 			if (connector.getDirection() == Direction.IN)
@@ -105,6 +109,7 @@ public class NodeModel
 				in = connector;
 			}
 		}
+
 		if (out == null)
 		{
 			throw new IllegalArgumentException("The 'FromItem' has no connectors.");
@@ -113,6 +118,7 @@ public class NodeModel
 		{
 			throw new IllegalArgumentException("The 'ToItem' has no connectors.");
 		}
+
 		addConnection(out, in);
 	}
 
@@ -152,5 +158,11 @@ public class NodeModel
 	public Stream<NodeItem> getConnectionsFrom(Connector aConnector)
 	{
 		return mConnections.stream().filter((Connection e) -> e.getIn() == aConnector).map((Connection e) -> e.getIn().getNodeItem());
+	}
+
+
+	public NodeItem getNodeItem(String aPath)
+	{
+		return getNode(aPath).getItem(aPath);
 	}
 }

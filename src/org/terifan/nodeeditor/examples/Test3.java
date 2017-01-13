@@ -29,7 +29,7 @@ public class Test3
 		{
 			NodeModel model = new NodeModel();
 
-			model.add(new Node("Color")
+			model.addNode(new Node("Color")
 				.setSize(200, 0)
 				.add(new TextNodeItem("Color")
 					.addConnector(OUT, YELLOW))
@@ -44,7 +44,7 @@ public class Test3
 			);
 
 			BufferedImage image = new BufferedImage(200, 200, BufferedImage.TYPE_INT_ARGB);
-			model.add(new Node("Texture")
+			model.addNode(new Node("Texture")
 				.add(new TextNodeItem("Color")
 					.addConnector(OUT, YELLOW))
 				.add(new TextNodeItem("Alpha")
@@ -55,26 +55,26 @@ public class Test3
 					.addConnector(IN, PURPLE))
 			);
 
-			model.add(new Node("Output")
+			model.addNode(new Node("Output")
 				.add(new ColorChooserNodeItem("Surface", new Color(0, 0, 0))
 					.addConnector(IN, YELLOW))
 				.add(new SliderNodeItem("Alpha", 0, 1, 0.75)
 					.addConnector(IN, GRAY))
 			);
 
-			model.add(new Node("Alpha")
+			model.addNode(new Node("Alpha")
 				.setSize(200, 0)
 				.add(new SliderNodeItem("Alpha", 0, 1, 0.75)
 					.addConnector(OUT, GRAY))
 			);
 
-			model.add(new Node("TextureCoordinate")
+			model.addNode(new Node("TextureCoordinate")
 				.setSize(200, 0)
 				.add(new TextNodeItem("UV")
 					.addConnector(OUT, PURPLE))
 			);
 
-			model.add(new Node("Multiply")
+			model.addNode(new Node("Multiply")
 				.setSize(200, 0)
 				.setIdentity("math")
 				.add(new TextNodeItem("Value")
@@ -90,7 +90,7 @@ public class Test3
 					.addConnector(IN, GRAY))
 			);
 
-			model.add(new Node("Mix")
+			model.addNode(new Node("Mix")
 				.setSize(200, 0)
 				.add(new TextNodeItem("Color")
 					.setIdentity("colorOut")
