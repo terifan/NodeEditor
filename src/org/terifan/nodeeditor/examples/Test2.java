@@ -18,9 +18,7 @@ public class Test2
 		{
 			NodeModel model = new NodeModel();
 
-			NodeEditor editor = new NodeEditor(model);
-
-			editor.addFactory("trip", e->
+			model.addFactory("trip", e->
 				new Node(e)
 					.setSize(200, 0)
 					.add(new TextNodeItem("CLOSED"))
@@ -28,7 +26,7 @@ public class Test2
 						.addConnector(OUT, YELLOW))
 				);
 
-			editor.addFactory("stop", e->
+			model.addFactory("stop", e->
 				new Node(e)
 					.setSize(200, 0)
 					.add(new TextNodeItem("trip")
@@ -38,7 +36,7 @@ public class Test2
 						.addConnector(OUT, YELLOW))
 				);
 
-			editor.addFactory("activity", e->
+			model.addFactory("activity", e->
 				new Node(e)
 					.setSize(200, 0)
 					.add(new TextNodeItem("stop")
@@ -49,17 +47,19 @@ public class Test2
 						.addConnector(OUT, YELLOW))
 				);
 
-			editor.attachNode("trip", "trip 8880130");
-			editor.attachNode("stop", "stop 12652");
-			editor.attachNode("stop", "stop 12696");
-			editor.attachNode("stop", "stop 12687");
-			editor.attachNode("activity", "activity 33054");
-			editor.attachNode("activity", "activity 33649");
-			editor.attachNode("activity", "activity 33267");
-			editor.attachNode("activity", "activity 33979");
-			editor.attachNode("activity", "activity 33249");
-			editor.attachNode("activity", "activity 33687");
+			model.attachNode("trip", "trip 8880130").setLocation(-300, 0);
+			model.attachNode("stop", "stop 12652").setLocation(0, -130);
+			model.attachNode("stop", "stop 12696").setLocation(0, 0);
+			model.attachNode("stop", "stop 12687").setLocation(0, 130);
+			model.attachNode("activity", "activity 33054").setLocation(300, -390);
+			model.attachNode("activity", "activity 33649").setLocation(300, -260);
+			model.attachNode("activity", "activity 33267").setLocation(300, -130);
+			model.attachNode("activity", "activity 33979").setLocation(300, 0);
+			model.attachNode("activity", "activity 33249").setLocation(300, 130);
+			model.attachNode("activity", "activity 33687").setLocation(300, 260);
+			model.attachNode("activity", "activity 33987").setLocation(300, 390);
 
+			NodeEditor editor = new NodeEditor(model);
 			editor.center();
 			editor.setScale(1);
 

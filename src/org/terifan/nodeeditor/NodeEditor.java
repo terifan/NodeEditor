@@ -14,14 +14,10 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
@@ -665,7 +661,6 @@ public class NodeEditor extends JComponent
 		{
 			Connector nearest = null;
 			double dist = 25;
-			boolean hitBox = false;
 
 			for (Node box : mModel.getNodes())
 			{
@@ -674,8 +669,9 @@ public class NodeEditor extends JComponent
 					continue;
 				}
 
-				int x = aPoint.x - box.getBounds().x;
-				int y = aPoint.y - box.getBounds().y;
+				Rectangle b = box.getBounds();
+				int x = aPoint.x - b.x;
+				int y = aPoint.y - b.y;
 
 				for (NodeItem item : box)
 				{
@@ -686,7 +682,6 @@ public class NodeEditor extends JComponent
 						double d = Math.sqrt(dx * dx + dy * dy);
 						if (d < dist)
 						{
-							hitBox = box.getBounds().contains(aPoint);
 							nearest = c;
 							dist = d;
 						}
@@ -694,7 +689,7 @@ public class NodeEditor extends JComponent
 				}
 			}
 
-			if (hitBox && nearest != null && dist > 8)
+			if (nearest != null && dist > 16)
 			{
 				nearest = null;
 			}
@@ -950,48 +945,5 @@ public class NodeEditor extends JComponent
 	public void setPopup(Popup aPopup)
 	{
 		this.mPopup = aPopup;
-	}
-
-
-	public void marshal() throws IOException
-	{
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-		try (ObjectOutputStream dos = new ObjectOutputStream(baos))
-		{
-			dos.writeInt(mModel.getNodes().size());
-			for (Node box : mModel.getNodes())
-			{
-				dos.writeObject(box);
-			}
-			dos.writeInt(mModel.getConnections().size());
-			for (Connection connection : mModel.getConnections())
-			{
-				dos.writeObject(connection);
-			}
-		}
-
-		System.out.println(baos.toString());
-	}
-
-
-	private HashMap<String,Factory> mFactories = new HashMap<>();
-
-	public void addFactory(String aPrototype, Factory aFactory)
-	{
-		mFactories.put(aPrototype, aFactory);
-	}
-
-	public Node attachNode(String aPrototype, String aName)
-	{
-		Node box = mFactories.get(aPrototype).create(aName);
-		box.setPrototype(aPrototype);
-		return mModel.addNode(box);
-	}
-
-	@FunctionalInterface
-	public interface Factory
-	{
-		Node create(String aName);
 	}
 }

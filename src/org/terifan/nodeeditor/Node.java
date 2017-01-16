@@ -88,9 +88,10 @@ public class Node implements Iterable<NodeItem>, Renderable, Externalizable
 	}
 
 
-	public void setPrototype(String aPrototype)
+	public Node setPrototype(String aPrototype)
 	{
-		this.mPrototype = aPrototype;
+		mPrototype = aPrototype;
+		return this;
 	}
 
 

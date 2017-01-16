@@ -1,6 +1,10 @@
 package org.terifan.nodeeditor;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.stream.Stream;
 
 
@@ -164,5 +168,65 @@ public class NodeModel
 	public NodeItem getNodeItem(String aPath)
 	{
 		return getNode(aPath).getItem(aPath);
+	}
+
+
+
+
+	private HashMap<String, Factory> mFactoryMap = new HashMap<>();
+
+
+	public void addFactory(String aPrototype, Factory aFactory)
+	{
+		mFactoryMap.put(aPrototype, aFactory);
+	}
+
+
+	public Node attachNode(String aPrototype, String aIdentity)
+	{
+		Node box = mFactoryMap.get(aPrototype).create(aIdentity);
+		box.setPrototype(aPrototype);
+		return addNode(box);
+	}
+
+
+	@FunctionalInterface
+	public interface Factory
+	{
+		Node create(String aIdentity);
+	}
+
+
+
+	
+	public byte[] marshal() throws IOException
+	{
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+		try (ObjectOutputStream dos = new ObjectOutputStream(baos))
+		{
+			dos.writeInt(getNodes().size());
+			for (Node box : getNodes())
+			{
+				dos.writeObject(box);
+			}
+			dos.writeInt(getConnections().size());
+			for (Connection connection : getConnections())
+			{
+				dos.writeObject(connection);
+			}
+		}
+
+		return baos.toByteArray();
+	}
+
+
+	public static NodeModel unmarshal(byte[] aContent)
+	{
+		NodeModel model = new NodeModel();
+
+
+
+		return model;
 	}
 }

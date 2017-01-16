@@ -30,6 +30,7 @@ public class Test3
 			NodeModel model = new NodeModel();
 
 			model.addNode(new Node("Color")
+				.setPrototype("color")
 				.setSize(200, 0)
 				.add(new TextNodeItem("Color")
 					.addConnector(OUT, YELLOW))
@@ -125,8 +126,6 @@ public class Test3
 
 			editor.center();
 			editor.setScale(1);
-
-			editor.marshal();
 
 			JFrame frame = new JFrame();
 			frame.add(editor);
