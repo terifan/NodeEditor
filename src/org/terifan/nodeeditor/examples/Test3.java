@@ -124,7 +124,7 @@ public class Test3
 
 			NodeEditor editor = new NodeEditor(model2);
 
-			editor.addResourceLoader("texture.image", e->ImageIO.read(Test3.class.getResource("slime.jpg")));
+			editor.addResourceLoader("texture.image", e->ImageIO.read(Test3.class.getResource("Big_pebbles_pxr128.jpg")));
 
 			editor.center();
 			editor.setScale(1);
