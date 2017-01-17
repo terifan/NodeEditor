@@ -49,11 +49,11 @@ public abstract class AbstractNodeItem<T extends AbstractNodeItem> extends NodeI
 	}
 
 
-	@Override
-	public T setOnInputChange(OnInputChangeListener aOnInputChangeListener)
-	{
-		return (T)super.setOnInputChange(aOnInputChangeListener);
-	}
+//	@Override
+//	public T setOnInputChange(OnInputChangeListener aOnInputChangeListener)
+//	{
+//		return (T)super.setOnInputChange(aOnInputChangeListener);
+//	}
 
 
 	@Override

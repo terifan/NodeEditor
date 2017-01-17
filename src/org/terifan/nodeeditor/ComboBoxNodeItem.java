@@ -20,16 +20,14 @@ public class ComboBoxNodeItem extends AbstractNodeItem
 	protected boolean mArmed;
 	protected int mSelectedIndex;
 	protected String mHeader;
-	protected ResultReceiver mResultReceiver;
 	protected String[] mOptions;
 
 
-	public ComboBoxNodeItem(String aText, ResultReceiver aResultReceiver, int aSelectedIndex, String... aOptions)
+	public ComboBoxNodeItem(String aText, int aSelectedIndex, String... aOptions)
 	{
 		super(aOptions[aSelectedIndex]);
 
 		mHeader = aText;
-		mResultReceiver = aResultReceiver;
 		mSelectedIndex = aSelectedIndex;
 		mOptions = aOptions;
 
@@ -129,18 +127,18 @@ public class ComboBoxNodeItem extends AbstractNodeItem
 		mSelectedIndex = aSelectedIndex;
 		setText(mOptions[mSelectedIndex]);
 
-		if (mResultReceiver != null)
-		{
-			mResultReceiver.selectionChanged(mSelectedIndex);
-		}
+//		if (mResultReceiver != null)
+//		{
+//			mResultReceiver.selectionChanged(mSelectedIndex);
+//		}
 
 		return this;
 	}
 
 
-	@FunctionalInterface
-	public interface ResultReceiver
-	{
-		void selectionChanged(int aSelectedIndex);
-	}
+//	@FunctionalInterface
+//	public interface ResultReceiver
+//	{
+//		void selectionChanged(int aSelectedIndex);
+//	}
 }

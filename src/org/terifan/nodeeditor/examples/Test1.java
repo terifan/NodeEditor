@@ -7,7 +7,6 @@ import org.terifan.nodeeditor.CheckBoxNodeItem;
 import org.terifan.nodeeditor.ColorChooserNodeItem;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.image.BufferedImage;
 import javax.swing.JFrame;
 import org.terifan.nodeeditor.Connector;
 import org.terifan.nodeeditor.Direction;
@@ -33,7 +32,7 @@ public class Test1
 			TextNodeItem node7 = new TextNodeItem("node7").add(new Connector(Direction.IN)).add(new Connector(Direction.OUT));
 			TextNodeItem node8 = new TextNodeItem("node8").add(new Connector(Direction.OUT));
 			TextNodeItem node9 = new TextNodeItem("node9").add(new Connector(Direction.OUT, Connector.PURPLE));
-			ImageNodeItem node10 = new ImageNodeItem("node10", new BufferedImage(200, 200, BufferedImage.TYPE_INT_RGB), 200, 200).add(new Connector(Direction.OUT, Connector.PURPLE)).add(new Connector(Direction.OUT, Connector.PURPLE)).add(new Connector(Direction.OUT, Connector.PURPLE));
+			ImageNodeItem node10 = new ImageNodeItem("node10", 200, 200).add(new Connector(Direction.OUT, Connector.PURPLE)).add(new Connector(Direction.OUT, Connector.PURPLE)).add(new Connector(Direction.OUT, Connector.PURPLE));
 			ColorChooserNodeItem node11 = new ColorChooserNodeItem("node11", new Color(255,255,255)).add(new Connector(Direction.IN, Connector.YELLOW));
 			TextNodeItem node12 = new TextNodeItem("node12").add(new Connector(Direction.IN, Connector.PURPLE));
 			TextNodeItem node13 = new TextNodeItem("node13").add(new Connector(Direction.IN, Connector.YELLOW));
@@ -49,8 +48,8 @@ public class Test1
 			SliderNodeItem slider4 = new SliderNodeItem("Roughness", 0.0, 0.1);
 			CheckBoxNodeItem checkbox1 = new CheckBoxNodeItem("Inverted", false);
 			CheckBoxNodeItem checkbox2 = new CheckBoxNodeItem("Inverted", true);
-			ComboBoxNodeItem comboBoxNodeItem1 = new ComboBoxNodeItem("A", System.out::println, 0, "GCX", "Beckmann");
-			ComboBoxNodeItem comboBoxNodeItem2 = new ComboBoxNodeItem("B", System.out::println, 1, "Alpha", "Beta");
+			ComboBoxNodeItem comboBoxNodeItem1 = new ComboBoxNodeItem("A", 0, "GCX", "Beckmann");
+			ComboBoxNodeItem comboBoxNodeItem2 = new ComboBoxNodeItem("B", 1, "Alpha", "Beta");
 			Node nodeBox0 = new Node("nodeBox0", node0, node1, comboBoxNodeItem1, comboBoxNodeItem2);
 			Node nodeBox1 = new Node("nodeBox1", node2, slider1, slider2, slider3, slider4, checkbox1, checkbox2, node3);
 			Node nodeBox2 = new Node("nodeBox2", node4, node5, node10, node6);

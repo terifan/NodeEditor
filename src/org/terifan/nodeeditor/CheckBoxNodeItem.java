@@ -7,15 +7,12 @@ import java.awt.LinearGradientPaint;
 import java.awt.Paint;
 import java.awt.Point;
 import java.awt.Stroke;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 import org.terifan.ui.Anchor;
 
 
 public class CheckBoxNodeItem extends AbstractNodeItem
 {
-	private static final long serialVersionUID = 1L;
+	private final static long serialVersionUID = 1L;
 
 	private final static float[] RANGES = new float[]{0f,1f};
 
@@ -85,21 +82,5 @@ public class CheckBoxNodeItem extends AbstractNodeItem
 	protected boolean mousePressed(NodeEditor aEditor, Point aClickPoint)
 	{
 		return true;
-	}
-
-
-	@Override
-	public void writeExternal(ObjectOutput aOutput) throws IOException
-	{
-		super.writeExternal(aOutput);
-
-		aOutput.writeBoolean(mState);
-	}
-
-
-	@Override
-	public void readExternal(ObjectInput aIn) throws IOException, ClassNotFoundException
-	{
-		super.readExternal(aIn);
 	}
 }

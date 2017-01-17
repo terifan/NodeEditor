@@ -7,6 +7,7 @@ import java.awt.Rectangle;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.io.Serializable;
 import javax.swing.JColorChooser;
 import org.terifan.ui.Anchor;
 
@@ -81,21 +82,21 @@ public class ColorChooserNodeItem extends AbstractNodeItem<ColorChooserNodeItem>
 	}
 
 
-	@Override
-	public void writeExternal(ObjectOutput aOutput) throws IOException
-	{
-		super.writeExternal(aOutput);
-
-		aOutput.writeInt(mColor.getRed());
-		aOutput.writeInt(mColor.getGreen());
-		aOutput.writeInt(mColor.getBlue());
-		aOutput.writeInt(mColor.getAlpha());
-	}
-
-
-	@Override
-	public void readExternal(ObjectInput aIn) throws IOException, ClassNotFoundException
-	{
-		super.readExternal(aIn);
-	}
+//	@Override
+//	public void writeExternal(ObjectOutput aOutput) throws IOException
+//	{
+//		super.writeExternal(aOutput);
+//
+//		aOutput.writeInt(mColor.getRed());
+//		aOutput.writeInt(mColor.getGreen());
+//		aOutput.writeInt(mColor.getBlue());
+//		aOutput.writeInt(mColor.getAlpha());
+//	}
+//
+//
+//	@Override
+//	public void readExternal(ObjectInput aIn) throws IOException, ClassNotFoundException
+//	{
+//		super.readExternal(aIn);
+//	}
 }

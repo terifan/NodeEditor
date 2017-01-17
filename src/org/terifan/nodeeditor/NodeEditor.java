@@ -17,6 +17,8 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
@@ -945,5 +947,34 @@ public class NodeEditor extends JComponent
 	public void setPopup(Popup aPopup)
 	{
 		this.mPopup = aPopup;
+	}
+
+
+	protected HashMap<String,ResourceLoader> mResourceLoaders = new HashMap<>();
+
+
+	protected BufferedImage getImageResource(NodeItem aItem)
+	{
+		try
+		{
+			return (BufferedImage)mResourceLoaders.get((aItem.getNode().getIdentityOrName() + "." + aItem.getIdentityOrName()).toLowerCase()).load(aItem);
+		}
+		catch (Exception e)
+		{
+			throw new IllegalStateException(e);
+		}
+	}
+
+
+	public NodeEditor addResourceLoader(String aPath, ResourceLoader aResourceLoader)
+	{
+		mResourceLoaders.put(aPath.toLowerCase(), aResourceLoader);
+		return this;
+	}
+
+
+	public interface ResourceLoader
+	{
+		Object load(NodeItem aItem) throws Exception;
 	}
 }

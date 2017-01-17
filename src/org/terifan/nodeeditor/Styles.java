@@ -2,6 +2,11 @@ package org.terifan.nodeeditor;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 
 
 public class Styles
@@ -94,4 +99,19 @@ public class Styles
 	public static Color POPUP_SELECTION_BACKGROUND = new Color(255, 0, 0, 128);
 	public static Color POPUP_HEADER_LINE = new Color(55, 55, 55);
 	public static Color POPUP_BACKGROUND = new Color(16,16,16, 220);
+
+	public static BufferedImage DIRECTORY_ICON;
+
+	static
+	{
+		try
+		{
+			DIRECTORY_ICON = ImageIO.read(ButtonNodeItem.class.getResource("directory.png"));
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace(System.err);
+			System.exit(0);
+		}
+	}
 }

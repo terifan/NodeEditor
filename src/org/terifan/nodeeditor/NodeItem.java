@@ -9,13 +9,14 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.stream.Stream;
 import org.terifan.ui.TextBox;
 import org.terifan.util.Strings;
 
 
-public abstract class NodeItem implements Externalizable
+public abstract class NodeItem implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -26,7 +27,6 @@ public abstract class NodeItem implements Externalizable
 	protected Node mNode;
 	protected String mIdentity;
 	protected boolean mFixedSize;
-	protected OnInputChangeListener mOnInputChangeListener;
 
 
 	public NodeItem(String aText)
@@ -162,20 +162,20 @@ public abstract class NodeItem implements Externalizable
 	}
 
 
-	public NodeItem setOnInputChange(OnInputChangeListener aOnInputChangeListener)
-	{
-		mOnInputChangeListener = aOnInputChangeListener;
-		return this;
-	}
-
-
-	protected void inputWasChanged(NodeItem aSource)
-	{
-		if (mOnInputChangeListener != null)
-		{
-			mOnInputChangeListener.onInputChange(aSource);
-		}
-	}
+//	public NodeItem setOnInputChange(OnInputChangeListener aOnInputChangeListener)
+//	{
+//		mOnInputChangeListener = aOnInputChangeListener;
+//		return this;
+//	}
+//
+//
+//	protected void inputWasChanged(NodeItem aSource)
+//	{
+//		if (mOnInputChangeListener != null)
+//		{
+//			mOnInputChangeListener.onInputChange(aSource);
+//		}
+//	}
 
 
 	@FunctionalInterface
@@ -191,30 +191,30 @@ public abstract class NodeItem implements Externalizable
 	}
 
 
-	@Override
-	public void writeExternal(ObjectOutput aOutput) throws IOException
-	{
-		aOutput.writeUTF(getClass().getName());
-		aOutput.writeUTF(getText());
-		aOutput.writeUTF(Strings.nullToEmpty(mIdentity));
-		aOutput.writeInt(mBounds.x);
-		aOutput.writeInt(mBounds.y);
-		aOutput.writeInt(mBounds.width);
-		aOutput.writeInt(mBounds.height);
-		aOutput.writeInt(mPreferredSize.width);
-		aOutput.writeInt(mPreferredSize.height);
-		aOutput.writeBoolean(mFixedSize);
-		aOutput.writeInt(mConnectors.size());
-		for (Connector connector : mConnectors)
-		{
-			aOutput.writeObject(connector);
-		}
-	}
-
-
-	@Override
-	public void readExternal(ObjectInput aIn) throws IOException, ClassNotFoundException
-	{
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-	}
+//	@Override
+//	public void writeExternal(ObjectOutput aOutput) throws IOException
+//	{
+//		aOutput.writeUTF(getClass().getName());
+//		aOutput.writeUTF(getText());
+//		aOutput.writeUTF(Strings.nullToEmpty(mIdentity));
+//		aOutput.writeInt(mBounds.x);
+//		aOutput.writeInt(mBounds.y);
+//		aOutput.writeInt(mBounds.width);
+//		aOutput.writeInt(mBounds.height);
+//		aOutput.writeInt(mPreferredSize.width);
+//		aOutput.writeInt(mPreferredSize.height);
+//		aOutput.writeBoolean(mFixedSize);
+//		aOutput.writeInt(mConnectors.size());
+//		for (Connector connector : mConnectors)
+//		{
+//			aOutput.writeObject(connector);
+//		}
+//	}
+//
+//
+//	@Override
+//	public void readExternal(ObjectInput aIn) throws IOException, ClassNotFoundException
+//	{
+//		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//	}
 }
