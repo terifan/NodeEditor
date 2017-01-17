@@ -1,15 +1,20 @@
 package org.terifan.nodeeditor;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.stream.Stream;
 
 
-public class NodeModel
+public class NodeModel implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	protected ArrayList<Node> mNodes;
 	protected ArrayList<Connection> mConnections;
 
@@ -171,6 +176,12 @@ public class NodeModel
 	}
 
 
+	public <T extends NodeItem> T getNodeItem(Class<T> aClass, String aPath)
+	{
+		return (T)getNodeItem(aPath);
+	}
+
+
 
 
 	private HashMap<String, Factory> mFactoryMap = new HashMap<>();
@@ -198,7 +209,7 @@ public class NodeModel
 
 
 
-	
+
 	public byte[] marshal() throws IOException
 	{
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -221,11 +232,25 @@ public class NodeModel
 	}
 
 
-	public static NodeModel unmarshal(byte[] aContent)
+	public static NodeModel unmarshal(byte[] aContent) throws IOException
 	{
 		NodeModel model = new NodeModel();
 
-
+		try (ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(aContent)))
+		{
+			for (int i = 0, sz = ois.readInt(); i < sz; i++)
+			{
+				model.mNodes.add((Node)ois.readObject());
+			}
+			for (int i = 0, sz = ois.readInt(); i < sz; i++)
+			{
+				model.mConnections.add((Connection)ois.readObject());
+			}
+		}
+		catch (ClassNotFoundException e)
+		{
+			throw new IOException(e);
+		}
 
 		return model;
 	}

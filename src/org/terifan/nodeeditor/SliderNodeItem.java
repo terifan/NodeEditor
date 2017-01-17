@@ -6,16 +6,13 @@ import java.awt.Paint;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.TextBox;
 
 
 public class SliderNodeItem extends AbstractNodeItem<SliderNodeItem>
 {
-	private static final long serialVersionUID = 1L;
+	private final static long serialVersionUID = 1L;
 
 	private final static float[] RANGES = new float[]{0f,1f};
 
@@ -25,13 +22,6 @@ public class SliderNodeItem extends AbstractNodeItem<SliderNodeItem>
 	private double mStartValue;
 	private boolean mArmed;
 	private double mStepSize;
-	private OnChangeListener mOnChangeListener;
-
-
-	protected SliderNodeItem(String aText)
-	{
-		super(null);
-	}
 
 
 	public SliderNodeItem(String aText, double aValue, double aStepSize)
@@ -62,13 +52,6 @@ public class SliderNodeItem extends AbstractNodeItem<SliderNodeItem>
 	public SliderNodeItem setValue(double aValue)
 	{
 		mValue = aValue;
-		return this;
-	}
-
-
-	public SliderNodeItem setOnChange(OnChangeListener aOnChangeListener)
-	{
-		mOnChangeListener = aOnChangeListener;
 		return this;
 	}
 
@@ -151,14 +134,10 @@ public class SliderNodeItem extends AbstractNodeItem<SliderNodeItem>
 			mArmed = false;
 			if (mStartValue != mValue)
 			{
-				if (mOnChangeListener != null)
-				{
-					mOnChangeListener.onChange(this, false);
-				}
-				else
-				{
-//					fireOnChange();
-				}
+//				if (mOnChangeListener != null)
+//				{
+//					mOnChangeListener.onChange(this, false);
+//				}
 			}
 			aEditor.repaint();
 		}
@@ -181,14 +160,10 @@ public class SliderNodeItem extends AbstractNodeItem<SliderNodeItem>
 				mValue = mStartValue + delta;
 			}
 
-			if (mOnChangeListener != null)
-			{
-				mOnChangeListener.onChange(this, true);
-			}
-			else
-			{
-//				fireOnChange();
-			}
+//			if (mOnChangeListener != null)
+//			{
+//				mOnChangeListener.onChange(this, true);
+//			}
 
 			aEditor.repaint();
 		}
@@ -202,21 +177,21 @@ public class SliderNodeItem extends AbstractNodeItem<SliderNodeItem>
 	}
 
 
-	@Override
-	public void writeExternal(ObjectOutput aOutput) throws IOException
-	{
-		super.writeExternal(aOutput);
-
-		aOutput.writeDouble(mMin);
-		aOutput.writeDouble(mMax);
-		aOutput.writeDouble(mValue);
-		aOutput.writeDouble(mStepSize);
-	}
-
-
-	@Override
-	public void readExternal(ObjectInput aIn) throws IOException, ClassNotFoundException
-	{
-		super.readExternal(aIn);
-	}
+//	@Override
+//	public void writeExternal(ObjectOutput aOutput) throws IOException
+//	{
+//		super.writeExternal(aOutput);
+//
+//		aOutput.writeDouble(mMin);
+//		aOutput.writeDouble(mMax);
+//		aOutput.writeDouble(mValue);
+//		aOutput.writeDouble(mStepSize);
+//	}
+//
+//
+//	@Override
+//	public void readExternal(ObjectInput aIn) throws IOException, ClassNotFoundException
+//	{
+//		super.readExternal(aIn);
+//	}
 }

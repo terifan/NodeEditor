@@ -4,14 +4,20 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.io.Serializable;
 
 
-public class Connection implements Externalizable
+public class Connection implements Serializable
 {
-	private static final long serialVersionUID = 1L;
+	private final static long serialVersionUID = 1L;
 
 	protected Connector mOut;
 	protected Connector mIn;
+
+
+	public Connection()
+	{
+	}
 
 
 	public Connection(Connector aIn, Connector aOut)
@@ -42,20 +48,5 @@ public class Connection implements Externalizable
 	public void setIn(Connector aIn)
 	{
 		mIn = aIn;
-	}
-
-
-	@Override
-	public void writeExternal(ObjectOutput aOutput) throws IOException
-	{
-		aOutput.writeObject(mIn);
-		aOutput.writeObject(mOut);
-	}
-
-
-	@Override
-	public void readExternal(ObjectInput aIn) throws IOException, ClassNotFoundException
-	{
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 }

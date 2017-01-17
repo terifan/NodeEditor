@@ -7,10 +7,11 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.io.Serializable;
 import java.util.stream.Stream;
 
 
-public class Connector implements Externalizable
+public class Connector implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -22,6 +23,12 @@ public class Connector implements Externalizable
 	protected final Direction mDirection;
 	protected NodeItem mNodeItem;
 	protected Color mColor;
+
+
+	public Connector()
+	{
+		mDirection = null;
+	}
 
 
 	public Connector(Direction aDirection)
@@ -81,20 +88,20 @@ public class Connector implements Externalizable
 	}
 
 
-	@Override
-	public void writeExternal(ObjectOutput aOutput) throws IOException
-	{
-		aOutput.writeUTF(mDirection.name());
-		aOutput.writeInt(mColor.getRed());
-		aOutput.writeInt(mColor.getGreen());
-		aOutput.writeInt(mColor.getBlue());
-		aOutput.writeInt(mColor.getAlpha());
-	}
-
-
-	@Override
-	public void readExternal(ObjectInput aIn) throws IOException, ClassNotFoundException
-	{
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-	}
+//	@Override
+//	public void writeExternal(ObjectOutput aOutput) throws IOException
+//	{
+//		aOutput.writeUTF(mDirection.name());
+//		aOutput.writeInt(mColor.getRed());
+//		aOutput.writeInt(mColor.getGreen());
+//		aOutput.writeInt(mColor.getBlue());
+//		aOutput.writeInt(mColor.getAlpha());
+//	}
+//
+//
+//	@Override
+//	public void readExternal(ObjectInput aIn) throws IOException, ClassNotFoundException
+//	{
+//		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//	}
 }

@@ -1,7 +1,6 @@
 package org.terifan.nodeeditor.examples;
 
 import java.awt.Color;
-import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import org.terifan.nodeeditor.SliderNodeItem;
 import org.terifan.nodeeditor.ImageNodeItem;
@@ -44,14 +43,13 @@ public class Test3
 					.addConnector(IN, GRAY))
 			);
 
-			BufferedImage image = new BufferedImage(200, 200, BufferedImage.TYPE_INT_ARGB);
 			model.addNode(new Node("Texture")
 				.add(new TextNodeItem("Color")
 					.addConnector(OUT, YELLOW))
 				.add(new TextNodeItem("Alpha")
 					.addConnector(OUT, GRAY))
-				.add(new ButtonNodeItem("Open", ImageIO.read(Test3.class.getResource("directory.png")), System.out::println))
-				.add(new ImageNodeItem("image", image, 200, 200))
+				.add(new ButtonNodeItem("Open"))
+				.add(new ImageNodeItem("image", 200, 200))
 				.add(new TextNodeItem("Vector")
 					.addConnector(IN, PURPLE))
 			);
@@ -81,7 +79,7 @@ public class Test3
 				.add(new TextNodeItem("Value")
 					.setIdentity("result")
 					.addConnector(OUT, GRAY))
-				.add(new ComboBoxNodeItem("Operation", System.out::println, 2, "Add", "Subtract", "Multiply", "Divide", "Absolute", "Modulo", "Greater Than"))
+				.add(new ComboBoxNodeItem("Operation", 2, "Add", "Subtract", "Multiply", "Divide", "Absolute", "Modulo", "Greater Than"))
 				.add(new CheckBoxNodeItem("Clamp", false))
 				.add(new SliderNodeItem("Value", 0.5, 0.01)
 					.setIdentity("value1")
@@ -122,7 +120,11 @@ public class Test3
 			model.getNode("texturecoordinate").setLocation(-600, -200);
 			model.getNode("math").setLocation(-300, -200);
 
-			NodeEditor editor = new NodeEditor(model);
+			NodeModel model2 = NodeModel.unmarshal(model.marshal());
+
+			NodeEditor editor = new NodeEditor(model2);
+
+			editor.addResourceLoader("texture.image", e->ImageIO.read(Test3.class.getResource("slime.jpg")));
 
 			editor.center();
 			editor.setScale(1);

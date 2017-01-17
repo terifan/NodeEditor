@@ -10,6 +10,7 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.stream.Stream;
@@ -19,7 +20,7 @@ import static org.terifan.nodeeditor.Styles.*;
 import org.terifan.util.Strings;
 
 
-public class Node implements Iterable<NodeItem>, Renderable, Externalizable
+public class Node implements Iterable<NodeItem>, Renderable, Serializable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -36,7 +37,11 @@ public class Node implements Iterable<NodeItem>, Renderable, Externalizable
 	protected Dimension mRestoredSize;
 	protected boolean mResizableHorizontal;
 	protected boolean mResizableVertical;
-	protected OnInputChangeListener mOnInputChangeListener;
+
+
+	public Node()
+	{
+	}
 
 
 	public Node(String aName, NodeItem... aItems)
@@ -98,13 +103,6 @@ public class Node implements Iterable<NodeItem>, Renderable, Externalizable
 	public NodeModel getModel()
 	{
 		return mModel;
-	}
-
-
-	public Node setOnInputChange(OnInputChangeListener aOnInputChangeListener)
-	{
-		mOnInputChangeListener = aOnInputChangeListener;
-		return this;
 	}
 
 
@@ -534,17 +532,10 @@ public class Node implements Iterable<NodeItem>, Renderable, Externalizable
 	 */
 	public void fireInputChange(NodeItem aNodeItem)
 	{
-		if (mOnInputChangeListener != null)
-		{
-			mOnInputChangeListener.onInputChange(aNodeItem, false);
-		}
-	}
-
-
-	@FunctionalInterface
-	public interface OnInputChangeListener
-	{
-		void onInputChange(NodeItem aSource, boolean aSelf);
+//		if (mOnInputChangeListener != null)
+//		{
+//			mOnInputChangeListener.onInputChange(aNodeItem, false);
+//		}
 	}
 
 
@@ -590,29 +581,36 @@ public class Node implements Iterable<NodeItem>, Renderable, Externalizable
 	}
 
 
-	@Override
-	public void writeExternal(ObjectOutput aOutput) throws IOException
-	{
-		aOutput.writeInt(mBounds.x);
-		aOutput.writeInt(mBounds.y);
-		aOutput.writeInt(mBounds.width);
-		aOutput.writeInt(mBounds.height);
-		aOutput.writeUTF(Strings.nullToEmpty(mPrototype));
-		aOutput.writeUTF(Strings.nullToEmpty(mIdentity));
-		aOutput.writeUTF(mName);
-		aOutput.writeBoolean(mMinimized);
-		aOutput.writeBoolean(mResizableHorizontal);
-		aOutput.writeBoolean(mResizableVertical);
-		for (NodeItem item : mItems)
-		{
-			aOutput.writeObject(item);
-		}
-	}
+//	@FunctionalInterface
+//	public interface OnInputChangeListener
+//	{
+//		void onInputChange(NodeItem aSource, boolean aSelf);
+//	}
 
 
-	@Override
-	public void readExternal(ObjectInput aIn) throws IOException, ClassNotFoundException
-	{
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-	}
+//	@Override
+//	public void writeExternal(ObjectOutput aOutput) throws IOException
+//	{
+//		aOutput.writeInt(mBounds.x);
+//		aOutput.writeInt(mBounds.y);
+//		aOutput.writeInt(mBounds.width);
+//		aOutput.writeInt(mBounds.height);
+//		aOutput.writeUTF(Strings.nullToEmpty(mPrototype));
+//		aOutput.writeUTF(Strings.nullToEmpty(mIdentity));
+//		aOutput.writeUTF(mName);
+//		aOutput.writeBoolean(mMinimized);
+//		aOutput.writeBoolean(mResizableHorizontal);
+//		aOutput.writeBoolean(mResizableVertical);
+//		for (NodeItem item : mItems)
+//		{
+//			aOutput.writeObject(item);
+//		}
+//	}
+//
+//
+//	@Override
+//	public void readExternal(ObjectInput aIn) throws IOException, ClassNotFoundException
+//	{
+//		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//	}
 }
