@@ -32,7 +32,7 @@ public class ColorChooserNodeItem extends AbstractNodeItem<ColorChooserNodeItem>
 	@Override
 	protected void paintComponent(NodeEditor aEditor, Graphics2D aGraphics, boolean aHover)
 	{
-		if (countConnections(Direction.IN) > 0)
+		if (isConnected(Direction.IN))
 		{
 			mTextBox.setMargins(0, 0, 0, 0);
 		}
@@ -58,7 +58,7 @@ public class ColorChooserNodeItem extends AbstractNodeItem<ColorChooserNodeItem>
 	@Override
 	protected void actionPerformed(NodeEditor aEditor, Point aClickPoint)
 	{
-		if (countConnections(Direction.IN) == 0)
+		if (!isConnected(Direction.IN))
 		{
 			Color c = JColorChooser.showDialog(aEditor, mTextBox.getText(), mColor);
 			if (c != null)
@@ -73,7 +73,7 @@ public class ColorChooserNodeItem extends AbstractNodeItem<ColorChooserNodeItem>
 	@Override
 	protected boolean mousePressed(NodeEditor aEditor, Point aClickPoint)
 	{
-		if (countConnections(Direction.IN) == 0 && new Rectangle(mNode.getBounds().x + mBounds.x, mNode.getBounds().y + mBounds.y, COLOR_BOX_WIDTH, mBounds.height).contains(aClickPoint))
+		if (!isConnected(Direction.IN) && new Rectangle(mNode.getBounds().x + mBounds.x, mNode.getBounds().y + mBounds.y, COLOR_BOX_WIDTH, mBounds.height).contains(aClickPoint))
 		{
 			return true;
 		}

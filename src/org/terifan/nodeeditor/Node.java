@@ -6,10 +6,6 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -530,13 +526,13 @@ public class Node implements Iterable<NodeItem>, Renderable, Serializable
 	/**
 	 * Other Nodes call this when an item of theirs have changed value.
 	 */
-	public void fireInputChange(NodeItem aNodeItem)
-	{
+//	public void fireInputChange(NodeItem aNodeItem)
+//	{
 //		if (mOnInputChangeListener != null)
 //		{
 //			mOnInputChangeListener.onInputChange(aNodeItem, false);
 //		}
-	}
+//	}
 
 
 	public NodeItem getItem(String aPath)

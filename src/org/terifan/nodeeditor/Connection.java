@@ -1,9 +1,5 @@
 package org.terifan.nodeeditor;
 
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 import java.io.Serializable;
 
 
@@ -20,10 +16,19 @@ public class Connection implements Serializable
 	}
 
 
-	public Connection(Connector aIn, Connector aOut)
+	public Connection(Connector aOut, Connector aIn)
 	{
-		mIn = aIn;
+		if (aOut.getDirection() != Direction.OUT)
+		{
+			throw new IllegalArgumentException("Expected out connector, found: " + aOut.getDirection());
+		}
+		if (aIn.getDirection() != Direction.IN)
+		{
+			throw new IllegalArgumentException("Expected in connector, found: " + aIn.getDirection());
+		}
+
 		mOut = aOut;
+		mIn = aIn;
 	}
 
 

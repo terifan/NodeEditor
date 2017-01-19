@@ -17,8 +17,6 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
@@ -167,8 +165,8 @@ public class NodeEditor extends JComponent
 			}
 			else
 			{
-				Color start = mSelectedNodes.contains(connection.getIn().getNodeItem().getNode()) ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : Styles.CONNECTOR_COLOR_INNER;
-				Color end = mSelectedNodes.contains(connection.getOut().getNodeItem().getNode()) ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : Styles.CONNECTOR_COLOR_INNER;
+				Color start = mSelectedNodes.contains(connection.getOut().getNodeItem().getNode()) ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : Styles.CONNECTOR_COLOR_INNER;
+				Color end = mSelectedNodes.contains(connection.getIn().getNodeItem().getNode()) ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : Styles.CONNECTOR_COLOR_INNER;
 
 				SplineRenderer.drawSpline(g, connection, mScale, Styles.CONNECTOR_COLOR_OUTER, start, end);
 			}
@@ -176,7 +174,7 @@ public class NodeEditor extends JComponent
 
 		if (mDragEndLocation != null)
 		{
-			if (mDragConnector.getDirection() == Direction.IN)
+			if (mDragConnector.getDirection() == Direction.OUT)
 			{
 				SplineRenderer.drawSpline(g, mDragStartLocation, mDragEndLocation, mScale, Styles.CONNECTOR_COLOR_OUTER, Styles.CONNECTOR_COLOR_INNER_DRAGGED, Styles.CONNECTOR_COLOR_INNER_DRAGGED);
 			}
@@ -437,9 +435,12 @@ public class NodeEditor extends JComponent
 					List<Connection> list = mModel.getConnectionsTo(mDragConnector.getNodeItem()).collect(Collectors.toList());
 					if (list.size() == 1)
 					{
-						mDragEndLocation = mDragConnector.getConnectorPoint();
-						mDragConnector = list.get(0).getIn();
-						mDragStartLocation = mDragConnector.getConnectorPoint();
+						Connector out = list.get(0).getOut();
+						Connector in = list.get(0).getIn();
+
+						mDragConnector = out;
+						mDragEndLocation = out.getConnectorPoint();
+						mDragStartLocation = out.getConnectorPoint();
 
 						mModel.getConnections().remove(list.get(0));
 
@@ -520,6 +521,8 @@ public class NodeEditor extends JComponent
 					{
 						mModel.addConnection(mDragConnector, nearestConnector);
 					}
+
+					nearestConnector.getNodeItem().connectionsChanged(NodeEditor.this, mClickPoint);
 				}
 
 				mDragConnector = null;

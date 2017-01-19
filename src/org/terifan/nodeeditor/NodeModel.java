@@ -91,8 +91,8 @@ public class NodeModel implements Serializable
 
 	public void addConnection(String aFromPath, String aToPath)
 	{
-		Connector out = getNodeItem(aFromPath).getConnectors(Direction.OUT).findFirst().get();
-		Connector in = getNodeItem(aToPath).getConnectors(Direction.IN).findFirst().get();
+		Connector out = getNodeItem(aFromPath).getConnector(Direction.OUT);
+		Connector in = getNodeItem(aToPath).getConnector(Direction.IN);
 
 		addConnection(out, in);
 	}
@@ -134,39 +134,31 @@ public class NodeModel implements Serializable
 
 	public void addConnection(Connector aFromConnector, Connector aToConnector)
 	{
-		if (aToConnector.getDirection() != Direction.IN)
-		{
-			throw new IllegalArgumentException("Expected in connector, found: " + aToConnector.getDirection());
-		}
-		if (aFromConnector.getDirection() != Direction.OUT)
-		{
-			throw new IllegalArgumentException("Expected out connector, found: " + aFromConnector.getDirection());
-		}
 		mConnections.add(new Connection(aFromConnector, aToConnector));
 	}
 
 
 	public Stream<Connection> getConnectionsTo(NodeItem aItem)
 	{
-		return mConnections.stream().filter((Connection e) -> e.getOut().getNodeItem() == aItem);
+		return mConnections.stream().filter(e -> e.getIn().getNodeItem() == aItem);
 	}
 
 
 	public Stream<Connection> getConnectionsFrom(NodeItem aItem)
 	{
-		return mConnections.stream().filter((Connection e) -> e.getIn().getNodeItem() == aItem);
+		return mConnections.stream().filter(e -> e.getOut().getNodeItem() == aItem);
 	}
 
 
 	public Stream<NodeItem> getConnectionsTo(Connector aConnector)
 	{
-		return mConnections.stream().filter((Connection e) -> e.getOut() == aConnector).map((Connection e) -> e.getOut().getNodeItem());
+		return mConnections.stream().filter(e -> e.getIn() == aConnector).map(e -> e.getIn().getNodeItem());
 	}
 
 
 	public Stream<NodeItem> getConnectionsFrom(Connector aConnector)
 	{
-		return mConnections.stream().filter((Connection e) -> e.getIn() == aConnector).map((Connection e) -> e.getIn().getNodeItem());
+		return mConnections.stream().filter(e -> e.getOut() == aConnector).map(e -> e.getOut().getNodeItem());
 	}
 
 
@@ -179,6 +171,32 @@ public class NodeModel implements Serializable
 	public <T extends NodeItem> T getNodeItem(Class<T> aClass, String aPath)
 	{
 		return (T)getNodeItem(aPath);
+	}
+
+
+	public byte[] marshal() throws IOException
+	{
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+		try (ObjectOutputStream dos = new ObjectOutputStream(baos))
+		{
+			dos.writeObject(this);
+		}
+
+		return baos.toByteArray();
+	}
+
+
+	public static NodeModel unmarshal(byte[] aContent) throws IOException
+	{
+		try (ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(aContent)))
+		{
+			return (NodeModel)ois.readObject();
+		}
+		catch (ClassNotFoundException e)
+		{
+			throw new IOException(e);
+		}
 	}
 
 
@@ -205,53 +223,5 @@ public class NodeModel implements Serializable
 	public interface Factory
 	{
 		Node create(String aIdentity);
-	}
-
-
-
-
-	public byte[] marshal() throws IOException
-	{
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-		try (ObjectOutputStream dos = new ObjectOutputStream(baos))
-		{
-			dos.writeInt(getNodes().size());
-			for (Node box : getNodes())
-			{
-				dos.writeObject(box);
-			}
-			dos.writeInt(getConnections().size());
-			for (Connection connection : getConnections())
-			{
-				dos.writeObject(connection);
-			}
-		}
-
-		return baos.toByteArray();
-	}
-
-
-	public static NodeModel unmarshal(byte[] aContent) throws IOException
-	{
-		NodeModel model = new NodeModel();
-
-		try (ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(aContent)))
-		{
-			for (int i = 0, sz = ois.readInt(); i < sz; i++)
-			{
-				model.mNodes.add((Node)ois.readObject());
-			}
-			for (int i = 0, sz = ois.readInt(); i < sz; i++)
-			{
-				model.mConnections.add((Connection)ois.readObject());
-			}
-		}
-		catch (ClassNotFoundException e)
-		{
-			throw new IOException(e);
-		}
-
-		return model;
 	}
 }

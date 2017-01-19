@@ -148,8 +148,8 @@ public class SplineRenderer
 		int y0 = (int)from.getCenterY() + b0.y;
 		int x1 = (int)to.getCenterX() + b1.x;
 		int y1 = (int)to.getCenterY() + b1.y;
-		int d0 = -16;
-		int d1 = 16;
+		int d0 = 16;
+		int d1 = -16;
 
 		return new BSpline(new double[]
 		{
@@ -167,8 +167,8 @@ public class SplineRenderer
 		int y0 = aFrom.y;
 		int x1 = aTo.x;
 		int y1 = aTo.y;
-		int d0 = -16;
-		int d1 = 16;
+		int d0 = 16;
+		int d1 = -16;
 
 		return new BSpline(new double[]
 		{

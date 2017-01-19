@@ -5,13 +5,10 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.stream.Stream;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.terifan.ui.TextBox;
 import org.terifan.util.Strings;
 
@@ -105,6 +102,11 @@ public abstract class NodeItem implements Serializable
 	}
 
 
+	protected void connectionsChanged(NodeEditor aEditor, Point aClickPoint)
+	{
+	}
+
+
 	/**
 	 * Should return true if the clicked point will perform an action. This method return false.
 	 */
@@ -122,12 +124,6 @@ public abstract class NodeItem implements Serializable
 	protected void mouseDragged(NodeEditor aEditor, Point aClickPoint, Point aDragPoint)
 	{
 	}
-
-
-//	public void fireOnChange()
-//	{
-//		mNode.fireOutputChange(this);
-//	}
 
 
 	public NodeItem add(Connector aConnector)
@@ -149,19 +145,37 @@ public abstract class NodeItem implements Serializable
 	}
 
 
-	public Stream<Connector> getConnectors(Direction aDirection)
+	public List<Connector> getConnectors(Direction aDirection)
 	{
-		return mConnectors.stream().filter(e->e.mDirection == aDirection);
+		return mConnectors.stream().filter(c -> c.getDirection() == aDirection).collect(Collectors.toList());
 	}
 
 
-	protected long countConnections(Direction aDirection)
+	public Connector getConnector(Direction aDirection)
 	{
-		Connector c = getConnectors(aDirection).findFirst().orElse(null);
-		return c == null ? 0 : c.getConnectedItems().count();
+		return mConnectors.stream().filter(c -> c.getDirection() == aDirection).findFirst().orElse(null);
 	}
 
 
+	protected boolean isConnected(Direction aDirection)
+	{
+		Connector c = getConnector(aDirection);
+		return c != null && c.getConnectedItems().count() > 0;
+	}
+
+
+	protected String getIdentityOrName()
+	{
+		return Strings.isEmptyOrNull(mIdentity) ? getText() : mIdentity;
+	}
+
+
+//	public void fireOnChange()
+//	{
+//		mNode.fireOutputChange(this);
+//	}
+//
+//
 //	public NodeItem setOnInputChange(OnInputChangeListener aOnInputChangeListener)
 //	{
 //		mOnInputChangeListener = aOnInputChangeListener;
@@ -176,21 +190,15 @@ public abstract class NodeItem implements Serializable
 //			mOnInputChangeListener.onInputChange(aSource);
 //		}
 //	}
-
-
-	@FunctionalInterface
-	public interface OnInputChangeListener
-	{
-		void onInputChange(NodeItem aSource);
-	}
-
-
-	protected String getIdentityOrName()
-	{
-		return Strings.isEmptyOrNull(mIdentity) ? getText() : mIdentity;
-	}
-
-
+//
+//
+//	@FunctionalInterface
+//	public interface OnInputChangeListener
+//	{
+//		void onInputChange(NodeItem aSource);
+//	}
+//
+//
 //	@Override
 //	public void writeExternal(ObjectOutput aOutput) throws IOException
 //	{

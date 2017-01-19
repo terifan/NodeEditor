@@ -84,7 +84,7 @@ public class Connector implements Serializable
 
 	public Stream<NodeItem> getConnectedItems()
 	{
-		return mNodeItem.getNode().getModel().getConnectionsTo(this);
+		return mDirection == Direction.IN ? mNodeItem.getNode().getModel().getConnectionsTo(this) : mNodeItem.getNode().getModel().getConnectionsFrom(this);
 	}
 
 

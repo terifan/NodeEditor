@@ -59,7 +59,7 @@ public class SliderNodeItem extends AbstractNodeItem<SliderNodeItem>
 	@Override
 	protected void paintComponent(NodeEditor aEditor, Graphics2D aGraphics, boolean aHover)
 	{
-		if (countConnections(Direction.IN) > 0)
+		if (isConnected(Direction.IN))
 		{
 			mTextBox.setMargins(0, 0, 0, 0);
 
@@ -114,7 +114,7 @@ public class SliderNodeItem extends AbstractNodeItem<SliderNodeItem>
 	@Override
 	protected boolean mousePressed(NodeEditor aEditor, Point aClickPoint)
 	{
-		if (countConnections(Direction.IN) == 0)
+		if (!isConnected(Direction.IN))
 		{
 			mArmed = true;
 			mStartValue = mValue;
@@ -129,7 +129,7 @@ public class SliderNodeItem extends AbstractNodeItem<SliderNodeItem>
 	@Override
 	protected void mouseReleased(NodeEditor aEditor, Point aClickPoint)
 	{
-		if (countConnections(Direction.IN) == 0)
+		if (!isConnected(Direction.IN))
 		{
 			mArmed = false;
 			if (mStartValue != mValue)
@@ -147,7 +147,7 @@ public class SliderNodeItem extends AbstractNodeItem<SliderNodeItem>
 	@Override
 	protected void mouseDragged(NodeEditor aEditor, Point aClickPoint, Point aDragPoint)
 	{
-		if (countConnections(Direction.IN) == 0)
+		if (!isConnected(Direction.IN))
 		{
 			if (mStepSize == 0)
 			{
@@ -170,28 +170,9 @@ public class SliderNodeItem extends AbstractNodeItem<SliderNodeItem>
 	}
 
 
-	@FunctionalInterface
-	public interface OnChangeListener
-	{
-		void onChange(SliderNodeItem aItem, boolean aValueIsAdjusting);
-	}
-
-
-//	@Override
-//	public void writeExternal(ObjectOutput aOutput) throws IOException
+//	@FunctionalInterface
+//	public interface OnChangeListener
 //	{
-//		super.writeExternal(aOutput);
-//
-//		aOutput.writeDouble(mMin);
-//		aOutput.writeDouble(mMax);
-//		aOutput.writeDouble(mValue);
-//		aOutput.writeDouble(mStepSize);
-//	}
-//
-//
-//	@Override
-//	public void readExternal(ObjectInput aIn) throws IOException, ClassNotFoundException
-//	{
-//		super.readExternal(aIn);
+//		void onChange(SliderNodeItem aItem, boolean aValueIsAdjusting);
 //	}
 }
