@@ -168,7 +168,7 @@ public class NodeModel implements Serializable
 	}
 
 
-	public <T extends NodeItem> T getNodeItem(Class<T> aClass, String aPath)
+	public <T extends NodeItem> T getNodeItem(Class<T> aReturnType, String aPath)
 	{
 		return (T)getNodeItem(aPath);
 	}

@@ -14,12 +14,15 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
+import org.terifan.util.cache.Cache;
+import org.terifan.util.cache.Cache.Provider;
 
 
 public class NodeEditor extends JComponent
@@ -40,8 +43,9 @@ public class NodeEditor extends JComponent
 	private boolean mRemoveInConnectionsOnDrop;
 	private NodeItem mClickedItem;
 	private Popup mPopup;
-
 	private NodeModel mModel;
+	private Class mResourceContext;
+	private Cache<Object,Object> mResourceCache;
 
 
 	public NodeEditor(NodeModel aModel)
@@ -50,6 +54,7 @@ public class NodeEditor extends JComponent
 		mSelectedNodes = new ArrayList<>();
 		mScale = 1;
 		mRemoveInConnectionsOnDrop = true;
+		mResourceCache = new Cache<>(100);			
 
 		super.addMouseMotionListener(mMouseListener);
 		super.addMouseListener(mMouseListener);
@@ -98,6 +103,32 @@ public class NodeEditor extends JComponent
 	public NodeEditor setScale(double aScale)
 	{
 		mScale = aScale;
+		return this;
+	}
+
+
+	public NodeEditor setResourceContext(Class aClass)
+	{
+		mResourceContext = aClass;
+		return this;
+	}
+
+
+	public Class getResourceContext()
+	{
+		return mResourceContext;
+	}
+
+
+	public Cache<Object, Object> getResourceCache()
+	{
+		return mResourceCache;
+	}
+
+
+	public NodeEditor setResourceCache(Cache<Object, Object> aResourceCache)
+	{
+		mResourceCache = aResourceCache;
 		return this;
 	}
 
@@ -960,7 +991,12 @@ public class NodeEditor extends JComponent
 	{
 		try
 		{
-			return (BufferedImage)mResourceLoaders.get((aItem.getNode().getIdentityOrName() + "." + aItem.getIdentityOrName()).toLowerCase()).load(aItem);
+			ResourceLoader loader = mResourceLoaders.get((aItem.getNode().getIdentityOrName() + "." + aItem.getIdentityOrName()).toLowerCase());
+			if (loader == null)
+			{
+				return null;
+			}
+			return (BufferedImage)loader.load(aItem);
 		}
 		catch (Exception e)
 		{
@@ -973,6 +1009,27 @@ public class NodeEditor extends JComponent
 	{
 		mResourceLoaders.put(aPath.toLowerCase(), aResourceLoader);
 		return this;
+	}
+
+
+	/**
+	 * Load a Java JAR resource relative to the resource context class, resources are cached.
+	 * 
+	 * @param aReturnType
+	 *   the type to return
+	 * @param aRelativePath
+	 *   the resource path relative to the resource context class
+	 * @param aResourceConverter
+	 *   a Provider used to convert the resource URL into an instance of 'aReturnType'
+	 */
+	protected <T> T loadResource(Class<T> aReturnType, String aRelativePath, Provider<URL,T> aResourceConverter)
+	{
+		if (mResourceContext == null || mResourceCache == null)
+		{
+			return null;
+		}
+
+		return (T)mResourceCache.get(aRelativePath, p->aResourceConverter.create(mResourceContext.getResource((String)p)));
 	}
 
 

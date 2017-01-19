@@ -1,6 +1,8 @@
 package org.terifan.nodeeditor.examples;
 
 import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import javax.imageio.ImageIO;
 import org.terifan.nodeeditor.SliderNodeItem;
 import org.terifan.nodeeditor.ImageNodeItem;
@@ -18,6 +20,7 @@ import org.terifan.nodeeditor.NodeEditor;
 import org.terifan.nodeeditor.Node;
 import org.terifan.nodeeditor.NodeModel;
 import org.terifan.nodeeditor.TextNodeItem;
+import org.terifan.util.cache.Cache;
 
 
 public class Test3
@@ -50,7 +53,8 @@ public class Test3
 				.add(new TextNodeItem("Alpha")
 					.addConnector(OUT, GRAY))
 				.add(new ButtonNodeItem("Open"))
-				.add(new ImageNodeItem("image", 200, 200))
+				.add(new ImageNodeItem("image", 200, 200)
+					.setImagePath("Big_pebbles_pxr128.jpg"))
 				.add(new TextNodeItem("Vector")
 					.addConnector(IN, PURPLE))
 			);
@@ -154,13 +158,17 @@ public class Test3
 			NodeModel modelCopy = NodeModel.unmarshal(model.marshal());
 
 			NodeEditor editor = new NodeEditor(modelCopy);
+			
 
-			editor.addResourceLoader("texture1.image", e->ImageIO.read(Test3.class.getResource("Big_pebbles_pxr128.jpg")));
-			editor.addResourceLoader("texture2.image", e->ImageIO.read(Test3.class.getResource("Big_pebbles_pxr128_bmp.jpg")));
-			editor.addResourceLoader("texture3.image", e->ImageIO.read(Test3.class.getResource(e.getProperty("image_path"))));
+			editor.setResourceContext(Test3.class); // texture1.image is loaded using this resource context
+
+			Cache<String,BufferedImage> cache = new Cache<>(3);
+			editor.addResourceLoader("texture2.image", e->cache.get("Big_pebbles_pxr128_bmp.jpg", p->ImageIO.read(Test3.class.getResource(p))));
+			editor.addResourceLoader("texture3.image", e->cache.get(e.getProperty("image_path"), p->ImageIO.read(Test3.class.getResource(p))));
+
 
 			editor.center();
-			editor.setScale(1);
+			editor.setScale(2);
 
 			JFrame frame = new JFrame();
 			frame.add(editor);

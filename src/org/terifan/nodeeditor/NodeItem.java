@@ -110,6 +110,12 @@ public abstract class NodeItem implements Serializable
 	protected abstract void paintComponent(NodeEditor aEditor, Graphics2D aGraphics, boolean aHover);
 
 
+	protected Rectangle getBounds()
+	{
+		return mBounds;
+	}
+
+
 	/**
 	 * Perform the action of this item, for instance after a mouse click.
 	 */

@@ -3,16 +3,33 @@ package org.terifan.nodeeditor;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.net.URL;
+import javax.imageio.ImageIO;
 
 
 public class ImageNodeItem extends AbstractNodeItem<ImageNodeItem>
 {
 	private static final long serialVersionUID = 1L;
+	
+	protected String mImagePath;
 
 
 	public ImageNodeItem(String aText, int aWidth, int aHeight)
 	{
 		super(aText, aWidth, aHeight);
+	}
+
+
+	public String getImagePath()
+	{
+		return mImagePath;
+	}
+
+
+	public ImageNodeItem setImagePath(String aImagePath)
+	{
+		mImagePath = aImagePath;
+		return this;
 	}
 
 
@@ -35,7 +52,17 @@ public class ImageNodeItem extends AbstractNodeItem<ImageNodeItem>
 			}
 		}
 
-		BufferedImage image = aEditor.getImageResource(this);
+		BufferedImage image = null;
+
+		if (mImagePath != null)
+		{
+			image = aEditor.loadResource(BufferedImage.class, mImagePath, p->ImageIO.read(p));
+		}
+
+		if (image == null)
+		{
+			image = aEditor.getImageResource(this);
+		}
 
 		if (image != null)
 		{

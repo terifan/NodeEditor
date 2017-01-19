@@ -68,9 +68,9 @@ public class SplineRenderer
 				spline = createPath(aSpline, aScale, i / (double)segments, (i + 1) / (double)segments);
 
 				double a = i / (double)(segments - 1);
-				int r = (int)(a * r0 + (1 - a) * r1);
-				int g = (int)(a * g0 + (1 - a) * g1);
-				int b = (int)(a * b0 + (1 - a) * b1);
+				int r = (int)(a * r1 + (1 - a) * r0);
+				int g = (int)(a * g1 + (1 - a) * g0);
+				int b = (int)(a * b1 + (1 - a) * b0);
 
 				aGraphics.setColor(new Color(r, g, b));
 				aGraphics.draw(spline);
