@@ -162,8 +162,10 @@ public class Test3
 
 			editor.setResourceContext(Test3.class); // texture1.image is loaded using this resource context
 
+			BufferedImage image = ImageIO.read(Test3.class.getResource("Big_pebbles_pxr128_bmp.jpg"));
+
 			Cache<String,BufferedImage> cache = new Cache<>(3);
-			editor.addResourceLoader("texture2.image", e->cache.get("Big_pebbles_pxr128_bmp.jpg", p->ImageIO.read(Test3.class.getResource(p))));
+			editor.addResourceLoader("texture2.image", e->image);
 			editor.addResourceLoader("texture3.image", e->cache.get(e.getProperty("image_path"), p->ImageIO.read(Test3.class.getResource(p))));
 
 
