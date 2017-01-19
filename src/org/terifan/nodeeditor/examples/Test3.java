@@ -44,12 +44,38 @@ public class Test3
 			);
 
 			model.addNode(new Node("Texture")
+				.setIdentity("texture1")
 				.add(new TextNodeItem("Color")
 					.addConnector(OUT, YELLOW))
 				.add(new TextNodeItem("Alpha")
 					.addConnector(OUT, GRAY))
 				.add(new ButtonNodeItem("Open"))
 				.add(new ImageNodeItem("image", 200, 200))
+				.add(new TextNodeItem("Vector")
+					.addConnector(IN, PURPLE))
+			);
+
+			model.addNode(new Node("Texture")
+				.setIdentity("texture2")
+				.add(new TextNodeItem("Color")
+					.addConnector(OUT, YELLOW))
+				.add(new TextNodeItem("Alpha")
+					.addConnector(OUT, GRAY))
+				.add(new ButtonNodeItem("Open"))
+				.add(new ImageNodeItem("image", 200, 200))
+				.add(new TextNodeItem("Vector")
+					.addConnector(IN, PURPLE))
+			);
+
+			model.addNode(new Node("Texture")
+				.setIdentity("texture3")
+				.add(new TextNodeItem("Color")
+					.addConnector(OUT, YELLOW))
+				.add(new TextNodeItem("Alpha")
+					.addConnector(OUT, GRAY))
+				.add(new ButtonNodeItem("Open"))
+				.add(new ImageNodeItem("image", 200, 200)
+					.putProperty("image_path", "Big_pebbles_pxr128_normal.jpg"))
 				.add(new TextNodeItem("Vector")
 					.addConnector(IN, PURPLE))
 			);
@@ -104,27 +130,34 @@ public class Test3
 					.addConnector(IN, YELLOW))
 			);
 
-			model.addConnection("texture.color", "mix.colorIn1");
+			model.addConnection("texture1.color", "mix.colorIn1");
 			model.addConnection("color.color", "mix.colorIn2");
 			model.addConnection("mix.colorOut", "output.surface");
 			model.addConnection("alpha.alpha", "output.alpha");
 			model.addConnection("alpha.alpha", "mix.fac");
 			model.addConnection("texturecoordinate.uv", "math.value1");
-			model.addConnection("math.result", "texture.vector");
+			model.addConnection("texturecoordinate.uv", "texture2.vector");
+			model.addConnection("texturecoordinate.uv", "texture3.vector");
+			model.addConnection("texture3.alpha", "color.alpha");
+			model.addConnection("math.result", "texture1.vector");
 
 			model.getNode("color").setLocation(0, 0);
 			model.getNode("mix").setLocation(300, -50);
 			model.getNode("alpha").setLocation(0, 200);
 			model.getNode("output").setLocation(600, 100);
-			model.getNode("texture").setLocation(0, -350);
-			model.getNode("texturecoordinate").setLocation(-600, -200);
+			model.getNode("texture1").setLocation(0, -350);
+			model.getNode("texture2").setLocation(-300, -550);
+			model.getNode("texture3").setLocation(-300, 0);
+			model.getNode("texturecoordinate").setLocation(-600, -150);
 			model.getNode("math").setLocation(-300, -200);
 
-			NodeModel model2 = NodeModel.unmarshal(model.marshal());
+			NodeModel modelCopy = NodeModel.unmarshal(model.marshal());
 
-			NodeEditor editor = new NodeEditor(model2);
+			NodeEditor editor = new NodeEditor(modelCopy);
 
-			editor.addResourceLoader("texture.image", e->ImageIO.read(Test3.class.getResource("Big_pebbles_pxr128.jpg")));
+			editor.addResourceLoader("texture1.image", e->ImageIO.read(Test3.class.getResource("Big_pebbles_pxr128.jpg")));
+			editor.addResourceLoader("texture2.image", e->ImageIO.read(Test3.class.getResource("Big_pebbles_pxr128_bmp.jpg")));
+			editor.addResourceLoader("texture3.image", e->ImageIO.read(Test3.class.getResource(e.getProperty("image_path"))));
 
 			editor.center();
 			editor.setScale(1);

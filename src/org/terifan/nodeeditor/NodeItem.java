@@ -7,6 +7,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.terifan.ui.TextBox;
@@ -24,6 +25,7 @@ public abstract class NodeItem implements Serializable
 	protected Node mNode;
 	protected String mIdentity;
 	protected boolean mFixedSize;
+	protected HashMap<String,String> mProperties;
 
 
 	public NodeItem(String aText)
@@ -32,6 +34,7 @@ public abstract class NodeItem implements Serializable
 		mConnectors = new ArrayList<>();
 		mBounds = new Rectangle();
 		mPreferredSize = new Dimension();
+		mProperties = new HashMap<>();
 	}
 
 
@@ -56,6 +59,19 @@ public abstract class NodeItem implements Serializable
 	public NodeItem setIdentity(String aIdentity)
 	{
 		mIdentity = aIdentity;
+		return this;
+	}
+
+
+	public String getProperty(String aName)
+	{
+		return mProperties.get(aName);
+	}
+
+
+	public NodeItem putProperty(String aName, String aValue)
+	{
+		mProperties.put(aName, aValue);
 		return this;
 	}
 

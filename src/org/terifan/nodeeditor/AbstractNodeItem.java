@@ -49,6 +49,13 @@ public abstract class AbstractNodeItem<T extends AbstractNodeItem> extends NodeI
 	}
 
 
+	@Override
+	public T putProperty(String aName, String aValue)
+	{
+		return (T)super.putProperty(aName, aValue);
+	}
+
+
 //	@Override
 //	public T setOnInputChange(OnInputChangeListener aOnInputChangeListener)
 //	{

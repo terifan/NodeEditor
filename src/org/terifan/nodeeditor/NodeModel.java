@@ -74,7 +74,7 @@ public class NodeModel implements Serializable
 			{
 				if (box != null)
 				{
-					throw new IllegalStateException("More than one Node have the same name, provide an Identity to either of them: " + b.getName());
+					throw new IllegalStateException("More than one Node have the same name, provide an Identity to either of them and use identity when connecting items: " + b.getName());
 				}
 				box = b;
 			}
