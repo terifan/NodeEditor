@@ -155,10 +155,11 @@ public class Test3
 			model.getNode("texturecoordinate").setLocation(-600, -150);
 			model.getNode("math").setLocation(-300, -200);
 
-			NodeModel modelCopy = NodeModel.unmarshal(model.marshal());
+//			NodeModel modelCopy = NodeModel.unmarshal(model.marshal());
 
-			NodeEditor editor = new NodeEditor(modelCopy);
-			
+//			NodeEditor editor = new NodeEditor(modelCopy);
+			NodeEditor editor = new NodeEditor(model);
+
 
 			editor.setResourceContext(Test3.class); // texture1.image is loaded using this resource context
 
