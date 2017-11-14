@@ -54,7 +54,7 @@ public class NodeEditor extends JComponent
 		mSelectedNodes = new ArrayList<>();
 		mScale = 1;
 		mRemoveInConnectionsOnDrop = true;
-		mResourceCache = new Cache<>(100);			
+		mResourceCache = new Cache<>(100);
 
 		super.addMouseMotionListener(mMouseListener);
 		super.addMouseListener(mMouseListener);
@@ -1014,7 +1014,7 @@ public class NodeEditor extends JComponent
 
 	/**
 	 * Load a Java JAR resource relative to the resource context class, resources are cached.
-	 * 
+	 *
 	 * @param aReturnType
 	 *   the type to return
 	 * @param aRelativePath
@@ -1030,6 +1030,23 @@ public class NodeEditor extends JComponent
 		}
 
 		return (T)mResourceCache.get(aRelativePath, p->aResourceConverter.create(mResourceContext.getResource((String)p)));
+	}
+
+
+	public void arrange()
+	{
+		int x = 0;
+		int y = 0;
+
+		for (Node node : mModel.getNodes())
+		{
+			Rectangle bounds = node.getBounds();
+			bounds.x = x;
+			bounds.y = y;
+			bounds.setSize(node.getMinSize());
+
+			x += bounds.width + 100;
+		}
 	}
 
 

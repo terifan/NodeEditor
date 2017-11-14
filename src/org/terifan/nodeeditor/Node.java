@@ -577,6 +577,12 @@ public class Node implements Iterable<NodeItem>, Renderable, Serializable
 	}
 
 
+	public void setBounds(int aX, int aY, int aWidth, int aHeight)
+	{
+		mBounds.setBounds(aX, aY, aWidth, aHeight);
+	}
+
+
 //	@FunctionalInterface
 //	public interface OnInputChangeListener
 //	{
