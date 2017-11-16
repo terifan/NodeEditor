@@ -5,7 +5,6 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 import org.terifan.bundle.Bundlable;
@@ -24,7 +23,7 @@ public class Connector implements Serializable, Bundlable
 	public final static Color YELLOW = new Color(0xC7C729);
 
 	protected final Rectangle mBounds = new Rectangle();
-	protected final Direction mDirection;
+	protected Direction mDirection;
 	protected NodeItem mNodeItem;
 	protected Color mColor;
 	protected int mModelRef;
@@ -104,6 +103,10 @@ public class Connector implements Serializable, Bundlable
 	@Override
 	public void readExternal(Bundle aBundle) throws IOException
 	{
+		mBounds.setBounds(BundleHelper.getRectangle(aBundle.getBundle("bounds"), new Rectangle()));
+		mColor = aBundle.getString("color").equals("YELLOW") ? YELLOW : aBundle.getString("color").equals("PURPLE") ? PURPLE : aBundle.getString("color").equals("GRAY") ? GRAY : new Color(Integer.parseInt(aBundle.getString("color"), 16));
+		mDirection = Direction.valueOf(aBundle.getString("direction"));
+		mModelRef = aBundle.getInt("ref");
 	}
 
 

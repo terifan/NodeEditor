@@ -162,9 +162,12 @@ public class Test3
 				bundle.marshalPSON(fos, false);
 			}
 
-			NodeModel modelCopy = NodeModel.unmarshal(model.marshal());
+			model = new NodeModel();
+			model.unmarshalBundle(bundle);
 
-			NodeEditor editor = new NodeEditor(modelCopy);
+//			model = NodeModel.unmarshal(model.marshal());
+
+			NodeEditor editor = new NodeEditor(model);
 
 			editor.setResourceContext(Test3.class); // texture1.image is loaded using this resource context
 

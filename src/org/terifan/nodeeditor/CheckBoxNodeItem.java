@@ -21,6 +21,11 @@ public class CheckBoxNodeItem extends AbstractNodeItem
 	private boolean mSelected;
 
 
+	protected CheckBoxNodeItem()
+	{
+	}
+
+
 	public CheckBoxNodeItem(String aText, boolean aState)
 	{
 		super(aText);

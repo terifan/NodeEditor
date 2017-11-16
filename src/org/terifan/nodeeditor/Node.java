@@ -32,8 +32,8 @@ public class Node implements Iterable<NodeItem>, Renderable, Serializable, Bundl
 	protected Rectangle mBounds;
 	protected boolean mMinimized;
 	protected int mVerticalSpacing;
-	protected Dimension mMinSize;
-	protected Dimension mMaxSize;
+	protected Dimension mMinimumSize;
+	protected Dimension mMaximumSize;
 	protected Dimension mRestoredSize;
 	protected boolean mResizableHorizontal;
 	protected boolean mResizableVertical;
@@ -52,8 +52,8 @@ public class Node implements Iterable<NodeItem>, Renderable, Serializable, Bundl
 		mItems = new ArrayList<>();
 
 		mVerticalSpacing = 3;
-		mMinSize = new Dimension(100, 0);
-		mMaxSize = new Dimension(Short.MAX_VALUE, Short.MAX_VALUE);
+		mMinimumSize = new Dimension(100, 0);
+		mMaximumSize = new Dimension(Short.MAX_VALUE, Short.MAX_VALUE);
 		mResizableHorizontal = true;
 
 		for (NodeItem item : aItems)
@@ -133,28 +133,28 @@ public class Node implements Iterable<NodeItem>, Renderable, Serializable, Bundl
 	}
 
 
-	public Dimension getMinSize()
+	public Dimension getMinimumSize()
 	{
-		return mMinSize;
+		return mMinimumSize;
 	}
 
 
 	public Node setMinSize(Dimension aMinSize)
 	{
-		mMinSize = aMinSize;
+		mMinimumSize = aMinSize;
 		return this;
 	}
 
 
-	public Dimension getMaxSize()
+	public Dimension getMaximumSize()
 	{
-		return mMaxSize;
+		return mMaximumSize;
 	}
 
 
 	public Node setMaxSize(Dimension aMaxSize)
 	{
-		mMaxSize = aMaxSize;
+		mMaximumSize = aMaxSize;
 		return this;
 	}
 
@@ -265,12 +265,12 @@ public class Node implements Iterable<NodeItem>, Renderable, Serializable, Bundl
 				{
 					Dimension size = item.getPreferredSize(aGraphics, mBounds);
 
-					mBounds.width = Math.max(mBounds.width, Math.min(mMaxSize.width, size.width) + 5 + 9 + 5 + 9);
+					mBounds.width = Math.max(mBounds.width, Math.min(mMaximumSize.width, size.width) + 5 + 9 + 5 + 9);
 					mBounds.height += size.height + mVerticalSpacing;
 				}
 
-				mBounds.width = Math.max(mBounds.width, mMinSize.width);
-				mBounds.height = Math.max(mBounds.height, mMinSize.height);
+				mBounds.width = Math.max(mBounds.width, mMinimumSize.width);
+				mBounds.height = Math.max(mBounds.height, mMinimumSize.height);
 
 				mBounds.height += TITLE_HEIGHT_PADDED;
 
@@ -278,13 +278,13 @@ public class Node implements Iterable<NodeItem>, Renderable, Serializable, Bundl
 			}
 			else
 			{
-				mBounds.width = Math.max(mBounds.width, mMinSize.width);
-				mBounds.height = Math.max(mBounds.height, mMinSize.height);
+				mBounds.width = Math.max(mBounds.width, mMinimumSize.width);
+				mBounds.height = Math.max(mBounds.height, mMinimumSize.height);
 			}
 		}
 		else
 		{
-			mBounds.width = mMinSize.width;
+			mBounds.width = mMinimumSize.width;
 			mBounds.height = TITLE_HEIGHT;
 
 			mBounds.height += 6 + 2 * 4;
@@ -311,9 +311,9 @@ public class Node implements Iterable<NodeItem>, Renderable, Serializable, Bundl
 
 			if (y >= mBounds.height)
 			{
-				mMinSize.height = y;
+				mMinimumSize.height = y;
 				computeBounds(aGraphics);
-				mMinSize.height = mBounds.height;
+				mMinimumSize.height = mBounds.height;
 			}
 		}
 	}
@@ -600,6 +600,57 @@ public class Node implements Iterable<NodeItem>, Renderable, Serializable, Bundl
 	@Override
 	public void readExternal(Bundle aBundle) throws IOException
 	{
+		mBounds = new Rectangle();
+		mBounds.setLocation(BundleHelper.getPoint(aBundle.getBundle("position"), new Point(0,0)));
+		mBounds.setSize(BundleHelper.getDimension(aBundle.getBundle("size"), new Dimension(0,0)));
+		mUserSetSize = aBundle.getBundle("size") != null;
+		mIdentity = aBundle.getString("identity");
+		mName = aBundle.getString("name");
+		mPrototype = aBundle.getString("prototype");
+		mMaximumSize = BundleHelper.getDimension(aBundle.getBundle("maximumSize"), new Dimension(Short.MAX_VALUE, Short.MAX_VALUE));
+		mMinimumSize = BundleHelper.getDimension(aBundle.getBundle("minimumSize"), new Dimension(100, 0));
+		mMinimized = aBundle.getBoolean("minimized", false);
+		mRestoredSize = BundleHelper.getDimension(aBundle.getBundle("restoredSize"), null);
+		mVerticalSpacing = aBundle.getInt("verticalSpacing", 3);
+		mResizableHorizontal = aBundle.getBoolean("resizableHorizontal", true);
+		mResizableVertical = aBundle.getBoolean("resizableVertical", false);
+
+		mItems = new ArrayList<>();
+		for (Bundle bundle : aBundle.getBundleArrayList("items"))
+		{
+			NodeItem item;
+			switch (bundle.getString("type"))
+			{
+				case "Button":
+					item = new ButtonNodeItem();
+					break;
+				case "CheckBox":
+					item = new CheckBoxNodeItem();
+					break;
+				case "ColorChooser":
+					item = new ColorChooserNodeItem();
+					break;
+				case "ComboBox":
+					item = new ComboBoxNodeItem();
+					break;
+				case "Image":
+					item = new ImageNodeItem();
+					break;
+				case "Slider":
+					item = new SliderNodeItem();
+					break;
+				case "Text":
+					item = new TextNodeItem();
+					break;
+				default:
+					throw new IOException("Unsupported type: " + bundle.getString("type"));
+			}
+
+			item.bind(this);
+			item.readExternal(bundle);
+
+			mItems.add(item);
+		}
 	}
 
 
@@ -620,13 +671,13 @@ public class Node implements Iterable<NodeItem>, Renderable, Serializable, Bundl
 		{
 			aBundle.putString("prototype", mPrototype);
 		}
-		if (mMaxSize.width != Short.MAX_VALUE || mMaxSize.height != Short.MAX_VALUE)
+		if (mMaximumSize.width != Short.MAX_VALUE || mMaximumSize.height != Short.MAX_VALUE)
 		{
-			aBundle.putBundle("maxSize", BundleHelper.toBundle(mMaxSize));
+			aBundle.putBundle("maximumSize", BundleHelper.toBundle(mMaximumSize));
 		}
-		if (mMinSize.width != 100 || mMinSize.height != 0)
+		if (mMinimumSize.width != 100 || mMinimumSize.height != 0)
 		{
-			aBundle.putBundle("minSize", BundleHelper.toBundle(mMinSize));
+			aBundle.putBundle("minimumSize", BundleHelper.toBundle(mMinimumSize));
 		}
 		if (mMinimized)
 		{

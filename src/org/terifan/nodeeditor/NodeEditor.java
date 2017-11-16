@@ -46,6 +46,7 @@ public class NodeEditor extends JComponent
 	private NodeModel mModel;
 	private Class mResourceContext;
 	private Cache<Object,Object> mResourceCache;
+	protected HashMap<String,ResourceLoader> mResourceLoaders;
 
 
 	public NodeEditor(NodeModel aModel)
@@ -55,6 +56,7 @@ public class NodeEditor extends JComponent
 		mScale = 1;
 		mRemoveInConnectionsOnDrop = true;
 		mResourceCache = new Cache<>(100);
+		mResourceLoaders = new HashMap<>();
 
 		super.addMouseMotionListener(mMouseListener);
 		super.addMouseListener(mMouseListener);
@@ -921,7 +923,7 @@ public class NodeEditor extends JComponent
 				case Cursor.NW_RESIZE_CURSOR:
 				case Cursor.SW_RESIZE_CURSOR:
 					int o = b.x;
-					b.x = Math.min(mStartBounds.x - mClickPoint.x + aPoint.x, mStartBounds.x + mStartBounds.width - aNode.getMinSize().width);
+					b.x = Math.min(mStartBounds.x - mClickPoint.x + aPoint.x, mStartBounds.x + mStartBounds.width - aNode.getMinimumSize().width);
 					b.width += o - b.x;
 					break;
 			}
@@ -932,7 +934,7 @@ public class NodeEditor extends JComponent
 				case Cursor.NW_RESIZE_CURSOR:
 				case Cursor.NE_RESIZE_CURSOR:
 					int o = b.y;
-					b.y = Math.min(mStartBounds.y - mClickPoint.y + aPoint.y, mStartBounds.y + mStartBounds.height - aNode.getMinSize().height);
+					b.y = Math.min(mStartBounds.y - mClickPoint.y + aPoint.y, mStartBounds.y + mStartBounds.height - aNode.getMinimumSize().height);
 					b.height += o - b.y;
 					break;
 			}
@@ -955,8 +957,8 @@ public class NodeEditor extends JComponent
 					break;
 			}
 
-			b.width = Math.min(aNode.getMaxSize().width, Math.max(aNode.getMinSize().width, b.width));
-			b.height = Math.min(aNode.getMaxSize().height, Math.max(aNode.getMinSize().height, b.height));
+			b.width = Math.min(aNode.getMaximumSize().width, Math.max(aNode.getMinimumSize().width, b.width));
+			b.height = Math.min(aNode.getMaximumSize().height, Math.max(aNode.getMinimumSize().height, b.height));
 
 			aNode.mBounds.setBounds(b);
 			repaint();
@@ -982,9 +984,6 @@ public class NodeEditor extends JComponent
 	{
 		this.mPopup = aPopup;
 	}
-
-
-	protected HashMap<String,ResourceLoader> mResourceLoaders = new HashMap<>();
 
 
 	protected BufferedImage getImageResource(NodeItem aItem)
@@ -1043,7 +1042,7 @@ public class NodeEditor extends JComponent
 			Rectangle bounds = node.getBounds();
 			bounds.x = x;
 			bounds.y = y;
-			bounds.setSize(node.getMinSize());
+			bounds.setSize(node.getMinimumSize());
 
 			x += bounds.width + 100;
 		}

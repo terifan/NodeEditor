@@ -8,7 +8,6 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.io.IOException;
 import org.terifan.bundle.Bundle;
-import org.terifan.bundle.BundleHelper;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.TextBox;
 
@@ -17,21 +16,32 @@ public class SliderNodeItem extends AbstractNodeItem<SliderNodeItem>
 {
 	private final static long serialVersionUID = 1L;
 
-	private final static float[] RANGES = new float[]{0f,1f};
+	private final static float[] RANGES = new float[]
+	{
+		0f, 1f
+	};
 
 	private double mMin;
 	private double mMax;
 	private double mValue;
 	private double mStartValue;
 	private boolean mArmed;
-	private double mStepSize;
+	private double mStep;
+
+
+	protected SliderNodeItem()
+	{
+		super();
+
+		mPreferredSize.height = 20;
+	}
 
 
 	public SliderNodeItem(String aText, double aValue, double aStepSize)
 	{
 		this(aText, 0.0, 1.0, aValue);
 
-		mStepSize = aStepSize;
+		mStep = aStepSize;
 	}
 
 
@@ -84,7 +94,7 @@ public class SliderNodeItem extends AbstractNodeItem<SliderNodeItem>
 			aGraphics.setPaint(new LinearGradientPaint(0, y, 0, y + h, RANGES, Styles.SLIDER_COLORS[i][0]));
 			aGraphics.fillRoundRect(x + 1, y + 1, w - 2, h - 2, 18, 18);
 
-			if (mStepSize == 0)
+			if (mStep == 0)
 			{
 				Shape oldClip = aGraphics.getClip();
 
@@ -98,11 +108,20 @@ public class SliderNodeItem extends AbstractNodeItem<SliderNodeItem>
 				int pw = 4;
 				int ph = 3;
 				int s = 6;
-				int[] py = new int[]{y + h / 2, y + h / 2 - ph, y + h / 2 + ph};
+				int[] py = new int[]
+				{
+					y + h / 2, y + h / 2 - ph, y + h / 2 + ph
+				};
 
 				aGraphics.setColor(Styles.SLIDER_ARROW_COLOR);
-				aGraphics.fillPolygon(new int[]{x + s, x + s + pw, x + s + pw}, py, 3);
-				aGraphics.fillPolygon(new int[]{x + w - s, x + w - s - pw, x + w - s - pw}, py, 3);
+				aGraphics.fillPolygon(new int[]
+				{
+					x + s, x + s + pw, x + s + pw
+				}, py, 3);
+				aGraphics.fillPolygon(new int[]
+				{
+					x + w - s, x + w - s - pw, x + w - s - pw
+				}, py, 3);
 			}
 
 			aGraphics.setPaint(oldPaint);
@@ -152,14 +171,14 @@ public class SliderNodeItem extends AbstractNodeItem<SliderNodeItem>
 	{
 		if (!isConnected(Direction.IN))
 		{
-			if (mStepSize == 0)
+			if (mStep == 0)
 			{
 				double delta = (aDragPoint.x - aClickPoint.x) / (double)mBounds.width;
 				mValue = Math.max(mMin, Math.min(mMax, mStartValue + delta));
 			}
 			else
 			{
-				double delta = (aDragPoint.x - aClickPoint.x) * mStepSize;
+				double delta = (aDragPoint.x - aClickPoint.x) * mStep;
 				mValue = mStartValue + delta;
 			}
 
@@ -167,7 +186,6 @@ public class SliderNodeItem extends AbstractNodeItem<SliderNodeItem>
 //			{
 //				mOnChangeListener.onChange(this, true);
 //			}
-
 			aEditor.repaint();
 		}
 	}
@@ -178,11 +196,15 @@ public class SliderNodeItem extends AbstractNodeItem<SliderNodeItem>
 //	{
 //		void onChange(SliderNodeItem aItem, boolean aValueIsAdjusting);
 //	}
-
-
 	@Override
 	public void readExternal(Bundle aBundle) throws IOException
 	{
+		super.readExternal(aBundle);
+
+		mMin = aBundle.getDouble("min", 0);
+		mMax = aBundle.getDouble("max", 1);
+		mValue = aBundle.getDouble("value", 0);
+		mStep = aBundle.getDouble("step", 0);
 	}
 
 
@@ -204,9 +226,9 @@ public class SliderNodeItem extends AbstractNodeItem<SliderNodeItem>
 		{
 			aBundle.putDouble("value", mValue);
 		}
-		if (mStepSize != 0.0)
+		if (mStep != 0.0)
 		{
-			aBundle.putDouble("stepSize", mStepSize);
+			aBundle.putDouble("step", mStep);
 		}
 	}
 }

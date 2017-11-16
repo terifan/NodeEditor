@@ -19,6 +19,13 @@ public class ButtonNodeItem extends AbstractNodeItem<ButtonNodeItem>
 	private boolean mArmed;
 
 
+	protected ButtonNodeItem()
+	{
+		mPreferredSize.height = 22;
+		mTextBox.setAnchor(Anchor.CENTER).setMargins(0, 0, 0, 0).setMaxLineCount(1).setFont(Styles.SLIDER_FONT);
+	}
+
+
 	public ButtonNodeItem(String aText) throws IOException
 	{
 		super(aText);
@@ -108,7 +115,7 @@ public class ButtonNodeItem extends AbstractNodeItem<ButtonNodeItem>
 	@Override
 	public void readExternal(Bundle aBundle) throws IOException
 	{
-		super.readExternal(aBundle); //To change body of generated methods, choose Tools | Templates.
+		super.readExternal(aBundle);
 	}
 
 

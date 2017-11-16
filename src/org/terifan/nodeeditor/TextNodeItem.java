@@ -12,6 +12,11 @@ public class TextNodeItem extends AbstractNodeItem<TextNodeItem>
 	private static final long serialVersionUID = 1L;
 
 
+	protected TextNodeItem()
+	{
+	}
+
+
 	public TextNodeItem(String aText)
 	{
 		super(aText);
@@ -52,7 +57,7 @@ public class TextNodeItem extends AbstractNodeItem<TextNodeItem>
 	@Override
 	public void readExternal(Bundle aBundle) throws IOException
 	{
-		super.readExternal(aBundle); //To change body of generated methods, choose Tools | Templates.
+		super.readExternal(aBundle);
 	}
 
 

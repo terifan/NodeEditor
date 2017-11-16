@@ -19,6 +19,11 @@ public class ColorChooserNodeItem extends AbstractNodeItem<ColorChooserNodeItem>
 	private Color mColor;
 
 
+	protected ColorChooserNodeItem()
+	{
+	}
+
+
 	public ColorChooserNodeItem(String aText, Color aColor)
 	{
 		super(aText);
@@ -103,6 +108,9 @@ public class ColorChooserNodeItem extends AbstractNodeItem<ColorChooserNodeItem>
 	@Override
 	public void readExternal(Bundle aBundle) throws IOException
 	{
+		super.readExternal(aBundle);
+
+		mColor = BundleHelper.getColor(aBundle.getString("color"));
 	}
 
 

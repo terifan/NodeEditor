@@ -10,6 +10,11 @@ public abstract class AbstractNodeItem<T extends AbstractNodeItem> extends NodeI
 	private static final long serialVersionUID = 1L;
 
 
+	protected AbstractNodeItem()
+	{
+	}
+
+
 	public AbstractNodeItem(String aText)
 	{
 		this(aText, 0, 0);
@@ -66,7 +71,7 @@ public abstract class AbstractNodeItem<T extends AbstractNodeItem> extends NodeI
 	@Override
 	public Dimension getPreferredSize(Graphics2D aGraphics, Rectangle aBounds)
 	{
-		if (!mFixedSize && mTextBox.isLayoutRequired())
+		if ((!mFixedSize || mTextBox.isLayoutRequired()) && mTextBox.isLayoutRequired())
 		{
 			mPreferredSize.setSize(mTextBox.measure(aGraphics == null ? null : aGraphics.getFontRenderContext()).getSize());
 		}

@@ -25,6 +25,11 @@ public class ComboBoxNodeItem extends AbstractNodeItem
 	protected String[] mOptions;
 
 
+	protected ComboBoxNodeItem()
+	{
+	}
+
+
 	public ComboBoxNodeItem(String aText, int aSelectedIndex, String... aOptions)
 	{
 		super(aOptions[aSelectedIndex]);
@@ -147,6 +152,11 @@ public class ComboBoxNodeItem extends AbstractNodeItem
 	@Override
 	public void readExternal(Bundle aBundle) throws IOException
 	{
+		super.readExternal(aBundle);
+
+		mSelectedIndex = aBundle.getInt("selected");
+		mHeader = aBundle.getString("header");
+		mOptions = aBundle.getStringArray("options");
 	}
 
 

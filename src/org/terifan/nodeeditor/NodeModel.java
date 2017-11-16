@@ -231,6 +231,46 @@ public class NodeModel implements Serializable
 	}
 
 
+	public void unmarshalBundle(Bundle aBundle) throws IOException
+	{
+		mNodes = new ArrayList<>();
+		mConnections = new ArrayList<>();
+
+		for (Bundle bundle : aBundle.getBundleArrayList("nodes"))
+		{
+			Node node = new Node();
+			node.bind(this);
+			node.readExternal(bundle);
+			mNodes.add(node);
+		}
+
+		for (Bundle bundle : aBundle.getBundleArrayList("connections"))
+		{
+			addConnection(getConnector(bundle.getInt("out")), getConnector(bundle.getInt("in")));
+		}
+	}
+
+
+	private Connector getConnector(int aRef)
+	{
+		for (Node node : mNodes)
+		{
+			for (NodeItem item : node.mItems)
+			{
+				for (Connector connector : item.mConnectors)
+				{
+					if (connector.mModelRef == aRef)
+					{
+						return connector;
+					}
+				}
+			}
+		}
+
+		return null;
+	}
+
+
 	@FunctionalInterface
 	public interface Factory
 	{

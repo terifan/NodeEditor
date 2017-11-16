@@ -10,7 +10,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import org.terifan.bundle.Bundlable;
 import org.terifan.bundle.Bundle;
@@ -31,15 +30,24 @@ public abstract class NodeItem implements Serializable, Bundlable
 	protected String mIdentity;
 	protected boolean mFixedSize;
 	protected HashMap<String,String> mProperties;
+	protected boolean mUserSetSize;
+
+
+	protected NodeItem()
+	{
+		mConnectors = new ArrayList<>();
+		mProperties = new HashMap<>();
+		mPreferredSize = new Dimension();
+		mBounds = new Rectangle();
+		mTextBox = new TextBox("");
+	}
 
 
 	public NodeItem(String aText)
 	{
-		mTextBox = new TextBox(aText);
-		mConnectors = new ArrayList<>();
-		mBounds = new Rectangle();
-		mPreferredSize = new Dimension();
-		mProperties = new HashMap<>();
+		this();
+
+		mTextBox.setText(aText);
 	}
 
 
@@ -108,7 +116,14 @@ public abstract class NodeItem implements Serializable, Bundlable
 
 	protected void setPreferredSize(Dimension aPreferredSize)
 	{
+		mUserSetSize = true;
 		mPreferredSize.setSize(aPreferredSize);
+	}
+
+
+	protected boolean isUserSetSize()
+	{
+		return mUserSetSize;
 	}
 
 
@@ -229,13 +244,36 @@ public abstract class NodeItem implements Serializable, Bundlable
 	@Override
 	public void readExternal(Bundle aBundle) throws IOException
 	{
+		mConnectors.clear();
+		mProperties.clear();
+
+		mUserSetSize = aBundle.getBundle("size") != null;
+		mPreferredSize.setSize(BundleHelper.getDimension(aBundle.getBundle("size"), new Dimension(100, 0)));
+		mBounds.setBounds(BundleHelper.getRectangle(aBundle.getBundle("bounds"), new Rectangle()));
+		mIdentity = aBundle.getString("identity");
+		mFixedSize = !aBundle.getBoolean("flexible");
+		aBundle.getBundleArrayList("properties", e->mProperties.put(e.getString("key"), e.getString("value")));
+		mConnectors.addAll(aBundle.getBundlableArrayList("connectors", ()->{Connector c = new Connector();c.bind(this);return c;}));
+		mTextBox.setText(aBundle.getString("text"));
+
+		if (!mUserSetSize)
+		{
+			mBounds.setSize(getPreferredSize(null, mBounds));
+		}
+		else
+		{
+			mBounds.setSize(mPreferredSize);
+		}
 	}
 
 
 	@Override
 	public void writeExternal(Bundle aBundle) throws IOException
 	{
-		aBundle.putBundle("size", BundleHelper.toBundle(mPreferredSize));
+		if (mUserSetSize)
+		{
+			aBundle.putBundle("size", BundleHelper.toBundle(mPreferredSize));
+		}
 		if (!mBounds.isEmpty())
 		{
 			aBundle.putBundle("bounds", BundleHelper.toBundle(mBounds));
