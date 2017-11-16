@@ -26,11 +26,10 @@ public abstract class NodeItem implements Serializable, Bundlable
 	protected final Dimension mPreferredSize;
 	protected final Rectangle mBounds;
 	protected final TextBox mTextBox;
-	protected Node mNode;
-	protected String mIdentity;
-	protected boolean mFixedSize;
 	protected HashMap<String,String> mProperties;
 	protected boolean mUserSetSize;
+	protected String mIdentity;
+	protected Node mNode;
 
 
 	protected NodeItem()
@@ -108,9 +107,9 @@ public abstract class NodeItem implements Serializable, Bundlable
 	}
 
 
-	protected Dimension getPreferredSize(Graphics2D aGraphics, Rectangle aBounds)
+	protected Dimension measure(Graphics2D aGraphics)
 	{
-		return mPreferredSize;
+		return (Dimension)mPreferredSize.clone();
 	}
 
 
@@ -251,14 +250,13 @@ public abstract class NodeItem implements Serializable, Bundlable
 		mPreferredSize.setSize(BundleHelper.getDimension(aBundle.getBundle("size"), new Dimension(100, 0)));
 		mBounds.setBounds(BundleHelper.getRectangle(aBundle.getBundle("bounds"), new Rectangle()));
 		mIdentity = aBundle.getString("identity");
-		mFixedSize = !aBundle.getBoolean("flexible");
 		aBundle.getBundleArrayList("properties", e->mProperties.put(e.getString("key"), e.getString("value")));
 		mConnectors.addAll(aBundle.getBundlableArrayList("connectors", ()->{Connector c = new Connector();c.bind(this);return c;}));
 		mTextBox.setText(aBundle.getString("text"));
 
 		if (!mUserSetSize)
 		{
-			mBounds.setSize(getPreferredSize(null, mBounds));
+			mBounds.setSize(measure(null));
 		}
 		else
 		{
@@ -281,10 +279,6 @@ public abstract class NodeItem implements Serializable, Bundlable
 		if (mIdentity != null)
 		{
 			aBundle.putString("identity", mIdentity);
-		}
-		if (!mFixedSize)
-		{
-			aBundle.putBoolean("flexible", !mFixedSize);
 		}
 		if (!mProperties.isEmpty())
 		{

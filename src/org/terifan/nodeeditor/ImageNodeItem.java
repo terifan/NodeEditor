@@ -48,7 +48,7 @@ public class ImageNodeItem extends AbstractNodeItem<ImageNodeItem>
 		int t = 10;
 		double sx = mBounds.width / (double)t;
 		double sy = mBounds.height / (double)t;
-
+		
 		aGraphics.setColor(new Color(200, 200, 200));
 		aGraphics.fillRect(mBounds.x, mBounds.y, mBounds.width, mBounds.height);
 

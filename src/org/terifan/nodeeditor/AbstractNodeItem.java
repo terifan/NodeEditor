@@ -2,7 +2,6 @@ package org.terifan.nodeeditor;
 
 import java.awt.Dimension;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 
 
 public abstract class AbstractNodeItem<T extends AbstractNodeItem> extends NodeItem
@@ -12,6 +11,7 @@ public abstract class AbstractNodeItem<T extends AbstractNodeItem> extends NodeI
 
 	protected AbstractNodeItem()
 	{
+		prepare();
 	}
 
 
@@ -27,9 +27,16 @@ public abstract class AbstractNodeItem<T extends AbstractNodeItem> extends NodeI
 	{
 		super(aText);
 
-		mTextBox.setFont(Styles.BOX_ITEM_FONT).setForeground(Styles.BOX_FOREGROUND_COLOR);
 		mPreferredSize.setSize(aWidth, aHeight);
-		mFixedSize = true;
+		mUserSetSize = true;
+
+		prepare();
+	}
+
+
+	protected void prepare()
+	{
+		mTextBox.setFont(Styles.BOX_ITEM_FONT).setForeground(Styles.BOX_FOREGROUND_COLOR);
 	}
 
 
@@ -69,13 +76,13 @@ public abstract class AbstractNodeItem<T extends AbstractNodeItem> extends NodeI
 
 
 	@Override
-	public Dimension getPreferredSize(Graphics2D aGraphics, Rectangle aBounds)
+	public Dimension measure(Graphics2D aGraphics)
 	{
-		if ((!mFixedSize || mTextBox.isLayoutRequired()) && mTextBox.isLayoutRequired())
+		if (!mUserSetSize && mTextBox.isLayoutRequired())
 		{
 			mPreferredSize.setSize(mTextBox.measure(aGraphics == null ? null : aGraphics.getFontRenderContext()).getSize());
 		}
 
-		return super.getPreferredSize(aGraphics, aBounds);
+		return super.measure(aGraphics);
 	}
 }

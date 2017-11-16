@@ -157,6 +157,8 @@ public class ComboBoxNodeItem extends AbstractNodeItem
 		mSelectedIndex = aBundle.getInt("selected");
 		mHeader = aBundle.getString("header");
 		mOptions = aBundle.getStringArray("options");
+
+		mPreferredSize.height = 21;
 	}
 
 

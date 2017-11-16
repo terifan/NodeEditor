@@ -42,19 +42,20 @@ public class Node implements Iterable<NodeItem>, Renderable, Serializable, Bundl
 
 	public Node()
 	{
+		mVerticalSpacing = 3;
+		mMinimumSize = new Dimension(100, 0);
+		mMaximumSize = new Dimension(Short.MAX_VALUE, Short.MAX_VALUE);
+		mResizableHorizontal = true;
+		mBounds = new Rectangle();
+		mItems = new ArrayList<>();
 	}
 
 
 	public Node(String aName, NodeItem... aItems)
 	{
+		this();
+		
 		mName = aName;
-		mBounds = new Rectangle();
-		mItems = new ArrayList<>();
-
-		mVerticalSpacing = 3;
-		mMinimumSize = new Dimension(100, 0);
-		mMaximumSize = new Dimension(Short.MAX_VALUE, Short.MAX_VALUE);
-		mResizableHorizontal = true;
 
 		for (NodeItem item : aItems)
 		{
@@ -263,7 +264,7 @@ public class Node implements Iterable<NodeItem>, Renderable, Serializable, Bundl
 
 				for (NodeItem item : mItems)
 				{
-					Dimension size = item.getPreferredSize(aGraphics, mBounds);
+					Dimension size = item.measure(aGraphics);
 
 					mBounds.width = Math.max(mBounds.width, Math.min(mMaximumSize.width, size.width) + 5 + 9 + 5 + 9);
 					mBounds.height += size.height + mVerticalSpacing;
@@ -300,7 +301,7 @@ public class Node implements Iterable<NodeItem>, Renderable, Serializable, Bundl
 
 			for (NodeItem item : mItems)
 			{
-				Dimension size = item.getPreferredSize(aGraphics, mBounds);
+				Dimension size = item.measure(aGraphics);
 
 				item.mBounds.setBounds(5 + 9, y, mBounds.width - (5 + 9 + 5 + 9), size.height);
 

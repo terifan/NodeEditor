@@ -178,7 +178,7 @@ public class Test3
 			editor.addResourceLoader("texture3.image", e->cache.get(e.getProperty("image_path"), p->ImageIO.read(Test3.class.getResource(p))));
 
 			editor.center();
-//			editor.setScale(2);
+			editor.setScale(2);
 
 			JFrame frame = new JFrame();
 			frame.add(editor);

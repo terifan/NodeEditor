@@ -95,6 +95,9 @@ public class CheckBoxNodeItem extends AbstractNodeItem
 	@Override
 	public void readExternal(Bundle aBundle) throws IOException
 	{
+		super.readExternal(aBundle);
+		
+		mSelected = aBundle.getBoolean("selected", false);
 	}
 
 

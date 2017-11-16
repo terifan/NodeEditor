@@ -196,6 +196,8 @@ public class SliderNodeItem extends AbstractNodeItem<SliderNodeItem>
 //	{
 //		void onChange(SliderNodeItem aItem, boolean aValueIsAdjusting);
 //	}
+
+
 	@Override
 	public void readExternal(Bundle aBundle) throws IOException
 	{
@@ -205,6 +207,8 @@ public class SliderNodeItem extends AbstractNodeItem<SliderNodeItem>
 		mMax = aBundle.getDouble("max", 1);
 		mValue = aBundle.getDouble("value", 0);
 		mStep = aBundle.getDouble("step", 0);
+
+		mPreferredSize.height = 20;
 	}
 
 

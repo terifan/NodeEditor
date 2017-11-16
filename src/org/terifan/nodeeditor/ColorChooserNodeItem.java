@@ -111,6 +111,8 @@ public class ColorChooserNodeItem extends AbstractNodeItem<ColorChooserNodeItem>
 		super.readExternal(aBundle);
 
 		mColor = BundleHelper.getColor(aBundle.getString("color"));
+
+		mPreferredSize.height = 20;
 	}
 
 

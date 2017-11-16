@@ -21,8 +21,8 @@ public class ButtonNodeItem extends AbstractNodeItem<ButtonNodeItem>
 
 	protected ButtonNodeItem()
 	{
-		mPreferredSize.height = 22;
 		mTextBox.setAnchor(Anchor.CENTER).setMargins(0, 0, 0, 0).setMaxLineCount(1).setFont(Styles.SLIDER_FONT);
+		mPreferredSize.height = 22;
 	}
 
 
@@ -30,8 +30,8 @@ public class ButtonNodeItem extends AbstractNodeItem<ButtonNodeItem>
 	{
 		super(aText);
 
-		mPreferredSize.height = 22;
 		mTextBox.setAnchor(Anchor.CENTER).setMargins(0, 0, 0, 0).setMaxLineCount(1).setFont(Styles.SLIDER_FONT);
+		mPreferredSize.height = 22;
 	}
 
 
@@ -116,6 +116,8 @@ public class ButtonNodeItem extends AbstractNodeItem<ButtonNodeItem>
 	public void readExternal(Bundle aBundle) throws IOException
 	{
 		super.readExternal(aBundle);
+
+		mPreferredSize.height = 22;
 	}
 
 

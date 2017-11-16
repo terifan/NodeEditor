@@ -58,6 +58,8 @@ public class TextNodeItem extends AbstractNodeItem<TextNodeItem>
 	public void readExternal(Bundle aBundle) throws IOException
 	{
 		super.readExternal(aBundle);
+
+		mPreferredSize.setSize(measure(null));
 	}
 
 
