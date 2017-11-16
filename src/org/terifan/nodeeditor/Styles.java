@@ -49,7 +49,7 @@ public class Styles
 
 	public final static Font BOX_FONT = new Font("Segoe UI", Font.PLAIN, 12);
 	public final static Font BOX_ITEM_FONT = new Font("Segoe UI", Font.PLAIN, 12);
-	public final static Font SLIDER_FONT = new Font("Segoe UI", Font.PLAIN, 10);
+	public final static Font SLIDER_FONT = new Font("Segoe UI", Font.PLAIN, 11);
 	public final static Color SLIDER_BORDER_COLOR = new Color(48, 48, 48);
 	public final static Color SLIDER_ARROW_COLOR = new Color(118, 118, 118);
 	public final static Color COMBOBOX_ARROW_COLOR = new Color(190,190,190);
