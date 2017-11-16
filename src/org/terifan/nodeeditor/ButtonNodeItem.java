@@ -125,7 +125,5 @@ public class ButtonNodeItem extends AbstractNodeItem<ButtonNodeItem>
 	public void writeExternal(Bundle aBundle) throws IOException
 	{
 		super.writeExternal(aBundle);
-
-		aBundle.putString("type", "Button");
 	}
 }

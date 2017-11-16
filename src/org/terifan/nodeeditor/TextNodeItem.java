@@ -67,7 +67,5 @@ public class TextNodeItem extends AbstractNodeItem<TextNodeItem>
 	public void writeExternal(Bundle aBundle) throws IOException
 	{
 		super.writeExternal(aBundle);
-
-		aBundle.putString("type", "Text");
 	}
 }

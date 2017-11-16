@@ -217,7 +217,6 @@ public class SliderNodeItem extends AbstractNodeItem<SliderNodeItem>
 	{
 		super.writeExternal(aBundle);
 
-		aBundle.putString("type", "Slider");
 		if (mMin != 0.0)
 		{
 			aBundle.putDouble("min", mMin);

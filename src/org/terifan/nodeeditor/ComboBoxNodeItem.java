@@ -167,7 +167,6 @@ public class ComboBoxNodeItem extends AbstractNodeItem
 	{
 		super.writeExternal(aBundle);
 
-		aBundle.putString("type", "ComboBox");
 		aBundle.putInt("selected", mSelectedIndex);
 		aBundle.putString("header", mHeader);
 		aBundle.putStringArray("options", mOptions);

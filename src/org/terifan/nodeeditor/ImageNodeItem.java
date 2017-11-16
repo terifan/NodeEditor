@@ -94,7 +94,6 @@ public class ImageNodeItem extends AbstractNodeItem<ImageNodeItem>
 	{
 		super.writeExternal(aBundle);
 
-		aBundle.putString("type", "Image");
 		if (mImagePath != null)
 		{
 			aBundle.putString("path", mImagePath);

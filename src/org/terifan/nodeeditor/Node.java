@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 import org.terifan.bundle.Bundlable;
 import org.terifan.bundle.Bundle;
@@ -619,38 +621,18 @@ public class Node implements Iterable<NodeItem>, Renderable, Serializable, Bundl
 		mItems = new ArrayList<>();
 		for (Bundle bundle : aBundle.getBundleArrayList("items"))
 		{
-			NodeItem item;
-			switch (bundle.getString("type"))
+			try
 			{
-				case "Button":
-					item = new ButtonNodeItem();
-					break;
-				case "CheckBox":
-					item = new CheckBoxNodeItem();
-					break;
-				case "ColorChooser":
-					item = new ColorChooserNodeItem();
-					break;
-				case "ComboBox":
-					item = new ComboBoxNodeItem();
-					break;
-				case "Image":
-					item = new ImageNodeItem();
-					break;
-				case "Slider":
-					item = new SliderNodeItem();
-					break;
-				case "Text":
-					item = new TextNodeItem();
-					break;
-				default:
-					throw new IOException("Unsupported type: " + bundle.getString("type"));
+				NodeItem item = (NodeItem)Class.forName("org.terifan.nodeeditor." + bundle.getString("type") + "NodeItem").newInstance();
+				item.bind(this);
+				item.readExternal(bundle);
+
+				mItems.add(item);
 			}
-
-			item.bind(this);
-			item.readExternal(bundle);
-
-			mItems.add(item);
+			catch (InstantiationException | IllegalAccessException | ClassNotFoundException e)
+			{
+				throw new IOException(e);
+			}
 		}
 	}
 

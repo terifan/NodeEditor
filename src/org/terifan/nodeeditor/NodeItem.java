@@ -268,6 +268,8 @@ public abstract class NodeItem implements Serializable, Bundlable
 	@Override
 	public void writeExternal(Bundle aBundle) throws IOException
 	{
+		aBundle.putString("type", getClass().getSimpleName().replace("NodeItem", ""));
+
 		if (mUserSetSize)
 		{
 			aBundle.putBundle("size", BundleHelper.toBundle(mPreferredSize));

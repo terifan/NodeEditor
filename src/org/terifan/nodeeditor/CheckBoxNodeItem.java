@@ -106,7 +106,6 @@ public class CheckBoxNodeItem extends AbstractNodeItem
 	{
 		super.writeExternal(aBundle);
 
-		aBundle.putString("type", "CheckBox");
 		if (mSelected)
 		{
 			aBundle.putBoolean("selected", mSelected);

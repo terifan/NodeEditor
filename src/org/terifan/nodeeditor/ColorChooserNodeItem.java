@@ -121,7 +121,6 @@ public class ColorChooserNodeItem extends AbstractNodeItem<ColorChooserNodeItem>
 	{
 		super.writeExternal(aBundle);
 
-		aBundle.putString("type", "ColorChooser");
 		aBundle.putString("color", BundleHelper.toString(mColor));
 	}
 }
