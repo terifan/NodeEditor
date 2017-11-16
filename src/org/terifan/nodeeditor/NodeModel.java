@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.stream.Stream;
+import org.terifan.bundle.Bundle;
 
 
 public class NodeModel implements Serializable
@@ -216,6 +217,17 @@ public class NodeModel implements Serializable
 		Node box = mFactoryMap.get(aPrototype).create(aIdentity);
 		box.setPrototype(aPrototype);
 		return addNode(box);
+	}
+
+
+	public Bundle marshalBundle() throws IOException
+	{
+		Bundle bundle = new Bundle();
+
+		bundle.putBundlableArrayList("nodes", mNodes);
+		bundle.putBundlableArrayList("connections", mConnections);
+
+		return bundle;
 	}
 
 

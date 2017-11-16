@@ -5,7 +5,9 @@ import java.awt.LinearGradientPaint;
 import java.awt.Paint;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.io.IOException;
 import java.util.ArrayList;
+import org.terifan.bundle.Bundle;
 import org.terifan.nodeeditor.Popup.Option;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.TextBox;
@@ -30,7 +32,6 @@ public class ComboBoxNodeItem extends AbstractNodeItem
 		mHeader = aText;
 		mSelectedIndex = aSelectedIndex;
 		mOptions = aOptions;
-
 		mPreferredSize.height = 21;
 	}
 
@@ -141,4 +142,22 @@ public class ComboBoxNodeItem extends AbstractNodeItem
 //	{
 //		void selectionChanged(int aSelectedIndex);
 //	}
+
+
+	@Override
+	public void readExternal(Bundle aBundle) throws IOException
+	{
+	}
+
+
+	@Override
+	public void writeExternal(Bundle aBundle) throws IOException
+	{
+		super.writeExternal(aBundle);
+
+		aBundle.putString("type", "ComboBox");
+		aBundle.putInt("selected", mSelectedIndex);
+		aBundle.putString("header", mHeader);
+		aBundle.putStringArray("options", mOptions);
+	}
 }

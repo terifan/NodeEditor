@@ -3,14 +3,16 @@ package org.terifan.nodeeditor;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.net.URL;
 import javax.imageio.ImageIO;
+import org.terifan.bundle.Bundle;
 
 
 public class ImageNodeItem extends AbstractNodeItem<ImageNodeItem>
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	protected String mImagePath;
 
 
@@ -68,5 +70,21 @@ public class ImageNodeItem extends AbstractNodeItem<ImageNodeItem>
 		{
 			aGraphics.drawImage(image, mBounds.x, mBounds.y, mBounds.width, mBounds.height, null);
 		}
+	}
+
+
+	@Override
+	public void readExternal(Bundle aBundle) throws IOException
+	{
+	}
+
+
+	@Override
+	public void writeExternal(Bundle aBundle) throws IOException
+	{
+		super.writeExternal(aBundle);
+
+		aBundle.putString("type", "Image");
+		aBundle.putString("imagePath", mImagePath);
 	}
 }

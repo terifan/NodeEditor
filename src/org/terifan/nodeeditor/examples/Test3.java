@@ -2,11 +2,12 @@ package org.terifan.nodeeditor.examples;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.util.HashMap;
+import java.io.FileOutputStream;
 import javax.imageio.ImageIO;
 import org.terifan.nodeeditor.SliderNodeItem;
 import org.terifan.nodeeditor.ImageNodeItem;
 import javax.swing.JFrame;
+import org.terifan.bundle.Bundle;
 import org.terifan.nodeeditor.ButtonNodeItem;
 import org.terifan.nodeeditor.CheckBoxNodeItem;
 import org.terifan.nodeeditor.ColorChooserNodeItem;
@@ -155,11 +156,15 @@ public class Test3
 			model.getNode("texturecoordinate").setLocation(-600, -150);
 			model.getNode("math").setLocation(-300, -200);
 
-//			NodeModel modelCopy = NodeModel.unmarshal(model.marshal());
+			Bundle bundle = model.marshalBundle();
+			try (FileOutputStream fos = new FileOutputStream("d:\\nodeeditor.json"))
+			{
+				bundle.marshalPSON(fos, false);
+			}
 
-//			NodeEditor editor = new NodeEditor(modelCopy);
-			NodeEditor editor = new NodeEditor(model);
+			NodeModel modelCopy = NodeModel.unmarshal(model.marshal());
 
+			NodeEditor editor = new NodeEditor(modelCopy);
 
 			editor.setResourceContext(Test3.class); // texture1.image is loaded using this resource context
 
@@ -169,9 +174,8 @@ public class Test3
 			editor.addResourceLoader("texture2.image", e->image);
 			editor.addResourceLoader("texture3.image", e->cache.get(e.getProperty("image_path"), p->ImageIO.read(Test3.class.getResource(p))));
 
-
 			editor.center();
-			editor.setScale(2);
+//			editor.setScale(2);
 
 			JFrame frame = new JFrame();
 			frame.add(editor);

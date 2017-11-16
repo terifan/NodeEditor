@@ -6,17 +6,21 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.stream.Stream;
+import org.terifan.bundle.Bundlable;
+import org.terifan.bundle.Bundle;
+import org.terifan.bundle.BundleHelper;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.TextBox;
 import static org.terifan.nodeeditor.Styles.*;
 import org.terifan.util.Strings;
 
 
-public class Node implements Iterable<NodeItem>, Renderable, Serializable
+public class Node implements Iterable<NodeItem>, Renderable, Serializable, Bundlable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -33,6 +37,7 @@ public class Node implements Iterable<NodeItem>, Renderable, Serializable
 	protected Dimension mRestoredSize;
 	protected boolean mResizableHorizontal;
 	protected boolean mResizableVertical;
+	private boolean mUserSetSize;
 
 
 	public Node()
@@ -163,6 +168,7 @@ public class Node implements Iterable<NodeItem>, Renderable, Serializable
 	public Node setSize(int aWidth, int aHeight)
 	{
 		mBounds.setSize(aWidth, aHeight);
+		mUserSetSize = true;
 		return this;
 	}
 
@@ -170,6 +176,7 @@ public class Node implements Iterable<NodeItem>, Renderable, Serializable
 	public Node setSize(Dimension aSize)
 	{
 		mBounds.setSize(aSize);
+		mUserSetSize = true;
 		return this;
 	}
 
@@ -590,29 +597,57 @@ public class Node implements Iterable<NodeItem>, Renderable, Serializable
 //	}
 
 
-//	@Override
-//	public void writeExternal(ObjectOutput aOutput) throws IOException
-//	{
-//		aOutput.writeInt(mBounds.x);
-//		aOutput.writeInt(mBounds.y);
-//		aOutput.writeInt(mBounds.width);
-//		aOutput.writeInt(mBounds.height);
-//		aOutput.writeUTF(Strings.nullToEmpty(mPrototype));
-//		aOutput.writeUTF(Strings.nullToEmpty(mIdentity));
-//		aOutput.writeUTF(mName);
-//		aOutput.writeBoolean(mMinimized);
-//		aOutput.writeBoolean(mResizableHorizontal);
-//		aOutput.writeBoolean(mResizableVertical);
-//		for (NodeItem item : mItems)
-//		{
-//			aOutput.writeObject(item);
-//		}
-//	}
-//
-//
-//	@Override
-//	public void readExternal(ObjectInput aIn) throws IOException, ClassNotFoundException
-//	{
-//		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//	}
+	@Override
+	public void readExternal(Bundle aBundle) throws IOException
+	{
+	}
+
+
+	@Override
+	public void writeExternal(Bundle aBundle) throws IOException
+	{
+		aBundle.putBundle("position", BundleHelper.toBundle(mBounds.getLocation()));
+		if (mUserSetSize)
+		{
+			aBundle.putBundle("size", BundleHelper.toBundle(mBounds.getSize()));
+		}
+		if (mIdentity != null)
+		{
+			aBundle.putString("identity", mIdentity);
+		}
+		aBundle.putString("name", mName);
+		if (mPrototype != null)
+		{
+			aBundle.putString("prototype", mPrototype);
+		}
+		if (mMaxSize.width != Short.MAX_VALUE || mMaxSize.height != Short.MAX_VALUE)
+		{
+			aBundle.putBundle("maxSize", BundleHelper.toBundle(mMaxSize));
+		}
+		if (mMinSize.width != 100 || mMinSize.height != 0)
+		{
+			aBundle.putBundle("minSize", BundleHelper.toBundle(mMinSize));
+		}
+		if (mMinimized)
+		{
+			aBundle.putBoolean("minimized", mMinimized);
+		}
+		if (mRestoredSize != null)
+		{
+			aBundle.putBundle("restoredSize", BundleHelper.toBundle(mRestoredSize));
+		}
+		if (mVerticalSpacing != 3)
+		{
+			aBundle.putInt("verticalSpacing", mVerticalSpacing);
+		}
+		if (!mResizableHorizontal)
+		{
+			aBundle.putBoolean("resizableHorizontal", mResizableHorizontal);
+		}
+		if (mResizableVertical)
+		{
+			aBundle.putBoolean("resizableVertical", mResizableVertical);
+		}
+		aBundle.putBundlableArrayList("items", mItems);
+	}
 }

@@ -3,17 +3,21 @@ package org.terifan.nodeeditor;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.io.Externalizable;
 import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 import java.io.Serializable;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
+import org.terifan.bundle.Bundlable;
+import org.terifan.bundle.Bundle;
+import org.terifan.bundle.BundleHelper;
 
 
-public class Connector implements Serializable
+public class Connector implements Serializable, Bundlable
 {
 	private static final long serialVersionUID = 1L;
+
+	private final static AtomicInteger REF_COUNTER = new AtomicInteger();
 
 	public final static Color PURPLE = new Color(0x6363C7);
 	public final static Color GRAY = new Color(0xA1A1A1);
@@ -23,11 +27,13 @@ public class Connector implements Serializable
 	protected final Direction mDirection;
 	protected NodeItem mNodeItem;
 	protected Color mColor;
+	protected int mModelRef;
 
 
 	public Connector()
 	{
 		mDirection = null;
+		mModelRef = REF_COUNTER.getAndIncrement();
 	}
 
 
@@ -41,6 +47,7 @@ public class Connector implements Serializable
 	{
 		mDirection = aDirection;
 		mColor = aColor;
+		mModelRef = REF_COUNTER.getAndIncrement();
 	}
 
 
@@ -74,6 +81,12 @@ public class Connector implements Serializable
 	}
 
 
+	protected int getModelRef()
+	{
+		return mModelRef;
+	}
+
+
 	Point getConnectorPoint()
 	{
 		Rectangle bounds = mNodeItem.getNode().getBounds();
@@ -88,20 +101,21 @@ public class Connector implements Serializable
 	}
 
 
-//	@Override
-//	public void writeExternal(ObjectOutput aOutput) throws IOException
-//	{
-//		aOutput.writeUTF(mDirection.name());
-//		aOutput.writeInt(mColor.getRed());
-//		aOutput.writeInt(mColor.getGreen());
-//		aOutput.writeInt(mColor.getBlue());
-//		aOutput.writeInt(mColor.getAlpha());
-//	}
-//
-//
-//	@Override
-//	public void readExternal(ObjectInput aIn) throws IOException, ClassNotFoundException
-//	{
-//		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//	}
+	@Override
+	public void readExternal(Bundle aBundle) throws IOException
+	{
+	}
+
+
+	@Override
+	public void writeExternal(Bundle aBundle) throws IOException
+	{
+		if (!mBounds.isEmpty())
+		{
+			aBundle.putBundle("bounds", BundleHelper.toBundle(mBounds));
+		}
+		aBundle.putString("color", mColor.equals(YELLOW) ? "YELLOW" : mColor.equals(GRAY) ? "GRAY" : mColor.equals(PURPLE) ? "PURPLE" : String.format("%08x", mColor.getRGB()));
+		aBundle.putString("direction", mDirection.name());
+		aBundle.putInt("ref", mModelRef);
+	}
 }

@@ -5,16 +5,21 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
+import org.terifan.bundle.Bundlable;
+import org.terifan.bundle.Bundle;
+import org.terifan.bundle.BundleHelper;
 import org.terifan.ui.TextBox;
 import org.terifan.util.Strings;
 
 
-public abstract class NodeItem implements Serializable
+public abstract class NodeItem implements Serializable, Bundlable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -219,32 +224,38 @@ public abstract class NodeItem implements Serializable
 //	{
 //		void onInputChange(NodeItem aSource);
 //	}
-//
-//
-//	@Override
-//	public void writeExternal(ObjectOutput aOutput) throws IOException
-//	{
-//		aOutput.writeUTF(getClass().getName());
-//		aOutput.writeUTF(getText());
-//		aOutput.writeUTF(Strings.nullToEmpty(mIdentity));
-//		aOutput.writeInt(mBounds.x);
-//		aOutput.writeInt(mBounds.y);
-//		aOutput.writeInt(mBounds.width);
-//		aOutput.writeInt(mBounds.height);
-//		aOutput.writeInt(mPreferredSize.width);
-//		aOutput.writeInt(mPreferredSize.height);
-//		aOutput.writeBoolean(mFixedSize);
-//		aOutput.writeInt(mConnectors.size());
-//		for (Connector connector : mConnectors)
-//		{
-//			aOutput.writeObject(connector);
-//		}
-//	}
-//
-//
-//	@Override
-//	public void readExternal(ObjectInput aIn) throws IOException, ClassNotFoundException
-//	{
-//		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//	}
+
+
+	@Override
+	public void readExternal(Bundle aBundle) throws IOException
+	{
+	}
+
+
+	@Override
+	public void writeExternal(Bundle aBundle) throws IOException
+	{
+		aBundle.putBundle("size", BundleHelper.toBundle(mPreferredSize));
+		if (!mBounds.isEmpty())
+		{
+			aBundle.putBundle("bounds", BundleHelper.toBundle(mBounds));
+		}
+		if (mIdentity != null)
+		{
+			aBundle.putString("identity", mIdentity);
+		}
+		if (!mFixedSize)
+		{
+			aBundle.putBoolean("flexible", !mFixedSize);
+		}
+		if (!mProperties.isEmpty())
+		{
+			aBundle.putBundleArrayList("properties", BundleHelper.toBundleArrayList(mProperties));
+		}
+		if (!mConnectors.isEmpty())
+		{
+			aBundle.putBundlableArrayList("connectors", mConnectors);
+		}
+		aBundle.putString("text", mTextBox.getText());
+	}
 }

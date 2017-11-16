@@ -6,6 +6,9 @@ import java.awt.Paint;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.io.IOException;
+import org.terifan.bundle.Bundle;
+import org.terifan.bundle.BundleHelper;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.TextBox;
 
@@ -26,7 +29,7 @@ public class SliderNodeItem extends AbstractNodeItem<SliderNodeItem>
 
 	public SliderNodeItem(String aText, double aValue, double aStepSize)
 	{
-		this(aText, Double.MIN_VALUE, Double.MAX_VALUE, aValue);
+		this(aText, 0.0, 1.0, aValue);
 
 		mStepSize = aStepSize;
 	}
@@ -175,4 +178,35 @@ public class SliderNodeItem extends AbstractNodeItem<SliderNodeItem>
 //	{
 //		void onChange(SliderNodeItem aItem, boolean aValueIsAdjusting);
 //	}
+
+
+	@Override
+	public void readExternal(Bundle aBundle) throws IOException
+	{
+	}
+
+
+	@Override
+	public void writeExternal(Bundle aBundle) throws IOException
+	{
+		super.writeExternal(aBundle);
+
+		aBundle.putString("type", "Slider");
+		if (mMin != 0.0)
+		{
+			aBundle.putDouble("min", mMin);
+		}
+		if (mMax != 1.0)
+		{
+			aBundle.putDouble("max", mMax);
+		}
+		if (mValue != 0.0)
+		{
+			aBundle.putDouble("value", mValue);
+		}
+		if (mStepSize != 0.0)
+		{
+			aBundle.putDouble("stepSize", mStepSize);
+		}
+	}
 }

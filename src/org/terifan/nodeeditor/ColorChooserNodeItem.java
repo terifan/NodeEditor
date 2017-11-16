@@ -5,10 +5,9 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-import java.io.Serializable;
 import javax.swing.JColorChooser;
+import org.terifan.bundle.Bundle;
+import org.terifan.bundle.BundleHelper;
 import org.terifan.ui.Anchor;
 
 
@@ -99,4 +98,20 @@ public class ColorChooserNodeItem extends AbstractNodeItem<ColorChooserNodeItem>
 //	{
 //		super.readExternal(aIn);
 //	}
+
+
+	@Override
+	public void readExternal(Bundle aBundle) throws IOException
+	{
+	}
+
+
+	@Override
+	public void writeExternal(Bundle aBundle) throws IOException
+	{
+		super.writeExternal(aBundle);
+
+		aBundle.putString("type", "ColorChooser");
+		aBundle.putString("color", BundleHelper.toString(mColor));
+	}
 }

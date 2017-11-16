@@ -4,9 +4,8 @@ import java.awt.Graphics2D;
 import java.awt.LinearGradientPaint;
 import java.awt.Paint;
 import java.awt.Point;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
-import javax.imageio.ImageIO;
+import org.terifan.bundle.Bundle;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.ImageResizer;
 import org.terifan.ui.TextBox;
@@ -103,5 +102,21 @@ public class ButtonNodeItem extends AbstractNodeItem<ButtonNodeItem>
 	public interface ButtonAction
 	{
 		void onClick(ButtonNodeItem aItem);
+	}
+
+
+	@Override
+	public void readExternal(Bundle aBundle) throws IOException
+	{
+		super.readExternal(aBundle); //To change body of generated methods, choose Tools | Templates.
+	}
+
+
+	@Override
+	public void writeExternal(Bundle aBundle) throws IOException
+	{
+		super.writeExternal(aBundle);
+
+		aBundle.putString("type", "Button");
 	}
 }
