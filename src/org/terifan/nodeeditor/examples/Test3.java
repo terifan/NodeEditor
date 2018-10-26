@@ -7,7 +7,7 @@ import javax.imageio.ImageIO;
 import org.terifan.nodeeditor.SliderNodeItem;
 import org.terifan.nodeeditor.ImageNodeItem;
 import javax.swing.JFrame;
-import org.terifan.bundle.Bundle;
+import org.terifan.bundle.old.Bundle;
 import org.terifan.nodeeditor.ButtonNodeItem;
 import org.terifan.nodeeditor.CheckBoxNodeItem;
 import org.terifan.nodeeditor.ColorChooserNodeItem;

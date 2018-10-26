@@ -7,7 +7,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.io.IOException;
-import org.terifan.bundle.Bundle;
+import org.terifan.bundle.old.Bundle;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.TextBox;
 

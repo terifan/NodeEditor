@@ -6,8 +6,8 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.IOException;
 import javax.swing.JColorChooser;
-import org.terifan.bundle.Bundle;
-import org.terifan.bundle.BundleHelper;
+import org.terifan.bundle.old.Bundle;
+import org.terifan.bundle.old.BundleHelper;
 import org.terifan.ui.Anchor;
 
 

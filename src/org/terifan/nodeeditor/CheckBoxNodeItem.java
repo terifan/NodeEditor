@@ -8,7 +8,7 @@ import java.awt.Paint;
 import java.awt.Point;
 import java.awt.Stroke;
 import java.io.IOException;
-import org.terifan.bundle.Bundle;
+import org.terifan.bundle.old.Bundle;
 import org.terifan.ui.Anchor;
 
 

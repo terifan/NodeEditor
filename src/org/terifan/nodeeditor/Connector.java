@@ -7,9 +7,9 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
-import org.terifan.bundle.Bundlable;
-import org.terifan.bundle.Bundle;
-import org.terifan.bundle.BundleHelper;
+import org.terifan.bundle.old.Bundlable;
+import org.terifan.bundle.old.Bundle;
+import org.terifan.bundle.old.BundleHelper;
 
 
 public class Connector implements Serializable, Bundlable

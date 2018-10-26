@@ -2,8 +2,8 @@ package org.terifan.nodeeditor;
 
 import java.io.IOException;
 import java.io.Serializable;
-import org.terifan.bundle.Bundlable;
-import org.terifan.bundle.Bundle;
+import org.terifan.bundle.old.Bundlable;
+import org.terifan.bundle.old.Bundle;
 
 
 public class Connection implements Serializable, Bundlable

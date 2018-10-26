@@ -5,7 +5,7 @@ import java.awt.LinearGradientPaint;
 import java.awt.Paint;
 import java.awt.Point;
 import java.io.IOException;
-import org.terifan.bundle.Bundle;
+import org.terifan.bundle.old.Bundle;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.ImageResizer;
 import org.terifan.ui.TextBox;

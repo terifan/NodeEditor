@@ -11,9 +11,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.terifan.bundle.Bundlable;
-import org.terifan.bundle.Bundle;
-import org.terifan.bundle.BundleHelper;
+import org.terifan.bundle.old.Bundlable;
+import org.terifan.bundle.old.Bundle;
+import org.terifan.bundle.old.BundleHelper;
 import org.terifan.ui.TextBox;
 import org.terifan.util.Strings;
 

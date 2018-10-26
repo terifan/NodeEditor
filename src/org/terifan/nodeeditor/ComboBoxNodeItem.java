@@ -7,7 +7,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.IOException;
 import java.util.ArrayList;
-import org.terifan.bundle.Bundle;
+import org.terifan.bundle.old.Bundle;
 import org.terifan.nodeeditor.Popup.Option;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.TextBox;

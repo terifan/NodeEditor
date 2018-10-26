@@ -2,7 +2,7 @@ package org.terifan.nodeeditor;
 
 import java.awt.Graphics2D;
 import java.io.IOException;
-import org.terifan.bundle.Bundle;
+import org.terifan.bundle.old.Bundle;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.TextBox;
 
