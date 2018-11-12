@@ -10,7 +10,7 @@ import java.awt.Stroke;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
-import org.terifan.math.vec2;
+import org.terifan.algebra.Vec2d;
 
 
 public class SplineRenderer
@@ -85,7 +85,7 @@ public class SplineRenderer
 	{
 		BSpline spline = createSpline(aConnection);
 		Point2D.Double prev = null;
-		vec2 p = vec2.as(aPoint.x, aPoint.y);
+		Vec2d p = new Vec2d(aPoint.x, aPoint.y);
 		int segments = Math.max(20, (int)spline.getPoint(0).distance(spline.getPoint(1)) / 4);
 		double dist = Double.MAX_VALUE;
 
@@ -94,7 +94,7 @@ public class SplineRenderer
 			Point2D.Double next = spline.getPoint(i);
 			if (prev != null)
 			{
-				double d = p.distanceLineSegment(new vec2(prev.x, prev.y), new vec2(next.x, next.y));
+				double d = p.distanceLineSegment(new Vec2d(prev.x, prev.y), new Vec2d(next.x, next.y));
 				if (d < dist)
 				{
 					dist = d;
