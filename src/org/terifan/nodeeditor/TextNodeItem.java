@@ -1,8 +1,7 @@
 package org.terifan.nodeeditor;
 
 import java.awt.Graphics2D;
-import java.io.IOException;
-import org.terifan.bundle.old.Bundle;
+import org.terifan.bundle.Bundle;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.TextBox;
 
@@ -55,7 +54,7 @@ public class TextNodeItem extends AbstractNodeItem<TextNodeItem>
 
 
 	@Override
-	public void readExternal(Bundle aBundle) throws IOException
+	public void readExternal(Bundle aBundle)
 	{
 		super.readExternal(aBundle);
 
@@ -64,7 +63,7 @@ public class TextNodeItem extends AbstractNodeItem<TextNodeItem>
 
 
 	@Override
-	public void writeExternal(Bundle aBundle) throws IOException
+	public void writeExternal(Bundle aBundle)
 	{
 		super.writeExternal(aBundle);
 	}

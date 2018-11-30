@@ -3,11 +3,12 @@ package org.terifan.nodeeditor.examples;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import javax.imageio.ImageIO;
 import org.terifan.nodeeditor.SliderNodeItem;
 import org.terifan.nodeeditor.ImageNodeItem;
 import javax.swing.JFrame;
-import org.terifan.bundle.old.Bundle;
+import org.terifan.bundle.Bundle;
 import org.terifan.nodeeditor.ButtonNodeItem;
 import org.terifan.nodeeditor.CheckBoxNodeItem;
 import org.terifan.nodeeditor.ColorChooserNodeItem;
@@ -157,15 +158,15 @@ public class Test3
 			model.getNode("math").setLocation(-300, -200);
 
 			Bundle bundle = model.marshalBundle();
-			try (FileOutputStream fos = new FileOutputStream("d:\\nodeeditor.json"))
+			try (FileWriter fos = new FileWriter("d:\\nodeeditor.json"))
 			{
-				bundle.marshalPSON(fos, false);
+				bundle.marshalJSON(fos, false);
 			}
 
 			model = new NodeModel();
 			model.unmarshalBundle(bundle);
 
-//			model = NodeModel.unmarshal(model.marshal());
+			System.out.println(bundle.marshalJSON(false));
 
 			NodeEditor editor = new NodeEditor(model);
 
@@ -182,7 +183,7 @@ public class Test3
 
 			JFrame frame = new JFrame();
 			frame.add(editor);
-			frame.setSize((int)(1600 * editor.getScale()), (int)(1000 * editor.getScale()));
+			frame.setSize(1600, 1000);
 			frame.setLocationRelativeTo(null);
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			frame.setVisible(true);

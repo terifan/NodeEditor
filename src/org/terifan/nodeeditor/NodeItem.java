@@ -5,15 +5,16 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.terifan.bundle.old.Bundlable;
-import org.terifan.bundle.old.Bundle;
-import org.terifan.bundle.old.BundleHelper;
+import java.util.stream.Stream;
+import org.terifan.bundle.Array;
+import org.terifan.bundle.Bundlable;
+import org.terifan.bundle.Bundle;
+import org.terifan.bundle.BundleHelper;
 import org.terifan.ui.TextBox;
 import org.terifan.util.Strings;
 
@@ -241,7 +242,7 @@ public abstract class NodeItem implements Serializable, Bundlable
 
 
 	@Override
-	public void readExternal(Bundle aBundle) throws IOException
+	public void readExternal(Bundle aBundle)
 	{
 		mConnectors.clear();
 		mProperties.clear();
@@ -250,8 +251,8 @@ public abstract class NodeItem implements Serializable, Bundlable
 		mPreferredSize.setSize(BundleHelper.getDimension(aBundle.getBundle("size"), new Dimension(100, 0)));
 		mBounds.setBounds(BundleHelper.getRectangle(aBundle.getBundle("bounds"), new Rectangle()));
 		mIdentity = aBundle.getString("identity");
-		aBundle.getBundleArrayList("properties", e->mProperties.put(e.getString("key"), e.getString("value")));
-		mConnectors.addAll(aBundle.getBundlableArrayList("connectors", ()->{Connector c = new Connector();c.bind(this);return c;}));
+		Stream.of(aBundle.getBundleArray("properties", new Bundle[0])).forEach(e->mProperties.put(e.getString("key"), e.getString("value")));
+		Stream.of(aBundle.getBundleArray("connectors", new Bundle[0])).forEach(e->{Connector c = new Connector(); c.readExternal(e); c.bind(this); mConnectors.add(c);});
 		mTextBox.setText(aBundle.getString("text"));
 
 		if (!mUserSetSize)
@@ -266,7 +267,7 @@ public abstract class NodeItem implements Serializable, Bundlable
 
 
 	@Override
-	public void writeExternal(Bundle aBundle) throws IOException
+	public void writeExternal(Bundle aBundle)
 	{
 		aBundle.putString("type", getClass().getSimpleName().replace("NodeItem", ""));
 
@@ -284,11 +285,11 @@ public abstract class NodeItem implements Serializable, Bundlable
 		}
 		if (!mProperties.isEmpty())
 		{
-			aBundle.putBundleArrayList("properties", BundleHelper.toBundleArrayList(mProperties));
+			aBundle.putArray("properties", BundleHelper.toArray(mProperties));
 		}
 		if (!mConnectors.isEmpty())
 		{
-			aBundle.putBundlableArrayList("connectors", mConnectors);
+			aBundle.putArray("connectors", Array.of(mConnectors));
 		}
 		aBundle.putString("text", mTextBox.getText());
 	}

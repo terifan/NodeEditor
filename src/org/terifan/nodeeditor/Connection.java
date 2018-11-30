@@ -2,8 +2,8 @@ package org.terifan.nodeeditor;
 
 import java.io.IOException;
 import java.io.Serializable;
-import org.terifan.bundle.old.Bundlable;
-import org.terifan.bundle.old.Bundle;
+import org.terifan.bundle.Bundlable;
+import org.terifan.bundle.Bundle;
 
 
 public class Connection implements Serializable, Bundlable
@@ -60,16 +60,16 @@ public class Connection implements Serializable, Bundlable
 
 
 	@Override
-	public void readExternal(Bundle aBundle) throws IOException
+	public void readExternal(Bundle aBundle)
 	{
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 
 
 	@Override
-	public void writeExternal(Bundle aBundle) throws IOException
+	public void writeExternal(Bundle aBundle)
 	{
-		aBundle.putInt("in", mIn.getModelRef());
-		aBundle.putInt("out", mOut.getModelRef());
+		aBundle.putNumber("in", mIn.getModelRef());
+		aBundle.putNumber("out", mOut.getModelRef());
 	}
 }

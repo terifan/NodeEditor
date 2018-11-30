@@ -3,9 +3,8 @@ package org.terifan.nodeeditor;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import javax.imageio.ImageIO;
-import org.terifan.bundle.old.Bundle;
+import org.terifan.bundle.Bundle;
 
 
 public class ImageNodeItem extends AbstractNodeItem<ImageNodeItem>
@@ -48,7 +47,7 @@ public class ImageNodeItem extends AbstractNodeItem<ImageNodeItem>
 		int t = 10;
 		double sx = mBounds.width / (double)t;
 		double sy = mBounds.height / (double)t;
-		
+
 		aGraphics.setColor(new Color(200, 200, 200));
 		aGraphics.fillRect(mBounds.x, mBounds.y, mBounds.width, mBounds.height);
 
@@ -81,7 +80,7 @@ public class ImageNodeItem extends AbstractNodeItem<ImageNodeItem>
 
 
 	@Override
-	public void readExternal(Bundle aBundle) throws IOException
+	public void readExternal(Bundle aBundle)
 	{
 		super.readExternal(aBundle);
 
@@ -90,7 +89,7 @@ public class ImageNodeItem extends AbstractNodeItem<ImageNodeItem>
 
 
 	@Override
-	public void writeExternal(Bundle aBundle) throws IOException
+	public void writeExternal(Bundle aBundle)
 	{
 		super.writeExternal(aBundle);
 

@@ -6,8 +6,7 @@ import java.awt.Paint;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
-import java.io.IOException;
-import org.terifan.bundle.old.Bundle;
+import org.terifan.bundle.Bundle;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.TextBox;
 
@@ -199,39 +198,39 @@ public class SliderNodeItem extends AbstractNodeItem<SliderNodeItem>
 
 
 	@Override
-	public void readExternal(Bundle aBundle) throws IOException
+	public void readExternal(Bundle aBundle)
 	{
 		super.readExternal(aBundle);
 
-		mMin = aBundle.getDouble("min", 0);
-		mMax = aBundle.getDouble("max", 1);
-		mValue = aBundle.getDouble("value", 0);
-		mStep = aBundle.getDouble("step", 0);
+		mMin = aBundle.getDouble("min", 0.0);
+		mMax = aBundle.getDouble("max", 1.0);
+		mValue = aBundle.getDouble("value", 0.0);
+		mStep = aBundle.getDouble("step", 0.0);
 
 		mPreferredSize.height = 20;
 	}
 
 
 	@Override
-	public void writeExternal(Bundle aBundle) throws IOException
+	public void writeExternal(Bundle aBundle)
 	{
 		super.writeExternal(aBundle);
 
 		if (mMin != 0.0)
 		{
-			aBundle.putDouble("min", mMin);
+			aBundle.putNumber("min", mMin);
 		}
 		if (mMax != 1.0)
 		{
-			aBundle.putDouble("max", mMax);
+			aBundle.putNumber("max", mMax);
 		}
 		if (mValue != 0.0)
 		{
-			aBundle.putDouble("value", mValue);
+			aBundle.putNumber("value", mValue);
 		}
 		if (mStep != 0.0)
 		{
-			aBundle.putDouble("step", mStep);
+			aBundle.putNumber("step", mStep);
 		}
 	}
 }

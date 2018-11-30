@@ -10,12 +10,11 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Stream;
-import org.terifan.bundle.old.Bundlable;
-import org.terifan.bundle.old.Bundle;
-import org.terifan.bundle.old.BundleHelper;
+import org.terifan.bundle.Array;
+import org.terifan.bundle.Bundlable;
+import org.terifan.bundle.Bundle;
+import org.terifan.bundle.BundleHelper;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.TextBox;
 import static org.terifan.nodeeditor.Styles.*;
@@ -56,7 +55,7 @@ public class Node implements Iterable<NodeItem>, Renderable, Serializable, Bundl
 	public Node(String aName, NodeItem... aItems)
 	{
 		this();
-		
+
 		mName = aName;
 
 		for (NodeItem item : aItems)
@@ -601,7 +600,7 @@ public class Node implements Iterable<NodeItem>, Renderable, Serializable, Bundl
 
 
 	@Override
-	public void readExternal(Bundle aBundle) throws IOException
+	public void readExternal(Bundle aBundle)
 	{
 		mBounds = new Rectangle();
 		mBounds.setLocation(BundleHelper.getPoint(aBundle.getBundle("position"), new Point(0,0)));
@@ -619,7 +618,7 @@ public class Node implements Iterable<NodeItem>, Renderable, Serializable, Bundl
 		mResizableVertical = aBundle.getBoolean("resizableVertical", false);
 
 		mItems = new ArrayList<>();
-		for (Bundle bundle : aBundle.getBundleArrayList("items"))
+		for (Bundle bundle : aBundle.getBundleArray("items"))
 		{
 			try
 			{
@@ -631,14 +630,14 @@ public class Node implements Iterable<NodeItem>, Renderable, Serializable, Bundl
 			}
 			catch (InstantiationException | IllegalAccessException | ClassNotFoundException e)
 			{
-				throw new IOException(e);
+				throw new IllegalStateException(e);
 			}
 		}
 	}
 
 
 	@Override
-	public void writeExternal(Bundle aBundle) throws IOException
+	public void writeExternal(Bundle aBundle)
 	{
 		aBundle.putBundle("position", BundleHelper.toBundle(mBounds.getLocation()));
 		if (mUserSetSize)
@@ -672,7 +671,7 @@ public class Node implements Iterable<NodeItem>, Renderable, Serializable, Bundl
 		}
 		if (mVerticalSpacing != 3)
 		{
-			aBundle.putInt("verticalSpacing", mVerticalSpacing);
+			aBundle.putNumber("verticalSpacing", mVerticalSpacing);
 		}
 		if (!mResizableHorizontal)
 		{
@@ -682,6 +681,6 @@ public class Node implements Iterable<NodeItem>, Renderable, Serializable, Bundl
 		{
 			aBundle.putBoolean("resizableVertical", mResizableVertical);
 		}
-		aBundle.putBundlableArrayList("items", mItems);
+		aBundle.putArray("items", Array.of(mItems));
 	}
 }

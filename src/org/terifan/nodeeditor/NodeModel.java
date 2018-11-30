@@ -9,7 +9,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.stream.Stream;
-import org.terifan.bundle.old.Bundle;
+import org.terifan.bundle.Array;
+import org.terifan.bundle.Bundle;
 
 
 public class NodeModel implements Serializable
@@ -220,23 +221,23 @@ public class NodeModel implements Serializable
 	}
 
 
-	public Bundle marshalBundle() throws IOException
+	public Bundle marshalBundle()
 	{
 		Bundle bundle = new Bundle();
 
-		bundle.putBundlableArrayList("nodes", mNodes);
-		bundle.putBundlableArrayList("connections", mConnections);
+		bundle.putArray("nodes", Array.of(mNodes));
+		bundle.putArray("connections", Array.of(mConnections));
 
 		return bundle;
 	}
 
 
-	public void unmarshalBundle(Bundle aBundle) throws IOException
+	public void unmarshalBundle(Bundle aBundle)
 	{
 		mNodes = new ArrayList<>();
 		mConnections = new ArrayList<>();
 
-		for (Bundle bundle : aBundle.getBundleArrayList("nodes"))
+		for (Bundle bundle : aBundle.getBundleArray("nodes"))
 		{
 			Node node = new Node();
 			node.bind(this);
@@ -244,7 +245,7 @@ public class NodeModel implements Serializable
 			mNodes.add(node);
 		}
 
-		for (Bundle bundle : aBundle.getBundleArrayList("connections"))
+		for (Bundle bundle : aBundle.getBundleArray("connections"))
 		{
 			addConnection(getConnector(bundle.getInt("out")), getConnector(bundle.getInt("in")));
 		}

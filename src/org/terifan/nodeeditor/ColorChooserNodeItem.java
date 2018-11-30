@@ -4,10 +4,9 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.io.IOException;
 import javax.swing.JColorChooser;
-import org.terifan.bundle.old.Bundle;
-import org.terifan.bundle.old.BundleHelper;
+import org.terifan.bundle.Bundle;
+import org.terifan.bundle.BundleHelper;
 import org.terifan.ui.Anchor;
 
 
@@ -87,7 +86,7 @@ public class ColorChooserNodeItem extends AbstractNodeItem<ColorChooserNodeItem>
 
 
 //	@Override
-//	public void writeExternal(ObjectOutput aOutput) throws IOException
+//	public void writeExternal(ObjectOutput aOutput)
 //	{
 //		super.writeExternal(aOutput);
 //
@@ -99,14 +98,14 @@ public class ColorChooserNodeItem extends AbstractNodeItem<ColorChooserNodeItem>
 //
 //
 //	@Override
-//	public void readExternal(ObjectInput aIn) throws IOException, ClassNotFoundException
+//	public void readExternal(ObjectInput aIn), ClassNotFoundException
 //	{
 //		super.readExternal(aIn);
 //	}
 
 
 	@Override
-	public void readExternal(Bundle aBundle) throws IOException
+	public void readExternal(Bundle aBundle)
 	{
 		super.readExternal(aBundle);
 
@@ -117,7 +116,7 @@ public class ColorChooserNodeItem extends AbstractNodeItem<ColorChooserNodeItem>
 
 
 	@Override
-	public void writeExternal(Bundle aBundle) throws IOException
+	public void writeExternal(Bundle aBundle)
 	{
 		super.writeExternal(aBundle);
 

@@ -7,9 +7,9 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
-import org.terifan.bundle.old.Bundlable;
-import org.terifan.bundle.old.Bundle;
-import org.terifan.bundle.old.BundleHelper;
+import org.terifan.bundle.Bundlable;
+import org.terifan.bundle.Bundle;
+import org.terifan.bundle.BundleHelper;
 
 
 public class Connector implements Serializable, Bundlable
@@ -101,7 +101,7 @@ public class Connector implements Serializable, Bundlable
 
 
 	@Override
-	public void readExternal(Bundle aBundle) throws IOException
+	public void readExternal(Bundle aBundle)
 	{
 		mBounds.setBounds(BundleHelper.getRectangle(aBundle.getBundle("bounds"), new Rectangle()));
 		mColor = aBundle.getString("color").equals("YELLOW") ? YELLOW : aBundle.getString("color").equals("PURPLE") ? PURPLE : aBundle.getString("color").equals("GRAY") ? GRAY : new Color(Integer.parseInt(aBundle.getString("color"), 16));
@@ -111,7 +111,7 @@ public class Connector implements Serializable, Bundlable
 
 
 	@Override
-	public void writeExternal(Bundle aBundle) throws IOException
+	public void writeExternal(Bundle aBundle)
 	{
 		if (!mBounds.isEmpty())
 		{
@@ -119,6 +119,6 @@ public class Connector implements Serializable, Bundlable
 		}
 		aBundle.putString("color", mColor.equals(YELLOW) ? "YELLOW" : mColor.equals(GRAY) ? "GRAY" : mColor.equals(PURPLE) ? "PURPLE" : String.format("%08x", mColor.getRGB()));
 		aBundle.putString("direction", mDirection.name());
-		aBundle.putInt("ref", mModelRef);
+		aBundle.putNumber("ref", mModelRef);
 	}
 }

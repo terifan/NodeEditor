@@ -4,8 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.LinearGradientPaint;
 import java.awt.Paint;
 import java.awt.Point;
-import java.io.IOException;
-import org.terifan.bundle.old.Bundle;
+import org.terifan.bundle.Bundle;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.ImageResizer;
 import org.terifan.ui.TextBox;
@@ -26,7 +25,7 @@ public class ButtonNodeItem extends AbstractNodeItem<ButtonNodeItem>
 	}
 
 
-	public ButtonNodeItem(String aText) throws IOException
+	public ButtonNodeItem(String aText)
 	{
 		super(aText);
 
@@ -113,7 +112,7 @@ public class ButtonNodeItem extends AbstractNodeItem<ButtonNodeItem>
 
 
 	@Override
-	public void readExternal(Bundle aBundle) throws IOException
+	public void readExternal(Bundle aBundle)
 	{
 		super.readExternal(aBundle);
 
@@ -122,7 +121,7 @@ public class ButtonNodeItem extends AbstractNodeItem<ButtonNodeItem>
 
 
 	@Override
-	public void writeExternal(Bundle aBundle) throws IOException
+	public void writeExternal(Bundle aBundle)
 	{
 		super.writeExternal(aBundle);
 	}
