@@ -28,11 +28,16 @@ public class NodeModel implements Serializable
 	}
 
 
+	public Node getNode(int aIndex)
+	{
+		return mNodes.get(aIndex);
+	}
+
+
 	public ArrayList<Node> getNodes()
 	{
 		return mNodes;
 	}
-
 
 
 	public ArrayList<Connection> getConnections()
@@ -200,9 +205,6 @@ public class NodeModel implements Serializable
 			throw new IOException(e);
 		}
 	}
-
-
-
 
 	private HashMap<String, Factory> mFactoryMap = new HashMap<>();
 

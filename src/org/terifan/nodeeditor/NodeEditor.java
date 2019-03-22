@@ -198,6 +198,13 @@ public class NodeEditor extends JComponent
 			}
 			else
 			{
+				assertNotNull(connection.getIn(), "connection.getIn() == null");
+				assertNotNull(connection.getOut(), "connection.getOut() == null");
+				assertNotNull(connection.getIn().getNodeItem(), "connection.getIn().getNodeItem() == null");
+				assertNotNull(connection.getOut().getNodeItem(), "connection.getOut().getNodeItem() == null");
+				assertNotNull(connection.getIn().getNodeItem().getNode(), "connection.getIn().getNodeItem().getNode() == null");
+				assertNotNull(connection.getOut().getNodeItem().getNode(), "connection.getOut().getNodeItem().getNode() == null");
+
 				Color start = mSelectedNodes.contains(connection.getOut().getNodeItem().getNode()) ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : Styles.CONNECTOR_COLOR_INNER;
 				Color end = mSelectedNodes.contains(connection.getIn().getNodeItem().getNode()) ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : Styles.CONNECTOR_COLOR_INNER;
 
@@ -1045,6 +1052,15 @@ public class NodeEditor extends JComponent
 			bounds.setSize(node.getMinimumSize());
 
 			x += bounds.width + 100;
+		}
+	}
+
+
+	private void assertNotNull(Object aObject, String aMessage)
+	{
+		if (aObject == null)
+		{
+			throw new IllegalStateException(aMessage);
 		}
 	}
 

@@ -181,6 +181,12 @@ public abstract class NodeItem implements Serializable, Bundlable
 	}
 
 
+	public NodeItem addConnector(Direction aDirection)
+	{
+		return add(new Connector(aDirection, Color.YELLOW));
+	}
+
+
 	public ArrayList<Connector> getConnectors()
 	{
 		return mConnectors;

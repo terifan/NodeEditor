@@ -215,9 +215,9 @@ public class Node implements Iterable<NodeItem>, Renderable, Serializable, Bundl
 	}
 
 
-	public Stream<NodeItem> getItems()
+	public NodeItem getItem(int aIndex)
 	{
-		return mItems.stream();
+		return mItems.get(aIndex);
 	}
 
 
@@ -573,7 +573,7 @@ public class Node implements Iterable<NodeItem>, Renderable, Serializable, Bundl
 
 		if (item == null)
 		{
-			throw new IllegalArgumentException("Failed to find NodeItem, ensure text or identity is set: " + aPath);
+			throw new IllegalArgumentException("Failed to find NodeItem, ensure text or identity is set: " + id + " (" + aPath + ")");
 		}
 
 		return item;
