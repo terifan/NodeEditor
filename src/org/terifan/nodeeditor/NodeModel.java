@@ -8,6 +8,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.stream.Stream;
 import org.terifan.bundle.Array;
 import org.terifan.bundle.Bundle;
@@ -271,6 +272,22 @@ public class NodeModel implements Serializable
 		}
 
 		return null;
+	}
+
+
+	public ArrayList<Node> getChildNodes(Node aParent)
+	{
+		ArrayList<Node> result = new ArrayList<>();
+
+		for (Connection conn : mConnections)
+		{
+			if (conn.getOut().getNodeItem().getNode() == aParent)
+			{
+				result.add(conn.getIn().getNodeItem().getNode());
+			}
+		}
+
+		return result;
 	}
 
 

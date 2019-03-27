@@ -3,7 +3,6 @@ package org.terifan.nodeeditor;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;

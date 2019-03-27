@@ -8,7 +8,7 @@ public interface Renderable
 {
 	Rectangle getBounds();
 
-	void layout(Graphics2D aGraphics);
+	void layout();
 
 	void paintComponent(NodeEditor aEditor, Graphics2D aGraphics, int aWidth, int aHeight, boolean aSelected);
 }

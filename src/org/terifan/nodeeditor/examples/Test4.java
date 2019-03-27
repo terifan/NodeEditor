@@ -1,6 +1,7 @@
 package org.terifan.nodeeditor.examples;
 
 import javax.swing.JFrame;
+import org.terifan.nodeeditor.AutoLayout;
 import org.terifan.nodeeditor.Connector;
 import org.terifan.nodeeditor.Direction;
 import org.terifan.nodeeditor.NodeEditor;
@@ -98,6 +99,8 @@ public class Test4
 			model.addConnection("4.11", "11.11");
 			model.addConnection("6.12", "12.12");
 			model.addConnection("6.13", "13.13");
+
+			new AutoLayout().layout(model, model.getNode(0));
 
 			NodeEditor editor = new NodeEditor(model);
 			editor.center();

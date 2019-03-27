@@ -148,7 +148,7 @@ public class NodeEditor extends JComponent
 		Rectangle bounds = new Rectangle(mModel.getNodes().get(0).getBounds());
 		for (Node box : mModel.getNodes())
 		{
-			box.layout(null);
+			box.layout();
 			bounds.add(box.getBounds());
 		}
 
@@ -183,11 +183,11 @@ public class NodeEditor extends JComponent
 
 		for (Node box : mModel.getNodes())
 		{
-			box.layout(g);
+			box.layout();
 		}
 		if (mPopup != null)
 		{
-			mPopup.layout(g);
+			mPopup.layout();
 		}
 
 		for (Connection connection : mModel.getConnections())
@@ -302,7 +302,7 @@ public class NodeEditor extends JComponent
 		Rectangle bounds = new Rectangle(mModel.getNodes().get(0).getBounds());
 		for (Node box : mModel.getNodes())
 		{
-			box.layout(null);
+			box.layout();
 			bounds.add(box.getBounds());
 		}
 

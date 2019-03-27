@@ -86,7 +86,7 @@ public class Popup implements Renderable
 
 
 	@Override
-	public void layout(Graphics2D aGraphics)
+	public void layout()
 	{
 	}
 

@@ -108,7 +108,7 @@ public abstract class NodeItem implements Serializable, Bundlable
 	}
 
 
-	protected Dimension measure(Graphics2D aGraphics)
+	protected Dimension measure()
 	{
 		return (Dimension)mPreferredSize.clone();
 	}
@@ -263,7 +263,7 @@ public abstract class NodeItem implements Serializable, Bundlable
 
 		if (!mUserSetSize)
 		{
-			mBounds.setSize(measure(null));
+			mBounds.setSize(measure());
 		}
 		else
 		{

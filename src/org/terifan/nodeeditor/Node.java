@@ -6,11 +6,10 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.stream.Stream;
 import org.terifan.bundle.Array;
 import org.terifan.bundle.Bundlable;
 import org.terifan.bundle.Bundle;
@@ -47,6 +46,7 @@ public class Node implements Iterable<NodeItem>, Renderable, Serializable, Bundl
 		mMinimumSize = new Dimension(100, 0);
 		mMaximumSize = new Dimension(Short.MAX_VALUE, Short.MAX_VALUE);
 		mResizableHorizontal = true;
+		mResizableVertical = true;
 		mBounds = new Rectangle();
 		mItems = new ArrayList<>();
 	}
@@ -215,6 +215,12 @@ public class Node implements Iterable<NodeItem>, Renderable, Serializable, Bundl
 	}
 
 
+	public int getItemCount()
+	{
+		return mItems.size();
+	}
+
+
 	public NodeItem getItem(int aIndex)
 	{
 		return mItems.get(aIndex);
@@ -246,15 +252,15 @@ public class Node implements Iterable<NodeItem>, Renderable, Serializable, Bundl
 
 
 	@Override
-	public void layout(Graphics2D aGraphics)
+	public void layout()
 	{
-		computeBounds(aGraphics);
-		layoutItems(aGraphics);
+		computeBounds();
+		layoutItems();
 		layoutConnectors();
 	}
 
 
-	protected void computeBounds(Graphics2D aGraphics)
+	protected void computeBounds()
 	{
 		if (!mMinimized)
 		{
@@ -265,7 +271,7 @@ public class Node implements Iterable<NodeItem>, Renderable, Serializable, Bundl
 
 				for (NodeItem item : mItems)
 				{
-					Dimension size = item.measure(aGraphics);
+					Dimension size = item.measure();
 
 					mBounds.width = Math.max(mBounds.width, Math.min(mMaximumSize.width, size.width) + 5 + 9 + 5 + 9);
 					mBounds.height += size.height + mVerticalSpacing;
@@ -294,7 +300,7 @@ public class Node implements Iterable<NodeItem>, Renderable, Serializable, Bundl
 	}
 
 
-	protected void layoutItems(Graphics2D aGraphics)
+	protected void layoutItems()
 	{
 		if (!mMinimized)
 		{
@@ -302,7 +308,7 @@ public class Node implements Iterable<NodeItem>, Renderable, Serializable, Bundl
 
 			for (NodeItem item : mItems)
 			{
-				Dimension size = item.measure(aGraphics);
+				Dimension size = item.measure();
 
 				item.mBounds.setBounds(5 + 9, y, mBounds.width - (5 + 9 + 5 + 9), size.height);
 
@@ -314,7 +320,7 @@ public class Node implements Iterable<NodeItem>, Renderable, Serializable, Bundl
 			if (y >= mBounds.height)
 			{
 				mMinimumSize.height = y;
-				computeBounds(aGraphics);
+				computeBounds();
 				mMinimumSize.height = mBounds.height;
 			}
 		}
@@ -597,6 +603,12 @@ public class Node implements Iterable<NodeItem>, Renderable, Serializable, Bundl
 //	{
 //		void onInputChange(NodeItem aSource, boolean aSelf);
 //	}
+
+
+	public ArrayList<Node> getChildNodes()
+	{
+		return mModel.getChildNodes(this);
+	}
 
 
 	@Override
