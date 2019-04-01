@@ -14,6 +14,8 @@ public class AutoLayout
 
 	public void layout(NodeModel aModel, Node aRoot)
 	{
+		aRoot.computeBounds();
+
 		Box box = computeSize(aModel, aRoot, aRoot.getChildNodes());
 		box.layout(0, 0, 0);
 	}
