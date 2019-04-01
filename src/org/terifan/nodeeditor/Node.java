@@ -8,7 +8,6 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import org.terifan.bundle.Array;
 import org.terifan.bundle.Bundlable;
@@ -87,6 +86,12 @@ public class Node implements Iterable<NodeItem>, Renderable, Serializable, Bundl
 	public String getName()
 	{
 		return mName;
+	}
+
+
+	public void setName(String aName)
+	{
+		mName = aName;
 	}
 
 

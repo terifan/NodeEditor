@@ -49,7 +49,8 @@ public class Test4
 			).setLocation(0, 150));
 
 			model.addNode(new Node("5",
-				new TextNodeItem("5").addConnector(Direction.IN)
+				new TextNodeItem("5").addConnector(Direction.IN),
+				new TextNodeItem("14").addConnector(Direction.OUT)
 			).setLocation(300, 0));
 
 			model.addNode(new Node("6",
@@ -86,6 +87,23 @@ public class Test4
 				new TextNodeItem("13").addConnector(Direction.IN)
 			).setLocation(300, 0));
 
+			model.addNode(new Node("14",
+				new TextNodeItem("14").addConnector(Direction.IN),
+				new TextNodeItem("15").addConnector(Direction.OUT),
+				new TextNodeItem("16").addConnector(Direction.OUT),
+				new TextNodeItem("17").addConnector(Direction.OUT),
+				new TextNodeItem("18").addConnector(Direction.OUT),
+				new TextNodeItem("19").addConnector(Direction.OUT)
+			).setLocation(300, 0));
+
+			model.addNode(new Node("15",
+				new TextNodeItem("15").addConnector(Direction.IN)
+			).setLocation(300, 0));
+
+			model.addNode(new Node("19",
+				new TextNodeItem("19").addConnector(Direction.IN)
+			).setLocation(300, 0));
+
 			model.addConnection("0.1", "1.1");
 			model.addConnection("0.2", "2.2");
 			model.addConnection("0.3", "3.3");
@@ -99,6 +117,9 @@ public class Test4
 			model.addConnection("4.11", "11.11");
 			model.addConnection("6.12", "12.12");
 			model.addConnection("6.13", "13.13");
+			model.addConnection("5.14", "14.14");
+			model.addConnection("14.15", "15.15");
+			model.addConnection("14.19", "19.19");
 
 			new AutoLayout().layout(model, model.getNode(0));
 
