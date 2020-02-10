@@ -58,7 +58,7 @@ public class TextNodeItem extends AbstractNodeItem<TextNodeItem>
 	{
 		super.readExternal(aBundle);
 
-		mPreferredSize.setSize(measure(null));
+		mPreferredSize.setSize(measure());
 	}
 
 

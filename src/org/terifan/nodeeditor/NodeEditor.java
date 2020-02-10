@@ -148,7 +148,7 @@ public class NodeEditor extends JComponent
 		Rectangle bounds = new Rectangle(mModel.getNodes().get(0).getBounds());
 		for (Node box : mModel.getNodes())
 		{
-			box.layout(null);
+			box.layout();
 			bounds.add(box.getBounds());
 		}
 
@@ -183,11 +183,11 @@ public class NodeEditor extends JComponent
 
 		for (Node box : mModel.getNodes())
 		{
-			box.layout(g);
+			box.layout();
 		}
 		if (mPopup != null)
 		{
-			mPopup.layout(g);
+			mPopup.layout();
 		}
 
 		for (Connection connection : mModel.getConnections())
@@ -198,6 +198,13 @@ public class NodeEditor extends JComponent
 			}
 			else
 			{
+				assertNotNull(connection.getIn(), "connection.getIn() == null");
+				assertNotNull(connection.getOut(), "connection.getOut() == null");
+				assertNotNull(connection.getIn().getNodeItem(), "connection.getIn().getNodeItem() == null");
+				assertNotNull(connection.getOut().getNodeItem(), "connection.getOut().getNodeItem() == null");
+				assertNotNull(connection.getIn().getNodeItem().getNode(), "connection.getIn().getNodeItem().getNode() == null");
+				assertNotNull(connection.getOut().getNodeItem().getNode(), "connection.getOut().getNodeItem().getNode() == null");
+
 				Color start = mSelectedNodes.contains(connection.getOut().getNodeItem().getNode()) ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : Styles.CONNECTOR_COLOR_INNER;
 				Color end = mSelectedNodes.contains(connection.getIn().getNodeItem().getNode()) ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : Styles.CONNECTOR_COLOR_INNER;
 
@@ -295,7 +302,7 @@ public class NodeEditor extends JComponent
 		Rectangle bounds = new Rectangle(mModel.getNodes().get(0).getBounds());
 		for (Node box : mModel.getNodes())
 		{
-			box.layout(null);
+			box.layout();
 			bounds.add(box.getBounds());
 		}
 
@@ -1045,6 +1052,15 @@ public class NodeEditor extends JComponent
 			bounds.setSize(node.getMinimumSize());
 
 			x += bounds.width + 100;
+		}
+	}
+
+
+	private void assertNotNull(Object aObject, String aMessage)
+	{
+		if (aObject == null)
+		{
+			throw new IllegalStateException(aMessage);
 		}
 	}
 

@@ -1,7 +1,9 @@
 package org.terifan.nodeeditor.examples;
 
 import javax.swing.JFrame;
+import org.terifan.nodeeditor.Connector;
 import static org.terifan.nodeeditor.Connector.YELLOW;
+import org.terifan.nodeeditor.Direction;
 import static org.terifan.nodeeditor.Direction.IN;
 import static org.terifan.nodeeditor.Direction.OUT;
 import org.terifan.nodeeditor.NodeEditor;

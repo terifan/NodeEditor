@@ -8,6 +8,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.stream.Stream;
 import org.terifan.bundle.Array;
 import org.terifan.bundle.Bundle;
@@ -28,11 +29,16 @@ public class NodeModel implements Serializable
 	}
 
 
+	public Node getNode(int aIndex)
+	{
+		return mNodes.get(aIndex);
+	}
+
+
 	public ArrayList<Node> getNodes()
 	{
 		return mNodes;
 	}
-
 
 
 	public ArrayList<Connection> getConnections()
@@ -201,9 +207,6 @@ public class NodeModel implements Serializable
 		}
 	}
 
-
-
-
 	private HashMap<String, Factory> mFactoryMap = new HashMap<>();
 
 
@@ -269,6 +272,22 @@ public class NodeModel implements Serializable
 		}
 
 		return null;
+	}
+
+
+	public ArrayList<Node> getChildNodes(Node aParent)
+	{
+		ArrayList<Node> result = new ArrayList<>();
+
+		for (Connection conn : mConnections)
+		{
+			if (conn.getOut().getNodeItem().getNode() == aParent)
+			{
+				result.add(conn.getIn().getNodeItem().getNode());
+			}
+		}
+
+		return result;
 	}
 
 

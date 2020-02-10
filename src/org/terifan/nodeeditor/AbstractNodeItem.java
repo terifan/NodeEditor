@@ -1,7 +1,6 @@
 package org.terifan.nodeeditor;
 
 import java.awt.Dimension;
-import java.awt.Graphics2D;
 
 
 public abstract class AbstractNodeItem<T extends AbstractNodeItem> extends NodeItem
@@ -76,13 +75,13 @@ public abstract class AbstractNodeItem<T extends AbstractNodeItem> extends NodeI
 
 
 	@Override
-	public Dimension measure(Graphics2D aGraphics)
+	public Dimension measure()
 	{
 		if (!mUserSetSize && mTextBox.isLayoutRequired())
 		{
-			mPreferredSize.setSize(mTextBox.measure(aGraphics == null ? null : aGraphics.getFontRenderContext()).getSize());
+			mPreferredSize.setSize(mTextBox.measure().getSize());
 		}
 
-		return super.measure(aGraphics);
+		return super.measure();
 	}
 }

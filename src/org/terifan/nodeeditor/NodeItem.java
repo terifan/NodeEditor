@@ -108,7 +108,7 @@ public abstract class NodeItem implements Serializable, Bundlable
 	}
 
 
-	protected Dimension measure(Graphics2D aGraphics)
+	protected Dimension measure()
 	{
 		return (Dimension)mPreferredSize.clone();
 	}
@@ -178,6 +178,12 @@ public abstract class NodeItem implements Serializable, Bundlable
 	public NodeItem addConnector(Direction aDirection, Color aColor)
 	{
 		return add(new Connector(aDirection, aColor));
+	}
+
+
+	public NodeItem addConnector(Direction aDirection)
+	{
+		return add(new Connector(aDirection, Color.YELLOW));
 	}
 
 
@@ -257,7 +263,7 @@ public abstract class NodeItem implements Serializable, Bundlable
 
 		if (!mUserSetSize)
 		{
-			mBounds.setSize(measure(null));
+			mBounds.setSize(measure());
 		}
 		else
 		{
