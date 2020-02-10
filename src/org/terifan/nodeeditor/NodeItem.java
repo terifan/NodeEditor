@@ -251,8 +251,8 @@ public abstract class NodeItem implements Serializable, Bundlable
 		mPreferredSize.setSize(BundleHelper.getDimension(aBundle.getBundle("size"), new Dimension(100, 0)));
 		mBounds.setBounds(BundleHelper.getRectangle(aBundle.getBundle("bounds"), new Rectangle()));
 		mIdentity = aBundle.getString("identity");
-		Stream.of(aBundle.getBundleArray("properties", new Bundle[0])).forEach(e->mProperties.put(e.getString("key"), e.getString("value")));
-		Stream.of(aBundle.getBundleArray("connectors", new Bundle[0])).forEach(e->{Connector c = new Connector(); c.readExternal(e); c.bind(this); mConnectors.add(c);});
+		aBundle.getBundleArray("properties").forEach(e->mProperties.put(e.getString("key"), e.getString("value")));
+		aBundle.getBundleArray("connectors").forEach(e->{Connector c = new Connector(); c.readExternal(e); c.bind(this); mConnectors.add(c);});
 		mTextBox.setText(aBundle.getString("text"));
 
 		if (!mUserSetSize)
