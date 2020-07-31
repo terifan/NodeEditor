@@ -6,6 +6,7 @@ import java.awt.Paint;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.Arrays;
 import org.terifan.bundle.Array;
 import org.terifan.bundle.Bundle;
 import org.terifan.nodeeditor.Popup.Option;
@@ -22,7 +23,7 @@ public class ComboBoxNodeItem extends AbstractNodeItem
 	protected boolean mArmed;
 	protected int mSelectedIndex;
 	protected String mHeader;
-	protected String[] mOptions;
+	protected ArrayList<String> mOptions;
 
 
 	protected ComboBoxNodeItem()
@@ -36,7 +37,7 @@ public class ComboBoxNodeItem extends AbstractNodeItem
 
 		mHeader = aText;
 		mSelectedIndex = aSelectedIndex;
-		mOptions = aOptions;
+		mOptions = new ArrayList<>(Arrays.asList(aOptions));
 		mPreferredSize.height = 21;
 	}
 
@@ -131,7 +132,7 @@ public class ComboBoxNodeItem extends AbstractNodeItem
 	public ComboBoxNodeItem setSelectedIndex(int aSelectedIndex)
 	{
 		mSelectedIndex = aSelectedIndex;
-		setText(mOptions[mSelectedIndex]);
+		setText(mOptions.get(mSelectedIndex));
 
 //		if (mResultReceiver != null)
 //		{
