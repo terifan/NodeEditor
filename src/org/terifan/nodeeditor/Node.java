@@ -19,7 +19,7 @@ import static org.terifan.nodeeditor.Styles.*;
 import org.terifan.util.Strings;
 
 
-public class Node implements Iterable<NodeItem>, Renderable, Serializable, Bundlable
+public class Node implements Iterable<NodeItem>, Renderable, Serializable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -616,88 +616,88 @@ public class Node implements Iterable<NodeItem>, Renderable, Serializable, Bundl
 	}
 
 
-	@Override
-	public void readExternal(Bundle aBundle)
-	{
-		mBounds = new Rectangle();
-		mBounds.setLocation(BundleHelper.getPoint(aBundle.getBundle("position"), new Point(0,0)));
-		mBounds.setSize(BundleHelper.getDimension(aBundle.getBundle("size"), new Dimension(0,0)));
-		mUserSetSize = aBundle.getBundle("size") != null;
-		mIdentity = aBundle.getString("identity");
-		mName = aBundle.getString("name");
-		mPrototype = aBundle.getString("prototype");
-		mMaximumSize = BundleHelper.getDimension(aBundle.getBundle("maximumSize"), new Dimension(Short.MAX_VALUE, Short.MAX_VALUE));
-		mMinimumSize = BundleHelper.getDimension(aBundle.getBundle("minimumSize"), new Dimension(100, 0));
-		mMinimized = aBundle.getBoolean("minimized", false);
-		mRestoredSize = BundleHelper.getDimension(aBundle.getBundle("restoredSize"), null);
-		mVerticalSpacing = aBundle.getInt("verticalSpacing", 3);
-		mResizableHorizontal = aBundle.getBoolean("resizableHorizontal", true);
-		mResizableVertical = aBundle.getBoolean("resizableVertical", false);
-
-		mItems = new ArrayList<>();
-		for (Bundle bundle : aBundle.getBundleArray("items"))
-		{
-			try
-			{
-				NodeItem item = (NodeItem)Class.forName("org.terifan.nodeeditor." + bundle.getString("type") + "NodeItem").newInstance();
-				item.bind(this);
-				item.readExternal(bundle);
-
-				mItems.add(item);
-			}
-			catch (InstantiationException | IllegalAccessException | ClassNotFoundException e)
-			{
-				throw new IllegalStateException(e);
-			}
-		}
-	}
-
-
-	@Override
-	public void writeExternal(Bundle aBundle)
-	{
-		aBundle.putBundle("position", BundleHelper.toBundle(mBounds.getLocation()));
-		if (mUserSetSize)
-		{
-			aBundle.putBundle("size", BundleHelper.toBundle(mBounds.getSize()));
-		}
-		if (mIdentity != null)
-		{
-			aBundle.putString("identity", mIdentity);
-		}
-		aBundle.putString("name", mName);
-		if (mPrototype != null)
-		{
-			aBundle.putString("prototype", mPrototype);
-		}
-		if (mMaximumSize.width != Short.MAX_VALUE || mMaximumSize.height != Short.MAX_VALUE)
-		{
-			aBundle.putBundle("maximumSize", BundleHelper.toBundle(mMaximumSize));
-		}
-		if (mMinimumSize.width != 100 || mMinimumSize.height != 0)
-		{
-			aBundle.putBundle("minimumSize", BundleHelper.toBundle(mMinimumSize));
-		}
-		if (mMinimized)
-		{
-			aBundle.putBoolean("minimized", mMinimized);
-		}
-		if (mRestoredSize != null)
-		{
-			aBundle.putBundle("restoredSize", BundleHelper.toBundle(mRestoredSize));
-		}
-		if (mVerticalSpacing != 3)
-		{
-			aBundle.putNumber("verticalSpacing", mVerticalSpacing);
-		}
-		if (!mResizableHorizontal)
-		{
-			aBundle.putBoolean("resizableHorizontal", mResizableHorizontal);
-		}
-		if (mResizableVertical)
-		{
-			aBundle.putBoolean("resizableVertical", mResizableVertical);
-		}
-		aBundle.putArray("items", Array.of(mItems));
-	}
+//	@Override
+//	public void readExternal(Bundle aBundle)
+//	{
+//		mBounds = new Rectangle();
+//		mBounds.setLocation(BundleHelper.getPoint(aBundle.getBundle("position"), new Point(0,0)));
+//		mBounds.setSize(BundleHelper.getDimension(aBundle.getBundle("size"), new Dimension(0,0)));
+//		mUserSetSize = aBundle.getBundle("size") != null;
+//		mIdentity = aBundle.getString("identity");
+//		mName = aBundle.getString("name");
+//		mPrototype = aBundle.getString("prototype");
+//		mMaximumSize = BundleHelper.getDimension(aBundle.getBundle("maximumSize"), new Dimension(Short.MAX_VALUE, Short.MAX_VALUE));
+//		mMinimumSize = BundleHelper.getDimension(aBundle.getBundle("minimumSize"), new Dimension(100, 0));
+//		mMinimized = aBundle.getBoolean("minimized", false);
+//		mRestoredSize = BundleHelper.getDimension(aBundle.getBundle("restoredSize"), null);
+//		mVerticalSpacing = aBundle.getInt("verticalSpacing", 3);
+//		mResizableHorizontal = aBundle.getBoolean("resizableHorizontal", true);
+//		mResizableVertical = aBundle.getBoolean("resizableVertical", false);
+//
+//		mItems = new ArrayList<>();
+//		for (Bundle bundle : aBundle.getBundleArray("items"))
+//		{
+//			try
+//			{
+//				NodeItem item = (NodeItem)Class.forName("org.terifan.nodeeditor." + bundle.getString("type") + "NodeItem").newInstance();
+//				item.bind(this);
+//				item.readExternal(bundle);
+//
+//				mItems.add(item);
+//			}
+//			catch (InstantiationException | IllegalAccessException | ClassNotFoundException e)
+//			{
+//				throw new IllegalStateException(e);
+//			}
+//		}
+//	}
+//
+//
+//	@Override
+//	public void writeExternal(Bundle aBundle)
+//	{
+//		aBundle.putBundle("position", BundleHelper.toBundle(mBounds.getLocation()));
+//		if (mUserSetSize)
+//		{
+//			aBundle.putBundle("size", BundleHelper.toBundle(mBounds.getSize()));
+//		}
+//		if (mIdentity != null)
+//		{
+//			aBundle.putString("identity", mIdentity);
+//		}
+//		aBundle.putString("name", mName);
+//		if (mPrototype != null)
+//		{
+//			aBundle.putString("prototype", mPrototype);
+//		}
+//		if (mMaximumSize.width != Short.MAX_VALUE || mMaximumSize.height != Short.MAX_VALUE)
+//		{
+//			aBundle.putBundle("maximumSize", BundleHelper.toBundle(mMaximumSize));
+//		}
+//		if (mMinimumSize.width != 100 || mMinimumSize.height != 0)
+//		{
+//			aBundle.putBundle("minimumSize", BundleHelper.toBundle(mMinimumSize));
+//		}
+//		if (mMinimized)
+//		{
+//			aBundle.putBoolean("minimized", mMinimized);
+//		}
+//		if (mRestoredSize != null)
+//		{
+//			aBundle.putBundle("restoredSize", BundleHelper.toBundle(mRestoredSize));
+//		}
+//		if (mVerticalSpacing != 3)
+//		{
+//			aBundle.putNumber("verticalSpacing", mVerticalSpacing);
+//		}
+//		if (!mResizableHorizontal)
+//		{
+//			aBundle.putBoolean("resizableHorizontal", mResizableHorizontal);
+//		}
+//		if (mResizableVertical)
+//		{
+//			aBundle.putBoolean("resizableVertical", mResizableVertical);
+//		}
+//		aBundle.putArray("items", Array.of(mItems));
+//	}
 }

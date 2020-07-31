@@ -5,8 +5,6 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import javax.swing.JColorChooser;
-import org.terifan.bundle.Bundle;
-import org.terifan.bundle.BundleHelper;
 import org.terifan.ui.Anchor;
 
 
@@ -104,22 +102,22 @@ public class ColorChooserNodeItem extends AbstractNodeItem<ColorChooserNodeItem>
 //	}
 
 
-	@Override
-	public void readExternal(Bundle aBundle)
-	{
-		super.readExternal(aBundle);
-
-		mColor = BundleHelper.getColor(aBundle.getString("color"));
-
-		mPreferredSize.height = 20;
-	}
-
-
-	@Override
-	public void writeExternal(Bundle aBundle)
-	{
-		super.writeExternal(aBundle);
-
-		aBundle.putString("color", BundleHelper.toString(mColor));
-	}
+//	@Override
+//	public void readExternal(Bundle aBundle)
+//	{
+//		super.readExternal(aBundle);
+//
+//		mColor = BundleHelper.getColor(aBundle.getString("color"));
+//
+//		mPreferredSize.height = 20;
+//	}
+//
+//
+//	@Override
+//	public void writeExternal(Bundle aBundle)
+//	{
+//		super.writeExternal(aBundle);
+//
+//		aBundle.putString("color", BundleHelper.toString(mColor));
+//	}
 }

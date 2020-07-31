@@ -10,16 +10,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import org.terifan.bundle.Array;
-import org.terifan.bundle.Bundlable;
-import org.terifan.bundle.Bundle;
-import org.terifan.bundle.BundleHelper;
 import org.terifan.ui.TextBox;
 import org.terifan.util.Strings;
 
 
-public abstract class NodeItem implements Serializable, Bundlable
+public abstract class NodeItem implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -247,56 +242,56 @@ public abstract class NodeItem implements Serializable, Bundlable
 //	}
 
 
-	@Override
-	public void readExternal(Bundle aBundle)
-	{
-		mConnectors.clear();
-		mProperties.clear();
-
-		mUserSetSize = aBundle.getBundle("size") != null;
-		mPreferredSize.setSize(BundleHelper.getDimension(aBundle.getBundle("size"), new Dimension(100, 0)));
-		mBounds.setBounds(BundleHelper.getRectangle(aBundle.getBundle("bounds"), new Rectangle()));
-		mIdentity = aBundle.getString("identity");
-		Stream.of(aBundle.getBundleArray("properties", new Bundle[0])).forEach(e->mProperties.put(e.getString("key"), e.getString("value")));
-		Stream.of(aBundle.getBundleArray("connectors", new Bundle[0])).forEach(e->{Connector c = new Connector(); c.readExternal(e); c.bind(this); mConnectors.add(c);});
-		mTextBox.setText(aBundle.getString("text"));
-
-		if (!mUserSetSize)
-		{
-			mBounds.setSize(measure());
-		}
-		else
-		{
-			mBounds.setSize(mPreferredSize);
-		}
-	}
-
-
-	@Override
-	public void writeExternal(Bundle aBundle)
-	{
-		aBundle.putString("type", getClass().getSimpleName().replace("NodeItem", ""));
-
-		if (mUserSetSize)
-		{
-			aBundle.putBundle("size", BundleHelper.toBundle(mPreferredSize));
-		}
-		if (!mBounds.isEmpty())
-		{
-			aBundle.putBundle("bounds", BundleHelper.toBundle(mBounds));
-		}
-		if (mIdentity != null)
-		{
-			aBundle.putString("identity", mIdentity);
-		}
-		if (!mProperties.isEmpty())
-		{
-			aBundle.putArray("properties", BundleHelper.toArray(mProperties));
-		}
-		if (!mConnectors.isEmpty())
-		{
-			aBundle.putArray("connectors", Array.of(mConnectors));
-		}
-		aBundle.putString("text", mTextBox.getText());
-	}
+//	@Override
+//	public void readExternal(Bundle aBundle)
+//	{
+//		mConnectors.clear();
+//		mProperties.clear();
+//
+//		mUserSetSize = aBundle.getBundle("size") != null;
+//		mPreferredSize.setSize(BundleHelper.getDimension(aBundle.getBundle("size"), new Dimension(100, 0)));
+//		mBounds.setBounds(BundleHelper.getRectangle(aBundle.getBundle("bounds"), new Rectangle()));
+//		mIdentity = aBundle.getString("identity");
+//		Stream.of(aBundle.getBundleArray("properties", new Bundle[0])).forEach(e->mProperties.put(e.getString("key"), e.getString("value")));
+//		Stream.of(aBundle.getBundleArray("connectors", new Bundle[0])).forEach(e->{Connector c = new Connector(); c.readExternal(e); c.bind(this); mConnectors.add(c);});
+//		mTextBox.setText(aBundle.getString("text"));
+//
+//		if (!mUserSetSize)
+//		{
+//			mBounds.setSize(measure());
+//		}
+//		else
+//		{
+//			mBounds.setSize(mPreferredSize);
+//		}
+//	}
+//
+//
+//	@Override
+//	public void writeExternal(Bundle aBundle)
+//	{
+//		aBundle.putString("type", getClass().getSimpleName().replace("NodeItem", ""));
+//
+//		if (mUserSetSize)
+//		{
+//			aBundle.putBundle("size", BundleHelper.toBundle(mPreferredSize));
+//		}
+//		if (!mBounds.isEmpty())
+//		{
+//			aBundle.putBundle("bounds", BundleHelper.toBundle(mBounds));
+//		}
+//		if (mIdentity != null)
+//		{
+//			aBundle.putString("identity", mIdentity);
+//		}
+//		if (!mProperties.isEmpty())
+//		{
+//			aBundle.putArray("properties", BundleHelper.toArray(mProperties));
+//		}
+//		if (!mConnectors.isEmpty())
+//		{
+//			aBundle.putArray("connectors", Array.of(mConnectors));
+//		}
+//		aBundle.putString("text", mTextBox.getText());
+//	}
 }

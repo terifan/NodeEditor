@@ -53,18 +53,18 @@ public class TextNodeItem extends AbstractNodeItem<TextNodeItem>
 	}
 
 
-	@Override
-	public void readExternal(Bundle aBundle)
-	{
-		super.readExternal(aBundle);
-
-		mPreferredSize.setSize(measure());
-	}
-
-
-	@Override
-	public void writeExternal(Bundle aBundle)
-	{
-		super.writeExternal(aBundle);
-	}
+//	@Override
+//	public void readExternal(Bundle aBundle)
+//	{
+//		super.readExternal(aBundle);
+//
+//		mPreferredSize.setSize(measure());
+//	}
+//
+//
+//	@Override
+//	public void writeExternal(Bundle aBundle)
+//	{
+//		super.writeExternal(aBundle);
+//	}
 }

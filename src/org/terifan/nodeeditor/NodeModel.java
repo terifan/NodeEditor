@@ -224,35 +224,35 @@ public class NodeModel implements Serializable
 	}
 
 
-	public Bundle marshalBundle()
-	{
-		Bundle bundle = new Bundle();
-
-		bundle.putArray("nodes", Array.of(mNodes));
-		bundle.putArray("connections", Array.of(mConnections));
-
-		return bundle;
-	}
-
-
-	public void unmarshalBundle(Bundle aBundle)
-	{
-		mNodes = new ArrayList<>();
-		mConnections = new ArrayList<>();
-
-		for (Bundle bundle : aBundle.getBundleArray("nodes"))
-		{
-			Node node = new Node();
-			node.bind(this);
-			node.readExternal(bundle);
-			mNodes.add(node);
-		}
-
-		for (Bundle bundle : aBundle.getBundleArray("connections"))
-		{
-			addConnection(getConnector(bundle.getInt("out")), getConnector(bundle.getInt("in")));
-		}
-	}
+//	public Bundle marshalBundle()
+//	{
+//		Bundle bundle = new Bundle();
+//
+//		bundle.putArray("nodes", Array.of(mNodes));
+//		bundle.putArray("connections", Array.of(mConnections));
+//
+//		return bundle;
+//	}
+//
+//
+//	public void unmarshalBundle(Bundle aBundle)
+//	{
+//		mNodes = new ArrayList<>();
+//		mConnections = new ArrayList<>();
+//
+//		for (Bundle bundle : aBundle.getBundleArray("nodes"))
+//		{
+//			Node node = new Node();
+//			node.bind(this);
+//			node.readExternal(bundle);
+//			mNodes.add(node);
+//		}
+//
+//		for (Bundle bundle : aBundle.getBundleArray("connections"))
+//		{
+//			addConnection(getConnector(bundle.getInt("out")), getConnector(bundle.getInt("in")));
+//		}
+//	}
 
 
 	private Connector getConnector(int aRef)

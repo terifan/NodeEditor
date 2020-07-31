@@ -92,23 +92,23 @@ public class CheckBoxNodeItem extends AbstractNodeItem
 	}
 
 
-	@Override
-	public void readExternal(Bundle aBundle)
-	{
-		super.readExternal(aBundle);
-
-		mSelected = aBundle.getBoolean("selected", false);
-	}
-
-
-	@Override
-	public void writeExternal(Bundle aBundle)
-	{
-		super.writeExternal(aBundle);
-
-		if (mSelected)
-		{
-			aBundle.putBoolean("selected", mSelected);
-		}
-	}
+//	@Override
+//	public void readExternal(Bundle aBundle)
+//	{
+//		super.readExternal(aBundle);
+//
+//		mSelected = aBundle.getBoolean("selected", false);
+//	}
+//
+//
+//	@Override
+//	public void writeExternal(Bundle aBundle)
+//	{
+//		super.writeExternal(aBundle);
+//
+//		if (mSelected)
+//		{
+//			aBundle.putBoolean("selected", mSelected);
+//		}
+//	}
 }

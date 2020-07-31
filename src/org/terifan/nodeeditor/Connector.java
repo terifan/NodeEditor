@@ -11,7 +11,7 @@ import org.terifan.bundle.Bundle;
 import org.terifan.bundle.BundleHelper;
 
 
-public class Connector implements Serializable, Bundlable
+public class Connector implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -99,25 +99,25 @@ public class Connector implements Serializable, Bundlable
 	}
 
 
-	@Override
-	public void readExternal(Bundle aBundle)
-	{
-		mBounds.setBounds(BundleHelper.getRectangle(aBundle.getBundle("bounds"), new Rectangle()));
-		mColor = aBundle.getString("color").equals("YELLOW") ? YELLOW : aBundle.getString("color").equals("PURPLE") ? PURPLE : aBundle.getString("color").equals("GRAY") ? GRAY : new Color(Integer.parseInt(aBundle.getString("color"), 16));
-		mDirection = Direction.valueOf(aBundle.getString("direction"));
-		mModelRef = aBundle.getInt("ref");
-	}
-
-
-	@Override
-	public void writeExternal(Bundle aBundle)
-	{
-		if (!mBounds.isEmpty())
-		{
-			aBundle.putBundle("bounds", BundleHelper.toBundle(mBounds));
-		}
-		aBundle.putString("color", mColor.equals(YELLOW) ? "YELLOW" : mColor.equals(GRAY) ? "GRAY" : mColor.equals(PURPLE) ? "PURPLE" : String.format("%08x", mColor.getRGB()));
-		aBundle.putString("direction", mDirection.name());
-		aBundle.putNumber("ref", mModelRef);
-	}
+//	@Override
+//	public void readExternal(Bundle aBundle)
+//	{
+//		mBounds.setBounds(BundleHelper.getRectangle(aBundle.getBundle("bounds"), new Rectangle()));
+//		mColor = aBundle.getString("color").equals("YELLOW") ? YELLOW : aBundle.getString("color").equals("PURPLE") ? PURPLE : aBundle.getString("color").equals("GRAY") ? GRAY : new Color(Integer.parseInt(aBundle.getString("color"), 16));
+//		mDirection = Direction.valueOf(aBundle.getString("direction"));
+//		mModelRef = aBundle.getInt("ref");
+//	}
+//
+//
+//	@Override
+//	public void writeExternal(Bundle aBundle)
+//	{
+//		if (!mBounds.isEmpty())
+//		{
+//			aBundle.putBundle("bounds", BundleHelper.toBundle(mBounds));
+//		}
+//		aBundle.putString("color", mColor.equals(YELLOW) ? "YELLOW" : mColor.equals(GRAY) ? "GRAY" : mColor.equals(PURPLE) ? "PURPLE" : String.format("%08x", mColor.getRGB()));
+//		aBundle.putString("direction", mDirection.name());
+//		aBundle.putNumber("ref", mModelRef);
+//	}
 }

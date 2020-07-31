@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
-import org.terifan.bundle.Bundle;
 
 
 public class ImageNodeItem extends AbstractNodeItem<ImageNodeItem>
@@ -79,23 +78,23 @@ public class ImageNodeItem extends AbstractNodeItem<ImageNodeItem>
 	}
 
 
-	@Override
-	public void readExternal(Bundle aBundle)
-	{
-		super.readExternal(aBundle);
-
-		mImagePath = aBundle.getString("path");
-	}
-
-
-	@Override
-	public void writeExternal(Bundle aBundle)
-	{
-		super.writeExternal(aBundle);
-
-		if (mImagePath != null)
-		{
-			aBundle.putString("path", mImagePath);
-		}
-	}
+//	@Override
+//	public void readExternal(Bundle aBundle)
+//	{
+//		super.readExternal(aBundle);
+//
+//		mImagePath = aBundle.getString("path");
+//	}
+//
+//
+//	@Override
+//	public void writeExternal(Bundle aBundle)
+//	{
+//		super.writeExternal(aBundle);
+//
+//		if (mImagePath != null)
+//		{
+//			aBundle.putString("path", mImagePath);
+//		}
+//	}
 }

@@ -197,40 +197,40 @@ public class SliderNodeItem extends AbstractNodeItem<SliderNodeItem>
 //	}
 
 
-	@Override
-	public void readExternal(Bundle aBundle)
-	{
-		super.readExternal(aBundle);
-
-		mMin = aBundle.getDouble("min", 0.0);
-		mMax = aBundle.getDouble("max", 1.0);
-		mValue = aBundle.getDouble("value", 0.0);
-		mStep = aBundle.getDouble("step", 0.0);
-
-		mPreferredSize.height = 20;
-	}
-
-
-	@Override
-	public void writeExternal(Bundle aBundle)
-	{
-		super.writeExternal(aBundle);
-
-		if (mMin != 0.0)
-		{
-			aBundle.putNumber("min", mMin);
-		}
-		if (mMax != 1.0)
-		{
-			aBundle.putNumber("max", mMax);
-		}
-		if (mValue != 0.0)
-		{
-			aBundle.putNumber("value", mValue);
-		}
-		if (mStep != 0.0)
-		{
-			aBundle.putNumber("step", mStep);
-		}
-	}
+//	@Override
+//	public void readExternal(Bundle aBundle)
+//	{
+//		super.readExternal(aBundle);
+//
+//		mMin = aBundle.getDouble("min", 0.0);
+//		mMax = aBundle.getDouble("max", 1.0);
+//		mValue = aBundle.getDouble("value", 0.0);
+//		mStep = aBundle.getDouble("step", 0.0);
+//
+//		mPreferredSize.height = 20;
+//	}
+//
+//
+//	@Override
+//	public void writeExternal(Bundle aBundle)
+//	{
+//		super.writeExternal(aBundle);
+//
+//		if (mMin != 0.0)
+//		{
+//			aBundle.putNumber("min", mMin);
+//		}
+//		if (mMax != 1.0)
+//		{
+//			aBundle.putNumber("max", mMax);
+//		}
+//		if (mValue != 0.0)
+//		{
+//			aBundle.putNumber("value", mValue);
+//		}
+//		if (mStep != 0.0)
+//		{
+//			aBundle.putNumber("step", mStep);
+//		}
+//	}
 }

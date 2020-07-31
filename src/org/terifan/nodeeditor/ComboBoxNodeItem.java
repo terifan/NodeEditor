@@ -149,26 +149,26 @@ public class ComboBoxNodeItem extends AbstractNodeItem
 //	}
 
 
-	@Override
-	public void readExternal(Bundle aBundle)
-	{
-		super.readExternal(aBundle);
-
-		mSelectedIndex = aBundle.getInt("selected");
-		mHeader = aBundle.getString("header");
-		mOptions = aBundle.getStringArray("options");
-
-		mPreferredSize.height = 21;
-	}
-
-
-	@Override
-	public void writeExternal(Bundle aBundle)
-	{
-		super.writeExternal(aBundle);
-
-		aBundle.putNumber("selected", mSelectedIndex);
-		aBundle.putString("header", mHeader);
-		aBundle.putArray("options", Array.of(mOptions));
-	}
+//	@Override
+//	public void readExternal(Bundle aBundle)
+//	{
+//		super.readExternal(aBundle);
+//
+//		mSelectedIndex = aBundle.getInt("selected");
+//		mHeader = aBundle.getString("header");
+//		mOptions = aBundle.getStringArray("options");
+//
+//		mPreferredSize.height = 21;
+//	}
+//
+//
+//	@Override
+//	public void writeExternal(Bundle aBundle)
+//	{
+//		super.writeExternal(aBundle);
+//
+//		aBundle.putNumber("selected", mSelectedIndex);
+//		aBundle.putString("header", mHeader);
+//		aBundle.putArray("options", Array.of(mOptions));
+//	}
 }
