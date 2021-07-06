@@ -1035,7 +1035,7 @@ public class NodeEditor extends JComponent
 			return null;
 		}
 
-		return (T)mResourceCache.get(aRelativePath, p->aResourceConverter.create(mResourceContext.getResource((String)p)));
+		return (T)mResourceCache.computeIfAbsent(aRelativePath, p->aResourceConverter.create(mResourceContext.getResource((String)p)));
 	}
 
 
