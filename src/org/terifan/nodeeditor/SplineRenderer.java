@@ -11,6 +11,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import org.terifan.algebra.Vec2d;
+import org.terifan.algebra.VectorMath;
 
 
 public class SplineRenderer
@@ -94,7 +95,7 @@ public class SplineRenderer
 			Point2D.Double next = spline.getPoint(i);
 			if (prev != null)
 			{
-				double d = p.distanceLineSegment(new Vec2d(prev.x, prev.y), new Vec2d(next.x, next.y));
+				double d = VectorMath.distanceLineSegment(new Vec2d(prev.x, prev.y), new Vec2d(next.x, next.y), p);
 				if (d < dist)
 				{
 					dist = d;
