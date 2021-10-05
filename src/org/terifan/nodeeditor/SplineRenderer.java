@@ -10,7 +10,6 @@ import java.awt.Stroke;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
-import org.terifan.algebra.Vec2d;
 
 
 public class SplineRenderer
