@@ -1,6 +1,5 @@
 package org.terifan.nodeeditor;
 
-import org.terifan.graphics.BSpline;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
