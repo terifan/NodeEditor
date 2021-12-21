@@ -9,19 +9,13 @@ import java.awt.Shape;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.function.Supplier;
-import org.terifan.bundle.Array;
-import org.terifan.bundle.Bundlable;
-import org.terifan.bundle.BundlableInput;
-import org.terifan.bundle.BundlableOutput;
-import org.terifan.bundle.Bundle;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.TextBox;
 import static org.terifan.nodeeditor.Styles.*;
 import org.terifan.util.Strings;
 
 
-public class Node implements Iterable<NodeItem>, Renderable, Serializable, Bundlable
+public class Node implements Iterable<NodeItem>, Renderable, Serializable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -618,106 +612,106 @@ public class Node implements Iterable<NodeItem>, Renderable, Serializable, Bundl
 	}
 
 
-	@Override
-	public void readExternal(BundlableInput aInput)
-	{
-		Bundle in = aInput.bundle();
-		Array position = in.getArray("position");
-		Array size = in.getArray("size");
-		Array minimumSize = in.getArray("minimumSize");
-		Array maximumSize = in.getArray("maximumSize");
-		Array restoredSize = in.getArray("restoredSize");
-
-		mBounds = new Rectangle();
-		mBounds.setLocation(position.getInt(0), position.getInt(1));
-		if (size != null)
-		{
-			mUserSetSize = true;
-			mBounds.setSize(size.getInt(0, 0), size.getInt(1, 0));
-		}
-		mIdentity = in.getString("identity");
-		mName = in.getString("name");
-		mPrototype = in.getString("prototype");
-		mMinimumSize = new Dimension(minimumSize.get(0), minimumSize.get(1));
-		mMaximumSize = new Dimension(maximumSize.get(0), maximumSize.get(1));
-		mRestoredSize = new Dimension(restoredSize.get(0), restoredSize.get(1));
-		mMinimized = in.getBoolean("minimized", false);
-		mVerticalSpacing = in.getInt("verticalSpacing", 3);
-		mResizableHorizontal = in.getBoolean("resizableHorizontal", false);
-		mResizableVertical = in.getBoolean("resizableVertical", false);
-
-		try
-		{
-			Class type = Class.forName("org.terifan.nodeeditor." + in.getString("type") + "NodeItem");
-
-			mItems = in.getBundlableArrayList("items", (Supplier)() ->
-			{
-				try
-				{
-					NodeItem item = (NodeItem)type.newInstance();
-					item.bind(this);
-					return item;
-				}
-				catch (InstantiationException | IllegalAccessException e)
-				{
-					throw new IllegalStateException(e);
-				}
-			});
-		}
-		catch (ClassNotFoundException e)
-		{
-			throw new IllegalStateException(e);
-		}
-	}
-
-
-	@Override
-	public void writeExternal(BundlableOutput aOutput)
-	{
-		Bundle out = aOutput.bundle();
-
-		out.putArray("position", Array.of(mBounds.getLocation().x, mBounds.getLocation().y));
-		if (mUserSetSize)
-		{
-			out.putArray("size", Array.of(mBounds.getSize().width, mBounds.getSize().height));
-		}
-		if (mIdentity != null)
-		{
-			out.putString("identity", mIdentity);
-		}
-		out.putString("name", mName);
-		if (mPrototype != null)
-		{
-			out.putString("prototype", mPrototype);
-		}
-		if (mMinimumSize.width != 100 || mMinimumSize.height != 0)
-		{
-			out.putArray("minimumSize", Array.of(mMinimumSize.width, mMinimumSize.height));
-		}
-		if (mMaximumSize.width != Short.MAX_VALUE || mMaximumSize.height != Short.MAX_VALUE)
-		{
-			out.putArray("maximumSize", Array.of(mMaximumSize.width, mMaximumSize.height));
-		}
-		if (mRestoredSize != null)
-		{
-			out.putArray("restoredSize", Array.of(mRestoredSize.width, mRestoredSize.height));
-		}
-		if (mMinimized)
-		{
-			out.putBoolean("minimized", mMinimized);
-		}
-		if (mVerticalSpacing != 3)
-		{
-			out.putNumber("verticalSpacing", mVerticalSpacing);
-		}
-		if (mResizableHorizontal)
-		{
-			out.putBoolean("resizableHorizontal", mResizableHorizontal);
-		}
-		if (mResizableVertical)
-		{
-			out.putBoolean("resizableVertical", mResizableVertical);
-		}
-		out.putArray("items", Array.of(mItems));
-	}
+//	@Override
+//	public void readExternal(BundlableInput aInput)
+//	{
+//		Bundle in = aInput.bundle();
+//		Array position = in.getArray("position");
+//		Array size = in.getArray("size");
+//		Array minimumSize = in.getArray("minimumSize");
+//		Array maximumSize = in.getArray("maximumSize");
+//		Array restoredSize = in.getArray("restoredSize");
+//
+//		mBounds = new Rectangle();
+//		mBounds.setLocation(position.getInt(0), position.getInt(1));
+//		if (size != null)
+//		{
+//			mUserSetSize = true;
+//			mBounds.setSize(size.getInt(0, 0), size.getInt(1, 0));
+//		}
+//		mIdentity = in.getString("identity");
+//		mName = in.getString("name");
+//		mPrototype = in.getString("prototype");
+//		mMinimumSize = new Dimension(minimumSize.get(0), minimumSize.get(1));
+//		mMaximumSize = new Dimension(maximumSize.get(0), maximumSize.get(1));
+//		mRestoredSize = new Dimension(restoredSize.get(0), restoredSize.get(1));
+//		mMinimized = in.getBoolean("minimized", false);
+//		mVerticalSpacing = in.getInt("verticalSpacing", 3);
+//		mResizableHorizontal = in.getBoolean("resizableHorizontal", false);
+//		mResizableVertical = in.getBoolean("resizableVertical", false);
+//
+//		try
+//		{
+//			Class type = Class.forName("org.terifan.nodeeditor." + in.getString("type") + "NodeItem");
+//
+//			mItems = in.getBundlableArrayList("items", (Supplier)() ->
+//			{
+//				try
+//				{
+//					NodeItem item = (NodeItem)type.newInstance();
+//					item.bind(this);
+//					return item;
+//				}
+//				catch (InstantiationException | IllegalAccessException e)
+//				{
+//					throw new IllegalStateException(e);
+//				}
+//			});
+//		}
+//		catch (ClassNotFoundException e)
+//		{
+//			throw new IllegalStateException(e);
+//		}
+//	}
+//
+//
+//	@Override
+//	public void writeExternal(BundlableOutput aOutput)
+//	{
+//		Bundle out = aOutput.bundle();
+//
+//		out.putArray("position", Array.of(mBounds.getLocation().x, mBounds.getLocation().y));
+//		if (mUserSetSize)
+//		{
+//			out.putArray("size", Array.of(mBounds.getSize().width, mBounds.getSize().height));
+//		}
+//		if (mIdentity != null)
+//		{
+//			out.putString("identity", mIdentity);
+//		}
+//		out.putString("name", mName);
+//		if (mPrototype != null)
+//		{
+//			out.putString("prototype", mPrototype);
+//		}
+//		if (mMinimumSize.width != 100 || mMinimumSize.height != 0)
+//		{
+//			out.putArray("minimumSize", Array.of(mMinimumSize.width, mMinimumSize.height));
+//		}
+//		if (mMaximumSize.width != Short.MAX_VALUE || mMaximumSize.height != Short.MAX_VALUE)
+//		{
+//			out.putArray("maximumSize", Array.of(mMaximumSize.width, mMaximumSize.height));
+//		}
+//		if (mRestoredSize != null)
+//		{
+//			out.putArray("restoredSize", Array.of(mRestoredSize.width, mRestoredSize.height));
+//		}
+//		if (mMinimized)
+//		{
+//			out.putBoolean("minimized", mMinimized);
+//		}
+//		if (mVerticalSpacing != 3)
+//		{
+//			out.putNumber("verticalSpacing", mVerticalSpacing);
+//		}
+//		if (mResizableHorizontal)
+//		{
+//			out.putBoolean("resizableHorizontal", mResizableHorizontal);
+//		}
+//		if (mResizableVertical)
+//		{
+//			out.putBoolean("resizableVertical", mResizableVertical);
+//		}
+//		out.putArray("items", Array.of(mItems));
+//	}
 }

@@ -29,6 +29,14 @@
                 <id>jar</id>
             </reference>
             <reference>
+                <foreign-project>UI</foreign-project>
+                <artifact-type>jar</artifact-type>
+                <script>build.xml</script>
+                <target>jar</target>
+                <clean-target>clean</clean-target>
+                <id>jar</id>
+            </reference>
+            <reference>
                 <foreign-project>VecMath</foreign-project>
                 <artifact-type>jar</artifact-type>
                 <script>build.xml</script>

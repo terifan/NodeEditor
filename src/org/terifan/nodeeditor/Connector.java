@@ -6,14 +6,9 @@ import java.awt.Rectangle;
 import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
-import org.terifan.bundle.Array;
-import org.terifan.bundle.Bundlable;
-import org.terifan.bundle.BundlableInput;
-import org.terifan.bundle.BundlableOutput;
-import org.terifan.bundle.Bundle;
 
 
-public class Connector implements Serializable, Bundlable
+public class Connector implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -101,29 +96,29 @@ public class Connector implements Serializable, Bundlable
 	}
 
 
-	@Override
-	public void readExternal(BundlableInput aInput)
-	{
-		Bundle in = aInput.bundle();
-		Array bounds = in.getArray("bounds");
-		String color = in.getString("color");
-		mBounds.setBounds(new Rectangle(bounds.getInt(0), bounds.getInt(1), bounds.getInt(2), bounds.getInt(3)));
-		mColor = color.equals("YELLOW") ? YELLOW : color.equals("PURPLE") ? PURPLE : color.equals("GRAY") ? GRAY : new Color(Integer.parseInt(color, 16));
-		mDirection = Direction.valueOf(in.getString("direction"));
-		mModelRef = in.getInt("ref");
-	}
-
-
-	@Override
-	public void writeExternal(BundlableOutput aOutput)
-	{
-		Bundle out = aOutput.bundle();
-		if (!mBounds.isEmpty())
-		{
-			out.putArray("bounds", Array.of(mBounds.x, mBounds.y, mBounds.width, mBounds.height));
-		}
-		out.putString("color", mColor.equals(YELLOW) ? "YELLOW" : mColor.equals(GRAY) ? "GRAY" : mColor.equals(PURPLE) ? "PURPLE" : String.format("%08x", mColor.getRGB()));
-		out.putString("direction", mDirection.name());
-		out.putNumber("ref", mModelRef);
-	}
+//	@Override
+//	public void readExternal(BundlableInput aInput)
+//	{
+//		Bundle in = aInput.bundle();
+//		Array bounds = in.getArray("bounds");
+//		String color = in.getString("color");
+//		mBounds.setBounds(new Rectangle(bounds.getInt(0), bounds.getInt(1), bounds.getInt(2), bounds.getInt(3)));
+//		mColor = color.equals("YELLOW") ? YELLOW : color.equals("PURPLE") ? PURPLE : color.equals("GRAY") ? GRAY : new Color(Integer.parseInt(color, 16));
+//		mDirection = Direction.valueOf(in.getString("direction"));
+//		mModelRef = in.getInt("ref");
+//	}
+//
+//
+//	@Override
+//	public void writeExternal(BundlableOutput aOutput)
+//	{
+//		Bundle out = aOutput.bundle();
+//		if (!mBounds.isEmpty())
+//		{
+//			out.putArray("bounds", Array.of(mBounds.x, mBounds.y, mBounds.width, mBounds.height));
+//		}
+//		out.putString("color", mColor.equals(YELLOW) ? "YELLOW" : mColor.equals(GRAY) ? "GRAY" : mColor.equals(PURPLE) ? "PURPLE" : String.format("%08x", mColor.getRGB()));
+//		out.putString("direction", mDirection.name());
+//		out.putNumber("ref", mModelRef);
+//	}
 }
