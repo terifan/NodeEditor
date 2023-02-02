@@ -7,14 +7,17 @@ import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Path2D;
+import java.io.Serializable;
 import java.util.List;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.TextBox;
 import org.terifan.util.Strings;
 
 
-public class Popup implements Renderable
+public class Popup implements Renderable, Serializable
 {
+	private final static long serialVersionUID = 1L;
+
 	protected final NodeEditor mEditor;
 	protected final Rectangle mBounds;
 	protected final NodeItem mOwner;
@@ -29,12 +32,9 @@ public class Popup implements Renderable
 	 * Constructs a new Pop-up.
 	 *
 	 * @param aOwner
-	 * @param aHeader
-	 *   optional text header
-	 * @param aBounds
-	 *   with and heigh will be ignored if the options list contain any elements
-	 * @param aOptions
-	 *   list of selectable options, can be empty
+	 * @param aHeader optional text header
+	 * @param aBounds with and heigh will be ignored if the options list contain any elements
+	 * @param aOptions list of selectable options, can be empty
 	 * @param aResultReceiver
 	 */
 	public Popup(NodeEditor aEditor, NodeItem aOwner, String aHeader, Rectangle aBounds, List<Option> aOptions, ResultReceiver aResultReceiver)
@@ -134,12 +134,12 @@ public class Popup implements Renderable
 			if (mAboveField)
 			{
 				aGraphics.drawLine(0, ly, aWidth, ly);
-				textBox.setBounds(10, 0, aWidth-10, ly).render(aGraphics);
+				textBox.setBounds(10, 0, aWidth - 10, ly).render(aGraphics);
 			}
 			else
 			{
 				aGraphics.drawLine(0, aHeight - ly, aWidth, aHeight - ly);
-				textBox.setBounds(10, aHeight - ly, aWidth-10, ly).render(aGraphics);
+				textBox.setBounds(10, aHeight - ly, aWidth - 10, ly).render(aGraphics);
 			}
 		}
 
@@ -221,6 +221,7 @@ public class Popup implements Renderable
 		 * Return the bounds of the item within the popup. The popup size will be equal to the combined size of all options.
 		 */
 		Rectangle getBounds();
+
 
 		void paintOption(Graphics2D aGraphics, boolean aSelected);
 	}

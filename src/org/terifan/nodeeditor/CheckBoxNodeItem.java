@@ -7,8 +7,6 @@ import java.awt.LinearGradientPaint;
 import java.awt.Paint;
 import java.awt.Point;
 import java.awt.Stroke;
-import java.io.IOException;
-import org.terifan.bundle.Bundle;
 import org.terifan.ui.Anchor;
 
 
@@ -90,25 +88,4 @@ public class CheckBoxNodeItem extends AbstractNodeItem
 	{
 		return true;
 	}
-
-
-//	@Override
-//	public void readExternal(Bundle aBundle)
-//	{
-//		super.readExternal(aBundle);
-//
-//		mSelected = aBundle.getBoolean("selected", false);
-//	}
-//
-//
-//	@Override
-//	public void writeExternal(Bundle aBundle)
-//	{
-//		super.writeExternal(aBundle);
-//
-//		if (mSelected)
-//		{
-//			aBundle.putBoolean("selected", mSelected);
-//		}
-//	}
 }

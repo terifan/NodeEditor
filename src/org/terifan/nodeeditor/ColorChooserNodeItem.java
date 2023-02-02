@@ -74,50 +74,6 @@ public class ColorChooserNodeItem extends AbstractNodeItem<ColorChooserNodeItem>
 	@Override
 	protected boolean mousePressed(NodeEditor aEditor, Point aClickPoint)
 	{
-		if (!isConnected(Direction.IN) && new Rectangle(mNode.getBounds().x + mBounds.x, mNode.getBounds().y + mBounds.y, COLOR_BOX_WIDTH, mBounds.height).contains(aClickPoint))
-		{
-			return true;
-		}
-
-		return false;
+		return !isConnected(Direction.IN) && new Rectangle(mNode.getBounds().x + mBounds.x, mNode.getBounds().y + mBounds.y, COLOR_BOX_WIDTH, mBounds.height).contains(aClickPoint);
 	}
-
-
-//	@Override
-//	public void writeExternal(ObjectOutput aOutput)
-//	{
-//		super.writeExternal(aOutput);
-//
-//		aOutput.writeInt(mColor.getRed());
-//		aOutput.writeInt(mColor.getGreen());
-//		aOutput.writeInt(mColor.getBlue());
-//		aOutput.writeInt(mColor.getAlpha());
-//	}
-//
-//
-//	@Override
-//	public void readExternal(ObjectInput aIn), ClassNotFoundException
-//	{
-//		super.readExternal(aIn);
-//	}
-
-
-//	@Override
-//	public void readExternal(Bundle aBundle)
-//	{
-//		super.readExternal(aBundle);
-//
-//		mColor = BundleHelper.getColor(aBundle.getString("color"));
-//
-//		mPreferredSize.height = 20;
-//	}
-//
-//
-//	@Override
-//	public void writeExternal(Bundle aBundle)
-//	{
-//		super.writeExternal(aBundle);
-//
-//		aBundle.putString("color", BundleHelper.toString(mColor));
-//	}
 }

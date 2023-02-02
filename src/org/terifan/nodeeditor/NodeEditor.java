@@ -29,7 +29,10 @@ public class NodeEditor extends JComponent
 {
 	private static final long serialVersionUID = 1L;
 
-	private static final BasicStroke SELECTION_RECTANGLE_STROKE = new BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{3}, 0);
+	private static final BasicStroke SELECTION_RECTANGLE_STROKE = new BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]
+	{
+		3
+	}, 0);
 
 	private ArrayList<Node> mSelectedNodes;
 	private Connection mSelectedConnection;
@@ -45,8 +48,8 @@ public class NodeEditor extends JComponent
 	private Popup mPopup;
 	private NodeModel mModel;
 	private Class mResourceContext;
-	private Cache<Object,Object> mResourceCache;
-	protected HashMap<String,ResourceLoader> mResourceLoaders;
+	private Cache<Object, Object> mResourceCache;
+	protected HashMap<String, ResourceLoader> mResourceLoaders;
 
 
 	public NodeEditor(NodeModel aModel)
@@ -321,21 +324,21 @@ public class NodeEditor extends JComponent
 		int step = Math.max((int)(24 * mScale), 1);
 
 		aGraphics.setColor(Styles.PANE_GRID_COLOR_1);
-		for (int x = mPaneScroll.x % step; x < w; x+=step)
+		for (int x = mPaneScroll.x % step; x < w; x += step)
 		{
 			aGraphics.drawLine(x, 0, x, h);
 		}
-		for (int y = mPaneScroll.y % step; y < h; y+=step)
+		for (int y = mPaneScroll.y % step; y < h; y += step)
 		{
 			aGraphics.drawLine(0, y, w, y);
 		}
 
 		aGraphics.setColor(Styles.PANE_GRID_COLOR_2);
-		for (int x = mPaneScroll.x % (5*step); x < w; x+=5*step)
+		for (int x = mPaneScroll.x % (5 * step); x < w; x += 5 * step)
 		{
 			aGraphics.drawLine(x, 0, x, h);
 		}
-		for (int y = mPaneScroll.y % (5*step); y < h; y+=5*step)
+		for (int y = mPaneScroll.y % (5 * step); y < h; y += 5 * step)
 		{
 			aGraphics.drawLine(0, y, w, y);
 		}
@@ -347,7 +350,6 @@ public class NodeEditor extends JComponent
 		aGraphics.drawLine(w2, 0, w2, h);
 	}
 
-
 	private MouseAdapter mMouseListener = new MouseAdapter()
 	{
 		private Point mClickPoint;
@@ -357,6 +359,8 @@ public class NodeEditor extends JComponent
 		private Node mHoverBox;
 		private Rectangle mStartBounds;
 		private boolean mIgnoreNextMouseRelease;
+
+
 
 		{
 			mCursor = Cursor.DEFAULT_CURSOR;
@@ -630,7 +634,7 @@ public class NodeEditor extends JComponent
 				int x1 = (int)(Math.max(mClickPoint.x, newPoint.x) * mScale);
 				int y1 = (int)(Math.max(mClickPoint.y, newPoint.y) * mScale);
 
-				mSelectionRectangle.setBounds(x0, y0, x1-x0, y1-y0);
+				mSelectionRectangle.setBounds(x0, y0, x1 - x0, y1 - y0);
 			}
 			else
 			{
@@ -858,7 +862,7 @@ public class NodeEditor extends JComponent
 			if (mCursor != aCursor)
 			{
 				mCursor = aCursor;
-				SwingUtilities.invokeLater(()->setCursor(Cursor.getPredefinedCursor(aCursor < -1 ? Cursor.DEFAULT_CURSOR : aCursor)));
+				SwingUtilities.invokeLater(() -> setCursor(Cursor.getPredefinedCursor(aCursor < -1 ? Cursor.DEFAULT_CURSOR : aCursor)));
 			}
 		}
 
@@ -979,8 +983,6 @@ public class NodeEditor extends JComponent
 	}
 
 
-
-
 	public Popup getPopup()
 	{
 		return mPopup;
@@ -1021,21 +1023,18 @@ public class NodeEditor extends JComponent
 	/**
 	 * Load a Java JAR resource relative to the resource context class, resources are cached.
 	 *
-	 * @param aReturnType
-	 *   the type to return
-	 * @param aRelativePath
-	 *   the resource path relative to the resource context class
-	 * @param aResourceConverter
-	 *   a Provider used to convert the resource URL into an instance of 'aReturnType'
+	 * @param aReturnType the type to return
+	 * @param aRelativePath the resource path relative to the resource context class
+	 * @param aResourceConverter a Provider used to convert the resource URL into an instance of 'aReturnType'
 	 */
-	protected <T> T loadResource(Class<T> aReturnType, String aRelativePath, Provider<URL,T> aResourceConverter)
+	protected <T> T loadResource(Class<T> aReturnType, String aRelativePath, Provider<URL, T> aResourceConverter)
 	{
 		if (mResourceContext == null || mResourceCache == null)
 		{
 			return null;
 		}
 
-		return (T)mResourceCache.computeIfAbsent(aRelativePath, p->aResourceConverter.create(mResourceContext.getResource((String)p)));
+		return (T)mResourceCache.computeIfAbsent(aRelativePath, p -> aResourceConverter.create(mResourceContext.getResource((String)p)));
 	}
 
 

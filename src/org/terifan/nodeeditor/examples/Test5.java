@@ -9,7 +9,6 @@ import javax.swing.JToolBar;
 import org.terifan.nodeeditor.ButtonNodeItem;
 import org.terifan.nodeeditor.CheckBoxNodeItem;
 import org.terifan.nodeeditor.ComboBoxNodeItem;
-import org.terifan.nodeeditor.Connector;
 import static org.terifan.nodeeditor.Connector.GRAY;
 import org.terifan.nodeeditor.Direction;
 import static org.terifan.nodeeditor.Direction.IN;

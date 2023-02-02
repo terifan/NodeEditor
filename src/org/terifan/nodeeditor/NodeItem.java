@@ -22,7 +22,7 @@ public abstract class NodeItem implements Serializable
 	protected final Dimension mPreferredSize;
 	protected final Rectangle mBounds;
 	protected final TextBox mTextBox;
-	protected HashMap<String,String> mProperties;
+	protected HashMap<String, String> mProperties;
 	protected boolean mUserSetSize;
 	protected String mIdentity;
 	protected Node mNode;
@@ -211,87 +211,4 @@ public abstract class NodeItem implements Serializable
 	{
 		return Strings.isEmptyOrNull(mIdentity) ? getText() : mIdentity;
 	}
-
-
-//	public void fireOnChange()
-//	{
-//		mNode.fireOutputChange(this);
-//	}
-//
-//
-//	public NodeItem setOnInputChange(OnInputChangeListener aOnInputChangeListener)
-//	{
-//		mOnInputChangeListener = aOnInputChangeListener;
-//		return this;
-//	}
-//
-//
-//	protected void inputWasChanged(NodeItem aSource)
-//	{
-//		if (mOnInputChangeListener != null)
-//		{
-//			mOnInputChangeListener.onInputChange(aSource);
-//		}
-//	}
-//
-//
-//	@FunctionalInterface
-//	public interface OnInputChangeListener
-//	{
-//		void onInputChange(NodeItem aSource);
-//	}
-
-
-//	@Override
-//	public void readExternal(Bundle aBundle)
-//	{
-//		mConnectors.clear();
-//		mProperties.clear();
-//
-//		mUserSetSize = aBundle.getBundle("size") != null;
-//		mPreferredSize.setSize(BundleHelper.getDimension(aBundle.getBundle("size"), new Dimension(100, 0)));
-//		mBounds.setBounds(BundleHelper.getRectangle(aBundle.getBundle("bounds"), new Rectangle()));
-//		mIdentity = aBundle.getString("identity");
-//		Stream.of(aBundle.getBundleArray("properties", new Bundle[0])).forEach(e->mProperties.put(e.getString("key"), e.getString("value")));
-//		Stream.of(aBundle.getBundleArray("connectors", new Bundle[0])).forEach(e->{Connector c = new Connector(); c.readExternal(e); c.bind(this); mConnectors.add(c);});
-//		mTextBox.setText(aBundle.getString("text"));
-//
-//		if (!mUserSetSize)
-//		{
-//			mBounds.setSize(measure());
-//		}
-//		else
-//		{
-//			mBounds.setSize(mPreferredSize);
-//		}
-//	}
-//
-//
-//	@Override
-//	public void writeExternal(Bundle aBundle)
-//	{
-//		aBundle.putString("type", getClass().getSimpleName().replace("NodeItem", ""));
-//
-//		if (mUserSetSize)
-//		{
-//			aBundle.putBundle("size", BundleHelper.toBundle(mPreferredSize));
-//		}
-//		if (!mBounds.isEmpty())
-//		{
-//			aBundle.putBundle("bounds", BundleHelper.toBundle(mBounds));
-//		}
-//		if (mIdentity != null)
-//		{
-//			aBundle.putString("identity", mIdentity);
-//		}
-//		if (!mProperties.isEmpty())
-//		{
-//			aBundle.putArray("properties", BundleHelper.toArray(mProperties));
-//		}
-//		if (!mConnectors.isEmpty())
-//		{
-//			aBundle.putArray("connectors", Array.of(mConnectors));
-//		}
-//		aBundle.putString("text", mTextBox.getText());
-//	}
 }

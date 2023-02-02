@@ -6,81 +6,62 @@ import java.util.Arrays;
 
 
 /**
- * Interpolates points given in the 2D plane. The resulting spline
- * is a function s: R -> R^2 with parameter t in [0,1].
- *
- * @author krueger
+ * Interpolates points given in the 2D plane. The resulting spline is a function s: R -> R^2 with parameter t in [0,1].
  */
 public class BSpline
 {
-
 	/**
-	 * Array representing the relative proportion of the total distance
-	 * of each point in the line ( i.e. first point is 0.0, end point is
+	 * Array representing the relative proportion of the total distance of each point in the line ( i.e. first point is 0.0, end point is
 	 * 1.0, a point halfway on line is 0.5 ).
 	 */
 	private double[] t;
 	private Spline splineX;
 	private Spline splineY;
-	/**
-	 * Total length tracing the points on the spline
-	 */
 	private double length;
 
 
-	/**
-	 * Creates a new Spline2D.
-	 *
-	 * @param points
-	 */
-	public BSpline(Point2D[] points)
+	public BSpline(Point2D[] aPoints)
 	{
-		double[] x = new double[points.length];
-		double[] y = new double[points.length];
+		double[] x = new double[aPoints.length];
+		double[] y = new double[aPoints.length];
 
-		for (int i = 0; i < points.length; i++)
+		for (int i = 0; i < aPoints.length; i++)
 		{
-			x[i] = points[i].getX();
-			y[i] = points[i].getY();
+			x[i] = aPoints[i].getX();
+			y[i] = aPoints[i].getY();
 		}
 
 		init(x, y);
 	}
 
 
-	/**
-	 * Creates a new Spline2D.
-	 *
-	 * @param x
-	 * @param y
-	 */
-	public BSpline(double[] x, double[] y)
+	public BSpline(double[] aX, double[] aY)
 	{
-		init(x, y);
+		init(aX, aY);
 	}
 
 
-	private void init(double[] x, double[] y)
+	private void init(double[] aX, double[] aY)
 	{
-		if (x.length != y.length)
+		if (aX.length != aY.length)
 		{
 			throw new IllegalArgumentException("Arrays must have the same length.");
 		}
 
-		if (x.length < 2)
+		if (aX.length < 2)
 		{
 			throw new IllegalArgumentException("Spline edges must have at least two points.");
 		}
 
-		t = new double[x.length];
+		t = new double[aX.length];
 		t[0] = 0.0; // start point is always 0.0
 
-		// Calculate the partial proportions of each section between each set
-		// of points and the total length of sum of all sections
+		// Calculate the partial proportions of each section between each set of points and the total length of sum of all sections
 		for (int i = 1; i < t.length; i++)
 		{
-			double lx = x[i] - x[i - 1];
-			double ly = y[i] - y[i - 1];
+			double lx = aX[i] - aX[i - 1];
+			double ly = aY[i] - aY[i - 1];
+
 			// If either diff is zero there is no point performing the square root
 			if (0.0 == lx)
 			{
@@ -106,324 +87,251 @@ public class BSpline
 
 		t[(t.length) - 1] = 1.0; // end point is always 1.0
 
-		splineX = new Spline(t, x);
-		splineY = new Spline(t, y);
+		splineX = new Spline(t, aX);
+		splineY = new Spline(t, aY);
 	}
 
 
 	/**
-	 * @param t 0 <= t <= 1
+	 * @param aT 0 <= t <= 1
 	 */
-	public Point2D.Double getPoint(double t)
+	public Point2D.Double getPoint(double aT)
 	{
-		return new Point.Double(splineX.getValue(t), splineY.getValue(t));
+		return new Point.Double(splineX.getValue(aT), splineY.getValue(aT));
 	}
 
 
-	/**
-	 * Used to check the correctness of this spline
-	 */
 	public boolean checkValues()
 	{
-		return (splineX.checkValues() && splineY.checkValues());
+		return splineX.checkValues() && splineY.checkValues();
 	}
 
 
-	public double getDx(double t)
+	public double getDx(double aT)
 	{
-		return splineX.getDx(t);
+		return splineX.getDx(aT);
 	}
 
 
-	public double getDy(double t)
+	public double getDy(double aT)
 	{
-		return splineY.getDx(t);
+		return splineY.getDx(aT);
 	}
 
 
-	public Spline getSplineX()
+
+	static class Spline
 	{
-		return splineX;
-	}
+		private double[] x;
+		private double[] y;
+		private double[] a;
+		private double[] b;
+		private double[] c;
+		private double[] d;
+
+		/**
+		 * tracks the last index found since that is mostly commonly the next one used
+		 */
+		private int storageIndex = 0;
 
 
-	public Spline getSplineY()
-	{
-		return splineY;
-	}
-
-
-	public double getLength()
-	{
-		return length;
-	}
-
-}
-
-
-/* This code is PUBLIC DOMAIN */
-
-/**
- * Interpolates given values by B-Splines.
- *
- * @author krueger
- */
-class Spline
-{
-
-	private double[] xx;
-	private double[] yy;
-
-	private double[] a;
-	private double[] b;
-	private double[] c;
-	private double[] d;
-
-	/** tracks the last index found since that is mostly commonly the next one used */
-	private int storageIndex = 0;
-
-
-	/**
-	 * Creates a new Spline.
-	 *
-	 * @param xx
-	 * @param yy
-	 */
-	public Spline(double[] xx, double[] yy)
-	{
-		setValues(xx, yy);
-	}
-
-
-	/**
-	 * Set values for this Spline.
-	 *
-	 * @param xx
-	 * @param yy
-	 */
-	public void setValues(double[] xx, double[] yy)
-	{
-		this.xx = xx;
-		this.yy = yy;
-		if (xx.length > 1)
+		public Spline(double[] aX, double[] aY)
 		{
-			calculateCoefficients();
-		}
-	}
-
-
-	/**
-	 * Returns an interpolated value.
-	 *
-	 * @param x
-	 * @return the interpolated value
-	 */
-	public double getValue(double x)
-	{
-		if (xx.length == 0)
-		{
-			return Double.NaN;
+			setValues(aX, aY);
 		}
 
-		if (xx.length == 1)
+
+		public void setValues(double[] aX, double[] aY)
 		{
-			if (xx[0] == x)
+			this.x = aX;
+			this.y = aY;
+			if (aX.length > 1)
 			{
-				return yy[0];
+				calculateCoefficients();
 			}
-			else
+		}
+
+
+		public double getValue(double aX)
+		{
+			if (x.length == 0)
 			{
 				return Double.NaN;
 			}
-		}
 
-		int index = Arrays.binarySearch(xx, x);
-		if (index > 0)
-		{
-			return yy[index];
-		}
+			if (x.length == 1)
+			{
+				if (x[0] == aX)
+				{
+					return y[0];
+				}
+				else
+				{
+					return Double.NaN;
+				}
+			}
 
-		index = -(index + 1) - 1;
-		//TODO linear interpolation or extrapolation
-		if (index < 0)
-		{
-			return yy[0];
-		}
-
-		return a[index]
-			+ b[index] * (x - xx[index])
-			+ c[index] * Math.pow(x - xx[index], 2)
-			+ d[index] * Math.pow(x - xx[index], 3);
-	}
-
-
-	/**
-	 * Returns an interpolated value. To be used when a long sequence of values
-	 * are required in order, but ensure checkValues() is called beforehand to
-	 * ensure the boundary checks from getValue() are made
-	 *
-	 * @param x
-	 * @return the interpolated value
-	 */
-	public double getFastValue(double x)
-	{
-		// Fast check to see if previous index is still valid
-		if (storageIndex > -1 && storageIndex < xx.length - 1 && x > xx[storageIndex] && x < xx[storageIndex + 1])
-		{
-
-		}
-		else
-		{
-			int index = Arrays.binarySearch(xx, x);
+			int index = Arrays.binarySearch(x, aX);
 			if (index > 0)
 			{
-				return yy[index];
+				return y[index];
 			}
+
 			index = -(index + 1) - 1;
-			storageIndex = index;
-		}
 
-		//TODO linear interpolation or extrapolation
-		if (storageIndex < 0)
-		{
-			return yy[0];
-		}
-		double value = x - xx[storageIndex];
-		return a[storageIndex]
-			+ b[storageIndex] * value
-			+ c[storageIndex] * (value * value)
-			+ d[storageIndex] * (value * value * value);
-	}
-
-
-	/**
-	 * Used to check the correctness of this spline
-	 */
-	public boolean checkValues()
-	{
-		if (xx.length < 2)
-		{
-			return false;
-		}
-		else
-		{
-			return true;
-		}
-	}
-
-
-	/**
-	 * Returns the first derivation at x.
-	 *
-	 * @param x
-	 * @return the first derivation at x
-	 */
-	public double getDx(double x)
-	{
-		if (xx.length == 0 || xx.length == 1)
-		{
-			return 0;
-		}
-
-		int index = Arrays.binarySearch(xx, x);
-		if (index < 0)
-		{
-			index = -(index + 1) - 1;
-		}
-
-		return b[index]
-			+ 2 * c[index] * (x - xx[index])
-			+ 3 * d[index] * Math.pow(x - xx[index], 2);
-	}
-
-
-	/**
-	 * Calculates the Spline coefficients.
-	 */
-	private void calculateCoefficients()
-	{
-		int N = yy.length;
-		a = new double[N];
-		b = new double[N];
-		c = new double[N];
-		d = new double[N];
-
-		if (N == 2)
-		{
-			a[0] = yy[0];
-			b[0] = yy[1] - yy[0];
-			return;
-		}
-
-		double[] h = new double[N - 1];
-		for (int i = 0; i < N - 1; i++)
-		{
-			a[i] = yy[i];
-			h[i] = xx[i + 1] - xx[i];
-			// h[i] is used for division later, avoid a NaN
-			if (h[i] == 0.0)
+			//TODO linear interpolation or extrapolation
+			if (index < 0)
 			{
-				h[i] = 0.01;
-			}
-		}
-		a[N - 1] = yy[N - 1];
-
-		double[][] A = new double[N - 2][N - 2];
-		double[] y = new double[N - 2];
-		for (int i = 0; i < N - 2; i++)
-		{
-			y[i]
-				= 3
-				* ((yy[i + 2] - yy[i + 1]) / h[i
-				+ 1]
-				- (yy[i + 1] - yy[i]) / h[i]);
-
-			A[i][i] = 2 * (h[i] + h[i + 1]);
-
-			if (i > 0)
-			{
-				A[i][i - 1] = h[i];
+				return y[0];
 			}
 
-			if (i < N - 3)
+			return a[index]
+				+ b[index] * (aX - x[index])
+				+ c[index] * Math.pow(aX - x[index], 2)
+				+ d[index] * Math.pow(aX - x[index], 3);
+		}
+
+
+		/**
+		 * Returns an interpolated value. To be used when a long sequence of values are required in order, but ensure checkValues() is called
+		 * beforehand to ensure the boundary checks from getValue() are made
+		 */
+		public double getFastValue(double aX)
+		{
+			// Fast check to see if previous index is still valid
+			if (!(storageIndex > -1 && storageIndex < x.length - 1 && aX > x[storageIndex] && aX < x[storageIndex + 1]))
 			{
-				A[i][i + 1] = h[i + 1];
+				int index = Arrays.binarySearch(x, aX);
+				if (index > 0)
+				{
+					return y[index];
+				}
+				index = -(index + 1) - 1;
+				storageIndex = index;
 			}
-		}
-		solve(A, y);
 
-		for (int i = 0; i < N - 2; i++)
-		{
-			c[i + 1] = y[i];
-			b[i] = (a[i + 1] - a[i]) / h[i] - (2 * c[i] + c[i + 1]) / 3 * h[i];
-			d[i] = (c[i + 1] - c[i]) / (3 * h[i]);
-		}
-		b[N - 2]
-			= (a[N - 1] - a[N - 2]) / h[N
-			- 2]
-			- (2 * c[N - 2] + c[N - 1]) / 3 * h[N
-			- 2];
-		d[N - 2] = (c[N - 1] - c[N - 2]) / (3 * h[N - 2]);
-	}
+			//TODO linear interpolation or extrapolation
+			if (storageIndex < 0)
+			{
+				return y[0];
+			}
 
+			double value = aX - x[storageIndex];
 
-	/**
-	 * Solves Ax=b and stores the solution in b.
-	 */
-	public void solve(double[][] A, double[] b)
-	{
-		int n = b.length;
-		for (int i = 1; i < n; i++)
-		{
-			A[i][i - 1] = A[i][i - 1] / A[i - 1][i - 1];
-			A[i][i] = A[i][i] - A[i - 1][i] * A[i][i - 1];
-			b[i] = b[i] - A[i][i - 1] * b[i - 1];
+			return a[storageIndex]
+				+ b[storageIndex] * value
+				+ c[storageIndex] * (value * value)
+				+ d[storageIndex] * (value * value * value);
 		}
 
-		b[n - 1] = b[n - 1] / A[n - 1][n - 1];
-		for (int i = b.length - 2; i >= 0; i--)
+
+		public boolean checkValues()
 		{
-			b[i] = (b[i] - A[i][i + 1] * b[i + 1]) / A[i][i];
+			return x.length >= 2;
+		}
+
+
+		public double getDx(double aX)
+		{
+			if (x.length == 0 || x.length == 1)
+			{
+				return 0;
+			}
+
+			int index = Arrays.binarySearch(x, aX);
+			if (index < 0)
+			{
+				index = -(index + 1) - 1;
+			}
+
+			return b[index]
+				+ 2 * c[index] * (aX - x[index])
+				+ 3 * d[index] * Math.pow(aX - x[index], 2);
+		}
+
+
+		private void calculateCoefficients()
+		{
+			int N = y.length;
+			a = new double[N];
+			b = new double[N];
+			c = new double[N];
+			d = new double[N];
+
+			if (N == 2)
+			{
+				a[0] = y[0];
+				b[0] = y[1] - y[0];
+				return;
+			}
+
+			double[] h = new double[N - 1];
+			for (int i = 0; i < N - 1; i++)
+			{
+				a[i] = y[i];
+				h[i] = x[i + 1] - x[i];
+				// h[i] is used for division later, avoid a NaN
+				if (h[i] == 0.0)
+				{
+					h[i] = 0.01;
+				}
+			}
+			a[N - 1] = y[N - 1];
+
+			double[][] A = new double[N - 2][N - 2];
+			double[] y = new double[N - 2];
+			for (int i = 0; i < N - 2; i++)
+			{
+				y[i]
+					= 3
+					* ((y[i + 2] - y[i + 1]) / h[i
+					+ 1]
+					- (y[i + 1] - y[i]) / h[i]);
+
+				A[i][i] = 2 * (h[i] + h[i + 1]);
+
+				if (i > 0)
+				{
+					A[i][i - 1] = h[i];
+				}
+
+				if (i < N - 3)
+				{
+					A[i][i + 1] = h[i + 1];
+				}
+			}
+			solve(A, y);
+
+			for (int i = 0; i < N - 2; i++)
+			{
+				c[i + 1] = y[i];
+				b[i] = (a[i + 1] - a[i]) / h[i] - (2 * c[i] + c[i + 1]) / 3 * h[i];
+				d[i] = (c[i + 1] - c[i]) / (3 * h[i]);
+			}
+			b[N - 2]
+				= (a[N - 1] - a[N - 2]) / h[N
+				- 2]
+				- (2 * c[N - 2] + c[N - 1]) / 3 * h[N
+				- 2];
+			d[N - 2] = (c[N - 1] - c[N - 2]) / (3 * h[N - 2]);
+		}
+
+
+		public void solve(double[][] aA, double[] aB)
+		{
+			int n = aB.length;
+			for (int i = 1; i < n; i++)
+			{
+				aA[i][i - 1] = aA[i][i - 1] / aA[i - 1][i - 1];
+				aA[i][i] = aA[i][i] - aA[i - 1][i] * aA[i][i - 1];
+				aB[i] = aB[i] - aA[i][i - 1] * aB[i - 1];
+			}
+
+			aB[n - 1] = aB[n - 1] / aA[n - 1][n - 1];
+			for (int i = aB.length - 2; i >= 0; i--)
+			{
+				aB[i] = (aB[i] - aA[i][i + 1] * aB[i + 1]) / aA[i][i];
+			}
 		}
 	}
 }

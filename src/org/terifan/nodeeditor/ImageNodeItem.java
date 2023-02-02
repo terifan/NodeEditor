@@ -13,12 +13,6 @@ public class ImageNodeItem extends AbstractNodeItem<ImageNodeItem>
 	protected String mImagePath;
 
 
-	protected ImageNodeItem()
-	{
-		super();
-	}
-
-
 	public ImageNodeItem(String aText, int aWidth, int aHeight)
 	{
 		super(aText, aWidth, aHeight);

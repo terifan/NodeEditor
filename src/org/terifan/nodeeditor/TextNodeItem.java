@@ -1,7 +1,6 @@
 package org.terifan.nodeeditor;
 
 import java.awt.Graphics2D;
-import org.terifan.bundle.Bundle;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.TextBox;
 
@@ -51,20 +50,4 @@ public class TextNodeItem extends AbstractNodeItem<TextNodeItem>
 			.setAnchor(mConnectors.isEmpty() || mConnectors.get(0).mDirection == Direction.IN ? Anchor.WEST : Anchor.EAST)
 			.render(aGraphics);
 	}
-
-
-//	@Override
-//	public void readExternal(Bundle aBundle)
-//	{
-//		super.readExternal(aBundle);
-//
-//		mPreferredSize.setSize(measure());
-//	}
-//
-//
-//	@Override
-//	public void writeExternal(Bundle aBundle)
-//	{
-//		super.writeExternal(aBundle);
-//	}
 }

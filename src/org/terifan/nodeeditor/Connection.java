@@ -54,19 +54,4 @@ public class Connection implements Serializable
 	{
 		mIn = aIn;
 	}
-
-
-//	@Override
-//	public void readExternal(Bundle aBundle)
-//	{
-//		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//	}
-//
-//
-//	@Override
-//	public void writeExternal(Bundle aBundle)
-//	{
-//		aBundle.putNumber("in", mIn.getModelRef());
-//		aBundle.putNumber("out", mOut.getModelRef());
-//	}
 }

@@ -3,6 +3,6 @@ package org.terifan.nodeeditor;
 
 public enum Direction
 {
-	IN, 
+	IN,
 	OUT
 }

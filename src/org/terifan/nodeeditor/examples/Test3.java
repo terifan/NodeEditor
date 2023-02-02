@@ -2,13 +2,12 @@ package org.terifan.nodeeditor.examples;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import javax.imageio.ImageIO;
 import org.terifan.nodeeditor.SliderNodeItem;
 import org.terifan.nodeeditor.ImageNodeItem;
 import javax.swing.JFrame;
-import org.terifan.bundle.Bundle;
 import org.terifan.nodeeditor.ButtonNodeItem;
 import org.terifan.nodeeditor.CheckBoxNodeItem;
 import org.terifan.nodeeditor.ColorChooserNodeItem;
@@ -157,36 +156,30 @@ public class Test3
 			model.getNode("texturecoordinate").setLocation(-600, -150);
 			model.getNode("math").setLocation(-300, -200);
 
-//			Bundle bundle = model.marshalBundle();
-//			try (FileWriter fos = new FileWriter("d:\\nodeeditor.json"))
-//			{
-//				bundle.marshalJSON(fos, false);
-//			}
-//
+			Files.write(Paths.get("d:\\nodeeditor.json"), model.marshal());
+
 //			model = new NodeModel();
-//			model.unmarshalBundle(bundle);
-//
-//			System.out.println(bundle.marshalJSON(false));
-//
-//			NodeEditor editor = new NodeEditor(model);
-//
-//			editor.setResourceContext(Test3.class); // texture1.image is loaded using this resource context
-//
-//			BufferedImage image = ImageIO.read(Test3.class.getResource("Big_pebbles_pxr128_bmp.jpg"));
-//
-//			Cache<String,BufferedImage> cache = new Cache<>(3);
-//			editor.addResourceLoader("texture2.image", e->image);
+//			model.unmarshal(Files.readAllBytes(Paths.get("d:\\nodeeditor.json")));
+
+			NodeEditor editor = new NodeEditor(model);
+
+			editor.setResourceContext(Test3.class); // texture1.image is loaded using this resource context
+
+			BufferedImage image = ImageIO.read(Test3.class.getResource("Big_pebbles_pxr128_bmp.jpg"));
+
+			Cache<String,BufferedImage> cache = new Cache<>(3);
+			editor.addResourceLoader("texture2.image", e->image);
 //			editor.addResourceLoader("texture3.image", e->cache.get(e.getProperty("image_path"), p->ImageIO.read(Test3.class.getResource(p))));
-//
-//			editor.center();
-//			editor.setScale(2);
-//
-//			JFrame frame = new JFrame();
-//			frame.add(editor);
-//			frame.setSize(1600, 1000);
-//			frame.setLocationRelativeTo(null);
-//			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//			frame.setVisible(true);
+
+			editor.center();
+			editor.setScale(2);
+
+			JFrame frame = new JFrame();
+			frame.add(editor);
+			frame.setSize(1600, 1000);
+			frame.setLocationRelativeTo(null);
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			frame.setVisible(true);
 		}
 		catch (Throwable e)
 		{

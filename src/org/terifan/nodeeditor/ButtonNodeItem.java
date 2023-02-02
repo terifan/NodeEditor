@@ -4,7 +4,6 @@ import java.awt.Graphics2D;
 import java.awt.LinearGradientPaint;
 import java.awt.Paint;
 import java.awt.Point;
-import org.terifan.bundle.Bundle;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.ImageResizer;
 import org.terifan.ui.TextBox;
@@ -109,20 +108,4 @@ public class ButtonNodeItem extends AbstractNodeItem<ButtonNodeItem>
 	{
 		void onClick(ButtonNodeItem aItem);
 	}
-
-
-//	@Override
-//	public void readExternal(Bundle aBundle)
-//	{
-//		super.readExternal(aBundle);
-//
-//		mPreferredSize.height = 22;
-//	}
-//
-//
-//	@Override
-//	public void writeExternal(Bundle aBundle)
-//	{
-//		super.writeExternal(aBundle);
-//	}
 }
