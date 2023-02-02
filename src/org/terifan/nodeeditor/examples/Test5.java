@@ -77,6 +77,7 @@ public class Test5
 				public void actionPerformed(ActionEvent aE)
 				{
 					model.addNode(new Node("Math")
+						.setLocation(0, 0)
 						.setSize(200, 0)
 						.setIdentity("math")
 						.add(new TextNodeItem("Value")
@@ -90,7 +91,7 @@ public class Test5
 						.add(new SliderNodeItem("Value", 0.5, 0.01)
 							.setIdentity("value2")
 							.addConnector(IN, GRAY))
-					).setLocation(0, 0);
+					);
 
 					editor.repaint();
 				}

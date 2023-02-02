@@ -23,7 +23,6 @@ public class Node implements Iterable<NodeItem>, Renderable, Serializable
 	protected ArrayList<NodeItem> mItems;
 	protected String mIdentity;
 	protected String mName;
-	protected String mPrototype;
 	protected Rectangle mBounds;
 	protected boolean mMinimized;
 	protected int mVerticalSpacing;
@@ -84,21 +83,9 @@ public class Node implements Iterable<NodeItem>, Renderable, Serializable
 	}
 
 
-	public void setName(String aName)
+	public Node setName(String aName)
 	{
 		mName = aName;
-	}
-
-
-	public String getPrototype()
-	{
-		return mPrototype;
-	}
-
-
-	public Node setPrototype(String aPrototype)
-	{
-		mPrototype = aPrototype;
 		return this;
 	}
 
@@ -598,13 +585,13 @@ public class Node implements Iterable<NodeItem>, Renderable, Serializable
 	}
 
 
-	public void setBounds(int aX, int aY, int aWidth, int aHeight)
+	public Node setBounds(int aX, int aY, int aWidth, int aHeight)
 	{
 		mBounds.setBounds(aX, aY, aWidth, aHeight);
+		return this;
 	}
 
 
-//	}
 	public ArrayList<Node> getChildNodes()
 	{
 		return mModel.getChildNodes(this);

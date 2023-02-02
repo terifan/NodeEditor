@@ -35,7 +35,6 @@ public class TestJavaSerializingNodeModel
 			NodeModel model = new NodeModel();
 
 			model.addNode(new Node("Color")
-				.setPrototype("color")
 				.setSize(200, 0)
 				.add(new TextNodeItem("Color")
 					.addConnector(OUT, YELLOW))

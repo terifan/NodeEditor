@@ -3,6 +3,7 @@ package org.terifan.nodeeditor;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.stream.Stream;
+import static org.terifan.util.Assert.*;
 
 
 public class NodeModel implements Serializable
@@ -38,7 +39,7 @@ public class NodeModel implements Serializable
 	}
 
 
-	public Node addNode(Node aNode)
+	public NodeModel addNode(Node aNode)
 	{
 		mNodes.add(aNode);
 
@@ -52,7 +53,7 @@ public class NodeModel implements Serializable
 			}
 		}
 
-		return aNode;
+		return this;
 	}
 
 
@@ -88,16 +89,25 @@ public class NodeModel implements Serializable
 	}
 
 
-	public void addConnection(String aFromPath, String aToPath)
+	public NodeModel addConnection(String aFromPath, String aToPath)
 	{
-		Connector out = getNodeItem(aFromPath).getConnector(Direction.OUT);
-		Connector in = getNodeItem(aToPath).getConnector(Direction.IN);
+		NodeItem fromNode = getNodeItem(aFromPath);
+		NodeItem toNode = getNodeItem(aToPath);
 
-		addConnection(out, in);
+		assertNotNull(fromNode, "From path cannot be resolved to a Node: path: %s", aFromPath);
+		assertNotNull(toNode, "To path cannot be resolved to a Node: path: %s", aToPath);
+
+		Connector out = fromNode.getConnector(Direction.OUT);
+		Connector in = toNode.getConnector(Direction.IN);
+
+		assertNotNull(out, "From path cannot be resolved to a OUT connector: path: %s", aFromPath);
+		assertNotNull(out, "To path cannot be resolved to a IN connector: path: %s", aToPath);
+
+		return addConnection(out, in);
 	}
 
 
-	public void addConnection(NodeItem aFromItem, NodeItem aToItem)
+	public NodeModel addConnection(NodeItem aFromItem, NodeItem aToItem)
 	{
 		Connector out = null;
 		Connector in = null;
@@ -127,13 +137,15 @@ public class NodeModel implements Serializable
 			throw new IllegalArgumentException("The 'ToItem' has no connectors.");
 		}
 
-		addConnection(out, in);
+		return addConnection(out, in);
 	}
 
 
-	public void addConnection(Connector aFromConnector, Connector aToConnector)
+	public NodeModel addConnection(Connector aFromConnector, Connector aToConnector)
 	{
 		mConnections.add(new Connection(aFromConnector, aToConnector));
+
+		return this;
 	}
 
 

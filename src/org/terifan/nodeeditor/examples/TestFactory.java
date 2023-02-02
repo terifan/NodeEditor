@@ -83,9 +83,9 @@ public class TestFactory
 
 	public static Node attachNode(String aPrototype, String aIdentity)
 	{
-		Node box = mFactoryMap.get(aPrototype).create(aIdentity);
-		box.setPrototype(aPrototype);
-		return mModel.addNode(box);
+		Node node = mFactoryMap.get(aPrototype).create(aIdentity);
+		mModel.addNode(node);
+		return node;
 	}
 
 
