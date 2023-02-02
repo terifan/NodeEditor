@@ -14,10 +14,10 @@ public class BSpline
 	 * Array representing the relative proportion of the total distance of each point in the line ( i.e. first point is 0.0, end point is
 	 * 1.0, a point halfway on line is 0.5 ).
 	 */
-	private double[] t;
-	private Spline splineX;
-	private Spline splineY;
-	private double length;
+	private double[] mT;
+	private Spline mSplineX;
+	private Spline mSplineY;
+	private double mLength;
 
 
 	public BSpline(Point2D[] aPoints)
@@ -53,11 +53,11 @@ public class BSpline
 			throw new IllegalArgumentException("Spline edges must have at least two points.");
 		}
 
-		t = new double[aX.length];
-		t[0] = 0.0; // start point is always 0.0
+		mT = new double[aX.length];
+		mT[0] = 0.0; // start point is always 0.0
 
 		// Calculate the partial proportions of each section between each set of points and the total length of sum of all sections
-		for (int i = 1; i < t.length; i++)
+		for (int i = 1; i < mT.length; i++)
 		{
 			double lx = aX[i] - aX[i - 1];
 			double ly = aY[i] - aY[i - 1];
@@ -65,30 +65,30 @@ public class BSpline
 			// If either diff is zero there is no point performing the square root
 			if (0.0 == lx)
 			{
-				t[i] = Math.abs(ly);
+				mT[i] = Math.abs(ly);
 			}
 			else if (0.0 == ly)
 			{
-				t[i] = Math.abs(lx);
+				mT[i] = Math.abs(lx);
 			}
 			else
 			{
-				t[i] = Math.sqrt(lx * lx + ly * ly);
+				mT[i] = Math.sqrt(lx * lx + ly * ly);
 			}
 
-			length += t[i];
-			t[i] += t[i - 1];
+			mLength += mT[i];
+			mT[i] += mT[i - 1];
 		}
 
-		for (int i = 1; i < (t.length) - 1; i++)
+		for (int i = 1; i < (mT.length) - 1; i++)
 		{
-			t[i] = t[i] / length;
+			mT[i] = mT[i] / mLength;
 		}
 
-		t[(t.length) - 1] = 1.0; // end point is always 1.0
+		mT[(mT.length) - 1] = 1.0; // end point is always 1.0
 
-		splineX = new Spline(t, aX);
-		splineY = new Spline(t, aY);
+		mSplineX = new Spline(mT, aX);
+		mSplineY = new Spline(mT, aY);
 	}
 
 
@@ -97,37 +97,37 @@ public class BSpline
 	 */
 	public Point2D.Double getPoint(double aT)
 	{
-		return new Point.Double(splineX.getValue(aT), splineY.getValue(aT));
+		return new Point.Double(mSplineX.getValue(aT), mSplineY.getValue(aT));
 	}
 
 
 	public boolean checkValues()
 	{
-		return splineX.checkValues() && splineY.checkValues();
+		return mSplineX.checkValues() && mSplineY.checkValues();
 	}
 
 
 	public double getDx(double aT)
 	{
-		return splineX.getDx(aT);
+		return mSplineX.getDx(aT);
 	}
 
 
 	public double getDy(double aT)
 	{
-		return splineY.getDx(aT);
+		return mSplineY.getDx(aT);
 	}
 
 
 
 	static class Spline
 	{
-		private double[] x;
-		private double[] y;
-		private double[] a;
-		private double[] b;
-		private double[] c;
-		private double[] d;
+		private double[] mX;
+		private double[] mY;
+		private double[] mA;
+		private double[] mB;
+		private double[] mC;
+		private double[] mD;
 
 		/**
 		 * tracks the last index found since that is mostly commonly the next one used
@@ -143,8 +143,8 @@ public class BSpline
 
 		public void setValues(double[] aX, double[] aY)
 		{
-			this.x = aX;
-			this.y = aY;
+			this.mX = aX;
+			this.mY = aY;
 			if (aX.length > 1)
 			{
 				calculateCoefficients();
@@ -154,16 +154,16 @@ public class BSpline
 
 		public double getValue(double aX)
 		{
-			if (x.length == 0)
+			if (mX.length == 0)
 			{
 				return Double.NaN;
 			}
 
-			if (x.length == 1)
+			if (mX.length == 1)
 			{
-				if (x[0] == aX)
+				if (mX[0] == aX)
 				{
-					return y[0];
+					return mY[0];
 				}
 				else
 				{
@@ -171,10 +171,10 @@ public class BSpline
 				}
 			}
 
-			int index = Arrays.binarySearch(x, aX);
+			int index = Arrays.binarySearch(mX, aX);
 			if (index > 0)
 			{
-				return y[index];
+				return mY[index];
 			}
 
 			index = -(index + 1) - 1;
@@ -182,13 +182,13 @@ public class BSpline
 			//TODO linear interpolation or extrapolation
 			if (index < 0)
 			{
-				return y[0];
+				return mY[0];
 			}
 
-			return a[index]
-				+ b[index] * (aX - x[index])
-				+ c[index] * Math.pow(aX - x[index], 2)
-				+ d[index] * Math.pow(aX - x[index], 3);
+			return mA[index]
+				+ mB[index] * (aX - mX[index])
+				+ mC[index] * Math.pow(aX - mX[index], 2)
+				+ mD[index] * Math.pow(aX - mX[index], 3);
 		}
 
 
@@ -199,12 +199,12 @@ public class BSpline
 		public double getFastValue(double aX)
 		{
 			// Fast check to see if previous index is still valid
-			if (!(storageIndex > -1 && storageIndex < x.length - 1 && aX > x[storageIndex] && aX < x[storageIndex + 1]))
+			if (!(storageIndex > -1 && storageIndex < mX.length - 1 && aX > mX[storageIndex] && aX < mX[storageIndex + 1]))
 			{
-				int index = Arrays.binarySearch(x, aX);
+				int index = Arrays.binarySearch(mX, aX);
 				if (index > 0)
 				{
-					return y[index];
+					return mY[index];
 				}
 				index = -(index + 1) - 1;
 				storageIndex = index;
@@ -213,70 +213,70 @@ public class BSpline
 			//TODO linear interpolation or extrapolation
 			if (storageIndex < 0)
 			{
-				return y[0];
+				return mY[0];
 			}
 
-			double value = aX - x[storageIndex];
+			double value = aX - mX[storageIndex];
 
-			return a[storageIndex]
-				+ b[storageIndex] * value
-				+ c[storageIndex] * (value * value)
-				+ d[storageIndex] * (value * value * value);
+			return mA[storageIndex]
+				+ mB[storageIndex] * value
+				+ mC[storageIndex] * (value * value)
+				+ mD[storageIndex] * (value * value * value);
 		}
 
 
 		public boolean checkValues()
 		{
-			return x.length >= 2;
+			return mX.length >= 2;
 		}
 
 
 		public double getDx(double aX)
 		{
-			if (x.length == 0 || x.length == 1)
+			if (mX.length == 0 || mX.length == 1)
 			{
 				return 0;
 			}
 
-			int index = Arrays.binarySearch(x, aX);
+			int index = Arrays.binarySearch(mX, aX);
 			if (index < 0)
 			{
 				index = -(index + 1) - 1;
 			}
 
-			return b[index]
-				+ 2 * c[index] * (aX - x[index])
-				+ 3 * d[index] * Math.pow(aX - x[index], 2);
+			return mB[index]
+				+ 2 * mC[index] * (aX - mX[index])
+				+ 3 * mD[index] * Math.pow(aX - mX[index], 2);
 		}
 
 
 		private void calculateCoefficients()
 		{
-			int N = y.length;
-			a = new double[N];
-			b = new double[N];
-			c = new double[N];
-			d = new double[N];
+			int N = mY.length;
+			mA = new double[N];
+			mB = new double[N];
+			mC = new double[N];
+			mD = new double[N];
 
 			if (N == 2)
 			{
-				a[0] = y[0];
-				b[0] = y[1] - y[0];
+				mA[0] = mY[0];
+				mB[0] = mY[1] - mY[0];
 				return;
 			}
 
 			double[] h = new double[N - 1];
 			for (int i = 0; i < N - 1; i++)
 			{
-				a[i] = y[i];
-				h[i] = x[i + 1] - x[i];
+				mA[i] = mY[i];
+				h[i] = mX[i + 1] - mX[i];
 				// h[i] is used for division later, avoid a NaN
 				if (h[i] == 0.0)
 				{
 					h[i] = 0.01;
 				}
 			}
-			a[N - 1] = y[N - 1];
+			mA[N - 1] = mY[N - 1];
 
 			double[][] A = new double[N - 2][N - 2];
 			double[] y = new double[N - 2];
@@ -284,9 +284,9 @@ public class BSpline
 			{
 				y[i]
 					= 3
-					* ((y[i + 2] - y[i + 1]) / h[i
+					* ((mY[i + 2] - mY[i + 1]) / h[i
 					+ 1]
-					- (y[i + 1] - y[i]) / h[i]);
+					- (mY[i + 1] - mY[i]) / h[i]);
 
 				A[i][i] = 2 * (h[i] + h[i + 1]);
 
@@ -304,16 +304,16 @@ public class BSpline
 
 			for (int i = 0; i < N - 2; i++)
 			{
-				c[i + 1] = y[i];
-				b[i] = (a[i + 1] - a[i]) / h[i] - (2 * c[i] + c[i + 1]) / 3 * h[i];
-				d[i] = (c[i + 1] - c[i]) / (3 * h[i]);
+				mC[i + 1] = y[i];
+				mB[i] = (mA[i + 1] - mA[i]) / h[i] - (2 * mC[i] + mC[i + 1]) / 3 * h[i];
+				mD[i] = (mC[i + 1] - mC[i]) / (3 * h[i]);
 			}
-			b[N - 2]
-				= (a[N - 1] - a[N - 2]) / h[N
+			mB[N - 2]
+				= (mA[N - 1] - mA[N - 2]) / h[N
 				- 2]
-				- (2 * c[N - 2] + c[N - 1]) / 3 * h[N
+				- (2 * mC[N - 2] + mC[N - 1]) / 3 * h[N
 				- 2];
-			d[N - 2] = (c[N - 1] - c[N - 2]) / (3 * h[N - 2]);
+			mD[N - 2] = (mC[N - 1] - mC[N - 2]) / (3 * h[N - 2]);
 		}
 
 
