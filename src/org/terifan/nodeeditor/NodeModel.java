@@ -1,22 +1,16 @@
 package org.terifan.nodeeditor;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.stream.Stream;
 
 
 public class NodeModel implements Serializable
 {
-	private static final long serialVersionUID = 1L;
+	private final static long serialVersionUID = 1L;
 
-	protected ArrayList<Node> mNodes;
-	protected ArrayList<Connection> mConnections;
+	private ArrayList<Node> mNodes;
+	private ArrayList<Connection> mConnections;
 
 
 	public NodeModel()
@@ -179,48 +173,6 @@ public class NodeModel implements Serializable
 	}
 
 
-	public byte[] marshal() throws IOException
-	{
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-		try (ObjectOutputStream dos = new ObjectOutputStream(baos))
-		{
-			dos.writeObject(this);
-		}
-
-		return baos.toByteArray();
-	}
-
-
-	public static NodeModel unmarshal(byte[] aContent) throws IOException
-	{
-		try (ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(aContent)))
-		{
-			return (NodeModel)ois.readObject();
-		}
-		catch (ClassNotFoundException e)
-		{
-			throw new IOException(e);
-		}
-	}
-
-	private HashMap<String, Factory> mFactoryMap = new HashMap<>();
-
-
-	public void addFactory(String aPrototype, Factory aFactory)
-	{
-		mFactoryMap.put(aPrototype, aFactory);
-	}
-
-
-	public Node attachNode(String aPrototype, String aIdentity)
-	{
-		Node box = mFactoryMap.get(aPrototype).create(aIdentity);
-		box.setPrototype(aPrototype);
-		return addNode(box);
-	}
-
-
 	private Connector getConnector(int aRef)
 	{
 		for (Node node : mNodes)
@@ -254,12 +206,5 @@ public class NodeModel implements Serializable
 		}
 
 		return result;
-	}
-
-
-	@FunctionalInterface
-	public interface Factory
-	{
-		Node create(String aIdentity);
 	}
 }

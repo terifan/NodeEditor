@@ -378,8 +378,10 @@ public class NodeEditor extends JComponent
 				return;
 			}
 
-			for (Node box : mModel.getNodes())
+			ArrayList<Node> nodes = mModel.getNodes();
+			for (int i = nodes.size(); --i >= 0; )
 			{
+				Node box = nodes.get(i);
 				Rectangle b = box.getBounds();
 				if (!box.isMinimized() && b.contains(point) && findNearestConnector(point, box) == null)
 				{

@@ -32,7 +32,6 @@ public class Node implements Iterable<NodeItem>, Renderable, Serializable
 	protected Dimension mRestoredSize;
 	protected boolean mResizableHorizontal;
 	protected boolean mResizableVertical;
-	private boolean mUserSetSize;
 
 
 	public Node()
@@ -171,16 +170,13 @@ public class Node implements Iterable<NodeItem>, Renderable, Serializable
 	public Node setSize(int aWidth, int aHeight)
 	{
 		mBounds.setSize(aWidth, aHeight);
-		mUserSetSize = true;
 		return this;
 	}
 
 
 	public Node setSize(Dimension aSize)
 	{
-		mBounds.setSize(aSize);
-		mUserSetSize = true;
-		return this;
+		return setSize(aSize.width, aSize.height);
 	}
 
 

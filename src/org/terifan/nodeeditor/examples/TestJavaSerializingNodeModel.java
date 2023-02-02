@@ -2,8 +2,10 @@ package org.terifan.nodeeditor.examples;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import javax.imageio.ImageIO;
 import org.terifan.nodeeditor.SliderNodeItem;
 import org.terifan.nodeeditor.ImageNodeItem;
@@ -24,7 +26,7 @@ import org.terifan.nodeeditor.TextNodeItem;
 import org.terifan.util.cache.Cache;
 
 
-public class Test3
+public class TestJavaSerializingNodeModel
 {
 	public static void main(String... args)
 	{
@@ -156,23 +158,34 @@ public class Test3
 			model.getNode("texturecoordinate").setLocation(-600, -150);
 			model.getNode("math").setLocation(-300, -200);
 
-			Files.write(Paths.get("d:\\nodeeditor.json"), model.marshal());
 
-//			model = new NodeModel();
-//			model.unmarshal(Files.readAllBytes(Paths.get("d:\\nodeeditor.json")));
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			try (ObjectOutputStream dos = new ObjectOutputStream(baos))
+			{
+				dos.writeObject(model);
+			}
+			byte[] serializedData = baos.toByteArray();
 
-			NodeEditor editor = new NodeEditor(model);
 
-			editor.setResourceContext(Test3.class); // texture1.image is loaded using this resource context
+			NodeModel deserializedModel;
+			try (ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(serializedData)))
+			{
+				deserializedModel = (NodeModel)ois.readObject();
+			}
 
-			BufferedImage image = ImageIO.read(Test3.class.getResource("Big_pebbles_pxr128_bmp.jpg"));
+
+			NodeEditor editor = new NodeEditor(deserializedModel);
+
+			editor.setResourceContext(TestJavaSerializingNodeModel.class); // texture1.image is loaded using this resource context
+
+			BufferedImage image = ImageIO.read(TestJavaSerializingNodeModel.class.getResource("Big_pebbles_pxr128_bmp.jpg"));
 
 			Cache<String,BufferedImage> cache = new Cache<>(3);
 			editor.addResourceLoader("texture2.image", e->image);
 //			editor.addResourceLoader("texture3.image", e->cache.get(e.getProperty("image_path"), p->ImageIO.read(Test3.class.getResource(p))));
 
 			editor.center();
-			editor.setScale(2);
+			editor.setScale(1);
 
 			JFrame frame = new JFrame();
 			frame.add(editor);
