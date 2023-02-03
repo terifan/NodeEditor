@@ -115,7 +115,7 @@ public abstract class Property<T extends Property> implements Serializable
 	}
 
 
-	public ArrayList<Connector> getConnectors()
+	public List<Connector> getConnectors()
 	{
 		return mConnectors;
 	}
@@ -151,7 +151,7 @@ public abstract class Property<T extends Property> implements Serializable
 	}
 
 
-	protected void setPreferredSize(Dimension aPreferredSize)
+	public void setPreferredSize(Dimension aPreferredSize)
 	{
 		mUserSetSize = true;
 		mPreferredSize.setSize(aPreferredSize);
