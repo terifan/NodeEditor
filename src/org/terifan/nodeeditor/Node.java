@@ -15,15 +15,15 @@ import static org.terifan.nodeeditor.Styles.*;
 import org.terifan.util.Strings;
 
 
-public class Node implements Iterable<Property>, Renderable, Serializable
+public class Node implements Renderable, Serializable
 {
-	private static final long serialVersionUID = 1L;
+	private final static long serialVersionUID = 1L;
 
+	protected final ArrayList<Property> mProperties;
+	protected final Rectangle mBounds;
 	protected NodeModel mModel;
-	protected ArrayList<Property> mItems;
 	protected String mIdentity;
 	protected String mName;
-	protected Rectangle mBounds;
 	protected boolean mMinimized;
 	protected int mVerticalSpacing;
 	protected Dimension mMinimumSize;
@@ -41,7 +41,7 @@ public class Node implements Iterable<Property>, Renderable, Serializable
 		mResizableHorizontal = true;
 		mResizableVertical = true;
 		mBounds = new Rectangle();
-		mItems = new ArrayList<>();
+		mProperties = new ArrayList<>();
 	}
 
 
@@ -185,7 +185,7 @@ public class Node implements Iterable<Property>, Renderable, Serializable
 
 	public Node addProperty(Property aItem)
 	{
-		mItems.add(aItem);
+		mProperties.add(aItem);
 		aItem.bind(this);
 
 		return this;
@@ -199,22 +199,57 @@ public class Node implements Iterable<Property>, Renderable, Serializable
 	}
 
 
-	public int getItemCount()
+	public int getPropertyCount()
 	{
-		return mItems.size();
+		return mProperties.size();
 	}
 
 
-	public Property getItem(int aIndex)
+	public ArrayList<Property> getProperties()
 	{
-		return mItems.get(aIndex);
+		return mProperties;
 	}
 
 
-	@Override
-	public Iterator<Property> iterator()
+	public Property getProperty(int aIndex)
 	{
-		return mItems.iterator();
+		return mProperties.get(aIndex);
+	}
+
+
+	public Property getProperty(String aPath)
+	{
+		String id = aPath.contains(".") ? aPath.split("\\.")[1] : aPath;
+		Property item = null;
+
+		for (Property pi : mProperties)
+		{
+			if (pi.getIdentity() != null && pi.getIdentity().equals(id))
+			{
+				item = pi;
+				break;
+			}
+			else if (pi instanceof Property)
+			{
+				Property ab = (Property)pi;
+
+				if (ab.getText().equalsIgnoreCase(id))
+				{
+					if (item != null)
+					{
+						throw new IllegalStateException("More than one NodeItem have the same name, provide an Identity to either of them: " + ab.getText());
+					}
+					item = pi;
+				}
+			}
+		}
+
+		if (item == null)
+		{
+			throw new IllegalArgumentException("Failed to find NodeItem, ensure text or identity is set: " + id + " (" + aPath + ")");
+		}
+
+		return item;
 	}
 
 
@@ -225,7 +260,7 @@ public class Node implements Iterable<Property>, Renderable, Serializable
 
 		if (!mMinimized)
 		{
-			for (Property item : mItems)
+			for (Property item : mProperties)
 			{
 				item.paintComponent(aEditor, aGraphics, false);
 			}
@@ -239,7 +274,7 @@ public class Node implements Iterable<Property>, Renderable, Serializable
 	public void layout()
 	{
 		computeBounds();
-		layoutItems();
+		layoutNode();
 		layoutConnectors();
 	}
 
@@ -253,7 +288,7 @@ public class Node implements Iterable<Property>, Renderable, Serializable
 				mBounds.width = 0;
 				mBounds.height = 0;
 
-				for (Property item : mItems)
+				for (Property item : mProperties)
 				{
 					Dimension size = item.measure();
 
@@ -284,13 +319,13 @@ public class Node implements Iterable<Property>, Renderable, Serializable
 	}
 
 
-	protected void layoutItems()
+	protected void layoutNode()
 	{
 		if (!mMinimized)
 		{
 			int y = TITLE_HEIGHT_PADDED + 4 + 4;
 
-			for (Property item : mItems)
+			for (Property item : mProperties)
 			{
 				Dimension size = item.measure();
 
@@ -315,7 +350,7 @@ public class Node implements Iterable<Property>, Renderable, Serializable
 	{
 		if (!mMinimized)
 		{
-			for (Property item : mItems)
+			for (Property item : mProperties)
 			{
 				int by0 = item.mBounds.y + Math.min(item.mBounds.height, TITLE_HEIGHT_PADDED + 4) / 2 - 5;
 				int by1 = by0;
@@ -340,7 +375,7 @@ public class Node implements Iterable<Property>, Renderable, Serializable
 			int n0 = 0;
 			int n1 = 0;
 
-			for (Property item : mItems)
+			for (Property item : mProperties)
 			{
 				for (Connector connector : (ArrayList<Connector>)item.mConnectors)
 				{
@@ -358,7 +393,7 @@ public class Node implements Iterable<Property>, Renderable, Serializable
 			int c0 = 0;
 			int c1 = 0;
 
-			for (Property item : mItems)
+			for (Property item : mProperties)
 			{
 				for (Connector connector : (ArrayList<Connector>)item.mConnectors)
 				{
@@ -380,7 +415,7 @@ public class Node implements Iterable<Property>, Renderable, Serializable
 	}
 
 
-	protected Point calcPoint(int c, int n)
+	private Point calcPoint(int c, int n)
 	{
 		n--;
 		double r = n == 0 ? 0 : 2 * Math.PI * (-0.075 * Math.min(3, n) + Math.min(3, n) * 0.15 * c / (double)n);
@@ -398,9 +433,16 @@ public class Node implements Iterable<Property>, Renderable, Serializable
 	}
 
 
+	public Node setBounds(int aX, int aY, int aWidth, int aHeight)
+	{
+		mBounds.setBounds(aX, aY, aWidth, aHeight);
+		return this;
+	}
+
+
 	protected void paintConnectors(Graphics2D aGraphics)
 	{
-		for (Property item : mItems)
+		for (Property item : mProperties)
 		{
 			for (Connector connector : (ArrayList<Connector>)item.mConnectors)
 			{
@@ -416,9 +458,6 @@ public class Node implements Iterable<Property>, Renderable, Serializable
 
 	protected void paintBorder(Graphics2D aGraphics, int aX, int aY, int aWidth, int aHeight, boolean aSelected)
 	{
-//		aGraphics.setColor(Color.YELLOW);
-//		aGraphics.drawRect(aX, aY, aWidth, aHeight);
-
 		aX += 5;
 		aY += 4;
 		aWidth -= 10;
@@ -427,8 +466,6 @@ public class Node implements Iterable<Property>, Renderable, Serializable
 		boolean minimized = mMinimized || aHeight <= 4 + 4 + TITLE_HEIGHT;
 		int th = minimized ? TITLE_HEIGHT : TITLE_HEIGHT_PADDED;
 
-//		aGraphics.setColor(new Color(48, 48, 48, 128));
-//		aGraphics.fillRoundRect(aX-5, aY+10, aWidth+10, aHeight-5, BORDE_RADIUS, BORDE_RADIUS);
 		if (minimized)
 		{
 			aGraphics.setColor(BOX_BORDER_TITLE_COLOR);
@@ -501,7 +538,7 @@ public class Node implements Iterable<Property>, Renderable, Serializable
 	 */
 	protected Property mousePressed(Point aPoint)
 	{
-		for (Property item : mItems)
+		for (Property item : mProperties)
 		{
 			if (item.mBounds.contains(aPoint.x - mBounds.x, aPoint.y - mBounds.y))
 			{
@@ -510,85 +547,6 @@ public class Node implements Iterable<Property>, Renderable, Serializable
 		}
 
 		return null;
-	}
-
-
-	/**
-	 * Child NodeItems call this when their values are changed
-	 */
-//	public void fireOutputChange(NodeItem aNodeItem)
-//	{
-//		if (mOnInputChangeListener != null)
-//		{
-//			mOnInputChangeListener.onInputChange(aNodeItem, true);
-//		}
-//
-//		for (NodeItem item : mItems)
-//		{
-//			mModel.getConnectionsFrom(item).forEach(c->{
-//				c.getOut().getNodeItem().inputWasChanged(aNodeItem);
-//				c.getOut().getNodeItem().getNode().fireInputChange(aNodeItem);
-//			});
-//		}
-//	}
-	/**
-	 * Other Nodes call this when an item of theirs have changed value.
-	 */
-//	public void fireInputChange(NodeItem aNodeItem)
-//	{
-//		if (mOnInputChangeListener != null)
-//		{
-//			mOnInputChangeListener.onInputChange(aNodeItem, false);
-//		}
-//	}
-
-
-	public Property getProperty(String aPath)
-	{
-		String id = aPath.contains(".") ? aPath.split("\\.")[1] : aPath;
-		Property item = null;
-
-		for (Property pi : mItems)
-		{
-			if (pi.getIdentity() != null && pi.getIdentity().equals(id))
-			{
-				item = pi;
-				break;
-			}
-			else if (pi instanceof Property)
-			{
-				Property ab = (Property)pi;
-
-				if (ab.getText().equalsIgnoreCase(id))
-				{
-					if (item != null)
-					{
-						throw new IllegalStateException("More than one NodeItem have the same name, provide an Identity to either of them: " + ab.getText());
-					}
-					item = pi;
-				}
-			}
-		}
-
-		if (item == null)
-		{
-			throw new IllegalArgumentException("Failed to find NodeItem, ensure text or identity is set: " + id + " (" + aPath + ")");
-		}
-
-		return item;
-	}
-
-
-	protected String getIdentityOrName()
-	{
-		return Strings.isEmptyOrNull(mIdentity) ? mName : mIdentity;
-	}
-
-
-	public Node setBounds(int aX, int aY, int aWidth, int aHeight)
-	{
-		mBounds.setBounds(aX, aY, aWidth, aHeight);
-		return this;
 	}
 
 

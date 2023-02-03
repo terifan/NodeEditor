@@ -38,7 +38,7 @@ public class NodeModel implements Serializable
 		mNodes.add(aNode);
 		aNode.bind(this);
 
-		for (Property item : aNode.mItems)
+		for (Property item : aNode.mProperties)
 		{
 			for (Connector connector : (ArrayList<Connector>)item.mConnectors)
 			{
@@ -185,7 +185,7 @@ public class NodeModel implements Serializable
 	{
 		for (Node node : mNodes)
 		{
-			for (Property item : node.mItems)
+			for (Property item : node.mProperties)
 			{
 				for (Connector connector : (ArrayList<Connector>)item.mConnectors)
 				{

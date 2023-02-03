@@ -8,13 +8,13 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import javax.imageio.ImageIO;
-import org.terifan.nodeeditor.widgets.SliderPropertyItem;
-import org.terifan.nodeeditor.widgets.ImagePropertyItem;
+import org.terifan.nodeeditor.widgets.SliderProperty;
+import org.terifan.nodeeditor.widgets.ImageProperty;
 import javax.swing.JFrame;
-import org.terifan.nodeeditor.widgets.ButtonPropertyItem;
-import org.terifan.nodeeditor.widgets.CheckBoxPropertyItem;
+import org.terifan.nodeeditor.widgets.ButtonProperty;
+import org.terifan.nodeeditor.widgets.CheckBoxProperty;
 import org.terifan.nodeeditor.widgets.ColorChooserNodeItem;
-import org.terifan.nodeeditor.widgets.ComboBoxPropertyItem;
+import org.terifan.nodeeditor.widgets.ComboBoxProperty;
 import static org.terifan.nodeeditor.Direction.IN;
 import static org.terifan.nodeeditor.Direction.OUT;
 import org.terifan.nodeeditor.NodeEditorPane;
@@ -23,7 +23,7 @@ import org.terifan.nodeeditor.NodeModel;
 import static org.terifan.nodeeditor.Styles.GRAY;
 import static org.terifan.nodeeditor.Styles.PURPLE;
 import static org.terifan.nodeeditor.Styles.YELLOW;
-import org.terifan.nodeeditor.widgets.TextPropertyItem;
+import org.terifan.nodeeditor.widgets.TextProperty;
 
 
 public class TestJavaSerializingNodeModel
@@ -46,7 +46,7 @@ public class TestJavaSerializingNodeModel
 			{
 				if ("Rendered.Output".equals(aProperty.getIdentity()))
 				{
-					BufferedImage image = new BufferedImage(200, 200, BufferedImage.TYPE_INT_RGB);
+					BufferedImage image = new BufferedImage(aBounds.width, aBounds.height, BufferedImage.TYPE_INT_RGB);
 					aGraphics.drawImage(image, aBounds.x, aBounds.y, aBounds.width, aBounds.height, null);
 					return true;
 				}
@@ -82,113 +82,113 @@ public class TestJavaSerializingNodeModel
 		NodeModel model = new NodeModel();
 
 		model.addNode(new Node("Color")
-			.addProperty(new TextPropertyItem("Color")
+			.addProperty(new TextProperty("Color")
 				.addConnector(OUT, YELLOW))
-			.addProperty(new SliderPropertyItem("Red", 0, 1, 0)
+			.addProperty(new SliderProperty("Red", 0, 1, 0)
 				.addConnector(IN, GRAY))
-			.addProperty(new SliderPropertyItem("Green", 0, 1, 0.5)
+			.addProperty(new SliderProperty("Green", 0, 1, 0.5)
 				.addConnector(IN, GRAY))
-			.addProperty(new SliderPropertyItem("Blue", 0, 1, 0.75)
+			.addProperty(new SliderProperty("Blue", 0, 1, 0.75)
 				.addConnector(IN, GRAY))
-			.addProperty(new SliderPropertyItem("Alpha", 0, 1, 0.5)
+			.addProperty(new SliderProperty("Alpha", 0, 1, 0.5)
 				.addConnector(IN, GRAY))
 		);
 
 		model.addNode(new Node("Texture")
 			.setIdentity("texture1")
-			.addProperty(new TextPropertyItem("Color")
+			.addProperty(new TextProperty("Color")
 				.addConnector(OUT, YELLOW))
-			.addProperty(new TextPropertyItem("Alpha")
+			.addProperty(new TextProperty("Alpha")
 				.addConnector(OUT, GRAY))
-			.addProperty(new ButtonPropertyItem("Open"))
-			.addProperty(new ImagePropertyItem("image", 200, 200)
+			.addProperty(new ButtonProperty("Open"))
+			.addProperty(new ImageProperty("image", 200, 200)
 				.setImagePath("Big_pebbles_pxr128.jpg"))
-			.addProperty(new TextPropertyItem("Vector")
+			.addProperty(new TextProperty("Vector")
 				.addConnector(IN, PURPLE))
 		);
 
 		model.addNode(new Node("Texture")
 			.setIdentity("texture2")
-			.addProperty(new TextPropertyItem("Color")
+			.addProperty(new TextProperty("Color")
 				.addConnector(OUT, YELLOW))
-			.addProperty(new TextPropertyItem("Alpha")
+			.addProperty(new TextProperty("Alpha")
 				.addConnector(OUT, GRAY))
-			.addProperty(new ButtonPropertyItem("Open"))
-			.addProperty(new ImagePropertyItem("image", 200, 200)
+			.addProperty(new ButtonProperty("Open"))
+			.addProperty(new ImageProperty("image", 200, 200)
 				.setImagePath("Big_pebbles_pxr128_bmp.jpg")
 			)
-			.addProperty(new TextPropertyItem("Vector")
+			.addProperty(new TextProperty("Vector")
 				.addConnector(IN, PURPLE))
 		);
 
 		model.addNode(new Node("Texture")
 			.setIdentity("texture3")
-			.addProperty(new TextPropertyItem("Color")
+			.addProperty(new TextProperty("Color")
 				.addConnector(OUT, YELLOW))
-			.addProperty(new TextPropertyItem("Alpha")
+			.addProperty(new TextProperty("Alpha")
 				.addConnector(OUT, GRAY))
-			.addProperty(new ButtonPropertyItem("Open"))
-			.addProperty(new ImagePropertyItem("image", 200, 200)
+			.addProperty(new ButtonProperty("Open"))
+			.addProperty(new ImageProperty("image", 200, 200)
 				.setImagePath("Big_pebbles_pxr128_normal.jpg"))
-			.addProperty(new TextPropertyItem("Vector")
+			.addProperty(new TextProperty("Vector")
 				.addConnector(IN, PURPLE))
 		);
 
 		model.addNode(new Node("Output")
 			.addProperty(new ColorChooserNodeItem("Surface", new Color(0, 0, 0))
 				.addConnector(IN, YELLOW))
-			.addProperty(new SliderPropertyItem("Alpha", 0, 1, 0.75)
+			.addProperty(new SliderProperty("Alpha", 0, 1, 0.75)
 				.addConnector(IN, GRAY))
-			.addProperty(new ImagePropertyItem("Image", 200, 200)
+			.addProperty(new ImageProperty("Image", 200, 200)
 				.setIdentity("Rendered.Output")
 			)
 		);
 
 		model.addNode(new Node("Alpha")
-			.addProperty(new SliderPropertyItem("Alpha", 0, 1, 0.75)
+			.addProperty(new SliderProperty("Alpha", 0, 1, 0.75)
 				.addConnector(OUT, GRAY))
 		);
 
 		model.addNode(new Node("TextureCoordinate")
-			.addProperty(new TextPropertyItem("UV")
+			.addProperty(new TextProperty("UV")
 				.addConnector(OUT, PURPLE))
 		);
 
 		model.addNode(new Node("Multiply")
 			.setIdentity("math")
-			.addProperty(new TextPropertyItem("Value")
+			.addProperty(new TextProperty("Value")
 				.setIdentity("result")
 				.addConnector(OUT, GRAY))
-			.addProperty(new ComboBoxPropertyItem("Operation", 2, "Add", "Subtract", "Multiply", "Divide", "Absolute", "Modulo", "Greater Than"))
-			.addProperty(new CheckBoxPropertyItem("Clamp", false))
-			.addProperty(new SliderPropertyItem("Value", 0.5, 0.01)
+			.addProperty(new ComboBoxProperty("Operation", 2, "Add", "Subtract", "Multiply", "Divide", "Absolute", "Modulo", "Greater Than"))
+			.addProperty(new CheckBoxProperty("Clamp", false))
+			.addProperty(new SliderProperty("Value", 0.5, 0.01)
 				.setIdentity("value1")
 				.addConnector(IN, GRAY))
-			.addProperty(new SliderPropertyItem("Value", 0.5, 0.01)
+			.addProperty(new SliderProperty("Value", 0.5, 0.01)
 				.setIdentity("value2")
 				.addConnector(IN, GRAY))
 		);
 
 		model.addNode(new Node("Multiply")
 			.setIdentity("math2")
-			.addProperty(new TextPropertyItem("Value")
+			.addProperty(new TextProperty("Value")
 				.setIdentity("result")
 				.addConnector(OUT, GRAY))
-			.addProperty(new ComboBoxPropertyItem("Operation", 2, "Add", "Subtract", "Multiply", "Divide", "Absolute", "Modulo", "Greater Than"))
-			.addProperty(new CheckBoxPropertyItem("Clamp", false))
-			.addProperty(new SliderPropertyItem("Value", 0.5, 0.01)
+			.addProperty(new ComboBoxProperty("Operation", 2, "Add", "Subtract", "Multiply", "Divide", "Absolute", "Modulo", "Greater Than"))
+			.addProperty(new CheckBoxProperty("Clamp", false))
+			.addProperty(new SliderProperty("Value", 0.5, 0.01)
 				.setIdentity("value1")
 				.addConnector(IN, GRAY))
-			.addProperty(new SliderPropertyItem("Value", 0.5, 0.01)
+			.addProperty(new SliderProperty("Value", 0.5, 0.01)
 				.setIdentity("value2")
 				.addConnector(IN, GRAY))
 		);
 
 		model.addNode(new Node("Mix")
-			.addProperty(new TextPropertyItem("Color")
+			.addProperty(new TextProperty("Color")
 				.setIdentity("colorOut")
 				.addConnector(OUT, YELLOW))
-			.addProperty(new SliderPropertyItem("Fac", 0, 1, 0.5)
+			.addProperty(new SliderProperty("Fac", 0, 1, 0.5)
 				.addConnector(IN, GRAY))
 			.addProperty(new ColorChooserNodeItem("Color", new Color(255, 0, 0))
 				.setIdentity("colorIn1")
@@ -199,10 +199,10 @@ public class TestJavaSerializingNodeModel
 		);
 
 		model.addNode(new Node("Mix2")
-			.addProperty(new TextPropertyItem("Color")
+			.addProperty(new TextProperty("Color")
 				.setIdentity("colorOut")
 				.addConnector(OUT, YELLOW))
-			.addProperty(new SliderPropertyItem("Fac", 0, 1, 0.5)
+			.addProperty(new SliderProperty("Fac", 0, 1, 0.5)
 				.addConnector(IN, GRAY))
 			.addProperty(new ColorChooserNodeItem("Color", new Color(255, 0, 0))
 				.setIdentity("colorIn1")

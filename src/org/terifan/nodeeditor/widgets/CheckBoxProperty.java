@@ -13,7 +13,7 @@ import org.terifan.nodeeditor.Styles;
 import org.terifan.ui.Anchor;
 
 
-public class CheckBoxPropertyItem extends Property<CheckBoxPropertyItem>
+public class CheckBoxProperty extends Property<CheckBoxProperty>
 {
 	private final static long serialVersionUID = 1L;
 
@@ -22,7 +22,7 @@ public class CheckBoxPropertyItem extends Property<CheckBoxPropertyItem>
 	private boolean mSelected;
 
 
-	public CheckBoxPropertyItem(String aText, boolean aState)
+	public CheckBoxProperty(String aText, boolean aState)
 	{
 		super(aText);
 

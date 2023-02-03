@@ -7,12 +7,12 @@ import org.terifan.nodeeditor.Property;
 import org.terifan.ui.Anchor;
 
 
-public class TextPropertyItem extends Property<TextPropertyItem>
+public class TextProperty extends Property<TextProperty>
 {
 	private static final long serialVersionUID = 1L;
 
 
-	public TextPropertyItem(String aText)
+	public TextProperty(String aText)
 	{
 		super(aText);
 	}

@@ -14,7 +14,7 @@ import org.terifan.ui.Anchor;
 import org.terifan.ui.TextBox;
 
 
-public class SliderPropertyItem extends Property<SliderPropertyItem>
+public class SliderProperty extends Property<SliderProperty>
 {
 	private final static long serialVersionUID = 1L;
 
@@ -31,7 +31,7 @@ public class SliderPropertyItem extends Property<SliderPropertyItem>
 	private double mStep;
 
 
-	public SliderPropertyItem(String aText, double aValue, double aStepSize)
+	public SliderProperty(String aText, double aValue, double aStepSize)
 	{
 		this(aText, 0.0, 1.0, aValue);
 
@@ -39,7 +39,7 @@ public class SliderPropertyItem extends Property<SliderPropertyItem>
 	}
 
 
-	public SliderPropertyItem(String aText, double aMin, double aMax, double aValue)
+	public SliderProperty(String aText, double aMin, double aMax, double aValue)
 	{
 		super(aText);
 
@@ -56,7 +56,7 @@ public class SliderPropertyItem extends Property<SliderPropertyItem>
 	}
 
 
-	public SliderPropertyItem setValue(double aValue)
+	public SliderProperty setValue(double aValue)
 	{
 		mValue = aValue;
 		return this;

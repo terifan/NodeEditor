@@ -23,8 +23,8 @@ import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 import static org.terifan.nodeeditor.Styles.SELECTION_RECTANGLE_STROKE;
 import org.terifan.nodeeditor.graphics.SplineRenderer;
-import org.terifan.nodeeditor.widgets.ButtonPropertyItem;
-import org.terifan.nodeeditor.widgets.ImagePropertyItem;
+import org.terifan.nodeeditor.widgets.ButtonProperty;
+import org.terifan.nodeeditor.widgets.ImageProperty;
 import static org.terifan.util.Assert.assertNotNull;
 
 
@@ -114,11 +114,11 @@ public class NodeEditorPane extends JComponent
 	/**
 	 * Move all nodes to the center of the screen
 	 */
-	public void center()
+	public NodeEditorPane center()
 	{
 		if (mModel.getNodes().isEmpty())
 		{
-			return;
+			return this;
 		}
 
 		Rectangle bounds = new Rectangle(mModel.getNodes().get(0).getBounds());
@@ -137,6 +137,7 @@ public class NodeEditorPane extends JComponent
 		}
 
 		mPaneScroll = null; // will be centered when pane is repainted
+		return this;
 	}
 
 
@@ -449,7 +450,6 @@ public class NodeEditorPane extends JComponent
 					if (list.size() == 1)
 					{
 						Connector out = list.get(0).getOut();
-						Connector in = list.get(0).getIn();
 
 						mDragConnector = out;
 						mDragEndLocation = out.getConnectorPoint();
@@ -691,7 +691,7 @@ public class NodeEditorPane extends JComponent
 				int x = aPoint.x - b.x;
 				int y = aPoint.y - b.y;
 
-				for (Property item : box)
+				for (Property item : box.getProperties())
 				{
 					for (Connector c : (ArrayList<Connector>)item.mConnectors)
 					{
@@ -730,9 +730,9 @@ public class NodeEditorPane extends JComponent
 			int x = aPoint.x - box.getBounds().x;
 			int y = aPoint.y - box.getBounds().y;
 
-			for (Property item : box)
+			for (Property item : box.getProperties())
 			{
-				for (Connector c : (ArrayList<Connector>)item.mConnectors)
+				for (Connector c : (ArrayList<Connector>)item.getConnectors())
 				{
 					double dx = x - c.getBounds().getCenterX();
 					double dy = y - c.getBounds().getCenterY();
@@ -958,9 +958,10 @@ public class NodeEditorPane extends JComponent
 	}
 
 
-	public void setPopup(Popup aPopup)
+	public NodeEditorPane setPopup(Popup aPopup)
 	{
-		this.mPopup = aPopup;
+		mPopup = aPopup;
+		return this;
 	}
 
 
@@ -971,24 +972,7 @@ public class NodeEditorPane extends JComponent
 	}
 
 
-	public void arrange()
-	{
-		int x = 0;
-		int y = 0;
-
-		for (Node node : mModel.getNodes())
-		{
-			Rectangle bounds = node.getBounds();
-			bounds.x = x;
-			bounds.y = y;
-			bounds.setSize(node.getMinimumSize());
-
-			x += bounds.width + 100;
-		}
-	}
-
-
-	public void paintImage(ImagePropertyItem aProperty, Graphics aGraphics, Rectangle aBounds)
+	public void paintImage(ImageProperty aProperty, Graphics aGraphics, Rectangle aBounds)
 	{
 		for (ImagePainter rl : mImagePainters)
 		{
@@ -1042,7 +1026,7 @@ public class NodeEditorPane extends JComponent
 	}
 
 
-	public void fireButtonClicked(ButtonPropertyItem aButton)
+	public void fireButtonClicked(ButtonProperty aButton)
 	{
 		for (OnClickHandler handler : mButtonHandlers)
 		{

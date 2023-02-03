@@ -115,7 +115,7 @@ public abstract class Property<T extends Property> implements Serializable
 	}
 
 
-	public List<Connector> getConnectors()
+	public ArrayList<Connector> getConnectors()
 	{
 		return mConnectors;
 	}

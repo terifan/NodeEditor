@@ -16,7 +16,7 @@ import org.terifan.ui.Anchor;
 import org.terifan.ui.TextBox;
 
 
-public class ComboBoxPropertyItem extends Property<ComboBoxPropertyItem>
+public class ComboBoxProperty extends Property<ComboBoxProperty>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -31,7 +31,7 @@ public class ComboBoxPropertyItem extends Property<ComboBoxPropertyItem>
 	protected ArrayList<String> mOptions;
 
 
-	public ComboBoxPropertyItem(String aText, int aSelectedIndex, String... aOptions)
+	public ComboBoxProperty(String aText, int aSelectedIndex, String... aOptions)
 	{
 		super(aOptions[aSelectedIndex]);
 
@@ -136,7 +136,7 @@ public class ComboBoxPropertyItem extends Property<ComboBoxPropertyItem>
 	}
 
 
-	public ComboBoxPropertyItem setSelectedIndex(int aSelectedIndex)
+	public ComboBoxProperty setSelectedIndex(int aSelectedIndex)
 	{
 		mSelectedIndex = aSelectedIndex;
 		setText(mOptions.get(mSelectedIndex));

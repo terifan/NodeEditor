@@ -7,14 +7,14 @@ import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Property;
 
 
-public class ImagePropertyItem extends Property<ImagePropertyItem>
+public class ImageProperty extends Property<ImageProperty>
 {
 	private static final long serialVersionUID = 1L;
 
 	protected String mImagePath;
 
 
-	public ImagePropertyItem(String aText, int aWidth, int aHeight)
+	public ImageProperty(String aText, int aWidth, int aHeight)
 	{
 		super(aText);
 
@@ -28,7 +28,7 @@ public class ImagePropertyItem extends Property<ImagePropertyItem>
 	}
 
 
-	public ImagePropertyItem setImagePath(String aImagePath)
+	public ImageProperty setImagePath(String aImagePath)
 	{
 		mImagePath = aImagePath;
 		return this;
