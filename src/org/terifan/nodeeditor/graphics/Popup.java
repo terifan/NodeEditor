@@ -48,7 +48,7 @@ public class Popup implements Renderable
 		mSelectedOption = null;
 		mAboveField = false;
 
-		mBounds = new Rectangle(mOwner.getOwnerNode().getBounds().x + aBounds.x, mOwner.getOwnerNode().getBounds().y + aBounds.y, aBounds.width, aBounds.height);
+		mBounds = new Rectangle(mOwner.getNode().getBounds().x + aBounds.x, mOwner.getNode().getBounds().y + aBounds.y, aBounds.width, aBounds.height);
 
 		if (!mOptions.isEmpty())
 		{

@@ -84,7 +84,7 @@ public class Connector implements Serializable
 
 	Point getConnectorPoint()
 	{
-		Rectangle bounds = mNodeItem.getOwnerNode().getBounds();
+		Rectangle bounds = mNodeItem.getNode().getBounds();
 
 		return new Point(bounds.x + mBounds.x + mBounds.width / 2, bounds.y + mBounds.y + mBounds.height / 2);
 	}
@@ -92,6 +92,6 @@ public class Connector implements Serializable
 
 	public Stream<PropertyItem> getConnectedItems()
 	{
-		return mDirection == Direction.IN ? mNodeItem.getOwnerNode().getModel().getConnectionsTo(this) : mNodeItem.getOwnerNode().getModel().getConnectionsFrom(this);
+		return mDirection == Direction.IN ? mNodeItem.getNode().getModel().getConnectionsTo(this) : mNodeItem.getNode().getModel().getConnectionsFrom(this);
 	}
 }

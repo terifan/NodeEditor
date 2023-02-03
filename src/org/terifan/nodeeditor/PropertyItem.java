@@ -56,7 +56,7 @@ public abstract class PropertyItem implements Serializable
 	}
 
 
-	public Node getOwnerNode()
+	public Node getNode()
 	{
 		return mOwnerNode;
 	}

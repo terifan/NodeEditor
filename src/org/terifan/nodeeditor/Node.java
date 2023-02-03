@@ -543,7 +543,7 @@ public class Node implements Iterable<PropertyItem>, Renderable, Serializable
 //	}
 
 
-	public PropertyItem getItem(String aPath)
+	public PropertyItem getProperty(String aPath)
 	{
 		String id = aPath.contains(".") ? aPath.split("\\.")[1] : aPath;
 		PropertyItem item = null;

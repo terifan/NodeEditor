@@ -169,7 +169,7 @@ public class NodeModel implements Serializable
 
 	public PropertyItem getNodeItem(String aPath)
 	{
-		return getNode(aPath).getItem(aPath);
+		return getNode(aPath).getProperty(aPath);
 	}
 
 
@@ -205,9 +205,9 @@ public class NodeModel implements Serializable
 
 		for (Connection conn : mConnections)
 		{
-			if (conn.getOut().getPropertyItem().getOwnerNode() == aParent)
+			if (conn.getOut().getPropertyItem().getNode() == aParent)
 			{
-				result.add(conn.getIn().getPropertyItem().getOwnerNode());
+				result.add(conn.getIn().getPropertyItem().getNode());
 			}
 		}
 

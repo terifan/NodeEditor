@@ -84,10 +84,7 @@ public class ButtonPropertyItem extends AbstractPropertyItem<ButtonPropertyItem>
 	@Override
 	protected void actionPerformed(NodeEditor aEditor, Point aClickPoint)
 	{
-//		if (mButtonAction != null)
-//		{
-//			mButtonAction.onClick(this);
-//		}
+		aEditor.fireButtonClicked(this);
 	}
 
 

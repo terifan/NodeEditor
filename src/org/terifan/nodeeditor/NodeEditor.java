@@ -15,12 +15,15 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 import org.terifan.nodeeditor.graphics.SplineRenderer;
+import org.terifan.nodeeditor.widgets.ButtonPropertyItem;
 import org.terifan.nodeeditor.widgets.ImagePropertyItem;
 
 
@@ -33,7 +36,12 @@ public class NodeEditor extends JComponent
 		3
 	}, 0);
 
-	private ArrayList<ImagePainter> mImagePainters;
+	private transient final ArrayList<NodeEditorButtonClickHandler> mButtonHandlers;
+	private transient final ArrayList<ImagePainter> mImagePainters;
+	private transient Popup mPopup;
+	private transient PropertyItem mClickedItem;
+
+	private NodeModel mModel;
 	private ArrayList<Node> mSelectedNodes;
 	private Connection mSelectedConnection;
 	private Connector mDragConnector;
@@ -42,15 +50,13 @@ public class NodeEditor extends JComponent
 	private Rectangle mSelectionRectangle;
 	private Point mPaneScroll;
 	private boolean mConnectorSelectionAllowed;
-	private double mScale;
 	private boolean mRemoveInConnectionsOnDrop;
-	private PropertyItem mClickedItem;
-	private Popup mPopup;
-	private NodeModel mModel;
+	private double mScale;
 
 
 	public NodeEditor(NodeModel aModel)
 	{
+		mButtonHandlers = new ArrayList<>();
 		mModel = aModel;
 		mSelectedNodes = new ArrayList<>();
 		mScale = 1;
@@ -175,11 +181,11 @@ public class NodeEditor extends JComponent
 				assertNotNull(connection.getOut(), "connection.getOut() == null");
 				assertNotNull(connection.getIn().getPropertyItem(), "connection.getIn().getNodeItem() == null");
 				assertNotNull(connection.getOut().getPropertyItem(), "connection.getOut().getNodeItem() == null");
-				assertNotNull(connection.getIn().getPropertyItem().getOwnerNode(), "connection.getIn().getNodeItem().getNode() == null");
-				assertNotNull(connection.getOut().getPropertyItem().getOwnerNode(), "connection.getOut().getNodeItem().getNode() == null");
+				assertNotNull(connection.getIn().getPropertyItem().getNode(), "connection.getIn().getNodeItem().getNode() == null");
+				assertNotNull(connection.getOut().getPropertyItem().getNode(), "connection.getOut().getNodeItem().getNode() == null");
 
-				Color start = mSelectedNodes.contains(connection.getOut().getPropertyItem().getOwnerNode()) ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : Styles.CONNECTOR_COLOR_INNER;
-				Color end = mSelectedNodes.contains(connection.getIn().getPropertyItem().getOwnerNode()) ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : Styles.CONNECTOR_COLOR_INNER;
+				Color start = mSelectedNodes.contains(connection.getOut().getPropertyItem().getNode()) ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : Styles.CONNECTOR_COLOR_INNER;
+				Color end = mSelectedNodes.contains(connection.getIn().getPropertyItem().getNode()) ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : Styles.CONNECTOR_COLOR_INNER;
 
 				SplineRenderer.drawSpline(g, connection, mScale, Styles.CONNECTOR_COLOR_OUTER, start, end);
 			}
@@ -685,7 +691,7 @@ public class NodeEditor extends JComponent
 
 			for (Node box : mModel.getNodes())
 			{
-				if (mDragConnector != null && mDragConnector.getPropertyItem().getOwnerNode() == box)
+				if (mDragConnector != null && mDragConnector.getPropertyItem().getNode() == box)
 				{
 					continue;
 				}
@@ -725,7 +731,7 @@ public class NodeEditor extends JComponent
 			double dist = 25;
 			boolean hitBox = false;
 
-			if (mDragConnector != null && mDragConnector.getPropertyItem().getOwnerNode() == box)
+			if (mDragConnector != null && mDragConnector.getPropertyItem().getNode() == box)
 			{
 				return null;
 			}
@@ -1014,6 +1020,53 @@ public class NodeEditor extends JComponent
 			catch (Exception e)
 			{
 				e.printStackTrace(System.out);
+			}
+		}
+
+		try
+		{
+			FALLBACK_PAINTER.paintImage(this, aProperty, aGraphics, aBounds);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace(System.out);
+		}
+	}
+
+
+	private static ImagePainter FALLBACK_PAINTER = (aEditor, aProperty, aGraphics, aBounds) ->
+	{
+		if (aProperty.getImagePath() != null)
+		{
+			File file = new File(aProperty.getImagePath());
+			if (file.exists())
+			{
+				BufferedImage image = ImageIO.read(file);
+				if (image != null)
+				{
+					aGraphics.drawImage(image, aBounds.x, aBounds.y, aBounds.width, aBounds.height, null);
+					return true;
+				}
+			}
+		}
+		return false;
+	};
+
+
+	public NodeEditor addButtonHandler(NodeEditorButtonClickHandler aHandler)
+	{
+		mButtonHandlers.add(aHandler);
+		return this;
+	}
+
+
+	public void fireButtonClicked(ButtonPropertyItem aButton)
+	{
+		for (NodeEditorButtonClickHandler handler : mButtonHandlers)
+		{
+			if (handler.onClick(aButton))
+			{
+				return;
 			}
 		}
 	}
