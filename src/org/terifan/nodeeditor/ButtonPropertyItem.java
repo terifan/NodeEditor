@@ -9,7 +9,7 @@ import org.terifan.ui.ImageResizer;
 import org.terifan.ui.TextBox;
 
 
-public class ButtonNodeItem extends AbstractNodeItem<ButtonNodeItem>
+public class ButtonPropertyItem extends AbstractPropertyItem<ButtonPropertyItem>
 {
 	private final static long serialVersionUID = 1L;
 	private final static float[] RANGES = new float[]{0f,1f};
@@ -17,14 +17,14 @@ public class ButtonNodeItem extends AbstractNodeItem<ButtonNodeItem>
 	private boolean mArmed;
 
 
-	protected ButtonNodeItem()
+	protected ButtonPropertyItem()
 	{
 		mTextBox.setAnchor(Anchor.CENTER).setMargins(0, 0, 0, 0).setMaxLineCount(1).setFont(Styles.SLIDER_FONT);
 		mPreferredSize.height = 22;
 	}
 
 
-	public ButtonNodeItem(String aText)
+	public ButtonPropertyItem(String aText)
 	{
 		super(aText);
 
@@ -33,15 +33,15 @@ public class ButtonNodeItem extends AbstractNodeItem<ButtonNodeItem>
 	}
 
 
-	@Override
-	public TextBox getTextBox()
-	{
-		return super.getTextBox();
-	}
+//	@Override
+//	public TextBox getTextBox()
+//	{
+//		return super.getTextBox();
+//	}
 
 
 	@Override
-	public ButtonNodeItem setText(String aText)
+	public ButtonPropertyItem setText(String aText)
 	{
 		super.setText(aText);
 		return this;
@@ -106,6 +106,6 @@ public class ButtonNodeItem extends AbstractNodeItem<ButtonNodeItem>
 	@FunctionalInterface
 	public interface ButtonAction
 	{
-		void onClick(ButtonNodeItem aItem);
+		void onClick(ButtonPropertyItem aItem);
 	}
 }

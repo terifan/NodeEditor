@@ -104,7 +104,7 @@ public class Styles
 	{
 		try
 		{
-			DIRECTORY_ICON = ImageIO.read(ButtonNodeItem.class.getResource("directory.png"));
+			DIRECTORY_ICON = ImageIO.read(ButtonPropertyItem.class.getResource("directory.png"));
 		}
 		catch (IOException e)
 		{

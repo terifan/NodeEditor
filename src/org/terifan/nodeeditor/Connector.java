@@ -20,7 +20,7 @@ public class Connector implements Serializable
 
 	protected final Rectangle mBounds = new Rectangle();
 	protected Direction mDirection;
-	protected NodeItem mNodeItem;
+	protected PropertyItem mNodeItem;
 	protected Color mColor;
 	protected int mModelRef;
 
@@ -46,13 +46,13 @@ public class Connector implements Serializable
 	}
 
 
-	void bind(NodeItem aNodeItem)
+	void bind(PropertyItem aNodeItem)
 	{
 		mNodeItem = aNodeItem;
 	}
 
 
-	public NodeItem getNodeItem()
+	public PropertyItem getPropertyItem()
 	{
 		return mNodeItem;
 	}
@@ -84,14 +84,14 @@ public class Connector implements Serializable
 
 	Point getConnectorPoint()
 	{
-		Rectangle bounds = mNodeItem.getNode().getBounds();
+		Rectangle bounds = mNodeItem.getOwnerNode().getBounds();
 
 		return new Point(bounds.x + mBounds.x + mBounds.width / 2, bounds.y + mBounds.y + mBounds.height / 2);
 	}
 
 
-	public Stream<NodeItem> getConnectedItems()
+	public Stream<PropertyItem> getConnectedItems()
 	{
-		return mDirection == Direction.IN ? mNodeItem.getNode().getModel().getConnectionsTo(this) : mNodeItem.getNode().getModel().getConnectionsFrom(this);
+		return mDirection == Direction.IN ? mNodeItem.getOwnerNode().getModel().getConnectionsTo(this) : mNodeItem.getOwnerNode().getModel().getConnectionsFrom(this);
 	}
 }

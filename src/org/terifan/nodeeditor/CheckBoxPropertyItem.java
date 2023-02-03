@@ -10,7 +10,7 @@ import java.awt.Stroke;
 import org.terifan.ui.Anchor;
 
 
-public class CheckBoxNodeItem extends AbstractNodeItem
+public class CheckBoxPropertyItem extends AbstractPropertyItem
 {
 	private final static long serialVersionUID = 1L;
 
@@ -19,12 +19,12 @@ public class CheckBoxNodeItem extends AbstractNodeItem
 	private boolean mSelected;
 
 
-	protected CheckBoxNodeItem()
+	protected CheckBoxPropertyItem()
 	{
 	}
 
 
-	public CheckBoxNodeItem(String aText, boolean aState)
+	public CheckBoxPropertyItem(String aText, boolean aState)
 	{
 		super(aText);
 

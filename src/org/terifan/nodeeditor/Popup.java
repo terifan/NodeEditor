@@ -20,7 +20,7 @@ public class Popup implements Renderable, Serializable
 
 	protected final NodeEditor mEditor;
 	protected final Rectangle mBounds;
-	protected final NodeItem mOwner;
+	protected final PropertyItem mOwner;
 	protected final boolean mAboveField;
 	protected final ResultReceiver mResultReceiver;
 	protected List<Option> mOptions;
@@ -37,7 +37,7 @@ public class Popup implements Renderable, Serializable
 	 * @param aOptions list of selectable options, can be empty
 	 * @param aResultReceiver
 	 */
-	public Popup(NodeEditor aEditor, NodeItem aOwner, String aHeader, Rectangle aBounds, List<Option> aOptions, ResultReceiver aResultReceiver)
+	public Popup(NodeEditor aEditor, PropertyItem aOwner, String aHeader, Rectangle aBounds, List<Option> aOptions, ResultReceiver aResultReceiver)
 	{
 		mHeader = aHeader;
 		mOwner = aOwner;
@@ -47,7 +47,7 @@ public class Popup implements Renderable, Serializable
 		mSelectedOption = null;
 		mAboveField = false;
 
-		mBounds = new Rectangle(mOwner.getNode().getBounds().x + aBounds.x, mOwner.getNode().getBounds().y + aBounds.y, aBounds.width, aBounds.height);
+		mBounds = new Rectangle(mOwner.getOwnerNode().getBounds().x + aBounds.x, mOwner.getOwnerNode().getBounds().y + aBounds.y, aBounds.width, aBounds.height);
 
 		if (!mOptions.isEmpty())
 		{

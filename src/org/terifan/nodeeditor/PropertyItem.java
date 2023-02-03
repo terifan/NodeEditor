@@ -14,7 +14,7 @@ import org.terifan.ui.TextBox;
 import org.terifan.util.Strings;
 
 
-public abstract class NodeItem implements Serializable
+public abstract class PropertyItem implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -25,10 +25,10 @@ public abstract class NodeItem implements Serializable
 	protected HashMap<String, String> mProperties;
 	protected boolean mUserSetSize;
 	protected String mIdentity;
-	protected Node mNode;
+	protected Node mOwnerNode;
 
 
-	protected NodeItem()
+	protected PropertyItem()
 	{
 		mConnectors = new ArrayList<>();
 		mProperties = new HashMap<>();
@@ -38,7 +38,7 @@ public abstract class NodeItem implements Serializable
 	}
 
 
-	public NodeItem(String aText)
+	public PropertyItem(String aText)
 	{
 		this();
 
@@ -48,13 +48,13 @@ public abstract class NodeItem implements Serializable
 
 	void bind(Node aNode)
 	{
-		mNode = aNode;
+		mOwnerNode = aNode;
 	}
 
 
-	public Node getNode()
+	public Node getOwnerNode()
 	{
-		return mNode;
+		return mOwnerNode;
 	}
 
 
@@ -64,7 +64,7 @@ public abstract class NodeItem implements Serializable
 	}
 
 
-	public NodeItem setIdentity(String aIdentity)
+	public PropertyItem setIdentity(String aIdentity)
 	{
 		mIdentity = aIdentity;
 		return this;
@@ -77,16 +77,10 @@ public abstract class NodeItem implements Serializable
 	}
 
 
-	public NodeItem putProperty(String aName, String aValue)
+	public PropertyItem putProperty(String aName, String aValue)
 	{
 		mProperties.put(aName, aValue);
 		return this;
-	}
-
-
-	protected TextBox getTextBox()
-	{
-		return mTextBox;
 	}
 
 
@@ -96,7 +90,7 @@ public abstract class NodeItem implements Serializable
 	}
 
 
-	protected NodeItem setText(String aText)
+	protected PropertyItem setText(String aText)
 	{
 		mTextBox.setText(aText);
 		return this;
@@ -163,20 +157,20 @@ public abstract class NodeItem implements Serializable
 	}
 
 
-	public NodeItem add(Connector aConnector)
+	public PropertyItem add(Connector aConnector)
 	{
 		mConnectors.add(aConnector);
 		return this;
 	}
 
 
-	public NodeItem addConnector(Direction aDirection, Color aColor)
+	public PropertyItem addConnector(Direction aDirection, Color aColor)
 	{
 		return add(new Connector(aDirection, aColor));
 	}
 
 
-	public NodeItem addConnector(Direction aDirection)
+	public PropertyItem addConnector(Direction aDirection)
 	{
 		return add(new Connector(aDirection, Color.YELLOW));
 	}

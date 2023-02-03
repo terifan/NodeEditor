@@ -5,37 +5,37 @@ import org.terifan.ui.Anchor;
 import org.terifan.ui.TextBox;
 
 
-public class TextNodeItem extends AbstractNodeItem<TextNodeItem>
+public class TextPropertyItem extends AbstractPropertyItem<TextPropertyItem>
 {
 	private static final long serialVersionUID = 1L;
 
 
-	protected TextNodeItem()
+	protected TextPropertyItem()
 	{
 	}
 
 
-	public TextNodeItem(String aText)
+	public TextPropertyItem(String aText)
 	{
 		super(aText);
 	}
 
 
-	public TextNodeItem(String aText, int aWidth, int aHeight)
+	public TextPropertyItem(String aText, int aWidth, int aHeight)
 	{
 		super(aText, aWidth, aHeight);
 	}
 
 
-	@Override
-	public TextBox getTextBox()
-	{
-		return super.getTextBox();
-	}
+//	@Override
+//	public TextBox getTextBox()
+//	{
+//		return super.getTextBox();
+//	}
 
 
 	@Override
-	public TextNodeItem setText(String aText)
+	public TextPropertyItem setText(String aText)
 	{
 		super.setText(aText);
 		return this;

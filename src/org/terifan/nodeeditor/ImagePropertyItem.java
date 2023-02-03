@@ -6,14 +6,14 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 
 
-public class ImageNodeItem extends AbstractNodeItem<ImageNodeItem>
+public class ImagePropertyItem extends AbstractPropertyItem<ImagePropertyItem>
 {
 	private static final long serialVersionUID = 1L;
 
 	protected String mImagePath;
 
 
-	public ImageNodeItem(String aText, int aWidth, int aHeight)
+	public ImagePropertyItem(String aText, int aWidth, int aHeight)
 	{
 		super(aText, aWidth, aHeight);
 
@@ -27,7 +27,7 @@ public class ImageNodeItem extends AbstractNodeItem<ImageNodeItem>
 	}
 
 
-	public ImageNodeItem setImagePath(String aImagePath)
+	public ImagePropertyItem setImagePath(String aImagePath)
 	{
 		mImagePath = aImagePath;
 		return this;

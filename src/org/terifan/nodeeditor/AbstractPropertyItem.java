@@ -3,18 +3,18 @@ package org.terifan.nodeeditor;
 import java.awt.Dimension;
 
 
-public abstract class AbstractNodeItem<T extends AbstractNodeItem> extends NodeItem
+public abstract class AbstractPropertyItem<T extends AbstractPropertyItem> extends PropertyItem
 {
-	private static final long serialVersionUID = 1L;
+	private final static long serialVersionUID = 1L;
 
 
-	protected AbstractNodeItem()
+	protected AbstractPropertyItem()
 	{
 		prepare();
 	}
 
 
-	public AbstractNodeItem(String aText)
+	public AbstractPropertyItem(String aText)
 	{
 		this(aText, 0, 0);
 
@@ -22,7 +22,7 @@ public abstract class AbstractNodeItem<T extends AbstractNodeItem> extends NodeI
 	}
 
 
-	public AbstractNodeItem(String aText, int aWidth, int aHeight)
+	public AbstractPropertyItem(String aText, int aWidth, int aHeight)
 	{
 		super(aText);
 
@@ -65,13 +65,6 @@ public abstract class AbstractNodeItem<T extends AbstractNodeItem> extends NodeI
 	{
 		return (T)super.putProperty(aName, aValue);
 	}
-
-
-//	@Override
-//	public T setOnInputChange(OnInputChangeListener aOnInputChangeListener)
-//	{
-//		return (T)super.setOnInputChange(aOnInputChangeListener);
-//	}
 
 
 	@Override

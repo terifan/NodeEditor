@@ -44,7 +44,7 @@ public class NodeEditor extends JComponent
 	private boolean mConnectorSelectionAllowed;
 	private double mScale;
 	private boolean mRemoveInConnectionsOnDrop;
-	private NodeItem mClickedItem;
+	private PropertyItem mClickedItem;
 	private Popup mPopup;
 	private NodeModel mModel;
 	private Class mResourceContext;
@@ -203,13 +203,13 @@ public class NodeEditor extends JComponent
 			{
 				assertNotNull(connection.getIn(), "connection.getIn() == null");
 				assertNotNull(connection.getOut(), "connection.getOut() == null");
-				assertNotNull(connection.getIn().getNodeItem(), "connection.getIn().getNodeItem() == null");
-				assertNotNull(connection.getOut().getNodeItem(), "connection.getOut().getNodeItem() == null");
-				assertNotNull(connection.getIn().getNodeItem().getNode(), "connection.getIn().getNodeItem().getNode() == null");
-				assertNotNull(connection.getOut().getNodeItem().getNode(), "connection.getOut().getNodeItem().getNode() == null");
+				assertNotNull(connection.getIn().getPropertyItem(), "connection.getIn().getNodeItem() == null");
+				assertNotNull(connection.getOut().getPropertyItem(), "connection.getOut().getNodeItem() == null");
+				assertNotNull(connection.getIn().getPropertyItem().getOwnerNode(), "connection.getIn().getNodeItem().getNode() == null");
+				assertNotNull(connection.getOut().getPropertyItem().getOwnerNode(), "connection.getOut().getNodeItem().getNode() == null");
 
-				Color start = mSelectedNodes.contains(connection.getOut().getNodeItem().getNode()) ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : Styles.CONNECTOR_COLOR_INNER;
-				Color end = mSelectedNodes.contains(connection.getIn().getNodeItem().getNode()) ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : Styles.CONNECTOR_COLOR_INNER;
+				Color start = mSelectedNodes.contains(connection.getOut().getPropertyItem().getOwnerNode()) ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : Styles.CONNECTOR_COLOR_INNER;
+				Color end = mSelectedNodes.contains(connection.getIn().getPropertyItem().getOwnerNode()) ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : Styles.CONNECTOR_COLOR_INNER;
 
 				SplineRenderer.drawSpline(g, connection, mScale, Styles.CONNECTOR_COLOR_OUTER, start, end);
 			}
@@ -453,7 +453,7 @@ public class NodeEditor extends JComponent
 						return;
 					}
 
-					NodeItem tmp = box.mousePressed(mClickPoint);
+					PropertyItem tmp = box.mousePressed(mClickPoint);
 					if (tmp != null)
 					{
 						if (tmp.mousePressed(NodeEditor.this, mClickPoint))
@@ -478,7 +478,7 @@ public class NodeEditor extends JComponent
 				boolean done = false;
 				if (mDragConnector.getDirection() == Direction.IN)
 				{
-					List<Connection> list = mModel.getConnectionsTo(mDragConnector.getNodeItem()).collect(Collectors.toList());
+					List<Connection> list = mModel.getConnectionsTo(mDragConnector.getPropertyItem()).collect(Collectors.toList());
 					if (list.size() == 1)
 					{
 						Connector out = list.get(0).getOut();
@@ -551,11 +551,11 @@ public class NodeEditor extends JComponent
 					{
 						if (nearestConnector.getDirection() == Direction.IN)
 						{
-							mModel.getConnections().removeAll(mModel.getConnectionsTo(nearestConnector.getNodeItem()).collect(Collectors.toList()));
+							mModel.getConnections().removeAll(mModel.getConnectionsTo(nearestConnector.getPropertyItem()).collect(Collectors.toList()));
 						}
 						if (nearestConnector.getDirection() == Direction.OUT)
 						{
-							mModel.getConnections().removeAll(mModel.getConnectionsTo(mDragConnector.getNodeItem()).collect(Collectors.toList()));
+							mModel.getConnections().removeAll(mModel.getConnectionsTo(mDragConnector.getPropertyItem()).collect(Collectors.toList()));
 						}
 					}
 
@@ -568,7 +568,7 @@ public class NodeEditor extends JComponent
 						mModel.addConnection(mDragConnector, nearestConnector);
 					}
 
-					nearestConnector.getNodeItem().connectionsChanged(NodeEditor.this, mClickPoint);
+					nearestConnector.getPropertyItem().connectionsChanged(NodeEditor.this, mClickPoint);
 				}
 
 				mDragConnector = null;
@@ -715,7 +715,7 @@ public class NodeEditor extends JComponent
 
 			for (Node box : mModel.getNodes())
 			{
-				if (mDragConnector != null && mDragConnector.getNodeItem().getNode() == box)
+				if (mDragConnector != null && mDragConnector.getPropertyItem().getOwnerNode() == box)
 				{
 					continue;
 				}
@@ -724,7 +724,7 @@ public class NodeEditor extends JComponent
 				int x = aPoint.x - b.x;
 				int y = aPoint.y - b.y;
 
-				for (NodeItem item : box)
+				for (PropertyItem item : box)
 				{
 					for (Connector c : item.mConnectors)
 					{
@@ -755,7 +755,7 @@ public class NodeEditor extends JComponent
 			double dist = 25;
 			boolean hitBox = false;
 
-			if (mDragConnector != null && mDragConnector.getNodeItem().getNode() == box)
+			if (mDragConnector != null && mDragConnector.getPropertyItem().getOwnerNode() == box)
 			{
 				return null;
 			}
@@ -763,7 +763,7 @@ public class NodeEditor extends JComponent
 			int x = aPoint.x - box.getBounds().x;
 			int y = aPoint.y - box.getBounds().y;
 
-			for (NodeItem item : box)
+			for (PropertyItem item : box)
 			{
 				for (Connector c : item.mConnectors)
 				{
@@ -997,11 +997,11 @@ public class NodeEditor extends JComponent
 	}
 
 
-	protected BufferedImage getImageResource(NodeItem aItem)
+	protected BufferedImage getImageResource(PropertyItem aItem)
 	{
 		try
 		{
-			ResourceLoader loader = mResourceLoaders.get((aItem.getNode().getIdentityOrName() + "." + aItem.getIdentityOrName()).toLowerCase());
+			ResourceLoader loader = mResourceLoaders.get((aItem.getOwnerNode().getIdentityOrName() + "." + aItem.getIdentityOrName()).toLowerCase());
 			if (loader == null)
 			{
 				return null;
@@ -1068,6 +1068,6 @@ public class NodeEditor extends JComponent
 
 	public interface ResourceLoader
 	{
-		Object load(NodeItem aItem) throws Exception;
+		Object load(PropertyItem aItem) throws Exception;
 	}
 }

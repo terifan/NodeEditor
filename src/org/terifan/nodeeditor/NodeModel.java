@@ -45,7 +45,7 @@ public class NodeModel implements Serializable
 
 		aNode.bind(this);
 
-		for (NodeItem item : aNode.mItems)
+		for (PropertyItem item : aNode.mItems)
 		{
 			for (Connector connector : item.mConnectors)
 			{
@@ -91,8 +91,8 @@ public class NodeModel implements Serializable
 
 	public NodeModel addConnection(String aFromPath, String aToPath)
 	{
-		NodeItem fromNode = getNodeItem(aFromPath);
-		NodeItem toNode = getNodeItem(aToPath);
+		PropertyItem fromNode = getNodeItem(aFromPath);
+		PropertyItem toNode = getNodeItem(aToPath);
 
 		assertNotNull(fromNode, "From path cannot be resolved to a Node: path: %s", aFromPath);
 		assertNotNull(toNode, "To path cannot be resolved to a Node: path: %s", aToPath);
@@ -107,7 +107,7 @@ public class NodeModel implements Serializable
 	}
 
 
-	public NodeModel addConnection(NodeItem aFromItem, NodeItem aToItem)
+	public NodeModel addConnection(PropertyItem aFromItem, PropertyItem aToItem)
 	{
 		Connector out = null;
 		Connector in = null;
@@ -128,14 +128,8 @@ public class NodeModel implements Serializable
 			}
 		}
 
-		if (out == null)
-		{
-			throw new IllegalArgumentException("The 'FromItem' has no connectors.");
-		}
-		if (in == null)
-		{
-			throw new IllegalArgumentException("The 'ToItem' has no connectors.");
-		}
+		assertNotNull(out, "The 'FromItem' has no connectors.");
+		assertNotNull(in, "The 'ToItem' has no connectors.");
 
 		return addConnection(out, in);
 	}
@@ -149,37 +143,37 @@ public class NodeModel implements Serializable
 	}
 
 
-	public Stream<Connection> getConnectionsTo(NodeItem aItem)
+	public Stream<Connection> getConnectionsTo(PropertyItem aItem)
 	{
-		return mConnections.stream().filter(e -> e.getIn().getNodeItem() == aItem);
+		return mConnections.stream().filter(e -> e.getIn().getPropertyItem() == aItem);
 	}
 
 
-	public Stream<Connection> getConnectionsFrom(NodeItem aItem)
+	public Stream<Connection> getConnectionsFrom(PropertyItem aItem)
 	{
-		return mConnections.stream().filter(e -> e.getOut().getNodeItem() == aItem);
+		return mConnections.stream().filter(e -> e.getOut().getPropertyItem() == aItem);
 	}
 
 
-	public Stream<NodeItem> getConnectionsTo(Connector aConnector)
+	public Stream<PropertyItem> getConnectionsTo(Connector aConnector)
 	{
-		return mConnections.stream().filter(e -> e.getIn() == aConnector).map(e -> e.getIn().getNodeItem());
+		return mConnections.stream().filter(e -> e.getIn() == aConnector).map(e -> e.getIn().getPropertyItem());
 	}
 
 
-	public Stream<NodeItem> getConnectionsFrom(Connector aConnector)
+	public Stream<PropertyItem> getConnectionsFrom(Connector aConnector)
 	{
-		return mConnections.stream().filter(e -> e.getOut() == aConnector).map(e -> e.getOut().getNodeItem());
+		return mConnections.stream().filter(e -> e.getOut() == aConnector).map(e -> e.getOut().getPropertyItem());
 	}
 
 
-	public NodeItem getNodeItem(String aPath)
+	public PropertyItem getNodeItem(String aPath)
 	{
 		return getNode(aPath).getItem(aPath);
 	}
 
 
-	public <T extends NodeItem> T getNodeItem(Class<T> aReturnType, String aPath)
+	public <T extends PropertyItem> T getNodeItem(Class<T> aReturnType, String aPath)
 	{
 		return (T)getNodeItem(aPath);
 	}
@@ -189,7 +183,7 @@ public class NodeModel implements Serializable
 	{
 		for (Node node : mNodes)
 		{
-			for (NodeItem item : node.mItems)
+			for (PropertyItem item : node.mItems)
 			{
 				for (Connector connector : item.mConnectors)
 				{
@@ -211,9 +205,9 @@ public class NodeModel implements Serializable
 
 		for (Connection conn : mConnections)
 		{
-			if (conn.getOut().getNodeItem().getNode() == aParent)
+			if (conn.getOut().getPropertyItem().getOwnerNode() == aParent)
 			{
-				result.add(conn.getIn().getNodeItem().getNode());
+				result.add(conn.getIn().getPropertyItem().getOwnerNode());
 			}
 		}
 

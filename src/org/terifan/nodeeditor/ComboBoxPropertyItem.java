@@ -12,7 +12,7 @@ import org.terifan.ui.Anchor;
 import org.terifan.ui.TextBox;
 
 
-public class ComboBoxNodeItem extends AbstractNodeItem
+public class ComboBoxPropertyItem extends AbstractPropertyItem
 {
 	private static final long serialVersionUID = 1L;
 
@@ -27,12 +27,12 @@ public class ComboBoxNodeItem extends AbstractNodeItem
 	protected ArrayList<String> mOptions;
 
 
-	protected ComboBoxNodeItem()
+	protected ComboBoxPropertyItem()
 	{
 	}
 
 
-	public ComboBoxNodeItem(String aText, int aSelectedIndex, String... aOptions)
+	public ComboBoxPropertyItem(String aText, int aSelectedIndex, String... aOptions)
 	{
 		super(aOptions[aSelectedIndex]);
 
@@ -138,7 +138,7 @@ public class ComboBoxNodeItem extends AbstractNodeItem
 	}
 
 
-	public ComboBoxNodeItem setSelectedIndex(int aSelectedIndex)
+	public ComboBoxPropertyItem setSelectedIndex(int aSelectedIndex)
 	{
 		mSelectedIndex = aSelectedIndex;
 		setText(mOptions.get(mSelectedIndex));

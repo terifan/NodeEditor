@@ -6,19 +6,19 @@ import javax.swing.AbstractAction;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
-import org.terifan.nodeeditor.ButtonNodeItem;
-import org.terifan.nodeeditor.CheckBoxNodeItem;
-import org.terifan.nodeeditor.ComboBoxNodeItem;
+import org.terifan.nodeeditor.ButtonPropertyItem;
+import org.terifan.nodeeditor.CheckBoxPropertyItem;
+import org.terifan.nodeeditor.ComboBoxPropertyItem;
 import static org.terifan.nodeeditor.Connector.GRAY;
 import org.terifan.nodeeditor.Direction;
 import static org.terifan.nodeeditor.Direction.IN;
 import static org.terifan.nodeeditor.Direction.OUT;
-import org.terifan.nodeeditor.ImageNodeItem;
+import org.terifan.nodeeditor.ImagePropertyItem;
 import org.terifan.nodeeditor.NodeEditor;
 import org.terifan.nodeeditor.Node;
 import org.terifan.nodeeditor.NodeModel;
-import org.terifan.nodeeditor.SliderNodeItem;
-import org.terifan.nodeeditor.TextNodeItem;
+import org.terifan.nodeeditor.SliderPropertyItem;
+import org.terifan.nodeeditor.TextPropertyItem;
 
 
 public class Test5
@@ -40,14 +40,14 @@ public class Test5
 				@Override
 				public void actionPerformed(ActionEvent aE)
 				{
-					ImageNodeItem image = new ImageNodeItem("node10", 200, 200);
-					ButtonNodeItem button = new ButtonNodeItem("Open");
+					ImagePropertyItem image = new ImagePropertyItem("node10", 200, 200);
+					ButtonPropertyItem button = new ButtonPropertyItem("Open");
 
 					model.addNode(new Node("SourceImage",
 						button,
 						image,
-						new TextNodeItem("Color").addConnector(Direction.OUT),
-						new TextNodeItem("Alpha").addConnector(Direction.OUT)
+						new TextPropertyItem("Color").addConnector(Direction.OUT),
+						new TextPropertyItem("Alpha").addConnector(Direction.OUT)
 					).setLocation(0, 0));
 
 					editor.repaint();
@@ -59,11 +59,11 @@ public class Test5
 				@Override
 				public void actionPerformed(ActionEvent aE)
 				{
-					ImageNodeItem image = new ImageNodeItem("node10", 200, 200);
+					ImagePropertyItem image = new ImagePropertyItem("node10", 200, 200);
 
 					model.addNode(new Node("Image",
-						new TextNodeItem("Color").addConnector(Direction.IN),
-						new TextNodeItem("Alpha").addConnector(Direction.IN),
+						new TextPropertyItem("Color").addConnector(Direction.IN),
+						new TextPropertyItem("Alpha").addConnector(Direction.IN),
 						image
 					).setLocation(0, 0));
 
@@ -80,15 +80,15 @@ public class Test5
 						.setLocation(0, 0)
 						.setSize(200, 0)
 						.setIdentity("math")
-						.add(new TextNodeItem("Value")
+						.add(new TextPropertyItem("Value")
 							.setIdentity("result")
 							.addConnector(OUT, GRAY))
-						.add(new ComboBoxNodeItem("Operation", 2, "Add", "Subtract", "Multiply", "Divide", "Absolute", "Modulo", "Greater Than"))
-						.add(new CheckBoxNodeItem("Clamp", false))
-						.add(new SliderNodeItem("Value", 0.5, 0.01)
+						.add(new ComboBoxPropertyItem("Operation", 2, "Add", "Subtract", "Multiply", "Divide", "Absolute", "Modulo", "Greater Than"))
+						.add(new CheckBoxPropertyItem("Clamp", false))
+						.add(new SliderPropertyItem("Value", 0.5, 0.01)
 							.setIdentity("value1")
 							.addConnector(IN, GRAY))
-						.add(new SliderNodeItem("Value", 0.5, 0.01)
+						.add(new SliderPropertyItem("Value", 0.5, 0.01)
 							.setIdentity("value2")
 							.addConnector(IN, GRAY))
 					);

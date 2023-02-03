@@ -6,7 +6,7 @@ import org.terifan.nodeeditor.Direction;
 import org.terifan.nodeeditor.NodeEditor;
 import org.terifan.nodeeditor.Node;
 import org.terifan.nodeeditor.NodeModel;
-import org.terifan.nodeeditor.TextNodeItem;
+import org.terifan.nodeeditor.TextPropertyItem;
 
 
 public class TestAutoLayout
@@ -18,89 +18,89 @@ public class TestAutoLayout
 			NodeModel model = new NodeModel();
 
 			model.addNode(new Node("0",
-				new TextNodeItem("1").addConnector(Direction.OUT),
-				new TextNodeItem("2").addConnector(Direction.OUT),
-				new TextNodeItem("3").addConnector(Direction.OUT),
-				new TextNodeItem("4").addConnector(Direction.OUT)
+				new TextPropertyItem("1").addConnector(Direction.OUT),
+				new TextPropertyItem("2").addConnector(Direction.OUT),
+				new TextPropertyItem("3").addConnector(Direction.OUT),
+				new TextPropertyItem("4").addConnector(Direction.OUT)
 			).setLocation(-300, 0));
 
 			model.addNode(new Node("1",
-				new TextNodeItem("1").addConnector(Direction.IN),
-				new TextNodeItem("5").addConnector(Direction.OUT),
-				new TextNodeItem("6").addConnector(Direction.OUT)
+				new TextPropertyItem("1").addConnector(Direction.IN),
+				new TextPropertyItem("5").addConnector(Direction.OUT),
+				new TextPropertyItem("6").addConnector(Direction.OUT)
 			).setLocation(0, -150));
 
 			model.addNode(new Node("2",
-				new TextNodeItem("2").addConnector(Direction.IN)
+				new TextPropertyItem("2").addConnector(Direction.IN)
 			).setLocation(0, -50));
 
 			model.addNode(new Node("3",
-				new TextNodeItem("3").addConnector(Direction.IN),
-				new TextNodeItem("7").addConnector(Direction.OUT),
-				new TextNodeItem("8").addConnector(Direction.OUT),
-				new TextNodeItem("9").addConnector(Direction.OUT)
+				new TextPropertyItem("3").addConnector(Direction.IN),
+				new TextPropertyItem("7").addConnector(Direction.OUT),
+				new TextPropertyItem("8").addConnector(Direction.OUT),
+				new TextPropertyItem("9").addConnector(Direction.OUT)
 			).setLocation(0, 50));
 
 			model.addNode(new Node("4",
-				new TextNodeItem("4").addConnector(Direction.IN),
-				new TextNodeItem("10").addConnector(Direction.OUT),
-				new TextNodeItem("11").addConnector(Direction.OUT)
+				new TextPropertyItem("4").addConnector(Direction.IN),
+				new TextPropertyItem("10").addConnector(Direction.OUT),
+				new TextPropertyItem("11").addConnector(Direction.OUT)
 			).setLocation(0, 150));
 
 			model.addNode(new Node("5",
-				new TextNodeItem("5").addConnector(Direction.IN),
-				new TextNodeItem("14").addConnector(Direction.OUT)
+				new TextPropertyItem("5").addConnector(Direction.IN),
+				new TextPropertyItem("14").addConnector(Direction.OUT)
 			).setLocation(300, 0));
 
 			model.addNode(new Node("6",
-				new TextNodeItem("6").addConnector(Direction.IN),
-				new TextNodeItem("12").addConnector(Direction.OUT),
-				new TextNodeItem("13").addConnector(Direction.OUT)
+				new TextPropertyItem("6").addConnector(Direction.IN),
+				new TextPropertyItem("12").addConnector(Direction.OUT),
+				new TextPropertyItem("13").addConnector(Direction.OUT)
 			).setLocation(300, 0));
 
 			model.addNode(new Node("7",
-				new TextNodeItem("7").addConnector(Direction.IN)
+				new TextPropertyItem("7").addConnector(Direction.IN)
 			).setLocation(300, 0));
 
 			model.addNode(new Node("8",
-				new TextNodeItem("8").addConnector(Direction.IN)
+				new TextPropertyItem("8").addConnector(Direction.IN)
 			).setLocation(300, 0));
 
 			model.addNode(new Node("9",
-				new TextNodeItem("9").addConnector(Direction.IN)
+				new TextPropertyItem("9").addConnector(Direction.IN)
 			).setLocation(300, 0));
 
 			model.addNode(new Node("10",
-				new TextNodeItem("10").addConnector(Direction.IN)
+				new TextPropertyItem("10").addConnector(Direction.IN)
 			).setLocation(300, 0));
 
 			model.addNode(new Node("11",
-				new TextNodeItem("11").addConnector(Direction.IN)
+				new TextPropertyItem("11").addConnector(Direction.IN)
 			).setLocation(300, 0));
 
 			model.addNode(new Node("12",
-				new TextNodeItem("12").addConnector(Direction.IN)
+				new TextPropertyItem("12").addConnector(Direction.IN)
 			).setLocation(300, 0));
 
 			model.addNode(new Node("13",
-				new TextNodeItem("13").addConnector(Direction.IN)
+				new TextPropertyItem("13").addConnector(Direction.IN)
 			).setLocation(300, 0));
 
 			model.addNode(new Node("14",
-				new TextNodeItem("14").addConnector(Direction.IN),
-				new TextNodeItem("15").addConnector(Direction.OUT),
-				new TextNodeItem("16").addConnector(Direction.OUT),
-				new TextNodeItem("17").addConnector(Direction.OUT),
-				new TextNodeItem("18").addConnector(Direction.OUT),
-				new TextNodeItem("19").addConnector(Direction.OUT)
+				new TextPropertyItem("14").addConnector(Direction.IN),
+				new TextPropertyItem("15").addConnector(Direction.OUT),
+				new TextPropertyItem("16").addConnector(Direction.OUT),
+				new TextPropertyItem("17").addConnector(Direction.OUT),
+				new TextPropertyItem("18").addConnector(Direction.OUT),
+				new TextPropertyItem("19").addConnector(Direction.OUT)
 			).setLocation(300, 0));
 
 			model.addNode(new Node("15",
-				new TextNodeItem("15").addConnector(Direction.IN)
+				new TextPropertyItem("15").addConnector(Direction.IN)
 			).setLocation(300, 0));
 
 			model.addNode(new Node("19",
-				new TextNodeItem("19").addConnector(Direction.IN)
+				new TextPropertyItem("19").addConnector(Direction.IN)
 			).setLocation(300, 0));
 
 			model.addConnection("0.1", "1.1");
