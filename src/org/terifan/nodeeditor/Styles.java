@@ -1,5 +1,6 @@
 package org.terifan.nodeeditor;
 
+import org.terifan.nodeeditor.widgets.ButtonPropertyItem;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.image.BufferedImage;
@@ -82,7 +83,7 @@ public class Styles
 		new Color[]{new Color(55,55,55),new Color(83,83,83)}
 	};
 
-	static Color[][] BUTTON_COLORS =
+	public static Color[][] BUTTON_COLORS =
 	{
 		new Color[]{new Color(166,166,166),new Color(137,137,137)},
 		new Color[]{new Color(181,181,181),new Color(153,153,153)},
@@ -104,7 +105,7 @@ public class Styles
 	{
 		try
 		{
-			DIRECTORY_ICON = ImageIO.read(ButtonPropertyItem.class.getResource("directory.png"));
+			DIRECTORY_ICON = ImageIO.read(Styles.class.getResource("directory.png"));
 		}
 		catch (IOException e)
 		{

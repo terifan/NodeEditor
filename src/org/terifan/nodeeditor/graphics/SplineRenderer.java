@@ -1,4 +1,4 @@
-package org.terifan.nodeeditor;
+package org.terifan.nodeeditor.graphics;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -10,6 +10,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import org.terifan.math.VectorMath;
+import org.terifan.nodeeditor.Connection;
+import org.terifan.nodeeditor.Styles;
 import org.terifan.vecmath.Vec2d;
 
 

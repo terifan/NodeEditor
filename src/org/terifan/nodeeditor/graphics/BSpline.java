@@ -1,4 +1,4 @@
-package org.terifan.nodeeditor;
+package org.terifan.nodeeditor.graphics;
 
 import java.awt.Point;
 import java.awt.geom.Point2D;

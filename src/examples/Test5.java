@@ -1,4 +1,4 @@
-package org.terifan.nodeeditor.examples;
+package examples;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -6,19 +6,19 @@ import javax.swing.AbstractAction;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
-import org.terifan.nodeeditor.ButtonPropertyItem;
-import org.terifan.nodeeditor.CheckBoxPropertyItem;
-import org.terifan.nodeeditor.ComboBoxPropertyItem;
+import org.terifan.nodeeditor.widgets.ButtonPropertyItem;
+import org.terifan.nodeeditor.widgets.CheckBoxPropertyItem;
+import org.terifan.nodeeditor.widgets.ComboBoxPropertyItem;
 import static org.terifan.nodeeditor.Connector.GRAY;
 import org.terifan.nodeeditor.Direction;
 import static org.terifan.nodeeditor.Direction.IN;
 import static org.terifan.nodeeditor.Direction.OUT;
-import org.terifan.nodeeditor.ImagePropertyItem;
+import org.terifan.nodeeditor.widgets.ImagePropertyItem;
 import org.terifan.nodeeditor.NodeEditor;
 import org.terifan.nodeeditor.Node;
 import org.terifan.nodeeditor.NodeModel;
-import org.terifan.nodeeditor.SliderPropertyItem;
-import org.terifan.nodeeditor.TextPropertyItem;
+import org.terifan.nodeeditor.widgets.SliderPropertyItem;
+import org.terifan.nodeeditor.widgets.TextPropertyItem;
 
 
 public class Test5

@@ -1,10 +1,13 @@
-package org.terifan.nodeeditor;
+package org.terifan.nodeeditor.widgets;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
+import org.terifan.nodeeditor.AbstractPropertyItem;
+import org.terifan.nodeeditor.NodeEditor;
 
 
 public class ImagePropertyItem extends AbstractPropertyItem<ImagePropertyItem>
@@ -54,42 +57,6 @@ public class ImagePropertyItem extends AbstractPropertyItem<ImagePropertyItem>
 			}
 		}
 
-		BufferedImage image = null;
-
-		if (mImagePath != null)
-		{
-			image = aEditor.loadResource(BufferedImage.class, mImagePath, p->ImageIO.read(p));
-		}
-
-		if (image == null)
-		{
-			image = aEditor.getImageResource(this);
-		}
-
-		if (image != null)
-		{
-			aGraphics.drawImage(image, mBounds.x, mBounds.y, mBounds.width, mBounds.height, null);
-		}
+		aEditor.paintImage(this, aGraphics, mBounds);
 	}
-
-
-//	@Override
-//	public void readExternal(Bundle aBundle)
-//	{
-//		super.readExternal(aBundle);
-//
-//		mImagePath = aBundle.getString("path");
-//	}
-//
-//
-//	@Override
-//	public void writeExternal(Bundle aBundle)
-//	{
-//		super.writeExternal(aBundle);
-//
-//		if (mImagePath != null)
-//		{
-//			aBundle.putString("path", mImagePath);
-//		}
-//	}
 }

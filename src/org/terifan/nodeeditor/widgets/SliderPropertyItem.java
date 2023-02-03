@@ -1,4 +1,4 @@
-package org.terifan.nodeeditor;
+package org.terifan.nodeeditor.widgets;
 
 import java.awt.Graphics2D;
 import java.awt.LinearGradientPaint;
@@ -6,6 +6,10 @@ import java.awt.Paint;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import org.terifan.nodeeditor.AbstractPropertyItem;
+import org.terifan.nodeeditor.Direction;
+import org.terifan.nodeeditor.NodeEditor;
+import org.terifan.nodeeditor.Styles;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.TextBox;
 

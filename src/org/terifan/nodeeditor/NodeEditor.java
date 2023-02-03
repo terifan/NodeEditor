@@ -1,5 +1,6 @@
 package org.terifan.nodeeditor;
 
+import org.terifan.nodeeditor.graphics.Popup;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -14,15 +15,13 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
-import org.terifan.util.cache.Cache;
-import org.terifan.util.cache.Cache.Provider;
+import org.terifan.nodeeditor.graphics.SplineRenderer;
+import org.terifan.nodeeditor.widgets.ImagePropertyItem;
 
 
 public class NodeEditor extends JComponent
@@ -34,6 +33,7 @@ public class NodeEditor extends JComponent
 		3
 	}, 0);
 
+	private ArrayList<ImagePainter> mImagePainters;
 	private ArrayList<Node> mSelectedNodes;
 	private Connection mSelectedConnection;
 	private Connector mDragConnector;
@@ -47,9 +47,6 @@ public class NodeEditor extends JComponent
 	private PropertyItem mClickedItem;
 	private Popup mPopup;
 	private NodeModel mModel;
-	private Class mResourceContext;
-	private Cache<Object, Object> mResourceCache;
-	protected HashMap<String, ResourceLoader> mResourceLoaders;
 
 
 	public NodeEditor(NodeModel aModel)
@@ -58,8 +55,7 @@ public class NodeEditor extends JComponent
 		mSelectedNodes = new ArrayList<>();
 		mScale = 1;
 		mRemoveInConnectionsOnDrop = true;
-		mResourceCache = new Cache<>(100);
-		mResourceLoaders = new HashMap<>();
+		mImagePainters = new ArrayList<>();
 
 		super.addMouseMotionListener(mMouseListener);
 		super.addMouseListener(mMouseListener);
@@ -108,32 +104,6 @@ public class NodeEditor extends JComponent
 	public NodeEditor setScale(double aScale)
 	{
 		mScale = aScale;
-		return this;
-	}
-
-
-	public NodeEditor setResourceContext(Class aClass)
-	{
-		mResourceContext = aClass;
-		return this;
-	}
-
-
-	public Class getResourceContext()
-	{
-		return mResourceContext;
-	}
-
-
-	public Cache<Object, Object> getResourceCache()
-	{
-		return mResourceCache;
-	}
-
-
-	public NodeEditor setResourceCache(Cache<Object, Object> aResourceCache)
-	{
-		mResourceCache = aResourceCache;
 		return this;
 	}
 
@@ -997,46 +967,10 @@ public class NodeEditor extends JComponent
 	}
 
 
-	protected BufferedImage getImageResource(PropertyItem aItem)
+	public NodeEditor addImagePainter(ImagePainter aImagePainter)
 	{
-		try
-		{
-			ResourceLoader loader = mResourceLoaders.get((aItem.getOwnerNode().getIdentityOrName() + "." + aItem.getIdentityOrName()).toLowerCase());
-			if (loader == null)
-			{
-				return null;
-			}
-			return (BufferedImage)loader.load(aItem);
-		}
-		catch (Exception e)
-		{
-			throw new IllegalStateException(e);
-		}
-	}
-
-
-	public NodeEditor addResourceLoader(String aPath, ResourceLoader aResourceLoader)
-	{
-		mResourceLoaders.put(aPath.toLowerCase(), aResourceLoader);
+		mImagePainters.add(aImagePainter);
 		return this;
-	}
-
-
-	/**
-	 * Load a Java JAR resource relative to the resource context class, resources are cached.
-	 *
-	 * @param aReturnType the type to return
-	 * @param aRelativePath the resource path relative to the resource context class
-	 * @param aResourceConverter a Provider used to convert the resource URL into an instance of 'aReturnType'
-	 */
-	protected <T> T loadResource(Class<T> aReturnType, String aRelativePath, Provider<URL, T> aResourceConverter)
-	{
-		if (mResourceContext == null || mResourceCache == null)
-		{
-			return null;
-		}
-
-		return (T)mResourceCache.computeIfAbsent(aRelativePath, p -> aResourceConverter.create(mResourceContext.getResource((String)p)));
 	}
 
 
@@ -1066,8 +1000,21 @@ public class NodeEditor extends JComponent
 	}
 
 
-	public interface ResourceLoader
+	public void paintImage(ImagePropertyItem aProperty, Graphics aGraphics, Rectangle aBounds)
 	{
-		Object load(PropertyItem aItem) throws Exception;
+		for (ImagePainter rl : mImagePainters)
+		{
+			try
+			{
+				if (rl.paintImage(this, aProperty, aGraphics, aBounds))
+				{
+					return;
+				}
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace(System.out);
+			}
+		}
 	}
 }

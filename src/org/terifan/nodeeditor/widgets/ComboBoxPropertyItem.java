@@ -1,4 +1,4 @@
-package org.terifan.nodeeditor;
+package org.terifan.nodeeditor.widgets;
 
 import java.awt.Graphics2D;
 import java.awt.LinearGradientPaint;
@@ -7,7 +7,11 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Arrays;
-import org.terifan.nodeeditor.Popup.Option;
+import org.terifan.nodeeditor.AbstractPropertyItem;
+import org.terifan.nodeeditor.NodeEditor;
+import org.terifan.nodeeditor.graphics.Popup;
+import org.terifan.nodeeditor.graphics.Popup.Option;
+import org.terifan.nodeeditor.Styles;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.TextBox;
 
@@ -107,7 +111,6 @@ public class ComboBoxPropertyItem extends AbstractPropertyItem
 			});
 		}
 
-//		Popup popup = new Popup(this, "", new Rectangle(mBounds.x, mBounds.y, 340, 520), options, e->setSelectedIndex(options.indexOf(e)));
 		Popup popup = new Popup(aEditor, this, mHeader, mBounds, options, e -> setSelectedIndex(options.indexOf(e)));
 
 		aEditor.setPopup(popup);

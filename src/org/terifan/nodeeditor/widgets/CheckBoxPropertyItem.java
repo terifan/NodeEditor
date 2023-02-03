@@ -1,4 +1,4 @@
-package org.terifan.nodeeditor;
+package org.terifan.nodeeditor.widgets;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -7,6 +7,9 @@ import java.awt.LinearGradientPaint;
 import java.awt.Paint;
 import java.awt.Point;
 import java.awt.Stroke;
+import org.terifan.nodeeditor.AbstractPropertyItem;
+import org.terifan.nodeeditor.NodeEditor;
+import org.terifan.nodeeditor.Styles;
 import org.terifan.ui.Anchor;
 
 

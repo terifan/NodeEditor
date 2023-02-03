@@ -1,10 +1,10 @@
-package org.terifan.nodeeditor.examples;
+package examples;
 
-import org.terifan.nodeeditor.SliderPropertyItem;
-import org.terifan.nodeeditor.ImagePropertyItem;
-import org.terifan.nodeeditor.ComboBoxPropertyItem;
-import org.terifan.nodeeditor.CheckBoxPropertyItem;
-import org.terifan.nodeeditor.ColorChooserNodeItem;
+import org.terifan.nodeeditor.widgets.SliderPropertyItem;
+import org.terifan.nodeeditor.widgets.ImagePropertyItem;
+import org.terifan.nodeeditor.widgets.ComboBoxPropertyItem;
+import org.terifan.nodeeditor.widgets.CheckBoxPropertyItem;
+import org.terifan.nodeeditor.widgets.ColorChooserNodeItem;
 import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.JFrame;
@@ -13,7 +13,7 @@ import org.terifan.nodeeditor.Direction;
 import org.terifan.nodeeditor.NodeEditor;
 import org.terifan.nodeeditor.Node;
 import org.terifan.nodeeditor.NodeModel;
-import org.terifan.nodeeditor.TextPropertyItem;
+import org.terifan.nodeeditor.widgets.TextPropertyItem;
 
 
 public class Test1

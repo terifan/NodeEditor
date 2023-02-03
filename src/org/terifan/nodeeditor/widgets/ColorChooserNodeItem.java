@@ -1,10 +1,14 @@
-package org.terifan.nodeeditor;
+package org.terifan.nodeeditor.widgets;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import javax.swing.JColorChooser;
+import org.terifan.nodeeditor.AbstractPropertyItem;
+import org.terifan.nodeeditor.Direction;
+import org.terifan.nodeeditor.NodeEditor;
+import org.terifan.nodeeditor.Styles;
 import org.terifan.ui.Anchor;
 
 

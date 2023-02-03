@@ -1,4 +1,4 @@
-package org.terifan.nodeeditor.examples;
+package examples;
 
 import java.util.HashMap;
 import javax.swing.JFrame;
@@ -8,7 +8,7 @@ import static org.terifan.nodeeditor.Direction.OUT;
 import org.terifan.nodeeditor.NodeEditor;
 import org.terifan.nodeeditor.Node;
 import org.terifan.nodeeditor.NodeModel;
-import org.terifan.nodeeditor.TextPropertyItem;
+import org.terifan.nodeeditor.widgets.TextPropertyItem;
 
 
 public class TestFactory

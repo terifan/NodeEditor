@@ -1,16 +1,16 @@
-package org.terifan.nodeeditor.examples;
+package examples;
 
 import java.awt.Color;
-import org.terifan.nodeeditor.SliderPropertyItem;
+import org.terifan.nodeeditor.widgets.SliderPropertyItem;
 import javax.swing.JFrame;
-import org.terifan.nodeeditor.ColorChooserNodeItem;
+import org.terifan.nodeeditor.widgets.ColorChooserNodeItem;
 import static org.terifan.nodeeditor.Connector.YELLOW;
 import static org.terifan.nodeeditor.Direction.IN;
 import static org.terifan.nodeeditor.Direction.OUT;
 import org.terifan.nodeeditor.NodeEditor;
 import org.terifan.nodeeditor.Node;
 import org.terifan.nodeeditor.NodeModel;
-import org.terifan.nodeeditor.TextPropertyItem;
+import org.terifan.nodeeditor.widgets.TextPropertyItem;
 
 
 public class TestTinyExample

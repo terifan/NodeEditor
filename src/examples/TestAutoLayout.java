@@ -1,4 +1,4 @@
-package org.terifan.nodeeditor.examples;
+package examples;
 
 import javax.swing.JFrame;
 import org.terifan.nodeeditor.AutoLayout;
@@ -6,7 +6,7 @@ import org.terifan.nodeeditor.Direction;
 import org.terifan.nodeeditor.NodeEditor;
 import org.terifan.nodeeditor.Node;
 import org.terifan.nodeeditor.NodeModel;
-import org.terifan.nodeeditor.TextPropertyItem;
+import org.terifan.nodeeditor.widgets.TextPropertyItem;
 
 
 public class TestAutoLayout

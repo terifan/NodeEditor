@@ -125,7 +125,7 @@ public abstract class PropertyItem implements Serializable
 	}
 
 
-	protected Rectangle getBounds()
+	public Rectangle getBounds()
 	{
 		return mBounds;
 	}
@@ -210,5 +210,12 @@ public abstract class PropertyItem implements Serializable
 	protected String getIdentityOrName()
 	{
 		return Strings.isEmptyOrNull(mIdentity) ? getText() : mIdentity;
+	}
+
+
+	// ugly, remove somehow
+	public void fireMouseReleased(NodeEditor aEditor, Point aPoint)
+	{
+		mouseReleased(aEditor, aPoint);
 	}
 }

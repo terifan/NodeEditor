@@ -1,6 +1,9 @@
-package org.terifan.nodeeditor;
+package org.terifan.nodeeditor.widgets;
 
 import java.awt.Graphics2D;
+import org.terifan.nodeeditor.AbstractPropertyItem;
+import org.terifan.nodeeditor.Direction;
+import org.terifan.nodeeditor.NodeEditor;
 import org.terifan.ui.Anchor;
 
 
@@ -20,7 +23,7 @@ public class TextPropertyItem extends AbstractPropertyItem<TextPropertyItem>
 	{
 		mTextBox
 			.setBounds(mBounds)
-			.setAnchor(getConnectors().isEmpty() || getConnectors().get(0).mDirection == Direction.IN ? Anchor.WEST : Anchor.EAST)
+			.setAnchor(getConnectors().isEmpty() || getConnectors().get(0).getDirection() == Direction.IN ? Anchor.WEST : Anchor.EAST)
 			.render(aGraphics);
 	}
 }

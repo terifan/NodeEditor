@@ -1,4 +1,4 @@
-package org.terifan.nodeeditor;
+package org.terifan.nodeeditor.graphics;
 
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -7,25 +7,26 @@ import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Path2D;
-import java.io.Serializable;
 import java.util.List;
+import org.terifan.nodeeditor.NodeEditor;
+import org.terifan.nodeeditor.PropertyItem;
+import org.terifan.nodeeditor.Renderable;
+import org.terifan.nodeeditor.Styles;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.TextBox;
 import org.terifan.util.Strings;
 
 
-public class Popup implements Renderable, Serializable
+public class Popup implements Renderable
 {
-	private final static long serialVersionUID = 1L;
-
 	protected final NodeEditor mEditor;
 	protected final Rectangle mBounds;
 	protected final PropertyItem mOwner;
 	protected final boolean mAboveField;
 	protected final ResultReceiver mResultReceiver;
-	protected List<Option> mOptions;
+	protected final List<Option> mOptions;
+	protected final String mHeader;
 	protected Option mSelectedOption;
-	protected String mHeader;
 
 
 	/**
@@ -66,7 +67,7 @@ public class Popup implements Renderable, Serializable
 		}
 		else
 		{
-			mBounds.y += aOwner.mBounds.height;
+			mBounds.y += aOwner.getBounds().height;
 		}
 		this.mEditor = aEditor;
 	}
@@ -159,7 +160,7 @@ public class Popup implements Renderable, Serializable
 	}
 
 
-	protected void mouseMoved(Point aPoint)
+	public void mouseMoved(Point aPoint)
 	{
 		if (!mOptions.isEmpty())
 		{
@@ -188,7 +189,7 @@ public class Popup implements Renderable, Serializable
 	}
 
 
-	protected void mousePressed(MouseEvent aEvent)
+	public void mousePressed(MouseEvent aEvent)
 	{
 		if (mSelectedOption != null)
 		{
@@ -197,13 +198,13 @@ public class Popup implements Renderable, Serializable
 	}
 
 
-	protected void mouseReleased(MouseEvent aEvent)
+	public void mouseReleased(MouseEvent aEvent)
 	{
-		mOwner.mouseReleased(mEditor, aEvent.getPoint());
+		mOwner.fireMouseReleased(mEditor, aEvent.getPoint());
 	}
 
 
-	protected void mouseWheelMoved(MouseWheelEvent aEvent)
+	public void mouseWheelMoved(MouseWheelEvent aEvent)
 	{
 	}
 
