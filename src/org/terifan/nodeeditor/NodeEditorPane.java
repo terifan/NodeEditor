@@ -1,7 +1,6 @@
 package org.terifan.nodeeditor;
 
 import org.terifan.nodeeditor.graphics.Popup;
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -22,6 +21,7 @@ import java.util.stream.Collectors;
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
+import static org.terifan.nodeeditor.Styles.SELECTION_RECTANGLE_STROKE;
 import org.terifan.nodeeditor.graphics.SplineRenderer;
 import org.terifan.nodeeditor.widgets.ButtonPropertyItem;
 import org.terifan.nodeeditor.widgets.ImagePropertyItem;
@@ -31,11 +31,6 @@ import static org.terifan.util.Assert.assertNotNull;
 public class NodeEditorPane extends JComponent
 {
 	private static final long serialVersionUID = 1L;
-
-	private static final BasicStroke SELECTION_RECTANGLE_STROKE = new BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]
-	{
-		3
-	}, 0);
 
 	private transient final ArrayList<OnClickHandler> mButtonHandlers;
 	private transient final ArrayList<ImagePainter> mImagePainters;
@@ -58,11 +53,12 @@ public class NodeEditorPane extends JComponent
 	public NodeEditorPane(NodeModel aModel)
 	{
 		mButtonHandlers = new ArrayList<>();
-		mModel = aModel;
 		mSelectedNodes = new ArrayList<>();
-		mScale = 1;
-		mRemoveInConnectionsOnDrop = true;
 		mImagePainters = new ArrayList<>();
+		mRemoveInConnectionsOnDrop = true;
+		mScale = 1;
+
+		mModel = aModel;
 
 		super.addMouseMotionListener(mMouseListener);
 		super.addMouseListener(mMouseListener);

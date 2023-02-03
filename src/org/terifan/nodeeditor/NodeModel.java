@@ -52,33 +52,33 @@ public class NodeModel implements Serializable
 
 	public Node getNode(String aPath)
 	{
-		String boxId = aPath.contains(".") ? aPath.split("\\.")[0] : aPath;
+		String nodeId = aPath.contains(".") ? aPath.split("\\.")[0] : aPath;
 
-		Node box = null;
+		Node node = null;
 
-		for (Node b : mNodes)
+		for (Node tmp : mNodes)
 		{
-			if (b.getIdentity() != null && b.getIdentity().equals(boxId))
+			if (nodeId.equals(tmp.getIdentity()))
 			{
-				box = b;
+				node = tmp;
 				break;
 			}
-			else if (b.getName().equalsIgnoreCase(boxId))
+			else if (tmp.getName().equalsIgnoreCase(nodeId))
 			{
-				if (box != null)
+				if (node != null)
 				{
-					throw new IllegalStateException("More than one Node have the same name, provide an Identity to either of them and use identity when connecting items: " + b.getName());
+					throw new IllegalStateException("More than one Node have the same name, provide an Identity to either of them and use identity when connecting items: " + tmp.getName());
 				}
-				box = b;
+				node = tmp;
 			}
 		}
 
-		if (box == null)
+		if (node == null)
 		{
 			throw new IllegalArgumentException("Failed to find Node, ensure name or identity is set: " + aPath);
 		}
 
-		return box;
+		return node;
 	}
 
 
@@ -90,8 +90,8 @@ public class NodeModel implements Serializable
 
 	public NodeModel addConnection(String aFromPath, String aToPath)
 	{
-		Property fromNode = NodeModel.this.getProperty(aFromPath);
-		Property toNode = NodeModel.this.getProperty(aToPath);
+		Property fromNode = getProperty(aFromPath);
+		Property toNode = getProperty(aToPath);
 
 		assertNotNull(fromNode, "From path cannot be resolved to a Node: path: %s", aFromPath);
 		assertNotNull(toNode, "To path cannot be resolved to a Node: path: %s", aToPath);
