@@ -2,7 +2,7 @@ package org.terifan.nodeeditor.widgets;
 
 import java.awt.Graphics2D;
 import org.terifan.nodeeditor.Direction;
-import org.terifan.nodeeditor.NodeEditor;
+import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Property;
 import org.terifan.ui.Anchor;
 
@@ -19,7 +19,7 @@ public class TextPropertyItem extends Property<TextPropertyItem>
 
 
 	@Override
-	protected void paintComponent(NodeEditor aEditor, Graphics2D aGraphics, boolean aHover)
+	protected void paintComponent(NodeEditorPane aEditor, Graphics2D aGraphics, boolean aHover)
 	{
 		mTextBox
 			.setBounds(mBounds)

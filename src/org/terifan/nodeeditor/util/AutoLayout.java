@@ -1,8 +1,10 @@
-package org.terifan.nodeeditor;
+package org.terifan.nodeeditor.util;
 
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import org.terifan.nodeeditor.Node;
+import org.terifan.nodeeditor.NodeModel;
 
 
 public class AutoLayout
@@ -16,7 +18,7 @@ public class AutoLayout
 	{
 		aRoot.computeBounds();
 
-		Box box = computeSize(aModel, aRoot, aRoot.getChildNodes());
+		Box box = computeSize(aModel, aRoot, aRoot.getConnectedNodes());
 		box.layout(0, 0, 0);
 	}
 
@@ -29,21 +31,21 @@ public class AutoLayout
 		{
 			child.computeBounds();
 
-			ArrayList<Node> grandChildren = child.getChildNodes();
+			ArrayList<Node> grandChildren = child.getConnectedNodes();
 			Box childBox;
 
 			if (!grandChildren.isEmpty())
 			{
 				childBox = computeSize(aModel, child, grandChildren);
 
-				childBox.mBounds.width = Math.max(child.mBounds.width, childBox.mBounds.width);
-				childBox.mBounds.height = Math.max(child.mBounds.height, childBox.mBounds.height);
+				childBox.mBounds.width = Math.max(child.getBounds().width, childBox.mBounds.width);
+				childBox.mBounds.height = Math.max(child.getBounds().height, childBox.mBounds.height);
 			}
 			else
 			{
 				childBox = new Box(child);
-				childBox.mBounds.width = child.mBounds.width;
-				childBox.mBounds.height = child.mBounds.height;
+				childBox.mBounds.width = child.getBounds().width;
+				childBox.mBounds.height = child.getBounds().height;
 			}
 
 			parentBox.mChildren.add(childBox);
@@ -76,7 +78,7 @@ public class AutoLayout
 				childrenHeight += box.mBounds.height;
 			}
 
-			int parentHeight = mNode.mBounds.height;
+			int parentHeight = mNode.getBounds().height;
 
 			int x = aStartX + mBounds.width;
 			int y = aStartY + (childrenHeight < parentHeight ? Math.min(parentHeight - childrenHeight, (parentHeight - childrenHeight) / 2 + 8) : 0);
@@ -88,8 +90,8 @@ public class AutoLayout
 				y += box.mBounds.height;
 			}
 
-			mNode.mBounds.x = aStartX + 100 * aLevel;
-			mNode.mBounds.y = aStartY + (childrenHeight > parentHeight ? Math.max(0, (childrenHeight - parentHeight) / 2 - 8) : 0);
+			mNode.getBounds().x = aStartX + 100 * aLevel;
+			mNode.getBounds().y = aStartY + (childrenHeight > parentHeight ? Math.max(0, (childrenHeight - parentHeight) / 2 - 8) : 0);
 		}
 	}
 }

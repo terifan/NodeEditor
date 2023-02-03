@@ -6,7 +6,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import javax.swing.JColorChooser;
 import org.terifan.nodeeditor.Direction;
-import org.terifan.nodeeditor.NodeEditor;
+import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Property;
 import org.terifan.nodeeditor.Styles;
 import org.terifan.ui.Anchor;
@@ -30,7 +30,7 @@ public class ColorChooserNodeItem extends Property<ColorChooserNodeItem>
 
 
 	@Override
-	protected void paintComponent(NodeEditor aEditor, Graphics2D aGraphics, boolean aHover)
+	protected void paintComponent(NodeEditorPane aEditor, Graphics2D aGraphics, boolean aHover)
 	{
 		if (isConnected(Direction.IN))
 		{
@@ -56,7 +56,7 @@ public class ColorChooserNodeItem extends Property<ColorChooserNodeItem>
 
 
 	@Override
-	protected void actionPerformed(NodeEditor aEditor, Point aClickPoint)
+	protected void actionPerformed(NodeEditorPane aEditor, Point aClickPoint)
 	{
 		if (!isConnected(Direction.IN))
 		{
@@ -71,7 +71,7 @@ public class ColorChooserNodeItem extends Property<ColorChooserNodeItem>
 
 
 	@Override
-	protected boolean mousePressed(NodeEditor aEditor, Point aClickPoint)
+	protected boolean mousePressed(NodeEditorPane aEditor, Point aClickPoint)
 	{
 		return !isConnected(Direction.IN) && new Rectangle(mNode.getBounds().x + mBounds.x, mNode.getBounds().y + mBounds.y, COLOR_BOX_WIDTH, mBounds.height).contains(aClickPoint);
 	}

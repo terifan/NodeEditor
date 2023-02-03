@@ -7,7 +7,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import org.terifan.nodeeditor.Direction;
-import org.terifan.nodeeditor.NodeEditor;
+import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Property;
 import org.terifan.nodeeditor.Styles;
 import org.terifan.ui.Anchor;
@@ -64,7 +64,7 @@ public class SliderPropertyItem extends Property<SliderPropertyItem>
 
 
 	@Override
-	protected void paintComponent(NodeEditor aEditor, Graphics2D aGraphics, boolean aHover)
+	protected void paintComponent(NodeEditorPane aEditor, Graphics2D aGraphics, boolean aHover)
 	{
 		if (isConnected(Direction.IN))
 		{
@@ -128,7 +128,7 @@ public class SliderPropertyItem extends Property<SliderPropertyItem>
 
 
 	@Override
-	protected boolean mousePressed(NodeEditor aEditor, Point aClickPoint)
+	protected boolean mousePressed(NodeEditorPane aEditor, Point aClickPoint)
 	{
 		if (!isConnected(Direction.IN))
 		{
@@ -143,7 +143,7 @@ public class SliderPropertyItem extends Property<SliderPropertyItem>
 
 
 	@Override
-	protected void mouseReleased(NodeEditor aEditor, Point aClickPoint)
+	protected void mouseReleased(NodeEditorPane aEditor, Point aClickPoint)
 	{
 		if (!isConnected(Direction.IN))
 		{
@@ -161,7 +161,7 @@ public class SliderPropertyItem extends Property<SliderPropertyItem>
 
 
 	@Override
-	protected void mouseDragged(NodeEditor aEditor, Point aClickPoint, Point aDragPoint)
+	protected void mouseDragged(NodeEditorPane aEditor, Point aClickPoint, Point aDragPoint)
 	{
 		if (!isConnected(Direction.IN))
 		{

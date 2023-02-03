@@ -219,7 +219,7 @@ public class Node implements Iterable<Property>, Renderable, Serializable
 
 
 	@Override
-	public void paintComponent(NodeEditor aEditor, Graphics2D aGraphics, int aWidth, int aHeight, boolean aSelected)
+	public void paintComponent(NodeEditorPane aEditor, Graphics2D aGraphics, int aWidth, int aHeight, boolean aSelected)
 	{
 		paintBorder(aGraphics, 0, 0, aWidth, aHeight, aSelected);
 
@@ -244,7 +244,7 @@ public class Node implements Iterable<Property>, Renderable, Serializable
 	}
 
 
-	protected void computeBounds()
+	public void computeBounds()
 	{
 		if (!mMinimized)
 		{
@@ -592,8 +592,8 @@ public class Node implements Iterable<Property>, Renderable, Serializable
 	}
 
 
-	public ArrayList<Node> getChildNodes()
+	public ArrayList<Node> getConnectedNodes()
 	{
-		return mModel.getChildNodes(this);
+		return mModel.getConnectedNodes(this);
 	}
 }

@@ -28,7 +28,7 @@ import org.terifan.nodeeditor.widgets.ImagePropertyItem;
 import static org.terifan.util.Assert.assertNotNull;
 
 
-public class NodeEditor extends JComponent
+public class NodeEditorPane extends JComponent
 {
 	private static final long serialVersionUID = 1L;
 
@@ -55,7 +55,7 @@ public class NodeEditor extends JComponent
 	private double mScale;
 
 
-	public NodeEditor(NodeModel aModel)
+	public NodeEditorPane(NodeModel aModel)
 	{
 		mButtonHandlers = new ArrayList<>();
 		mModel = aModel;
@@ -82,7 +82,7 @@ public class NodeEditor extends JComponent
 	}
 
 
-	public NodeEditor setRemoveInConnectionsOnDrop(boolean aRemoveInConnectionsOnDrop)
+	public NodeEditorPane setRemoveInConnectionsOnDrop(boolean aRemoveInConnectionsOnDrop)
 	{
 		mRemoveInConnectionsOnDrop = aRemoveInConnectionsOnDrop;
 		return this;
@@ -95,7 +95,7 @@ public class NodeEditor extends JComponent
 	}
 
 
-	public NodeEditor setConnectorSelectionAllowed(boolean aConnectorSelectionAllowed)
+	public NodeEditorPane setConnectorSelectionAllowed(boolean aConnectorSelectionAllowed)
 	{
 		mConnectorSelectionAllowed = aConnectorSelectionAllowed;
 		return this;
@@ -108,7 +108,7 @@ public class NodeEditor extends JComponent
 	}
 
 
-	public NodeEditor setScale(double aScale)
+	public NodeEditorPane setScale(double aScale)
 	{
 		mScale = aScale;
 		return this;
@@ -427,14 +427,14 @@ public class NodeEditor extends JComponent
 					Property tmp = box.mousePressed(mClickPoint);
 					if (tmp != null)
 					{
-						if (tmp.mousePressed(NodeEditor.this, mClickPoint))
+						if (tmp.mousePressed(NodeEditorPane.this, mClickPoint))
 						{
 							mSelectedNodes.clear();
 							mSelectedNodes.add(box);
 							mClickedItem = tmp;
 							repaint();
 
-							tmp.actionPerformed(NodeEditor.this, mClickPoint);
+							tmp.actionPerformed(NodeEditorPane.this, mClickPoint);
 
 							return;
 						}
@@ -507,7 +507,7 @@ public class NodeEditor extends JComponent
 
 			if (mClickedItem != null)
 			{
-				mClickedItem.mouseReleased(NodeEditor.this, mClickPoint);
+				mClickedItem.mouseReleased(NodeEditorPane.this, mClickPoint);
 				mClickedItem = null;
 				repaint();
 				return;
@@ -539,7 +539,7 @@ public class NodeEditor extends JComponent
 						mModel.addConnection(mDragConnector, nearestConnector);
 					}
 
-					nearestConnector.getProperty().connectionsChanged(NodeEditor.this, mClickPoint);
+					nearestConnector.getProperty().connectionsChanged(NodeEditorPane.this, mClickPoint);
 				}
 
 				mDragConnector = null;
@@ -597,7 +597,7 @@ public class NodeEditor extends JComponent
 
 			if (mClickedItem != null)
 			{
-				mClickedItem.mouseDragged(NodeEditor.this, mClickPoint, newPoint);
+				mClickedItem.mouseDragged(NodeEditorPane.this, mClickPoint, newPoint);
 				return;
 			}
 			if (mSelectionRectangle != null)
@@ -968,7 +968,7 @@ public class NodeEditor extends JComponent
 	}
 
 
-	public NodeEditor addImagePainter(ImagePainter aImagePainter)
+	public NodeEditorPane addImagePainter(ImagePainter aImagePainter)
 	{
 		mImagePainters.add(aImagePainter);
 		return this;
@@ -1039,7 +1039,7 @@ public class NodeEditor extends JComponent
 	};
 
 
-	public NodeEditor addButtonHandler(OnClickHandler aHandler)
+	public NodeEditorPane addButtonHandler(OnClickHandler aHandler)
 	{
 		mButtonHandlers.add(aHandler);
 		return this;

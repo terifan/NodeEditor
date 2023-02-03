@@ -17,7 +17,7 @@ import org.terifan.nodeeditor.widgets.ColorChooserNodeItem;
 import org.terifan.nodeeditor.widgets.ComboBoxPropertyItem;
 import static org.terifan.nodeeditor.Direction.IN;
 import static org.terifan.nodeeditor.Direction.OUT;
-import org.terifan.nodeeditor.NodeEditor;
+import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Node;
 import org.terifan.nodeeditor.NodeModel;
 import static org.terifan.nodeeditor.Styles.GRAY;
@@ -40,7 +40,7 @@ public class TestJavaSerializingNodeModel
 				model = (NodeModel)ois.readObject();
 			}
 
-			NodeEditor editor = new NodeEditor(model);
+			NodeEditorPane editor = new NodeEditorPane(model);
 
 			editor.addImagePainter((aEditor, aProperty, aGraphics, aBounds) ->
 			{

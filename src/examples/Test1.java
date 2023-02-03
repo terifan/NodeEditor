@@ -10,7 +10,7 @@ import java.awt.Dimension;
 import javax.swing.JFrame;
 import org.terifan.nodeeditor.Connector;
 import org.terifan.nodeeditor.Direction;
-import org.terifan.nodeeditor.NodeEditor;
+import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Node;
 import org.terifan.nodeeditor.NodeModel;
 import static org.terifan.nodeeditor.Styles.GRAY;
@@ -77,7 +77,7 @@ public class Test1
 			model.addConnection(item7, item11);
 			model.addConnection(item8, item5);
 
-			NodeEditor editor = new NodeEditor(model);
+			NodeEditorPane editor = new NodeEditorPane(model);
 
 			node0.setLocation(100, 50);
 			node1.setLocation(300, 0);

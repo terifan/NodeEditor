@@ -42,7 +42,7 @@ public abstract class Property<T extends Property> implements Serializable
 	}
 
 
-	protected abstract void paintComponent(NodeEditor aEditor, Graphics2D aGraphics, boolean aHover);
+	protected abstract void paintComponent(NodeEditorPane aEditor, Graphics2D aGraphics, boolean aHover);
 
 
 	void bind(Node aNode)
@@ -167,12 +167,12 @@ public abstract class Property<T extends Property> implements Serializable
 	/**
 	 * Perform the action of this item, for instance after a mouse click.
 	 */
-	protected void actionPerformed(NodeEditor aEditor, Point aClickPoint)
+	protected void actionPerformed(NodeEditorPane aEditor, Point aClickPoint)
 	{
 	}
 
 
-	protected void connectionsChanged(NodeEditor aEditor, Point aClickPoint)
+	protected void connectionsChanged(NodeEditorPane aEditor, Point aClickPoint)
 	{
 	}
 
@@ -180,24 +180,24 @@ public abstract class Property<T extends Property> implements Serializable
 	/**
 	 * Should return true if the clicked point will perform an action. This method return false.
 	 */
-	protected boolean mousePressed(NodeEditor aEditor, Point aClickPoint)
+	protected boolean mousePressed(NodeEditorPane aEditor, Point aClickPoint)
 	{
 		return false;
 	}
 
 
-	protected void mouseReleased(NodeEditor aEditor, Point aClickPoint)
+	protected void mouseReleased(NodeEditorPane aEditor, Point aClickPoint)
 	{
 	}
 
 
-	protected void mouseDragged(NodeEditor aEditor, Point aClickPoint, Point aDragPoint)
+	protected void mouseDragged(NodeEditorPane aEditor, Point aClickPoint, Point aDragPoint)
 	{
 	}
 
 
 	// ugly, remove somehow
-	public void fireMouseReleased(NodeEditor aEditor, Point aPoint)
+	public void fireMouseReleased(NodeEditorPane aEditor, Point aPoint)
 	{
 		mouseReleased(aEditor, aPoint);
 	}

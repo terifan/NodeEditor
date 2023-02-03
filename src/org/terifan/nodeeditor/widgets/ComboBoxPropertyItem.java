@@ -7,7 +7,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Arrays;
-import org.terifan.nodeeditor.NodeEditor;
+import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Property;
 import org.terifan.nodeeditor.graphics.Popup;
 import org.terifan.nodeeditor.graphics.Popup.Option;
@@ -43,7 +43,7 @@ public class ComboBoxPropertyItem extends Property<ComboBoxPropertyItem>
 
 
 	@Override
-	protected void paintComponent(NodeEditor aEditor, Graphics2D aGraphics, boolean aHover)
+	protected void paintComponent(NodeEditorPane aEditor, Graphics2D aGraphics, boolean aHover)
 	{
 		Paint oldPaint = aGraphics.getPaint();
 
@@ -79,7 +79,7 @@ public class ComboBoxPropertyItem extends Property<ComboBoxPropertyItem>
 
 
 	@Override
-	protected boolean mousePressed(NodeEditor aEditor, Point aClickPoint)
+	protected boolean mousePressed(NodeEditorPane aEditor, Point aClickPoint)
 	{
 		mArmed = true;
 
@@ -121,7 +121,7 @@ public class ComboBoxPropertyItem extends Property<ComboBoxPropertyItem>
 
 
 	@Override
-	protected void mouseReleased(NodeEditor aEditor, Point aClickPoint)
+	protected void mouseReleased(NodeEditorPane aEditor, Point aClickPoint)
 	{
 		mArmed = false;
 

@@ -4,7 +4,7 @@ import java.util.HashMap;
 import javax.swing.JFrame;
 import static org.terifan.nodeeditor.Direction.IN;
 import static org.terifan.nodeeditor.Direction.OUT;
-import org.terifan.nodeeditor.NodeEditor;
+import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Node;
 import org.terifan.nodeeditor.NodeModel;
 import static org.terifan.nodeeditor.Styles.YELLOW;
@@ -63,7 +63,7 @@ public class TestFactory
 			attachNode("activity", "activity 33687").setLocation(300, 260);
 			attachNode("activity", "activity 33987").setLocation(300, 390);
 
-			NodeEditor editor = new NodeEditor(mModel);
+			NodeEditorPane editor = new NodeEditorPane(mModel);
 			editor.center();
 			editor.setScale(1);
 

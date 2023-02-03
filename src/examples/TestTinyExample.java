@@ -6,7 +6,7 @@ import javax.swing.JFrame;
 import org.terifan.nodeeditor.widgets.ColorChooserNodeItem;
 import static org.terifan.nodeeditor.Direction.IN;
 import static org.terifan.nodeeditor.Direction.OUT;
-import org.terifan.nodeeditor.NodeEditor;
+import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Node;
 import org.terifan.nodeeditor.NodeModel;
 import static org.terifan.nodeeditor.Styles.YELLOW;
@@ -36,7 +36,7 @@ public class TestTinyExample
 				.addNode(output)
 				.addConnection("Input.Color", "Output.Color");
 
-			NodeEditor editor = new NodeEditor(model);
+			NodeEditorPane editor = new NodeEditorPane(model);
 			editor.center();
 
 			JFrame frame = new JFrame();

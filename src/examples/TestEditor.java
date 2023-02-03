@@ -18,7 +18,7 @@ import org.terifan.nodeeditor.Direction;
 import static org.terifan.nodeeditor.Direction.IN;
 import static org.terifan.nodeeditor.Direction.OUT;
 import org.terifan.nodeeditor.widgets.ImagePropertyItem;
-import org.terifan.nodeeditor.NodeEditor;
+import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Node;
 import org.terifan.nodeeditor.NodeModel;
 import org.terifan.nodeeditor.widgets.ColorChooserNodeItem;
@@ -34,7 +34,7 @@ public class TestEditor
 		{
 			NodeModel model = new NodeModel();
 
-			NodeEditor editor = new NodeEditor(model);
+			NodeEditorPane editor = new NodeEditorPane(model);
 			editor.addButtonHandler(item -> {
 				((ImagePropertyItem)item.getNode().getProperty("Image")).setImagePath("Big_pebbles_pxr128.jpg");
 				return true;

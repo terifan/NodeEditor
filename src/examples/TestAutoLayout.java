@@ -1,9 +1,9 @@
 package examples;
 
 import javax.swing.JFrame;
-import org.terifan.nodeeditor.AutoLayout;
+import org.terifan.nodeeditor.util.AutoLayout;
 import org.terifan.nodeeditor.Direction;
-import org.terifan.nodeeditor.NodeEditor;
+import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Node;
 import org.terifan.nodeeditor.NodeModel;
 import org.terifan.nodeeditor.widgets.TextPropertyItem;
@@ -122,7 +122,7 @@ public class TestAutoLayout
 
 			new AutoLayout().layout(model, model.getNode(0));
 
-			NodeEditor editor = new NodeEditor(model);
+			NodeEditorPane editor = new NodeEditorPane(model);
 			editor.center();
 			editor.setScale(1);
 

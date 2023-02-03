@@ -33,12 +33,6 @@ public class NodeModel implements Serializable
 	}
 
 
-	public ArrayList<Connection> getConnections()
-	{
-		return mConnections;
-	}
-
-
 	public NodeModel addNode(Node aNode)
 	{
 		mNodes.add(aNode);
@@ -88,10 +82,16 @@ public class NodeModel implements Serializable
 	}
 
 
+	public ArrayList<Connection> getConnections()
+	{
+		return mConnections;
+	}
+
+
 	public NodeModel addConnection(String aFromPath, String aToPath)
 	{
-		Property fromNode = getNodeItem(aFromPath);
-		Property toNode = getNodeItem(aToPath);
+		Property fromNode = NodeModel.this.getProperty(aFromPath);
+		Property toNode = NodeModel.this.getProperty(aToPath);
 
 		assertNotNull(fromNode, "From path cannot be resolved to a Node: path: %s", aFromPath);
 		assertNotNull(toNode, "To path cannot be resolved to a Node: path: %s", aToPath);
@@ -100,7 +100,7 @@ public class NodeModel implements Serializable
 		Connector in = toNode.getConnector(Direction.IN);
 
 		assertNotNull(out, "From path cannot be resolved to a OUT connector: path: %s", aFromPath);
-		assertNotNull(out, "To path cannot be resolved to a IN connector: path: %s", aToPath);
+		assertNotNull(in, "To path cannot be resolved to a IN connector: path: %s", aToPath);
 
 		return addConnection(out, in);
 	}
@@ -136,6 +136,9 @@ public class NodeModel implements Serializable
 
 	public NodeModel addConnection(Connector aFromConnector, Connector aToConnector)
 	{
+		assertEquals(aFromConnector.getDirection(), Direction.OUT, "Expected OUT connector");
+		assertEquals(aToConnector.getDirection(), Direction.IN, "Expected IN connector");
+
 		mConnections.add(new Connection(aFromConnector, aToConnector));
 
 		return this;
@@ -166,15 +169,15 @@ public class NodeModel implements Serializable
 	}
 
 
-	public Property getNodeItem(String aPath)
+	public Property getProperty(String aPath)
 	{
 		return getNode(aPath).getProperty(aPath);
 	}
 
 
-	public <T extends Property> T getNodeItem(Class<T> aReturnType, String aPath)
+	public <T extends Property> T getProperty(Class<T> aReturnType, String aPath)
 	{
-		return (T)getNodeItem(aPath);
+		return (T)getProperty(aPath);
 	}
 
 
@@ -198,13 +201,13 @@ public class NodeModel implements Serializable
 	}
 
 
-	public ArrayList<Node> getChildNodes(Node aParent)
+	public ArrayList<Node> getConnectedNodes(Node aNode)
 	{
 		ArrayList<Node> result = new ArrayList<>();
 
 		for (Connection conn : mConnections)
 		{
-			if (conn.getOut().getProperty().getNode() == aParent)
+			if (conn.getOut().getProperty().getNode() == aNode)
 			{
 				result.add(conn.getIn().getProperty().getNode());
 			}
