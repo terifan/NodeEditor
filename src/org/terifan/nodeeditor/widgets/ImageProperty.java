@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Property;
+import org.terifan.boxcomponentpane.BoxComponentPane;
 
 
 public class ImageProperty extends Property<ImageProperty>
@@ -36,7 +37,7 @@ public class ImageProperty extends Property<ImageProperty>
 
 
 	@Override
-	protected void paintComponent(NodeEditorPane aEditor, Graphics2D aGraphics, boolean aHover)
+	protected void paintComponent(BoxComponentPane aEditor, Graphics2D aGraphics, boolean aHover)
 	{
 		int t = 10;
 		double sx = mBounds.width / (double)t;
@@ -54,6 +55,6 @@ public class ImageProperty extends Property<ImageProperty>
 			}
 		}
 
-		aEditor.paintImage(this, aGraphics, mBounds);
+		((NodeEditorPane)aEditor).paintImage(this, aGraphics, mBounds);
 	}
 }

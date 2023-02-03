@@ -3,7 +3,7 @@ package examples;
 import java.awt.Color;
 import org.terifan.nodeeditor.widgets.SliderProperty;
 import javax.swing.JFrame;
-import org.terifan.nodeeditor.widgets.ColorChooserNodeItem;
+import org.terifan.nodeeditor.widgets.ColorChooserProperty;
 import static org.terifan.nodeeditor.Direction.IN;
 import static org.terifan.nodeeditor.Direction.OUT;
 import org.terifan.nodeeditor.NodeEditorPane;
@@ -29,7 +29,7 @@ public class TestTinyExample
 
 			Node output = new Node("Output")
 				.setBounds(200, 0, 150, 0)
-				.addProperty(new ColorChooserNodeItem("Color", new Color(0, 0, 0)).addConnector(IN, YELLOW));
+				.addProperty(new ColorChooserProperty("Color", new Color(0, 0, 0)).addConnector(IN, YELLOW));
 
 			NodeModel model = new NodeModel()
 				.addNode(color)

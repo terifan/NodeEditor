@@ -9,10 +9,11 @@ import org.terifan.nodeeditor.Direction;
 import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Property;
 import org.terifan.nodeeditor.Styles;
+import org.terifan.boxcomponentpane.BoxComponentPane;
 import org.terifan.ui.Anchor;
 
 
-public class ColorChooserNodeItem extends Property<ColorChooserNodeItem>
+public class ColorChooserProperty extends Property<ColorChooserProperty>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -20,7 +21,7 @@ public class ColorChooserNodeItem extends Property<ColorChooserNodeItem>
 	private Color mColor;
 
 
-	public ColorChooserNodeItem(String aText, Color aColor)
+	public ColorChooserProperty(String aText, Color aColor)
 	{
 		super(aText);
 
@@ -30,7 +31,7 @@ public class ColorChooserNodeItem extends Property<ColorChooserNodeItem>
 
 
 	@Override
-	protected void paintComponent(NodeEditorPane aEditor, Graphics2D aGraphics, boolean aHover)
+	protected void paintComponent(BoxComponentPane aEditor, Graphics2D aGraphics, boolean aHover)
 	{
 		if (isConnected(Direction.IN))
 		{

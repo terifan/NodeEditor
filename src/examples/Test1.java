@@ -4,7 +4,7 @@ import org.terifan.nodeeditor.widgets.SliderProperty;
 import org.terifan.nodeeditor.widgets.ImageProperty;
 import org.terifan.nodeeditor.widgets.ComboBoxProperty;
 import org.terifan.nodeeditor.widgets.CheckBoxProperty;
-import org.terifan.nodeeditor.widgets.ColorChooserNodeItem;
+import org.terifan.nodeeditor.widgets.ColorChooserProperty;
 import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.JFrame;
@@ -36,7 +36,7 @@ public class Test1
 			TextProperty item8 = new TextProperty("node8").addConnector(new Connector(Direction.OUT));
 			TextProperty item9 = new TextProperty("node9").addConnector(new Connector(Direction.OUT, PURPLE));
 			ImageProperty item10 = new ImageProperty("node10", 200, 200).addConnector(new Connector(Direction.OUT, PURPLE)).addConnector(new Connector(Direction.OUT, PURPLE)).addConnector(new Connector(Direction.OUT, PURPLE));
-			ColorChooserNodeItem item11 = new ColorChooserNodeItem("node11", new Color(255,255,255)).addConnector(new Connector(Direction.IN, YELLOW));
+			ColorChooserProperty item11 = new ColorChooserProperty("node11", new Color(255,255,255)).addConnector(new Connector(Direction.IN, YELLOW));
 			TextProperty item12 = new TextProperty("node12").addConnector(new Connector(Direction.IN, PURPLE));
 			TextProperty item13 = new TextProperty("node13").addConnector(new Connector(Direction.IN, YELLOW));
 			TextProperty item14 = new TextProperty("node14").addConnector(new Connector(Direction.IN, GRAY));

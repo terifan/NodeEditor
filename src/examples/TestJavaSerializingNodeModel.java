@@ -13,7 +13,7 @@ import org.terifan.nodeeditor.widgets.ImageProperty;
 import javax.swing.JFrame;
 import org.terifan.nodeeditor.widgets.ButtonProperty;
 import org.terifan.nodeeditor.widgets.CheckBoxProperty;
-import org.terifan.nodeeditor.widgets.ColorChooserNodeItem;
+import org.terifan.nodeeditor.widgets.ColorChooserProperty;
 import org.terifan.nodeeditor.widgets.ComboBoxProperty;
 import static org.terifan.nodeeditor.Direction.IN;
 import static org.terifan.nodeeditor.Direction.OUT;
@@ -135,7 +135,7 @@ public class TestJavaSerializingNodeModel
 		);
 
 		model.addNode(new Node("Output")
-			.addProperty(new ColorChooserNodeItem("Surface", new Color(0, 0, 0))
+			.addProperty(new ColorChooserProperty("Surface", new Color(0, 0, 0))
 				.addConnector(IN, YELLOW))
 			.addProperty(new SliderProperty("Alpha", 0, 1, 0.75)
 				.addConnector(IN, GRAY))
@@ -190,10 +190,10 @@ public class TestJavaSerializingNodeModel
 				.addConnector(OUT, YELLOW))
 			.addProperty(new SliderProperty("Fac", 0, 1, 0.5)
 				.addConnector(IN, GRAY))
-			.addProperty(new ColorChooserNodeItem("Color", new Color(255, 0, 0))
+			.addProperty(new ColorChooserProperty("Color", new Color(255, 0, 0))
 				.setIdentity("colorIn1")
 				.addConnector(IN, YELLOW))
-			.addProperty(new ColorChooserNodeItem("Color", new Color(0, 0, 255))
+			.addProperty(new ColorChooserProperty("Color", new Color(0, 0, 255))
 				.setIdentity("colorIn2")
 				.addConnector(IN, YELLOW))
 		);
@@ -204,10 +204,10 @@ public class TestJavaSerializingNodeModel
 				.addConnector(OUT, YELLOW))
 			.addProperty(new SliderProperty("Fac", 0, 1, 0.5)
 				.addConnector(IN, GRAY))
-			.addProperty(new ColorChooserNodeItem("Color", new Color(255, 0, 0))
+			.addProperty(new ColorChooserProperty("Color", new Color(255, 0, 0))
 				.setIdentity("colorIn1")
 				.addConnector(IN, YELLOW))
-			.addProperty(new ColorChooserNodeItem("Color", new Color(0, 0, 255))
+			.addProperty(new ColorChooserProperty("Color", new Color(0, 0, 255))
 				.setIdentity("colorIn2")
 				.addConnector(IN, YELLOW))
 		);

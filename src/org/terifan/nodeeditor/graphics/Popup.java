@@ -10,14 +10,13 @@ import java.awt.geom.Path2D;
 import java.util.List;
 import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Property;
-import org.terifan.nodeeditor.Renderable;
 import org.terifan.nodeeditor.Styles;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.TextBox;
 import org.terifan.util.Strings;
 
 
-public class Popup implements Renderable
+public class Popup
 {
 	protected final NodeEditorPane mEditor;
 	protected final Rectangle mBounds;
@@ -79,20 +78,17 @@ public class Popup implements Renderable
 	}
 
 
-	@Override
 	public Rectangle getBounds()
 	{
 		return mBounds;
 	}
 
 
-	@Override
 	public void layout()
 	{
 	}
 
 
-	@Override
 	public void paintComponent(NodeEditorPane aEditor, Graphics2D aGraphics, int aWidth, int aHeight, boolean aSelected)
 	{
 		int w = aWidth;

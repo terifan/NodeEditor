@@ -44,7 +44,9 @@ public class Styles
 	public static Color PANE_GRID_COLOR_3 = new Color(30, 30, 30);
 	public static Color PANE_SELECTION_RECTANGLE_LINE = new Color(255, 255, 255);
 	public static Color PANE_SELECTION_RECTANGLE_BACKGROUND = new Color(255, 255, 255, 15);
-	public static int MIN_WIDTH = 80;
+
+	public static int MIN_WIDTH = 180;
+	public static int MIN_HEIGHT = TITLE_HEIGHT + 6 + 2 * 4;
 
 	public static Font BOX_FONT = new Font("Segoe UI", Font.PLAIN, 12);
 	public static Font BOX_ITEM_FONT = new Font("Segoe UI", Font.PLAIN, 12);

@@ -8,48 +8,35 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.TextBox;
 import static org.terifan.nodeeditor.Styles.*;
-import org.terifan.util.Strings;
+import org.terifan.boxcomponentpane.BoxComponent;
+import org.terifan.boxcomponentpane.BoxComponentPane;
 
 
-public class Node implements Renderable, Serializable
+public class Node extends BoxComponent<Node> implements Serializable
 {
 	private final static long serialVersionUID = 1L;
 
 	protected final ArrayList<Property> mProperties;
-	protected final Rectangle mBounds;
 	protected NodeModel mModel;
 	protected String mIdentity;
-	protected String mName;
-	protected boolean mMinimized;
 	protected int mVerticalSpacing;
-	protected Dimension mMinimumSize;
-	protected Dimension mMaximumSize;
-	protected Dimension mRestoredSize;
-	protected boolean mResizableHorizontal;
-	protected boolean mResizableVertical;
 
 
-	public Node()
+	public Node(String aName)
 	{
+		super(aName);
+
 		mVerticalSpacing = 3;
-		mMinimumSize = new Dimension(100, 0);
-		mMaximumSize = new Dimension(Short.MAX_VALUE, Short.MAX_VALUE);
-		mResizableHorizontal = true;
-		mResizableVertical = true;
-		mBounds = new Rectangle();
 		mProperties = new ArrayList<>();
 	}
 
 
 	public Node(String aName, Property... aItems)
 	{
-		this();
-
-		mName = aName;
+		this(aName);
 
 		for (Property item : aItems)
 		{
@@ -77,109 +64,9 @@ public class Node implements Renderable, Serializable
 	}
 
 
-	public String getName()
-	{
-		return mName;
-	}
-
-
-	public Node setName(String aName)
-	{
-		mName = aName;
-		return this;
-	}
-
-
 	public NodeModel getModel()
 	{
 		return mModel;
-	}
-
-
-	public boolean isResizableHorizontal()
-	{
-		return mResizableHorizontal;
-	}
-
-
-	public Node setResizableHorizontal(boolean aResizableHorizontal)
-	{
-		mResizableHorizontal = aResizableHorizontal;
-		return this;
-	}
-
-
-	public boolean isResizableVertical()
-	{
-		return mResizableVertical;
-	}
-
-
-	public Node setResizableVertical(boolean aResizableVertical)
-	{
-		mResizableVertical = aResizableVertical;
-		return this;
-	}
-
-
-	public Dimension getMinimumSize()
-	{
-		return mMinimumSize;
-	}
-
-
-	public Node setMinSize(Dimension aMinSize)
-	{
-		mMinimumSize = aMinSize;
-		return this;
-	}
-
-
-	public Dimension getMaximumSize()
-	{
-		return mMaximumSize;
-	}
-
-
-	public Node setMaxSize(Dimension aMaxSize)
-	{
-		mMaximumSize = aMaxSize;
-		return this;
-	}
-
-
-	public boolean isMinimized()
-	{
-		return mMinimized;
-	}
-
-
-	public Node setSize(int aWidth, int aHeight)
-	{
-		mBounds.setSize(aWidth, aHeight);
-		return this;
-	}
-
-
-	public Node setSize(Dimension aSize)
-	{
-		return setSize(aSize.width, aSize.height);
-	}
-
-
-	public Node setMinimized(boolean aMinimized)
-	{
-		mMinimized = aMinimized;
-
-		if (!mMinimized && mRestoredSize != null)
-		{
-			mBounds.setSize(mRestoredSize);
-		}
-		else
-		{
-			mRestoredSize = mBounds.getSize();
-		}
-		return this;
 	}
 
 
@@ -188,13 +75,6 @@ public class Node implements Renderable, Serializable
 		mProperties.add(aItem);
 		aItem.bind(this);
 
-		return this;
-	}
-
-
-	public Node setLocation(int aX, int aY)
-	{
-		mBounds.setLocation(aX, aY);
 		return this;
 	}
 
@@ -254,9 +134,9 @@ public class Node implements Renderable, Serializable
 
 
 	@Override
-	public void paintComponent(NodeEditorPane aEditor, Graphics2D aGraphics, int aWidth, int aHeight, boolean aSelected)
+	public void paintComponent(BoxComponentPane<Node> aEditor, Graphics2D aGraphics, int aWidth, int aHeight, boolean aSelected)
 	{
-		paintBorder(aGraphics, 0, 0, aWidth, aHeight, aSelected);
+		super.paintBorder(aGraphics, aWidth, aWidth, aWidth, aHeight, aSelected);
 
 		if (!mMinimized)
 		{
@@ -300,7 +180,6 @@ public class Node implements Renderable, Serializable
 				mBounds.height = Math.max(mBounds.height, mMinimumSize.height);
 
 				mBounds.height += TITLE_HEIGHT_PADDED;
-
 				mBounds.height += 6 + 2 * 4;
 			}
 			else
@@ -311,10 +190,8 @@ public class Node implements Renderable, Serializable
 		}
 		else
 		{
-			mBounds.width = mMinimumSize.width;
-			mBounds.height = TITLE_HEIGHT;
-
-			mBounds.height += 6 + 2 * 4;
+			mBounds.width = Math.max(MIN_WIDTH, mMinimumSize.width);
+			mBounds.height = MIN_HEIGHT;
 		}
 	}
 
@@ -426,20 +303,6 @@ public class Node implements Renderable, Serializable
 	}
 
 
-	@Override
-	public Rectangle getBounds()
-	{
-		return mBounds;
-	}
-
-
-	public Node setBounds(int aX, int aY, int aWidth, int aHeight)
-	{
-		mBounds.setBounds(aX, aY, aWidth, aHeight);
-		return this;
-	}
-
-
 	protected void paintConnectors(Graphics2D aGraphics)
 	{
 		for (Property item : mProperties)
@@ -452,83 +315,6 @@ public class Node implements Renderable, Serializable
 				aGraphics.setColor(Color.BLACK);
 				aGraphics.drawOval(r.x, r.y, r.width, r.height);
 			}
-		}
-	}
-
-
-	protected void paintBorder(Graphics2D aGraphics, int aX, int aY, int aWidth, int aHeight, boolean aSelected)
-	{
-		aX += 5;
-		aY += 4;
-		aWidth -= 10;
-		aHeight -= 8;
-
-		boolean minimized = mMinimized || aHeight <= 4 + 4 + TITLE_HEIGHT;
-		int th = minimized ? TITLE_HEIGHT : TITLE_HEIGHT_PADDED;
-
-		if (minimized)
-		{
-			aGraphics.setColor(BOX_BORDER_TITLE_COLOR);
-			aGraphics.fillRoundRect(aX, aY, aWidth, aHeight, BORDE_RADIUS, BORDE_RADIUS);
-		}
-		else
-		{
-			Shape oldClip = aGraphics.getClip();
-
-			aGraphics.setColor(BOX_BORDER_TITLE_COLOR);
-			aGraphics.clipRect(aX, aY, aWidth, th);
-			aGraphics.fillRoundRect(aX, aY, aWidth, th + 3 + 12, BORDE_RADIUS, BORDE_RADIUS);
-
-			aGraphics.setClip(oldClip);
-
-			aGraphics.setColor(BOX_BACKGROUND_COLOR);
-			aGraphics.clipRect(aX, aY + th, aWidth, aHeight - th);
-			aGraphics.fillRoundRect(aX, aY, aWidth, aHeight, BORDE_RADIUS, BORDE_RADIUS);
-
-			aGraphics.setClip(oldClip);
-		}
-
-		aGraphics.setColor(BOX_BORDER_TITLE_SEPARATOR_COLOR);
-		aGraphics.drawLine(aX, aY + th - 1, aX + aWidth, aY + th - 1);
-
-		int inset = 6 + 4 + BUTTON_WIDTH;
-
-		new TextBox(mName)
-			.setShadow(BOX_TITLE_TEXT_SHADOW_COLOR, 1, 1)
-			.setAnchor(Anchor.WEST)
-			.setBounds(aX + inset, aY + 3, aWidth - inset - 4, TITLE_HEIGHT)
-			.setForeground(BOX_FOREGROUND_COLOR)
-			.setMaxLineCount(1)
-			.setFont(Styles.BOX_FONT)
-			.render(aGraphics);
-
-		aGraphics.setColor(aSelected ? BOX_BORDER_SELECTED_COLOR : BOX_BORDER_COLOR);
-		aGraphics.drawRoundRect(aX, aY, aWidth, aHeight, BORDE_RADIUS, BORDE_RADIUS);
-
-		aX += 10;
-		aY += 3 + th / 2;
-		int w = 10;
-		int h = 5;
-
-		if (mMinimized)
-		{
-			aGraphics.fillPolygon(new int[]
-			{
-				aX, aX + w, aX
-			}, new int[]
-			{
-				aY - h, aY, aY + h
-			}, 3);
-		}
-		else
-		{
-			aGraphics.fillPolygon(new int[]
-			{
-				aX, aX + w, aX + w / 2
-			}, new int[]
-			{
-				aY - h, aY - h, aY + h
-			}, 3);
 		}
 	}
 

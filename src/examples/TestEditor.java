@@ -21,7 +21,7 @@ import org.terifan.nodeeditor.widgets.ImageProperty;
 import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Node;
 import org.terifan.nodeeditor.NodeModel;
-import org.terifan.nodeeditor.widgets.ColorChooserNodeItem;
+import org.terifan.nodeeditor.widgets.ColorChooserProperty;
 import org.terifan.nodeeditor.widgets.SliderProperty;
 import org.terifan.nodeeditor.widgets.TextProperty;
 
@@ -119,10 +119,10 @@ public class TestEditor
 							.addConnector(OUT, YELLOW))
 						.addProperty(new SliderProperty("Fac", 0, 1, 0.5)
 							.addConnector(IN, GRAY))
-						.addProperty(new ColorChooserNodeItem("Color", new Color(255, 0, 0))
+						.addProperty(new ColorChooserProperty("Color", new Color(255, 0, 0))
 							.setIdentity("colorIn1")
 							.addConnector(IN, YELLOW))
-						.addProperty(new ColorChooserNodeItem("Color", new Color(0, 0, 255))
+						.addProperty(new ColorChooserProperty("Color", new Color(0, 0, 255))
 							.setIdentity("colorIn2")
 							.addConnector(IN, YELLOW))
 					);
