@@ -7,8 +7,8 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Arrays;
-import org.terifan.nodeeditor.AbstractPropertyItem;
 import org.terifan.nodeeditor.NodeEditor;
+import org.terifan.nodeeditor.PropertyItem;
 import org.terifan.nodeeditor.graphics.Popup;
 import org.terifan.nodeeditor.graphics.Popup.Option;
 import org.terifan.nodeeditor.Styles;
@@ -16,7 +16,7 @@ import org.terifan.ui.Anchor;
 import org.terifan.ui.TextBox;
 
 
-public class ComboBoxPropertyItem extends AbstractPropertyItem
+public class ComboBoxPropertyItem extends PropertyItem<ComboBoxPropertyItem>
 {
 	private static final long serialVersionUID = 1L;
 

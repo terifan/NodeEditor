@@ -47,7 +47,8 @@ public class NodeModel implements Serializable
 
 		for (PropertyItem item : aNode.mItems)
 		{
-			for (Connector connector : item.mConnectors)
+			ArrayList<Connector> list = item.mConnectors;
+			for (Connector connector : list)
 			{
 				connector.bind(item);
 			}
@@ -112,7 +113,7 @@ public class NodeModel implements Serializable
 		Connector out = null;
 		Connector in = null;
 
-		for (Connector connector : aFromItem.mConnectors)
+		for (Connector connector : (ArrayList<Connector>)aFromItem.mConnectors)
 		{
 			if (connector.getDirection() == Direction.OUT)
 			{
@@ -120,7 +121,7 @@ public class NodeModel implements Serializable
 			}
 		}
 
-		for (Connector connector : aToItem.mConnectors)
+		for (Connector connector : (ArrayList<Connector>)aToItem.mConnectors)
 		{
 			if (connector.getDirection() == Direction.IN)
 			{
@@ -185,7 +186,7 @@ public class NodeModel implements Serializable
 		{
 			for (PropertyItem item : node.mItems)
 			{
-				for (Connector connector : item.mConnectors)
+				for (Connector connector : (ArrayList<Connector>)item.mConnectors)
 				{
 					if (connector.mModelRef == aRef)
 					{

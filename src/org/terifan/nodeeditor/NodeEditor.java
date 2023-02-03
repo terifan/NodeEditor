@@ -702,7 +702,7 @@ public class NodeEditor extends JComponent
 
 				for (PropertyItem item : box)
 				{
-					for (Connector c : item.mConnectors)
+					for (Connector c : (ArrayList<Connector>)item.mConnectors)
 					{
 						double dx = x - c.getBounds().getCenterX();
 						double dy = y - c.getBounds().getCenterY();
@@ -741,7 +741,7 @@ public class NodeEditor extends JComponent
 
 			for (PropertyItem item : box)
 			{
-				for (Connector c : item.mConnectors)
+				for (Connector c : (ArrayList<Connector>)item.mConnectors)
 				{
 					double dx = x - c.getBounds().getCenterX();
 					double dy = y - c.getBounds().getCenterY();

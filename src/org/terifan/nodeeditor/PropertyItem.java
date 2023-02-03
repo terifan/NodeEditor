@@ -14,7 +14,7 @@ import org.terifan.ui.TextBox;
 import org.terifan.util.Strings;
 
 
-public abstract class PropertyItem implements Serializable
+public abstract class PropertyItem<T> implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -68,10 +68,10 @@ public abstract class PropertyItem implements Serializable
 	}
 
 
-	public PropertyItem setIdentity(String aIdentity)
+	public T setIdentity(String aIdentity)
 	{
 		mIdentity = aIdentity;
-		return this;
+		return (T)this;
 	}
 
 
@@ -81,10 +81,10 @@ public abstract class PropertyItem implements Serializable
 	}
 
 
-	public PropertyItem putProperty(String aName, String aValue)
+	public T putProperty(String aName, String aValue)
 	{
 		mProperties.put(aName, aValue);
-		return this;
+		return (T)this;
 	}
 
 
@@ -94,10 +94,10 @@ public abstract class PropertyItem implements Serializable
 	}
 
 
-	protected PropertyItem setText(String aText)
+	protected T setText(String aText)
 	{
 		mTextBox.setText(aText);
-		return this;
+		return (T)this;
 	}
 
 
@@ -163,20 +163,20 @@ public abstract class PropertyItem implements Serializable
 	}
 
 
-	public PropertyItem addConnector(Connector aConnector)
+	public T addConnector(Connector aConnector)
 	{
 		mConnectors.add(aConnector);
-		return this;
+		return (T)this;
 	}
 
 
-	public PropertyItem addConnector(Direction aDirection, Color aColor)
+	public T addConnector(Direction aDirection, Color aColor)
 	{
 		return addConnector(new Connector(aDirection, aColor));
 	}
 
 
-	public PropertyItem addConnector(Direction aDirection)
+	public T addConnector(Direction aDirection)
 	{
 		return addConnector(new Connector(aDirection, Color.YELLOW));
 	}

@@ -320,7 +320,7 @@ public class Node implements Iterable<PropertyItem>, Renderable, Serializable
 				int by0 = item.mBounds.y + Math.min(item.mBounds.height, TITLE_HEIGHT_PADDED + 4) / 2 - 5;
 				int by1 = by0;
 
-				for (Connector connector : item.mConnectors)
+				for (Connector connector : (ArrayList<Connector>)item.mConnectors)
 				{
 					if (connector.getDirection() == Direction.IN)
 					{
@@ -342,7 +342,7 @@ public class Node implements Iterable<PropertyItem>, Renderable, Serializable
 
 			for (PropertyItem item : mItems)
 			{
-				for (Connector connector : item.mConnectors)
+				for (Connector connector : (ArrayList<Connector>)item.mConnectors)
 				{
 					if (connector.getDirection() == Direction.IN)
 					{
@@ -360,7 +360,7 @@ public class Node implements Iterable<PropertyItem>, Renderable, Serializable
 
 			for (PropertyItem item : mItems)
 			{
-				for (Connector connector : item.mConnectors)
+				for (Connector connector : (ArrayList<Connector>)item.mConnectors)
 				{
 					if (connector.getDirection() == Direction.IN)
 					{
@@ -402,7 +402,7 @@ public class Node implements Iterable<PropertyItem>, Renderable, Serializable
 	{
 		for (PropertyItem item : mItems)
 		{
-			for (Connector connector : item.mConnectors)
+			for (Connector connector : (ArrayList<Connector>)item.mConnectors)
 			{
 				Rectangle r = connector.getBounds();
 				aGraphics.setColor(connector.getColor());

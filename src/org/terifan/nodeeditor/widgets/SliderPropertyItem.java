@@ -6,15 +6,15 @@ import java.awt.Paint;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
-import org.terifan.nodeeditor.AbstractPropertyItem;
 import org.terifan.nodeeditor.Direction;
 import org.terifan.nodeeditor.NodeEditor;
+import org.terifan.nodeeditor.PropertyItem;
 import org.terifan.nodeeditor.Styles;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.TextBox;
 
 
-public class SliderPropertyItem extends AbstractPropertyItem<SliderPropertyItem>
+public class SliderPropertyItem extends PropertyItem<SliderPropertyItem>
 {
 	private final static long serialVersionUID = 1L;
 

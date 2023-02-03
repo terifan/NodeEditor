@@ -11,6 +11,7 @@ import javax.imageio.ImageIO;
 import org.terifan.nodeeditor.widgets.SliderPropertyItem;
 import org.terifan.nodeeditor.widgets.ImagePropertyItem;
 import javax.swing.JFrame;
+import org.terifan.nodeeditor.AutoLayout;
 import org.terifan.nodeeditor.widgets.ButtonPropertyItem;
 import org.terifan.nodeeditor.widgets.CheckBoxPropertyItem;
 import org.terifan.nodeeditor.widgets.ColorChooserNodeItem;
@@ -82,7 +83,6 @@ public class TestJavaSerializingNodeModel
 		NodeModel model = new NodeModel();
 
 		model.addNode(new Node("Color")
-			.setSize(200, 0)
 			.add(new TextPropertyItem("Color")
 				.addConnector(OUT, YELLOW))
 			.add(new SliderPropertyItem("Red", 0, 1, 0)
@@ -146,19 +146,16 @@ public class TestJavaSerializingNodeModel
 		);
 
 		model.addNode(new Node("Alpha")
-			.setSize(200, 0)
 			.add(new SliderPropertyItem("Alpha", 0, 1, 0.75)
 				.addConnector(OUT, GRAY))
 		);
 
 		model.addNode(new Node("TextureCoordinate")
-			.setSize(200, 0)
 			.add(new TextPropertyItem("UV")
 				.addConnector(OUT, PURPLE))
 		);
 
 		model.addNode(new Node("Multiply")
-			.setSize(200, 0)
 			.setIdentity("math")
 			.add(new TextPropertyItem("Value")
 				.setIdentity("result")
@@ -174,7 +171,6 @@ public class TestJavaSerializingNodeModel
 		);
 
 		model.addNode(new Node("Multiply")
-			.setSize(200, 0)
 			.setIdentity("math2")
 			.add(new TextPropertyItem("Value")
 				.setIdentity("result")
@@ -190,7 +186,6 @@ public class TestJavaSerializingNodeModel
 		);
 
 		model.addNode(new Node("Mix")
-			.setSize(200, 0)
 			.add(new TextPropertyItem("Color")
 				.setIdentity("colorOut")
 				.addConnector(OUT, YELLOW))
@@ -205,7 +200,6 @@ public class TestJavaSerializingNodeModel
 		);
 
 		model.addNode(new Node("Mix2")
-			.setSize(200, 0)
 			.add(new TextPropertyItem("Color")
 				.setIdentity("colorOut")
 				.addConnector(OUT, YELLOW))
@@ -233,7 +227,7 @@ public class TestJavaSerializingNodeModel
 
 		model.getNode("color").setLocation(0, 0);
 		model.getNode("mix").setLocation(300, -50);
-		model.getNode("Mix2").setLocation(300, -250);
+		model.getNode("Mix2").setLocation(300, -330);
 		model.getNode("alpha").setLocation(0, 200);
 		model.getNode("output").setLocation(600, 100);
 		model.getNode("texture1").setLocation(0, -350);
@@ -243,6 +237,7 @@ public class TestJavaSerializingNodeModel
 		model.getNode("math").setLocation(-300, -200);
 		model.getNode("math2").setLocation(300, -200);
 
+//		new AutoLayout().layout(model, model.getNode(0));
 
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		try (ObjectOutputStream dos = new ObjectOutputStream(baos))

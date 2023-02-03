@@ -1,13 +1,13 @@
 package org.terifan.nodeeditor.widgets;
 
 import java.awt.Graphics2D;
-import org.terifan.nodeeditor.AbstractPropertyItem;
 import org.terifan.nodeeditor.Direction;
 import org.terifan.nodeeditor.NodeEditor;
+import org.terifan.nodeeditor.PropertyItem;
 import org.terifan.ui.Anchor;
 
 
-public class TextPropertyItem extends AbstractPropertyItem<TextPropertyItem>
+public class TextPropertyItem extends PropertyItem<TextPropertyItem>
 {
 	private static final long serialVersionUID = 1L;
 

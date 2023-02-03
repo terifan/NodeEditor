@@ -5,14 +5,14 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import javax.swing.JColorChooser;
-import org.terifan.nodeeditor.AbstractPropertyItem;
 import org.terifan.nodeeditor.Direction;
 import org.terifan.nodeeditor.NodeEditor;
+import org.terifan.nodeeditor.PropertyItem;
 import org.terifan.nodeeditor.Styles;
 import org.terifan.ui.Anchor;
 
 
-public class ColorChooserNodeItem extends AbstractPropertyItem<ColorChooserNodeItem>
+public class ColorChooserNodeItem extends PropertyItem<ColorChooserNodeItem>
 {
 	private static final long serialVersionUID = 1L;
 

@@ -2,15 +2,12 @@ package org.terifan.nodeeditor.widgets;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
-import org.terifan.nodeeditor.AbstractPropertyItem;
 import org.terifan.nodeeditor.NodeEditor;
+import org.terifan.nodeeditor.PropertyItem;
 
 
-public class ImagePropertyItem extends AbstractPropertyItem<ImagePropertyItem>
+public class ImagePropertyItem extends PropertyItem<ImagePropertyItem>
 {
 	private static final long serialVersionUID = 1L;
 

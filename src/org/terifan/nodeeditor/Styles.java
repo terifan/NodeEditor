@@ -1,6 +1,5 @@
 package org.terifan.nodeeditor;
 
-import org.terifan.nodeeditor.widgets.ButtonPropertyItem;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.image.BufferedImage;
