@@ -7,12 +7,12 @@ import java.awt.Rectangle;
 import javax.swing.JColorChooser;
 import org.terifan.nodeeditor.Direction;
 import org.terifan.nodeeditor.NodeEditor;
-import org.terifan.nodeeditor.PropertyItem;
+import org.terifan.nodeeditor.Property;
 import org.terifan.nodeeditor.Styles;
 import org.terifan.ui.Anchor;
 
 
-public class ColorChooserNodeItem extends PropertyItem<ColorChooserNodeItem>
+public class ColorChooserNodeItem extends Property<ColorChooserNodeItem>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -73,6 +73,6 @@ public class ColorChooserNodeItem extends PropertyItem<ColorChooserNodeItem>
 	@Override
 	protected boolean mousePressed(NodeEditor aEditor, Point aClickPoint)
 	{
-		return !isConnected(Direction.IN) && new Rectangle(mOwnerNode.getBounds().x + mBounds.x, mOwnerNode.getBounds().y + mBounds.y, COLOR_BOX_WIDTH, mBounds.height).contains(aClickPoint);
+		return !isConnected(Direction.IN) && new Rectangle(mNode.getBounds().x + mBounds.x, mNode.getBounds().y + mBounds.y, COLOR_BOX_WIDTH, mBounds.height).contains(aClickPoint);
 	}
 }

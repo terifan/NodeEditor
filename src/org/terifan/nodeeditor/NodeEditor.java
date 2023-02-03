@@ -25,6 +25,7 @@ import javax.swing.SwingUtilities;
 import org.terifan.nodeeditor.graphics.SplineRenderer;
 import org.terifan.nodeeditor.widgets.ButtonPropertyItem;
 import org.terifan.nodeeditor.widgets.ImagePropertyItem;
+import static org.terifan.util.Assert.assertNotNull;
 
 
 public class NodeEditor extends JComponent
@@ -36,10 +37,10 @@ public class NodeEditor extends JComponent
 		3
 	}, 0);
 
-	private transient final ArrayList<NodeEditorButtonClickHandler> mButtonHandlers;
+	private transient final ArrayList<OnClickHandler> mButtonHandlers;
 	private transient final ArrayList<ImagePainter> mImagePainters;
 	private transient Popup mPopup;
-	private transient PropertyItem mClickedItem;
+	private transient Property mClickedItem;
 
 	private NodeModel mModel;
 	private ArrayList<Node> mSelectedNodes;
@@ -179,13 +180,13 @@ public class NodeEditor extends JComponent
 			{
 				assertNotNull(connection.getIn(), "connection.getIn() == null");
 				assertNotNull(connection.getOut(), "connection.getOut() == null");
-				assertNotNull(connection.getIn().getPropertyItem(), "connection.getIn().getNodeItem() == null");
-				assertNotNull(connection.getOut().getPropertyItem(), "connection.getOut().getNodeItem() == null");
-				assertNotNull(connection.getIn().getPropertyItem().getNode(), "connection.getIn().getNodeItem().getNode() == null");
-				assertNotNull(connection.getOut().getPropertyItem().getNode(), "connection.getOut().getNodeItem().getNode() == null");
+				assertNotNull(connection.getIn().getProperty(), "connection.getIn().getNodeItem() == null");
+				assertNotNull(connection.getOut().getProperty(), "connection.getOut().getNodeItem() == null");
+				assertNotNull(connection.getIn().getProperty().getNode(), "connection.getIn().getNodeItem().getNode() == null");
+				assertNotNull(connection.getOut().getProperty().getNode(), "connection.getOut().getNodeItem().getNode() == null");
 
-				Color start = mSelectedNodes.contains(connection.getOut().getPropertyItem().getNode()) ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : Styles.CONNECTOR_COLOR_INNER;
-				Color end = mSelectedNodes.contains(connection.getIn().getPropertyItem().getNode()) ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : Styles.CONNECTOR_COLOR_INNER;
+				Color start = mSelectedNodes.contains(connection.getOut().getProperty().getNode()) ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : Styles.CONNECTOR_COLOR_INNER;
+				Color end = mSelectedNodes.contains(connection.getIn().getProperty().getNode()) ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : Styles.CONNECTOR_COLOR_INNER;
 
 				SplineRenderer.drawSpline(g, connection, mScale, Styles.CONNECTOR_COLOR_OUTER, start, end);
 			}
@@ -331,16 +332,10 @@ public class NodeEditor extends JComponent
 		private Point mClickPoint;
 		private Point mDragPoint;
 		private boolean mHitBox;
-		private int mCursor;
 		private Node mHoverBox;
 		private Rectangle mStartBounds;
 		private boolean mIgnoreNextMouseRelease;
-
-
-
-		{
-			mCursor = Cursor.DEFAULT_CURSOR;
-		}
+		private int mCursor = Cursor.DEFAULT_CURSOR;
 
 
 		@Override
@@ -429,7 +424,7 @@ public class NodeEditor extends JComponent
 						return;
 					}
 
-					PropertyItem tmp = box.mousePressed(mClickPoint);
+					Property tmp = box.mousePressed(mClickPoint);
 					if (tmp != null)
 					{
 						if (tmp.mousePressed(NodeEditor.this, mClickPoint))
@@ -454,7 +449,7 @@ public class NodeEditor extends JComponent
 				boolean done = false;
 				if (mDragConnector.getDirection() == Direction.IN)
 				{
-					List<Connection> list = mModel.getConnectionsTo(mDragConnector.getPropertyItem()).collect(Collectors.toList());
+					List<Connection> list = mModel.getConnectionsTo(mDragConnector.getProperty()).collect(Collectors.toList());
 					if (list.size() == 1)
 					{
 						Connector out = list.get(0).getOut();
@@ -527,11 +522,11 @@ public class NodeEditor extends JComponent
 					{
 						if (nearestConnector.getDirection() == Direction.IN)
 						{
-							mModel.getConnections().removeAll(mModel.getConnectionsTo(nearestConnector.getPropertyItem()).collect(Collectors.toList()));
+							mModel.getConnections().removeAll(mModel.getConnectionsTo(nearestConnector.getProperty()).collect(Collectors.toList()));
 						}
 						if (nearestConnector.getDirection() == Direction.OUT)
 						{
-							mModel.getConnections().removeAll(mModel.getConnectionsTo(mDragConnector.getPropertyItem()).collect(Collectors.toList()));
+							mModel.getConnections().removeAll(mModel.getConnectionsTo(mDragConnector.getProperty()).collect(Collectors.toList()));
 						}
 					}
 
@@ -544,7 +539,7 @@ public class NodeEditor extends JComponent
 						mModel.addConnection(mDragConnector, nearestConnector);
 					}
 
-					nearestConnector.getPropertyItem().connectionsChanged(NodeEditor.this, mClickPoint);
+					nearestConnector.getProperty().connectionsChanged(NodeEditor.this, mClickPoint);
 				}
 
 				mDragConnector = null;
@@ -691,7 +686,7 @@ public class NodeEditor extends JComponent
 
 			for (Node box : mModel.getNodes())
 			{
-				if (mDragConnector != null && mDragConnector.getPropertyItem().getNode() == box)
+				if (mDragConnector != null && mDragConnector.getProperty().getNode() == box)
 				{
 					continue;
 				}
@@ -700,7 +695,7 @@ public class NodeEditor extends JComponent
 				int x = aPoint.x - b.x;
 				int y = aPoint.y - b.y;
 
-				for (PropertyItem item : box)
+				for (Property item : box)
 				{
 					for (Connector c : (ArrayList<Connector>)item.mConnectors)
 					{
@@ -731,7 +726,7 @@ public class NodeEditor extends JComponent
 			double dist = 25;
 			boolean hitBox = false;
 
-			if (mDragConnector != null && mDragConnector.getPropertyItem().getNode() == box)
+			if (mDragConnector != null && mDragConnector.getProperty().getNode() == box)
 			{
 				return null;
 			}
@@ -739,7 +734,7 @@ public class NodeEditor extends JComponent
 			int x = aPoint.x - box.getBounds().x;
 			int y = aPoint.y - box.getBounds().y;
 
-			for (PropertyItem item : box)
+			for (Property item : box)
 			{
 				for (Connector c : (ArrayList<Connector>)item.mConnectors)
 				{
@@ -997,15 +992,6 @@ public class NodeEditor extends JComponent
 	}
 
 
-	private void assertNotNull(Object aObject, String aMessage)
-	{
-		if (aObject == null)
-		{
-			throw new IllegalStateException(aMessage);
-		}
-	}
-
-
 	public void paintImage(ImagePropertyItem aProperty, Graphics aGraphics, Rectangle aBounds)
 	{
 		for (ImagePainter rl : mImagePainters)
@@ -1053,7 +1039,7 @@ public class NodeEditor extends JComponent
 	};
 
 
-	public NodeEditor addButtonHandler(NodeEditorButtonClickHandler aHandler)
+	public NodeEditor addButtonHandler(OnClickHandler aHandler)
 	{
 		mButtonHandlers.add(aHandler);
 		return this;
@@ -1062,7 +1048,7 @@ public class NodeEditor extends JComponent
 
 	public void fireButtonClicked(ButtonPropertyItem aButton)
 	{
-		for (NodeEditorButtonClickHandler handler : mButtonHandlers)
+		for (OnClickHandler handler : mButtonHandlers)
 		{
 			if (handler.onClick(aButton))
 			{

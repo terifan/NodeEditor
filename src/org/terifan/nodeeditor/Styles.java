@@ -100,6 +100,10 @@ public class Styles
 
 	public static BufferedImage DIRECTORY_ICON;
 
+	public final static Color PURPLE = new Color(0x6363C7);
+	public final static Color GRAY = new Color(0xA1A1A1);
+	public final static Color YELLOW = new Color(0xC7C729);
+
 	static
 	{
 		try

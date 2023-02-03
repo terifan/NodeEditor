@@ -8,12 +8,12 @@ import java.awt.Paint;
 import java.awt.Point;
 import java.awt.Stroke;
 import org.terifan.nodeeditor.NodeEditor;
-import org.terifan.nodeeditor.PropertyItem;
+import org.terifan.nodeeditor.Property;
 import org.terifan.nodeeditor.Styles;
 import org.terifan.ui.Anchor;
 
 
-public class CheckBoxPropertyItem extends PropertyItem<CheckBoxPropertyItem>
+public class CheckBoxPropertyItem extends Property<CheckBoxPropertyItem>
 {
 	private final static long serialVersionUID = 1L;
 

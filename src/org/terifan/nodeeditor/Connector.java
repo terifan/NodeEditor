@@ -6,6 +6,7 @@ import java.awt.Rectangle;
 import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
+import static org.terifan.nodeeditor.Styles.YELLOW;
 
 
 public class Connector implements Serializable
@@ -14,20 +15,16 @@ public class Connector implements Serializable
 
 	private final static AtomicInteger REF_COUNTER = new AtomicInteger();
 
-	public final static Color PURPLE = new Color(0x6363C7);
-	public final static Color GRAY = new Color(0xA1A1A1);
-	public final static Color YELLOW = new Color(0xC7C729);
-
-	protected final Rectangle mBounds = new Rectangle();
+	protected final Rectangle mBounds;
 	protected Direction mDirection;
-	protected PropertyItem mNodeItem;
+	protected Property mProperty;
 	protected Color mColor;
 	protected int mModelRef;
 
 
 	public Connector()
 	{
-		mDirection = null;
+		mBounds = new Rectangle();
 		mModelRef = REF_COUNTER.getAndIncrement();
 	}
 
@@ -40,21 +37,22 @@ public class Connector implements Serializable
 
 	public Connector(Direction aDirection, Color aColor)
 	{
+		mBounds = new Rectangle();
 		mDirection = aDirection;
 		mColor = aColor;
 		mModelRef = REF_COUNTER.getAndIncrement();
 	}
 
 
-	void bind(PropertyItem aNodeItem)
+	void bind(Property aNodeItem)
 	{
-		mNodeItem = aNodeItem;
+		mProperty = aNodeItem;
 	}
 
 
-	public PropertyItem getPropertyItem()
+	public Property getProperty()
 	{
-		return mNodeItem;
+		return mProperty;
 	}
 
 
@@ -84,14 +82,14 @@ public class Connector implements Serializable
 
 	Point getConnectorPoint()
 	{
-		Rectangle bounds = mNodeItem.getNode().getBounds();
+		Rectangle bounds = mProperty.getNode().getBounds();
 
 		return new Point(bounds.x + mBounds.x + mBounds.width / 2, bounds.y + mBounds.y + mBounds.height / 2);
 	}
 
 
-	public Stream<PropertyItem> getConnectedItems()
+	public Stream<Property> getConnectedItems()
 	{
-		return mDirection == Direction.IN ? mNodeItem.getNode().getModel().getConnectionsTo(this) : mNodeItem.getNode().getModel().getConnectionsFrom(this);
+		return mDirection == Direction.IN ? mProperty.getNode().getModel().getConnectionsTo(this) : mProperty.getNode().getModel().getConnectionsFrom(this);
 	}
 }

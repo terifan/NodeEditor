@@ -9,7 +9,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Path2D;
 import java.util.List;
 import org.terifan.nodeeditor.NodeEditor;
-import org.terifan.nodeeditor.PropertyItem;
+import org.terifan.nodeeditor.Property;
 import org.terifan.nodeeditor.Renderable;
 import org.terifan.nodeeditor.Styles;
 import org.terifan.ui.Anchor;
@@ -21,7 +21,7 @@ public class Popup implements Renderable
 {
 	protected final NodeEditor mEditor;
 	protected final Rectangle mBounds;
-	protected final PropertyItem mOwner;
+	protected final Property mOwner;
 	protected final boolean mAboveField;
 	protected final ResultReceiver mResultReceiver;
 	protected final List<Option> mOptions;
@@ -38,7 +38,7 @@ public class Popup implements Renderable
 	 * @param aOptions list of selectable options, can be empty
 	 * @param aResultReceiver
 	 */
-	public Popup(NodeEditor aEditor, PropertyItem aOwner, String aHeader, Rectangle aBounds, List<Option> aOptions, ResultReceiver aResultReceiver)
+	public Popup(NodeEditor aEditor, Property aOwner, String aHeader, Rectangle aBounds, List<Option> aOptions, ResultReceiver aResultReceiver)
 	{
 		mHeader = aHeader;
 		mOwner = aOwner;

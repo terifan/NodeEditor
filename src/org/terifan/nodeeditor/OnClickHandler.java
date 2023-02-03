@@ -3,7 +3,7 @@ package org.terifan.nodeeditor;
 import org.terifan.nodeeditor.widgets.ButtonPropertyItem;
 
 
-public interface NodeEditorButtonClickHandler
+public interface OnClickHandler
 {
 	boolean onClick(ButtonPropertyItem aPropertyItem);
 }

@@ -15,12 +15,12 @@ import static org.terifan.nodeeditor.Styles.*;
 import org.terifan.util.Strings;
 
 
-public class Node implements Iterable<PropertyItem>, Renderable, Serializable
+public class Node implements Iterable<Property>, Renderable, Serializable
 {
 	private static final long serialVersionUID = 1L;
 
 	protected NodeModel mModel;
-	protected ArrayList<PropertyItem> mItems;
+	protected ArrayList<Property> mItems;
 	protected String mIdentity;
 	protected String mName;
 	protected Rectangle mBounds;
@@ -45,15 +45,15 @@ public class Node implements Iterable<PropertyItem>, Renderable, Serializable
 	}
 
 
-	public Node(String aName, PropertyItem... aItems)
+	public Node(String aName, Property... aItems)
 	{
 		this();
 
 		mName = aName;
 
-		for (PropertyItem item : aItems)
+		for (Property item : aItems)
 		{
-			add(item);
+			addProperty(item);
 		}
 	}
 
@@ -183,11 +183,11 @@ public class Node implements Iterable<PropertyItem>, Renderable, Serializable
 	}
 
 
-	public Node add(PropertyItem aItem)
+	public Node addProperty(Property aItem)
 	{
 		mItems.add(aItem);
-
 		aItem.bind(this);
+
 		return this;
 	}
 
@@ -205,14 +205,14 @@ public class Node implements Iterable<PropertyItem>, Renderable, Serializable
 	}
 
 
-	public PropertyItem getItem(int aIndex)
+	public Property getItem(int aIndex)
 	{
 		return mItems.get(aIndex);
 	}
 
 
 	@Override
-	public Iterator<PropertyItem> iterator()
+	public Iterator<Property> iterator()
 	{
 		return mItems.iterator();
 	}
@@ -225,7 +225,7 @@ public class Node implements Iterable<PropertyItem>, Renderable, Serializable
 
 		if (!mMinimized)
 		{
-			for (PropertyItem item : mItems)
+			for (Property item : mItems)
 			{
 				item.paintComponent(aEditor, aGraphics, false);
 			}
@@ -253,7 +253,7 @@ public class Node implements Iterable<PropertyItem>, Renderable, Serializable
 				mBounds.width = 0;
 				mBounds.height = 0;
 
-				for (PropertyItem item : mItems)
+				for (Property item : mItems)
 				{
 					Dimension size = item.measure();
 
@@ -290,7 +290,7 @@ public class Node implements Iterable<PropertyItem>, Renderable, Serializable
 		{
 			int y = TITLE_HEIGHT_PADDED + 4 + 4;
 
-			for (PropertyItem item : mItems)
+			for (Property item : mItems)
 			{
 				Dimension size = item.measure();
 
@@ -315,7 +315,7 @@ public class Node implements Iterable<PropertyItem>, Renderable, Serializable
 	{
 		if (!mMinimized)
 		{
-			for (PropertyItem item : mItems)
+			for (Property item : mItems)
 			{
 				int by0 = item.mBounds.y + Math.min(item.mBounds.height, TITLE_HEIGHT_PADDED + 4) / 2 - 5;
 				int by1 = by0;
@@ -340,7 +340,7 @@ public class Node implements Iterable<PropertyItem>, Renderable, Serializable
 			int n0 = 0;
 			int n1 = 0;
 
-			for (PropertyItem item : mItems)
+			for (Property item : mItems)
 			{
 				for (Connector connector : (ArrayList<Connector>)item.mConnectors)
 				{
@@ -358,7 +358,7 @@ public class Node implements Iterable<PropertyItem>, Renderable, Serializable
 			int c0 = 0;
 			int c1 = 0;
 
-			for (PropertyItem item : mItems)
+			for (Property item : mItems)
 			{
 				for (Connector connector : (ArrayList<Connector>)item.mConnectors)
 				{
@@ -400,7 +400,7 @@ public class Node implements Iterable<PropertyItem>, Renderable, Serializable
 
 	protected void paintConnectors(Graphics2D aGraphics)
 	{
-		for (PropertyItem item : mItems)
+		for (Property item : mItems)
 		{
 			for (Connector connector : (ArrayList<Connector>)item.mConnectors)
 			{
@@ -499,9 +499,9 @@ public class Node implements Iterable<PropertyItem>, Renderable, Serializable
 	/**
 	 * Return item pressed
 	 */
-	protected PropertyItem mousePressed(Point aPoint)
+	protected Property mousePressed(Point aPoint)
 	{
-		for (PropertyItem item : mItems)
+		for (Property item : mItems)
 		{
 			if (item.mBounds.contains(aPoint.x - mBounds.x, aPoint.y - mBounds.y))
 			{
@@ -543,21 +543,21 @@ public class Node implements Iterable<PropertyItem>, Renderable, Serializable
 //	}
 
 
-	public PropertyItem getProperty(String aPath)
+	public Property getProperty(String aPath)
 	{
 		String id = aPath.contains(".") ? aPath.split("\\.")[1] : aPath;
-		PropertyItem item = null;
+		Property item = null;
 
-		for (PropertyItem pi : mItems)
+		for (Property pi : mItems)
 		{
 			if (pi.getIdentity() != null && pi.getIdentity().equals(id))
 			{
 				item = pi;
 				break;
 			}
-			else if (pi instanceof PropertyItem)
+			else if (pi instanceof Property)
 			{
-				PropertyItem ab = (PropertyItem)pi;
+				Property ab = (Property)pi;
 
 				if (ab.getText().equalsIgnoreCase(id))
 				{

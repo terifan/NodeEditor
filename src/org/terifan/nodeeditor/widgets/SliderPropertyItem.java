@@ -8,13 +8,13 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import org.terifan.nodeeditor.Direction;
 import org.terifan.nodeeditor.NodeEditor;
-import org.terifan.nodeeditor.PropertyItem;
+import org.terifan.nodeeditor.Property;
 import org.terifan.nodeeditor.Styles;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.TextBox;
 
 
-public class SliderPropertyItem extends PropertyItem<SliderPropertyItem>
+public class SliderPropertyItem extends Property<SliderPropertyItem>
 {
 	private final static long serialVersionUID = 1L;
 

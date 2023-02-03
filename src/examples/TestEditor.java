@@ -2,6 +2,8 @@ package examples;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import static java.awt.Color.GRAY;
+import static java.awt.Color.YELLOW;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
@@ -9,11 +11,9 @@ import javax.swing.AbstractAction;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
-import static org.terifan.nodeeditor.Connector.GRAY;
 import org.terifan.nodeeditor.widgets.ButtonPropertyItem;
 import org.terifan.nodeeditor.widgets.CheckBoxPropertyItem;
 import org.terifan.nodeeditor.widgets.ComboBoxPropertyItem;
-import static org.terifan.nodeeditor.Connector.YELLOW;
 import org.terifan.nodeeditor.Direction;
 import static org.terifan.nodeeditor.Direction.IN;
 import static org.terifan.nodeeditor.Direction.OUT;
@@ -92,14 +92,14 @@ public class TestEditor
 					model.addNode(new Node("Math")
 						.setLocation(0, 0)
 						.setSize(200, 0)
-						.add(new TextPropertyItem("Value")
+						.addProperty(new TextPropertyItem("Value")
 							.addConnector(OUT, GRAY))
-						.add(new ComboBoxPropertyItem("Operation", 2, "Add", "Subtract", "Multiply", "Divide", "Absolute", "Modulo", "Greater Than"))
-						.add(new CheckBoxPropertyItem("Clamp", false))
-						.add(new SliderPropertyItem("Value", 0.5, 0.01)
+						.addProperty(new ComboBoxPropertyItem("Operation", 2, "Add", "Subtract", "Multiply", "Divide", "Absolute", "Modulo", "Greater Than"))
+						.addProperty(new CheckBoxPropertyItem("Clamp", false))
+						.addProperty(new SliderPropertyItem("Value", 0.5, 0.01)
 							.setIdentity("value1")
 							.addConnector(IN, GRAY))
-						.add(new SliderPropertyItem("Value", 0.5, 0.01)
+						.addProperty(new SliderPropertyItem("Value", 0.5, 0.01)
 							.setIdentity("value2")
 							.addConnector(IN, GRAY))
 					);
@@ -115,14 +115,14 @@ public class TestEditor
 				{
 					model.addNode(new Node("Mix")
 						.setSize(200, 0)
-						.add(new TextPropertyItem("Color")
+						.addProperty(new TextPropertyItem("Color")
 							.addConnector(OUT, YELLOW))
-						.add(new SliderPropertyItem("Fac", 0, 1, 0.5)
+						.addProperty(new SliderPropertyItem("Fac", 0, 1, 0.5)
 							.addConnector(IN, GRAY))
-						.add(new ColorChooserNodeItem("Color", new Color(255, 0, 0))
+						.addProperty(new ColorChooserNodeItem("Color", new Color(255, 0, 0))
 							.setIdentity("colorIn1")
 							.addConnector(IN, YELLOW))
-						.add(new ColorChooserNodeItem("Color", new Color(0, 0, 255))
+						.addProperty(new ColorChooserNodeItem("Color", new Color(0, 0, 255))
 							.setIdentity("colorIn2")
 							.addConnector(IN, YELLOW))
 					);
@@ -138,7 +138,7 @@ public class TestEditor
 				{
 					model.addNode(new Node("Alpha")
 						.setSize(200, 0)
-						.add(new SliderPropertyItem("Alpha", 0, 1, 0.75)
+						.addProperty(new SliderPropertyItem("Alpha", 0, 1, 0.75)
 							.addConnector(OUT, GRAY))
 					);
 
@@ -153,15 +153,15 @@ public class TestEditor
 				{
 					model.addNode(new Node("Color")
 						.setSize(200, 0)
-						.add(new TextPropertyItem("Color")
+						.addProperty(new TextPropertyItem("Color")
 							.addConnector(OUT, YELLOW))
-						.add(new SliderPropertyItem("Red", 0, 1, 0)
+						.addProperty(new SliderPropertyItem("Red", 0, 1, 0)
 							.addConnector(IN, GRAY))
-						.add(new SliderPropertyItem("Green", 0, 1, 0.5)
+						.addProperty(new SliderPropertyItem("Green", 0, 1, 0.5)
 							.addConnector(IN, GRAY))
-						.add(new SliderPropertyItem("Blue", 0, 1, 0.75)
+						.addProperty(new SliderPropertyItem("Blue", 0, 1, 0.75)
 							.addConnector(IN, GRAY))
-						.add(new SliderPropertyItem("Alpha", 0, 1, 0.5)
+						.addProperty(new SliderPropertyItem("Alpha", 0, 1, 0.5)
 							.addConnector(IN, GRAY))
 					);
 

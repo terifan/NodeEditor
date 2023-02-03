@@ -5,13 +5,13 @@ import java.awt.LinearGradientPaint;
 import java.awt.Paint;
 import java.awt.Point;
 import org.terifan.nodeeditor.NodeEditor;
-import org.terifan.nodeeditor.PropertyItem;
+import org.terifan.nodeeditor.Property;
 import org.terifan.nodeeditor.Styles;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.ImageResizer;
 
 
-public class ButtonPropertyItem extends PropertyItem<ButtonPropertyItem>
+public class ButtonPropertyItem extends Property<ButtonPropertyItem>
 {
 	private final static long serialVersionUID = 1L;
 	private final static float[] RANGES = new float[]{0f,1f};

@@ -4,12 +4,12 @@ import java.awt.Color;
 import org.terifan.nodeeditor.widgets.SliderPropertyItem;
 import javax.swing.JFrame;
 import org.terifan.nodeeditor.widgets.ColorChooserNodeItem;
-import static org.terifan.nodeeditor.Connector.YELLOW;
 import static org.terifan.nodeeditor.Direction.IN;
 import static org.terifan.nodeeditor.Direction.OUT;
 import org.terifan.nodeeditor.NodeEditor;
 import org.terifan.nodeeditor.Node;
 import org.terifan.nodeeditor.NodeModel;
+import static org.terifan.nodeeditor.Styles.YELLOW;
 import org.terifan.nodeeditor.widgets.TextPropertyItem;
 
 
@@ -21,15 +21,15 @@ public class TestTinyExample
 		{
 			Node color = new Node("Input")
 				.setBounds(0, 0, 150, 0)
-				.add(new TextPropertyItem("Color").addConnector(OUT, YELLOW))
-				.add(new SliderPropertyItem("Red", 0, 1, 0))
-				.add(new SliderPropertyItem("Green", 0, 1, 0.5))
-				.add(new SliderPropertyItem("Blue", 0, 1, 0.75))
-				.add(new SliderPropertyItem("Alpha", 0, 1, 0.5));
+				.addProperty(new TextPropertyItem("Color").addConnector(OUT, YELLOW))
+				.addProperty(new SliderPropertyItem("Red", 0, 1, 0))
+				.addProperty(new SliderPropertyItem("Green", 0, 1, 0.5))
+				.addProperty(new SliderPropertyItem("Blue", 0, 1, 0.75))
+				.addProperty(new SliderPropertyItem("Alpha", 0, 1, 0.5));
 
 			Node output = new Node("Output")
 				.setBounds(200, 0, 150, 0)
-				.add(new ColorChooserNodeItem("Color", new Color(0, 0, 0)).addConnector(IN, YELLOW));
+				.addProperty(new ColorChooserNodeItem("Color", new Color(0, 0, 0)).addConnector(IN, YELLOW));
 
 			NodeModel model = new NodeModel()
 				.addNode(color)

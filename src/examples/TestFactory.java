@@ -2,12 +2,12 @@ package examples;
 
 import java.util.HashMap;
 import javax.swing.JFrame;
-import static org.terifan.nodeeditor.Connector.YELLOW;
 import static org.terifan.nodeeditor.Direction.IN;
 import static org.terifan.nodeeditor.Direction.OUT;
 import org.terifan.nodeeditor.NodeEditor;
 import org.terifan.nodeeditor.Node;
 import org.terifan.nodeeditor.NodeModel;
+import static org.terifan.nodeeditor.Styles.YELLOW;
 import org.terifan.nodeeditor.widgets.TextPropertyItem;
 
 
@@ -25,29 +25,29 @@ public class TestFactory
 			mFactoryMap.put("trip", e->
 				new Node(e)
 					.setSize(200, 0)
-					.add(new TextPropertyItem("CLOSED"))
-					.add(new TextPropertyItem("stops")
+					.addProperty(new TextPropertyItem("CLOSED"))
+					.addProperty(new TextPropertyItem("stops")
 						.addConnector(OUT, YELLOW))
 				);
 
 			mFactoryMap.put("stop", e->
 				new Node(e)
 					.setSize(200, 0)
-					.add(new TextPropertyItem("trip")
+					.addProperty(new TextPropertyItem("trip")
 						.addConnector(IN, YELLOW))
-					.add(new TextPropertyItem("CLOSED"))
-					.add(new TextPropertyItem("activities")
+					.addProperty(new TextPropertyItem("CLOSED"))
+					.addProperty(new TextPropertyItem("activities")
 						.addConnector(OUT, YELLOW))
 				);
 
 			mFactoryMap.put("activity", e->
 				new Node(e)
 					.setSize(200, 0)
-					.add(new TextPropertyItem("stop")
+					.addProperty(new TextPropertyItem("stop")
 						.addConnector(IN, YELLOW))
-					.add(new TextPropertyItem("LOADING"))
-					.add(new TextPropertyItem("CLOSED"))
-					.add(new TextPropertyItem("events")
+					.addProperty(new TextPropertyItem("LOADING"))
+					.addProperty(new TextPropertyItem("CLOSED"))
+					.addProperty(new TextPropertyItem("events")
 						.addConnector(OUT, YELLOW))
 				);
 
