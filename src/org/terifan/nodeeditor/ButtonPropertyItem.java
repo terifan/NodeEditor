@@ -6,7 +6,6 @@ import java.awt.Paint;
 import java.awt.Point;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.ImageResizer;
-import org.terifan.ui.TextBox;
 
 
 public class ButtonPropertyItem extends AbstractPropertyItem<ButtonPropertyItem>
@@ -17,13 +16,6 @@ public class ButtonPropertyItem extends AbstractPropertyItem<ButtonPropertyItem>
 	private boolean mArmed;
 
 
-	protected ButtonPropertyItem()
-	{
-		mTextBox.setAnchor(Anchor.CENTER).setMargins(0, 0, 0, 0).setMaxLineCount(1).setFont(Styles.SLIDER_FONT);
-		mPreferredSize.height = 22;
-	}
-
-
 	public ButtonPropertyItem(String aText)
 	{
 		super(aText);
@@ -31,13 +23,6 @@ public class ButtonPropertyItem extends AbstractPropertyItem<ButtonPropertyItem>
 		mTextBox.setAnchor(Anchor.CENTER).setMargins(0, 0, 0, 0).setMaxLineCount(1).setFont(Styles.SLIDER_FONT);
 		mPreferredSize.height = 22;
 	}
-
-
-//	@Override
-//	public TextBox getTextBox()
-//	{
-//		return super.getTextBox();
-//	}
 
 
 	@Override

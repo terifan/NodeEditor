@@ -19,36 +19,40 @@ public abstract class PropertyItem implements Serializable
 	private static final long serialVersionUID = 1L;
 
 	protected final ArrayList<Connector> mConnectors;
+	protected final HashMap<String, String> mProperties;
 	protected final Dimension mPreferredSize;
 	protected final Rectangle mBounds;
 	protected final TextBox mTextBox;
-	protected HashMap<String, String> mProperties;
 	protected boolean mUserSetSize;
 	protected String mIdentity;
 	protected Node mOwnerNode;
 
 
-	protected PropertyItem()
+	protected PropertyItem(String aText)
 	{
 		mConnectors = new ArrayList<>();
 		mProperties = new HashMap<>();
 		mPreferredSize = new Dimension();
 		mBounds = new Rectangle();
-		mTextBox = new TextBox("");
+		mTextBox = new TextBox(aText);
+
+		setPreferredSize(mTextBox.measure().getSize());
+		prepare();
 	}
 
 
-	public PropertyItem(String aText)
-	{
-		this();
-
-		mTextBox.setText(aText);
-	}
+	protected abstract void paintComponent(NodeEditor aEditor, Graphics2D aGraphics, boolean aHover);
 
 
 	void bind(Node aNode)
 	{
 		mOwnerNode = aNode;
+	}
+
+
+	protected void prepare()
+	{
+		mTextBox.setFont(Styles.BOX_ITEM_FONT).setForeground(Styles.BOX_FOREGROUND_COLOR);
 	}
 
 
@@ -99,6 +103,11 @@ public abstract class PropertyItem implements Serializable
 
 	protected Dimension measure()
 	{
+		if (!mUserSetSize && mTextBox.isLayoutRequired())
+		{
+			mPreferredSize.setSize(mTextBox.measure().getSize());
+		}
+
 		return (Dimension)mPreferredSize.clone();
 	}
 
@@ -114,9 +123,6 @@ public abstract class PropertyItem implements Serializable
 	{
 		return mUserSetSize;
 	}
-
-
-	protected abstract void paintComponent(NodeEditor aEditor, Graphics2D aGraphics, boolean aHover);
 
 
 	protected Rectangle getBounds()
@@ -157,7 +163,7 @@ public abstract class PropertyItem implements Serializable
 	}
 
 
-	public PropertyItem add(Connector aConnector)
+	public PropertyItem addConnector(Connector aConnector)
 	{
 		mConnectors.add(aConnector);
 		return this;
@@ -166,13 +172,13 @@ public abstract class PropertyItem implements Serializable
 
 	public PropertyItem addConnector(Direction aDirection, Color aColor)
 	{
-		return add(new Connector(aDirection, aColor));
+		return addConnector(new Connector(aDirection, aColor));
 	}
 
 
 	public PropertyItem addConnector(Direction aDirection)
 	{
-		return add(new Connector(aDirection, Color.YELLOW));
+		return addConnector(new Connector(aDirection, Color.YELLOW));
 	}
 
 

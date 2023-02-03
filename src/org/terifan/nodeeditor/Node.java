@@ -548,16 +548,16 @@ public class Node implements Iterable<PropertyItem>, Renderable, Serializable
 		String id = aPath.contains(".") ? aPath.split("\\.")[1] : aPath;
 		PropertyItem item = null;
 
-		for (PropertyItem b : mItems)
+		for (PropertyItem pi : mItems)
 		{
-			if (b.getIdentity() != null && b.getIdentity().equals(id))
+			if (pi.getIdentity() != null && pi.getIdentity().equals(id))
 			{
-				item = b;
+				item = pi;
 				break;
 			}
-			else if (b instanceof AbstractPropertyItem)
+			else if (pi instanceof PropertyItem)
 			{
-				AbstractPropertyItem ab = (AbstractPropertyItem)b;
+				PropertyItem ab = (PropertyItem)pi;
 
 				if (ab.getText().equalsIgnoreCase(id))
 				{
@@ -565,7 +565,7 @@ public class Node implements Iterable<PropertyItem>, Renderable, Serializable
 					{
 						throw new IllegalStateException("More than one NodeItem have the same name, provide an Identity to either of them: " + ab.getText());
 					}
-					item = b;
+					item = pi;
 				}
 			}
 		}

@@ -16,11 +16,6 @@ public class ColorChooserNodeItem extends AbstractPropertyItem<ColorChooserNodeI
 	private Color mColor;
 
 
-	protected ColorChooserNodeItem()
-	{
-	}
-
-
 	public ColorChooserNodeItem(String aText, Color aColor)
 	{
 		super(aText);

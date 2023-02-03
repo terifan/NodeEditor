@@ -1,6 +1,7 @@
 package org.terifan.nodeeditor;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
@@ -15,9 +16,9 @@ public class ImagePropertyItem extends AbstractPropertyItem<ImagePropertyItem>
 
 	public ImagePropertyItem(String aText, int aWidth, int aHeight)
 	{
-		super(aText, aWidth, aHeight);
+		super(aText);
 
-		mUserSetSize = true;
+		setPreferredSize(new Dimension(aWidth, aHeight));
 	}
 
 

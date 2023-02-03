@@ -27,11 +27,6 @@ public class ComboBoxPropertyItem extends AbstractPropertyItem
 	protected ArrayList<String> mOptions;
 
 
-	protected ComboBoxPropertyItem()
-	{
-	}
-
-
 	public ComboBoxPropertyItem(String aText, int aSelectedIndex, String... aOptions)
 	{
 		super(aOptions[aSelectedIndex]);

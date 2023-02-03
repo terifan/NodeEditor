@@ -19,11 +19,6 @@ public class CheckBoxPropertyItem extends AbstractPropertyItem
 	private boolean mSelected;
 
 
-	protected CheckBoxPropertyItem()
-	{
-	}
-
-
 	public CheckBoxPropertyItem(String aText, boolean aState)
 	{
 		super(aText);

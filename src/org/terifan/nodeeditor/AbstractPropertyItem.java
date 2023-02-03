@@ -1,6 +1,7 @@
 package org.terifan.nodeeditor;
 
-import java.awt.Dimension;
+import java.awt.Color;
+
 
 
 public abstract class AbstractPropertyItem<T extends AbstractPropertyItem> extends PropertyItem
@@ -8,34 +9,9 @@ public abstract class AbstractPropertyItem<T extends AbstractPropertyItem> exten
 	private final static long serialVersionUID = 1L;
 
 
-	protected AbstractPropertyItem()
-	{
-		prepare();
-	}
-
-
-	public AbstractPropertyItem(String aText)
-	{
-		this(aText, 0, 0);
-
-		mPreferredSize.setSize(mTextBox.measure().getSize());
-	}
-
-
-	public AbstractPropertyItem(String aText, int aWidth, int aHeight)
+	protected AbstractPropertyItem(String aText)
 	{
 		super(aText);
-
-		mPreferredSize.setSize(aWidth, aHeight);
-		mUserSetSize = true;
-
-		prepare();
-	}
-
-
-	protected void prepare()
-	{
-		mTextBox.setFont(Styles.BOX_ITEM_FONT).setForeground(Styles.BOX_FOREGROUND_COLOR);
 	}
 
 
@@ -54,9 +30,23 @@ public abstract class AbstractPropertyItem<T extends AbstractPropertyItem> exten
 
 
 	@Override
-	public T add(Connector aConnector)
+	public T addConnector(Direction aDirection)
 	{
-		return (T)super.add(aConnector);
+		return (T)super.addConnector(aDirection);
+	}
+
+
+	@Override
+	public T addConnector(Direction aDirection, Color aColor)
+	{
+		return (T)super.addConnector(aDirection, aColor);
+	}
+
+
+	@Override
+	public T addConnector(Connector aConnector)
+	{
+		return (T)super.addConnector(aConnector);
 	}
 
 
@@ -64,17 +54,5 @@ public abstract class AbstractPropertyItem<T extends AbstractPropertyItem> exten
 	public T putProperty(String aName, String aValue)
 	{
 		return (T)super.putProperty(aName, aValue);
-	}
-
-
-	@Override
-	public Dimension measure()
-	{
-		if (!mUserSetSize && mTextBox.isLayoutRequired())
-		{
-			mPreferredSize.setSize(mTextBox.measure().getSize());
-		}
-
-		return super.measure();
 	}
 }

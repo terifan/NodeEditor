@@ -22,24 +22,24 @@ public class Test1
 	{
 		try
 		{
-			TextPropertyItem item0 = new TextPropertyItem("node0").add(new Connector(Direction.OUT));
-			TextPropertyItem item1 = new TextPropertyItem("node1").add(new Connector(Direction.OUT));
-			TextPropertyItem item2 = new TextPropertyItem("node2").add(new Connector(Direction.IN));
-			TextPropertyItem item3 = new TextPropertyItem("node3").add(new Connector(Direction.OUT));
-			TextPropertyItem item4 = new TextPropertyItem("node4").add(new Connector(Direction.IN));
-			TextPropertyItem item5 = new TextPropertyItem("node5").add(new Connector(Direction.IN));
-			TextPropertyItem item6 = new TextPropertyItem("node6").add(new Connector(Direction.OUT));
-			TextPropertyItem item7 = new TextPropertyItem("node7").add(new Connector(Direction.IN)).add(new Connector(Direction.OUT));
-			TextPropertyItem item8 = new TextPropertyItem("node8").add(new Connector(Direction.OUT));
-			TextPropertyItem item9 = new TextPropertyItem("node9").add(new Connector(Direction.OUT, Connector.PURPLE));
-			ImagePropertyItem item10 = new ImagePropertyItem("node10", 200, 200).add(new Connector(Direction.OUT, Connector.PURPLE)).add(new Connector(Direction.OUT, Connector.PURPLE)).add(new Connector(Direction.OUT, Connector.PURPLE));
-			ColorChooserNodeItem item11 = new ColorChooserNodeItem("node11", new Color(255,255,255)).add(new Connector(Direction.IN, Connector.YELLOW));
-			TextPropertyItem item12 = new TextPropertyItem("node12").add(new Connector(Direction.IN, Connector.PURPLE));
-			TextPropertyItem item13 = new TextPropertyItem("node13").add(new Connector(Direction.IN, Connector.YELLOW));
-			TextPropertyItem item14 = new TextPropertyItem("node14").add(new Connector(Direction.IN, Connector.GRAY));
-			TextPropertyItem item15 = new TextPropertyItem("node15").add(new Connector(Direction.IN, Connector.GRAY));
-			TextPropertyItem item16 = new TextPropertyItem("node16").add(new Connector(Direction.IN, Connector.GRAY));
-			TextPropertyItem item17 = new TextPropertyItem("node17").add(new Connector(Direction.IN, Connector.GRAY));
+			TextPropertyItem item0 = new TextPropertyItem("node0").addConnector(new Connector(Direction.OUT));
+			TextPropertyItem item1 = new TextPropertyItem("node1").addConnector(new Connector(Direction.OUT));
+			TextPropertyItem item2 = new TextPropertyItem("node2").addConnector(new Connector(Direction.IN));
+			TextPropertyItem item3 = new TextPropertyItem("node3").addConnector(new Connector(Direction.OUT));
+			TextPropertyItem item4 = new TextPropertyItem("node4").addConnector(new Connector(Direction.IN));
+			TextPropertyItem item5 = new TextPropertyItem("node5").addConnector(new Connector(Direction.IN));
+			TextPropertyItem item6 = new TextPropertyItem("node6").addConnector(new Connector(Direction.OUT));
+			TextPropertyItem item7 = new TextPropertyItem("node7").addConnector(new Connector(Direction.IN)).addConnector(new Connector(Direction.OUT));
+			TextPropertyItem item8 = new TextPropertyItem("node8").addConnector(new Connector(Direction.OUT));
+			TextPropertyItem item9 = new TextPropertyItem("node9").addConnector(new Connector(Direction.OUT, Connector.PURPLE));
+			ImagePropertyItem item10 = new ImagePropertyItem("node10", 200, 200).addConnector(new Connector(Direction.OUT, Connector.PURPLE)).addConnector(new Connector(Direction.OUT, Connector.PURPLE)).addConnector(new Connector(Direction.OUT, Connector.PURPLE));
+			ColorChooserNodeItem item11 = new ColorChooserNodeItem("node11", new Color(255,255,255)).addConnector(new Connector(Direction.IN, Connector.YELLOW));
+			TextPropertyItem item12 = new TextPropertyItem("node12").addConnector(new Connector(Direction.IN, Connector.PURPLE));
+			TextPropertyItem item13 = new TextPropertyItem("node13").addConnector(new Connector(Direction.IN, Connector.YELLOW));
+			TextPropertyItem item14 = new TextPropertyItem("node14").addConnector(new Connector(Direction.IN, Connector.GRAY));
+			TextPropertyItem item15 = new TextPropertyItem("node15").addConnector(new Connector(Direction.IN, Connector.GRAY));
+			TextPropertyItem item16 = new TextPropertyItem("node16").addConnector(new Connector(Direction.IN, Connector.GRAY));
+			TextPropertyItem item17 = new TextPropertyItem("node17").addConnector(new Connector(Direction.IN, Connector.GRAY));
 			TextPropertyItem item18 = new TextPropertyItem("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.");
 //			item18.getTextBox().setMaxWidth(300);
 			SliderPropertyItem slider1 = new SliderPropertyItem("Roughness", 0, 1, 0);

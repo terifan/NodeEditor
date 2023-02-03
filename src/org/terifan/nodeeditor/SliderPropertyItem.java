@@ -27,14 +27,6 @@ public class SliderPropertyItem extends AbstractPropertyItem<SliderPropertyItem>
 	private double mStep;
 
 
-	protected SliderPropertyItem()
-	{
-		super();
-
-		mPreferredSize.height = 20;
-	}
-
-
 	public SliderPropertyItem(String aText, double aValue, double aStepSize)
 	{
 		this(aText, 0.0, 1.0, aValue);
