@@ -2,6 +2,7 @@ package org.terifan.boxcomponentpane;
 
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.io.Serializable;
@@ -17,8 +18,8 @@ import static org.terifan.nodeeditor.Styles.BOX_BORDER_TITLE_SEPARATOR_COLOR;
 import static org.terifan.nodeeditor.Styles.BOX_FOREGROUND_COLOR;
 import static org.terifan.nodeeditor.Styles.BOX_TITLE_TEXT_SHADOW_COLOR;
 import static org.terifan.nodeeditor.Styles.TITLE_HEIGHT;
-import static org.terifan.nodeeditor.Styles.TITLE_HEIGHT_PADDED;
 import static org.terifan.nodeeditor.Styles.COLLAPSE_BUTTON_WIDTH;
+import static org.terifan.nodeeditor.Styles.TITLE_HEIGHT_PADDED;
 
 
 public abstract class BoxComponent<T extends BoxComponent> implements Serializable, Renderable
@@ -28,6 +29,7 @@ public abstract class BoxComponent<T extends BoxComponent> implements Serializab
 	protected final Rectangle mBounds;
 	protected final Dimension mMinimumSize;
 	protected final Dimension mMaximumSize;
+	protected final Insets mInsets;
 	protected Dimension mRestoredSize;
 	protected boolean mResizableHorizontal;
 	protected boolean mResizableVertical;
@@ -44,6 +46,8 @@ public abstract class BoxComponent<T extends BoxComponent> implements Serializab
 		mResizableVertical = true;
 
 		mName = aName;
+
+		mInsets = new Insets(TITLE_HEIGHT_PADDED + 6 + 4, 5 + 9, 6 + 4, 5 + 9);
 	}
 
 

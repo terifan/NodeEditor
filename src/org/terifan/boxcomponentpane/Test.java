@@ -2,13 +2,14 @@ package org.terifan.boxcomponentpane;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Insets;
 import javax.swing.JFrame;
 import static org.terifan.nodeeditor.Styles.TITLE_HEIGHT_PADDED;
 
 
 public class Test
 {
-	public static void main(String ... args)
+	public static void main(String... args)
 	{
 		try
 		{
@@ -47,7 +48,7 @@ public class Test
 			super.paintComponent(aPane, aGraphics, aWidth, aHeight, aSelected);
 
 			aGraphics.setColor(Color.RED);
-			aGraphics.drawRect(5+9, TITLE_HEIGHT_PADDED+6+4, aWidth-5-9-5-9, aHeight-TITLE_HEIGHT_PADDED-6-4-4-6);
+			aGraphics.drawRect(mInsets.left, mInsets.top, aWidth - mInsets.left - mInsets.right, aHeight - mInsets.top - mInsets.bottom);
 		}
 	}
 }
