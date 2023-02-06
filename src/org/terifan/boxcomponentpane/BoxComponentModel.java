@@ -28,9 +28,10 @@ public class BoxComponentModel<T extends BoxComponent> implements Serializable
 	}
 
 
-	public void add(T aComponent)
+	public BoxComponentModel<T> add(T aComponent)
 	{
 		mBoxComponents.add(aComponent);
+		return this;
 	}
 
 

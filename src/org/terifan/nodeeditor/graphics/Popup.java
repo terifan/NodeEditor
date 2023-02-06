@@ -8,6 +8,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Path2D;
 import java.util.List;
+import org.terifan.boxcomponentpane.BoxComponentPane;
+import org.terifan.boxcomponentpane.Renderable;
 import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Property;
 import org.terifan.nodeeditor.Styles;
@@ -16,7 +18,7 @@ import org.terifan.ui.TextBox;
 import org.terifan.util.Strings;
 
 
-public class Popup
+public class Popup implements Renderable
 {
 	protected final NodeEditorPane mEditor;
 	protected final Rectangle mBounds;
@@ -68,7 +70,7 @@ public class Popup
 		{
 			mBounds.y += aOwner.getBounds().height;
 		}
-		this.mEditor = aEditor;
+		mEditor = aEditor;
 	}
 
 
@@ -78,18 +80,15 @@ public class Popup
 	}
 
 
+	@Override
 	public Rectangle getBounds()
 	{
 		return mBounds;
 	}
 
 
-	public void layout()
-	{
-	}
-
-
-	public void paintComponent(NodeEditorPane aEditor, Graphics2D aGraphics, int aWidth, int aHeight, boolean aSelected)
+	@Override
+	public void paintComponent(BoxComponentPane aEditor, Graphics2D aGraphics, int aWidth, int aHeight, boolean aSelected)
 	{
 		int w = aWidth;
 		int h = aHeight;

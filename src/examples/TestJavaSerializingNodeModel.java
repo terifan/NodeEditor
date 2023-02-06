@@ -81,7 +81,7 @@ public class TestJavaSerializingNodeModel
 	{
 		NodeModel model = new NodeModel();
 
-		model.addNode(new Node("Color")
+		model.add(new Node("Color")
 			.addProperty(new TextProperty("Color")
 				.addConnector(OUT, YELLOW))
 			.addProperty(new SliderProperty("Red", 0, 1, 0)
@@ -94,7 +94,7 @@ public class TestJavaSerializingNodeModel
 				.addConnector(IN, GRAY))
 		);
 
-		model.addNode(new Node("Texture")
+		model.add(new Node("Texture")
 			.setIdentity("texture1")
 			.addProperty(new TextProperty("Color")
 				.addConnector(OUT, YELLOW))
@@ -107,7 +107,7 @@ public class TestJavaSerializingNodeModel
 				.addConnector(IN, PURPLE))
 		);
 
-		model.addNode(new Node("Texture")
+		model.add(new Node("Texture")
 			.setIdentity("texture2")
 			.addProperty(new TextProperty("Color")
 				.addConnector(OUT, YELLOW))
@@ -121,7 +121,7 @@ public class TestJavaSerializingNodeModel
 				.addConnector(IN, PURPLE))
 		);
 
-		model.addNode(new Node("Texture")
+		model.add(new Node("Texture")
 			.setIdentity("texture3")
 			.addProperty(new TextProperty("Color")
 				.addConnector(OUT, YELLOW))
@@ -134,7 +134,7 @@ public class TestJavaSerializingNodeModel
 				.addConnector(IN, PURPLE))
 		);
 
-		model.addNode(new Node("Output")
+		model.add(new Node("Output")
 			.addProperty(new ColorChooserProperty("Surface", new Color(0, 0, 0))
 				.addConnector(IN, YELLOW))
 			.addProperty(new SliderProperty("Alpha", 0, 1, 0.75)
@@ -144,17 +144,17 @@ public class TestJavaSerializingNodeModel
 			)
 		);
 
-		model.addNode(new Node("Alpha")
+		model.add(new Node("Alpha")
 			.addProperty(new SliderProperty("Alpha", 0, 1, 0.75)
 				.addConnector(OUT, GRAY))
 		);
 
-		model.addNode(new Node("TextureCoordinate")
+		model.add(new Node("TextureCoordinate")
 			.addProperty(new TextProperty("UV")
 				.addConnector(OUT, PURPLE))
 		);
 
-		model.addNode(new Node("Multiply")
+		model.add(new Node("Multiply")
 			.setIdentity("math")
 			.addProperty(new TextProperty("Value")
 				.setIdentity("result")
@@ -169,7 +169,7 @@ public class TestJavaSerializingNodeModel
 				.addConnector(IN, GRAY))
 		);
 
-		model.addNode(new Node("Multiply")
+		model.add(new Node("Multiply")
 			.setIdentity("math2")
 			.addProperty(new TextProperty("Value")
 				.setIdentity("result")
@@ -184,7 +184,7 @@ public class TestJavaSerializingNodeModel
 				.addConnector(IN, GRAY))
 		);
 
-		model.addNode(new Node("Mix")
+		model.add(new Node("Mix")
 			.addProperty(new TextProperty("Color")
 				.setIdentity("colorOut")
 				.addConnector(OUT, YELLOW))
@@ -198,7 +198,7 @@ public class TestJavaSerializingNodeModel
 				.addConnector(IN, YELLOW))
 		);
 
-		model.addNode(new Node("Mix2")
+		model.add(new Node("Mix2")
 			.addProperty(new TextProperty("Color")
 				.setIdentity("colorOut")
 				.addConnector(OUT, YELLOW))

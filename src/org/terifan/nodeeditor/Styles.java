@@ -13,8 +13,6 @@ public class Styles
 	private final static int a = 220;
 	private final static int b = 254; // alpha must be less than 255 to force Java to blend alpha correctly!
 
-//	public static float CONNECTOR_STROKE_WITH_INNER = 1.4f;
-//	public static float CONNECTOR_STROKE_WIDTH_OUTER = 3.0f;
 	public static float CONNECTOR_STROKE_WIDTH_INNER = 1.75f;
 	public static float CONNECTOR_STROKE_WIDTH_OUTER = 4.0f;
 	public static Color CONNECTOR_COLOR_OUTER = new Color(30, 30, 30);
@@ -26,8 +24,12 @@ public class Styles
 
 	public static int TITLE_HEIGHT = 20;
 	public static int TITLE_HEIGHT_PADDED = TITLE_HEIGHT + 5;
+	public static int MIN_WIDTH = 40;
+	public static int MIN_HEIGHT = TITLE_HEIGHT + 6 + 2 * 4;
 	public static int BORDE_RADIUS = 18;
-	public static int BUTTON_WIDTH = 16;
+
+	public static int COLLAPSE_BUTTON_WIDTH = 16;
+
 	public static Color BOX_FOREGROUND_COLOR = new Color(0, 0, 0, b);
 	public static Color BOX_FOREGROUND_ARMED_COLOR = new Color(255, 255, 255);
 	public static Color BOX_FOREGROUND_SELECTED_COLOR = new Color(255, 255, 255, b);
@@ -44,9 +46,6 @@ public class Styles
 	public static Color PANE_GRID_COLOR_3 = new Color(30, 30, 30);
 	public static Color PANE_SELECTION_RECTANGLE_LINE = new Color(255, 255, 255);
 	public static Color PANE_SELECTION_RECTANGLE_BACKGROUND = new Color(255, 255, 255, 15);
-
-	public static int MIN_WIDTH = 180;
-	public static int MIN_HEIGHT = TITLE_HEIGHT + 6 + 2 * 4;
 
 	public static Font BOX_FONT = new Font("Segoe UI", Font.PLAIN, 12);
 	public static Font BOX_ITEM_FONT = new Font("Segoe UI", Font.PLAIN, 12);

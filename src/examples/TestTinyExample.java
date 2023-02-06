@@ -10,6 +10,7 @@ import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Node;
 import org.terifan.nodeeditor.NodeModel;
 import static org.terifan.nodeeditor.Styles.YELLOW;
+import org.terifan.nodeeditor.widgets.ComboBoxProperty;
 import org.terifan.nodeeditor.widgets.TextProperty;
 
 
@@ -29,11 +30,12 @@ public class TestTinyExample
 
 			Node output = new Node("Output")
 				.setBounds(200, 0, 150, 0)
+				.addProperty(new ComboBoxProperty("Function", 0, "Add", "Subtract"))
 				.addProperty(new ColorChooserProperty("Color", new Color(0, 0, 0)).addConnector(IN, YELLOW));
 
 			NodeModel model = new NodeModel()
-				.addNode(color)
-				.addNode(output)
+				.add(color)
+				.add(output)
 				.addConnection("Input.Color", "Output.Color");
 
 			NodeEditorPane editor = new NodeEditorPane(model);

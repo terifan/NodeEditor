@@ -5,9 +5,9 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.io.Serializable;
-import org.terifan.nodeeditor.Node;
-import org.terifan.nodeeditor.Property;
 import org.terifan.nodeeditor.Styles;
+import org.terifan.ui.Anchor;
+import org.terifan.ui.TextBox;
 import static org.terifan.nodeeditor.Styles.BORDE_RADIUS;
 import static org.terifan.nodeeditor.Styles.BOX_BACKGROUND_COLOR;
 import static org.terifan.nodeeditor.Styles.BOX_BORDER_COLOR;
@@ -16,20 +16,18 @@ import static org.terifan.nodeeditor.Styles.BOX_BORDER_TITLE_COLOR;
 import static org.terifan.nodeeditor.Styles.BOX_BORDER_TITLE_SEPARATOR_COLOR;
 import static org.terifan.nodeeditor.Styles.BOX_FOREGROUND_COLOR;
 import static org.terifan.nodeeditor.Styles.BOX_TITLE_TEXT_SHADOW_COLOR;
-import static org.terifan.nodeeditor.Styles.BUTTON_WIDTH;
 import static org.terifan.nodeeditor.Styles.TITLE_HEIGHT;
 import static org.terifan.nodeeditor.Styles.TITLE_HEIGHT_PADDED;
-import org.terifan.ui.Anchor;
-import org.terifan.ui.TextBox;
+import static org.terifan.nodeeditor.Styles.COLLAPSE_BUTTON_WIDTH;
 
 
-public abstract class BoxComponent<T extends BoxComponent> implements Serializable
+public abstract class BoxComponent<T extends BoxComponent> implements Serializable, Renderable
 {
 	private final static long serialVersionUID = 1L;
 
 	protected final Rectangle mBounds;
-	protected Dimension mMinimumSize;
-	protected Dimension mMaximumSize;
+	protected final Dimension mMinimumSize;
+	protected final Dimension mMaximumSize;
 	protected Dimension mRestoredSize;
 	protected boolean mResizableHorizontal;
 	protected boolean mResizableVertical;
@@ -96,7 +94,7 @@ public abstract class BoxComponent<T extends BoxComponent> implements Serializab
 
 	public T setMinSize(Dimension aMinSize)
 	{
-		mMinimumSize = aMinSize;
+		mMinimumSize.setSize(aMinSize);
 		return (T)this;
 	}
 
@@ -109,7 +107,7 @@ public abstract class BoxComponent<T extends BoxComponent> implements Serializab
 
 	public T setMaxSize(Dimension aMaxSize)
 	{
-		mMaximumSize = aMaxSize;
+		mMaximumSize.setSize(aMaxSize);
 		return (T)this;
 	}
 
@@ -209,7 +207,7 @@ public abstract class BoxComponent<T extends BoxComponent> implements Serializab
 		aGraphics.setColor(BOX_BORDER_TITLE_SEPARATOR_COLOR);
 		aGraphics.drawLine(aX, aY + th - 1, aX + aWidth, aY + th - 1);
 
-		int inset = 6 + 4 + BUTTON_WIDTH;
+		int inset = 6 + 4 + COLLAPSE_BUTTON_WIDTH;
 
 		new TextBox(mName)
 			.setShadow(BOX_TITLE_TEXT_SHADOW_COLOR, 1, 1)
@@ -251,21 +249,9 @@ public abstract class BoxComponent<T extends BoxComponent> implements Serializab
 	}
 
 
-	public void paintComponent(BoxComponentPane<T> aEditor, Graphics2D aGraphics, int aWidth, int aHeight, boolean aSelected)
+	@Override
+	public void paintComponent(BoxComponentPane aEditor, Graphics2D aGraphics, int aWidth, int aHeight, boolean aSelected)
 	{
 		paintBorder(aGraphics, 0, 0, aWidth, aHeight, aSelected);
-
-		if (!mMinimized)
-		{
-		}
 	}
-
-
-//	public abstract T setLocation(int aX, int aY);
-//
-//
-//	public abstract boolean isMinimized();
-//
-//
-//	public abstract void setMinimized(boolean aMinimized);
 }

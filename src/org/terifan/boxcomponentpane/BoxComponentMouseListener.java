@@ -19,13 +19,14 @@ class BoxComponentMouseListener<T extends BoxComponent> extends MouseAdapter
 	private boolean mHitBox;
 	private T mHoverBox;
 	private Rectangle mStartBounds;
-	private boolean mIgnoreNextMouseRelease;
-	private int mCursor = Cursor.DEFAULT_CURSOR;
+//	private boolean mIgnoreNextMouseRelease;
 	private BoxComponentPane mBoxComponentPane;
+	private int mCursor;
 
 
 	public BoxComponentMouseListener(BoxComponentPane aBoxComponentPane)
 	{
+		mCursor = Cursor.DEFAULT_CURSOR;
 		mBoxComponentPane = aBoxComponentPane;
 	}
 
@@ -94,8 +95,8 @@ class BoxComponentMouseListener<T extends BoxComponent> extends MouseAdapter
 			mBoxComponentPane.mModel.getNodes().remove(mHoverBox);
 			mBoxComponentPane.mModel.getNodes().add(mHoverBox);
 
-			mBoxComponentPane.mSelectedNodes.clear();
-			mBoxComponentPane.mSelectedNodes.add(mHoverBox);
+			mBoxComponentPane.mSelectedBoxes.clear();
+			mBoxComponentPane.mSelectedBoxes.add(mHoverBox);
 //			mSelectedConnection = null;
 			mBoxComponentPane.repaint();
 
@@ -331,7 +332,7 @@ class BoxComponentMouseListener<T extends BoxComponent> extends MouseAdapter
 //			}
 			else if (mHitBox || SwingUtilities.isRightMouseButton(aEvent))
 			{
-				for (T box : (ArrayList<T>)mBoxComponentPane.mSelectedNodes)
+				for (T box : (ArrayList<T>)mBoxComponentPane.mSelectedBoxes)
 				{
 					Point pt = box.getBounds().getLocation();
 					pt.x += mClickPoint.x - oldPoint.x;
@@ -394,12 +395,12 @@ class BoxComponentMouseListener<T extends BoxComponent> extends MouseAdapter
 			{
 				clickedBox = aClickedBox;
 
-				boolean b = mBoxComponentPane.mSelectedNodes.contains(aClickedBox);
+				boolean b = mBoxComponentPane.mSelectedBoxes.contains(aClickedBox);
 				if (aEvent.isControlDown())
 				{
 					if (b)
 					{
-						mBoxComponentPane.mSelectedNodes.remove(aClickedBox);
+						mBoxComponentPane.mSelectedBoxes.remove(aClickedBox);
 					}
 					else
 					{
@@ -408,7 +409,7 @@ class BoxComponentMouseListener<T extends BoxComponent> extends MouseAdapter
 				}
 				else if (!b)
 				{
-					mBoxComponentPane.mSelectedNodes.clear();
+					mBoxComponentPane.mSelectedBoxes.clear();
 					newSelection = aClickedBox;
 				}
 			}
@@ -418,7 +419,7 @@ class BoxComponentMouseListener<T extends BoxComponent> extends MouseAdapter
 
 		if (newSelection != null)
 		{
-			mBoxComponentPane.mSelectedNodes.add(newSelection);
+			mBoxComponentPane.mSelectedBoxes.add(newSelection);
 		}
 
 		if (mHitBox)

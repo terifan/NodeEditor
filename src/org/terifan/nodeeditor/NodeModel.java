@@ -3,39 +3,28 @@ package org.terifan.nodeeditor;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.stream.Stream;
+import org.terifan.boxcomponentpane.BoxComponentModel;
 import static org.terifan.util.Assert.*;
 
 
-public class NodeModel implements Serializable
+public class NodeModel extends BoxComponentModel<Node> implements Serializable
 {
 	private final static long serialVersionUID = 1L;
 
-	private ArrayList<Node> mNodes;
 	private ArrayList<Connection> mConnections;
 
 
 	public NodeModel()
 	{
-		mNodes = new ArrayList<>();
 		mConnections = new ArrayList<>();
 	}
 
 
-	public Node getNode(int aIndex)
+	@Override
+	public NodeModel add(Node aNode)
 	{
-		return mNodes.get(aIndex);
-	}
+		super.add(aNode);
 
-
-	public ArrayList<Node> getNodes()
-	{
-		return mNodes;
-	}
-
-
-	public NodeModel addNode(Node aNode)
-	{
-		mNodes.add(aNode);
 		aNode.bind(this);
 
 		for (Property item : aNode.mProperties)
@@ -56,7 +45,7 @@ public class NodeModel implements Serializable
 
 		Node node = null;
 
-		for (Node tmp : mNodes)
+		for (Node tmp : getNodes())
 		{
 			if (nodeId.equals(tmp.getIdentity()))
 			{
@@ -183,7 +172,7 @@ public class NodeModel implements Serializable
 
 	private Connector getConnector(int aRef)
 	{
-		for (Node node : mNodes)
+		for (Node node : getNodes())
 		{
 			for (Property item : node.mProperties)
 			{

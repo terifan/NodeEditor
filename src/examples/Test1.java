@@ -63,12 +63,12 @@ public class Test1
 
 			NodeModel model = new NodeModel();
 
-			model.addNode(node0);
-			model.addNode(node1);
-			model.addNode(node2);
-			model.addNode(node3);
-			model.addNode(node4);
-			model.addNode(node5);
+			model.add(node0);
+			model.add(node1);
+			model.add(node2);
+			model.add(node3);
+			model.add(node4);
+			model.add(node5);
 			model.addConnection(item0, item2);
 			model.addConnection(item1, item7);
 			model.addConnection(item3, item4);

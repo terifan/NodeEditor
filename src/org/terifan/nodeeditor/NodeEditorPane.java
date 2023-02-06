@@ -1,27 +1,17 @@
 package org.terifan.nodeeditor;
 
-import org.terifan.nodeeditor.graphics.Popup;
 import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Dimension;
+import org.terifan.nodeeditor.graphics.Popup;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 import javax.imageio.ImageIO;
-import javax.swing.SwingUtilities;
-import static org.terifan.nodeeditor.Styles.SELECTION_RECTANGLE_STROKE;
-import org.terifan.boxcomponentpane.BoxComponentModel;
+import org.terifan.boxcomponentpane.BoxComponent;
 import org.terifan.boxcomponentpane.BoxComponentPane;
 import org.terifan.nodeeditor.graphics.SplineRenderer;
 import org.terifan.nodeeditor.widgets.ButtonProperty;
@@ -29,7 +19,7 @@ import org.terifan.nodeeditor.widgets.ImageProperty;
 import static org.terifan.util.Assert.assertNotNull;
 
 
-public class NodeEditorPane extends BoxComponentPane
+public class NodeEditorPane extends BoxComponentPane<Node>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -38,7 +28,6 @@ public class NodeEditorPane extends BoxComponentPane
 	private transient Popup mPopup;
 	private transient Property mClickedItem;
 
-	private NodeModel mModel;
 	private Connection mSelectedConnection;
 	private Connector mDragConnector;
 	private boolean mConnectorSelectionAllowed;
@@ -47,12 +36,21 @@ public class NodeEditorPane extends BoxComponentPane
 
 	public NodeEditorPane(NodeModel aModel)
 	{
-		super(new BoxComponentModel());
+		super(aModel);
 
 		mButtonHandlers = new ArrayList<>();
 		mImagePainters = new ArrayList<>();
 		mRemoveInConnectionsOnDrop = true;
-		mModel = aModel;
+	}
+
+
+	@Override
+	protected void setupListeners()
+	{
+		NodeEditorMouseListener mouseListener = new NodeEditorMouseListener(this);
+		super.addMouseMotionListener(mouseListener);
+		super.addMouseListener(mouseListener);
+		super.addMouseWheelListener(mouseListener);
 	}
 
 
@@ -82,49 +80,6 @@ public class NodeEditorPane extends BoxComponentPane
 	}
 
 
-	public double getScale()
-	{
-		return mScale;
-	}
-
-
-	public NodeEditorPane setScale(double aScale)
-	{
-		mScale = aScale;
-		return this;
-	}
-
-
-	/**
-	 * Move all nodes to the center of the screen
-	 */
-	public NodeEditorPane center()
-	{
-		if (mModel.getNodes().isEmpty())
-		{
-			return this;
-		}
-
-		Rectangle bounds = new Rectangle(mModel.getNodes().get(0).getBounds());
-		for (Node box : mModel.getNodes())
-		{
-			box.layout();
-			bounds.add(box.getBounds());
-		}
-
-		int dx = -(int)bounds.getCenterX();
-		int dy = -(int)bounds.getCenterY();
-
-		for (Node box : mModel.getNodes())
-		{
-			box.getBounds().translate(dx, dy);
-		}
-
-		mPaneScroll = null; // will be centered when pane is repainted
-		return this;
-	}
-
-
 	public Popup getPopup()
 	{
 		return mPopup;
@@ -135,6 +90,42 @@ public class NodeEditorPane extends BoxComponentPane
 	{
 		mPopup = aPopup;
 		return this;
+	}
+
+
+	public Property getClickedItem()
+	{
+		return mClickedItem;
+	}
+
+
+	public void setClickedItem(Property aClickedItem)
+	{
+		this.mClickedItem = aClickedItem;
+	}
+
+
+	public Connection getSelectedConnection()
+	{
+		return mSelectedConnection;
+	}
+
+
+	public void setSelectedConnection(Connection aSelectedConnection)
+	{
+		this.mSelectedConnection = aSelectedConnection;
+	}
+
+
+	public Connector getDragConnector()
+	{
+		return mDragConnector;
+	}
+
+
+	public void setDragConnector(Connector aDragConnector)
+	{
+		this.mDragConnector = aDragConnector;
 	}
 
 
@@ -211,7 +202,7 @@ public class NodeEditorPane extends BoxComponentPane
 	}
 
 
-	private Connector findNearestConnector(Point aPoint)
+	public Connector findNearestConnector(Point aPoint)
 	{
 		Connector nearest = null;
 		double dist = 25;
@@ -252,7 +243,7 @@ public class NodeEditorPane extends BoxComponentPane
 	}
 
 
-	private Connector findNearestConnector(Point aPoint, Node box)
+	public Connector findNearestConnector(Point aPoint, Node box)
 	{
 		Connector nearest = null;
 		double dist = 25;
@@ -288,5 +279,63 @@ public class NodeEditorPane extends BoxComponentPane
 		}
 
 		return nearest;
+	}
+
+
+	@Override
+	protected void paintComponent(Graphics aGraphics)
+	{
+		super.paintComponent(aGraphics);
+	}
+
+
+	@Override
+	protected void paintElements(Graphics2D aGraphics)
+	{
+		NodeModel model = (NodeModel)mModel;
+
+		aGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		aGraphics.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+
+		for (Connection connection : model.getConnections())
+		{
+			if (mSelectedConnection == connection)
+			{
+				SplineRenderer.drawSpline(aGraphics, connection, mScale, Styles.CONNECTOR_COLOR_OUTER_SELECTED, Styles.CONNECTOR_COLOR_INNER_SELECTED, Styles.CONNECTOR_COLOR_INNER_SELECTED);
+			}
+			else
+			{
+				assertNotNull(connection.getIn(), "connection.getIn() == null");
+				assertNotNull(connection.getOut(), "connection.getOut() == null");
+				assertNotNull(connection.getIn().getProperty(), "connection.getIn().getNodeItem() == null");
+				assertNotNull(connection.getOut().getProperty(), "connection.getOut().getNodeItem() == null");
+				assertNotNull(connection.getIn().getProperty().getNode(), "connection.getIn().getNodeItem().getNode() == null");
+				assertNotNull(connection.getOut().getProperty().getNode(), "connection.getOut().getNodeItem().getNode() == null");
+
+				Color start = mSelectedBoxes.contains(connection.getOut().getProperty().getNode()) ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : Styles.CONNECTOR_COLOR_INNER;
+				Color end = mSelectedBoxes.contains(connection.getIn().getProperty().getNode()) ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : Styles.CONNECTOR_COLOR_INNER;
+
+				SplineRenderer.drawSpline(aGraphics, connection, mScale, Styles.CONNECTOR_COLOR_OUTER, start, end);
+			}
+		}
+
+		if (mDragEndLocation != null)
+		{
+			if (mDragConnector.getDirection() == Direction.OUT)
+			{
+				SplineRenderer.drawSpline(aGraphics, mDragStartLocation, mDragEndLocation, mScale, Styles.CONNECTOR_COLOR_OUTER, Styles.CONNECTOR_COLOR_INNER_DRAGGED, Styles.CONNECTOR_COLOR_INNER_DRAGGED);
+			}
+			else
+			{
+				SplineRenderer.drawSpline(aGraphics, mDragEndLocation, mDragStartLocation, mScale, Styles.CONNECTOR_COLOR_OUTER, Styles.CONNECTOR_COLOR_INNER_DRAGGED, Styles.CONNECTOR_COLOR_INNER_DRAGGED);
+			}
+		}
+
+		super.paintElements(aGraphics);
+
+		if (mPopup != null)
+		{
+			paintBox(aGraphics, mPopup, false);
+		}
 	}
 }

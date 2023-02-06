@@ -5,11 +5,8 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.Shape;
 import java.io.Serializable;
 import java.util.ArrayList;
-import org.terifan.ui.Anchor;
-import org.terifan.ui.TextBox;
 import static org.terifan.nodeeditor.Styles.*;
 import org.terifan.boxcomponentpane.BoxComponent;
 import org.terifan.boxcomponentpane.BoxComponentPane;
@@ -134,15 +131,15 @@ public class Node extends BoxComponent<Node> implements Serializable
 
 
 	@Override
-	public void paintComponent(BoxComponentPane<Node> aEditor, Graphics2D aGraphics, int aWidth, int aHeight, boolean aSelected)
+	public void paintComponent(BoxComponentPane aPane, Graphics2D aGraphics, int aWidth, int aHeight, boolean aSelected)
 	{
-		super.paintBorder(aGraphics, aWidth, aWidth, aWidth, aHeight, aSelected);
+		super.paintComponent(aPane, aGraphics, aWidth, aHeight, aSelected);
 
 		if (!mMinimized)
 		{
 			for (Property item : mProperties)
 			{
-				item.paintComponent(aEditor, aGraphics, false);
+				item.paintComponent(aPane, aGraphics, false);
 			}
 		}
 
@@ -216,7 +213,9 @@ public class Node extends BoxComponent<Node> implements Serializable
 			if (y >= mBounds.height)
 			{
 				mMinimumSize.height = y;
+
 				computeBounds();
+
 				mMinimumSize.height = mBounds.height;
 			}
 		}
@@ -303,7 +302,7 @@ public class Node extends BoxComponent<Node> implements Serializable
 	}
 
 
-	protected void paintConnectors(Graphics2D aGraphics)
+	public void paintConnectors(Graphics2D aGraphics)
 	{
 		for (Property item : mProperties)
 		{
@@ -322,7 +321,7 @@ public class Node extends BoxComponent<Node> implements Serializable
 	/**
 	 * Return item pressed
 	 */
-	protected Property mousePressed(Point aPoint)
+	public Property mousePressed(Point aPoint)
 	{
 		for (Property item : mProperties)
 		{
