@@ -6,6 +6,7 @@ import static java.awt.Color.GRAY;
 import static java.awt.Color.YELLOW;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
+import java.util.Random;
 import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.JFrame;
@@ -21,6 +22,7 @@ import org.terifan.nodeeditor.widgets.ImageProperty;
 import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Node;
 import org.terifan.nodeeditor.NodeModel;
+import static org.terifan.nodeeditor.Styles.PURPLE;
 import org.terifan.nodeeditor.widgets.ColorChooserProperty;
 import org.terifan.nodeeditor.widgets.SliderProperty;
 import org.terifan.nodeeditor.widgets.TextProperty;
@@ -36,7 +38,7 @@ public class TestEditor
 
 			NodeEditorPane editor = new NodeEditorPane(model);
 			editor.addButtonHandler(item -> {
-				((ImageProperty)item.getNode().getProperty("Image")).setImagePath("Big_pebbles_pxr128.jpg");
+				((ImageProperty)item.getNode().getProperty("Image")).setImagePath(new String[]{"Big_pebbles_pxr128.jpg","Big_pebbles_pxr128_bmp.jpg","Big_pebbles_pxr128_normal.jpg"}[new Random().nextInt(3)]);
 				return true;
 			});
 			editor.addImagePainter((aEditor, aProperty, aGraphics, aBounds) ->
@@ -53,6 +55,21 @@ public class TestEditor
 
 			JToolBar toolbar = new JToolBar();
 
+			toolbar.add(new AbstractAction("TexturCoordinate")
+			{
+				@Override
+				public void actionPerformed(ActionEvent aE)
+				{
+					model.add(new Node("TexturCoordinate")
+						.setSize(200, 0)
+						.addProperty(new TextProperty("UV")
+							.addConnector(OUT, PURPLE))
+					);
+
+					editor.repaint();
+				}
+			});
+
 			toolbar.add(new AbstractAction("SourceImage")
 			{
 				@Override
@@ -63,7 +80,10 @@ public class TestEditor
 						new ImageProperty("Image", 200, 200),
 						new TextProperty("Color").addConnector(Direction.OUT),
 						new TextProperty("Alpha").addConnector(Direction.OUT)
-					).setLocation(0, 0));
+					).setLocation(0, 0)
+					.addProperty(new TextProperty("Vector")
+						.addConnector(IN, PURPLE))
+					);
 
 					editor.repaint();
 				}

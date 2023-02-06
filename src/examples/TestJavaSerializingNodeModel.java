@@ -169,21 +169,6 @@ public class TestJavaSerializingNodeModel
 				.addConnector(IN, GRAY))
 		);
 
-		model.add(new Node("Multiply")
-			.setIdentity("math2")
-			.addProperty(new TextProperty("Value")
-				.setIdentity("result")
-				.addConnector(OUT, GRAY))
-			.addProperty(new ComboBoxProperty("Operation", 2, "Add", "Subtract", "Multiply", "Divide", "Absolute", "Modulo", "Greater Than"))
-			.addProperty(new CheckBoxProperty("Clamp", false))
-			.addProperty(new SliderProperty("Value", 0.5, 0.01)
-				.setIdentity("value1")
-				.addConnector(IN, GRAY))
-			.addProperty(new SliderProperty("Value", 0.5, 0.01)
-				.setIdentity("value2")
-				.addConnector(IN, GRAY))
-		);
-
 		model.add(new Node("Mix")
 			.addProperty(new TextProperty("Color")
 				.setIdentity("colorOut")
@@ -224,17 +209,16 @@ public class TestJavaSerializingNodeModel
 		model.addConnection("texture3.alpha", "color.alpha");
 		model.addConnection("math.result", "texture1.vector");
 
-		model.getNode("color").setLocation(0, 0);
-		model.getNode("mix").setLocation(300, -50);
-		model.getNode("Mix2").setLocation(300, -330);
-		model.getNode("alpha").setLocation(0, 200);
-		model.getNode("output").setLocation(600, 100);
-		model.getNode("texture1").setLocation(0, -350);
-		model.getNode("texture2").setLocation(-300, -550);
-		model.getNode("texture3").setLocation(-300, 0);
-		model.getNode("texturecoordinate").setLocation(-600, -150);
-		model.getNode("math").setLocation(-300, -200);
-		model.getNode("math2").setLocation(300, -200);
+		model.getNode("color").setBounds(0, 0, 200, 0);
+		model.getNode("mix").setBounds(300, -50, 200, 0);
+		model.getNode("Mix2").setBounds(300, -330, 200, 0);
+		model.getNode("alpha").setBounds(0, 200, 200, 0);
+		model.getNode("output").setBounds(600, 100, 200, 0);
+		model.getNode("texture1").setBounds(0, -350, 200, 0);
+		model.getNode("texture2").setBounds(-300, -550, 200, 0);
+		model.getNode("texture3").setBounds(-300, 0, 200, 0);
+		model.getNode("texturecoordinate").setBounds(-600, -150, 200, 0);
+		model.getNode("math").setBounds(-300, -200, 200, 0);
 
 //		new AutoLayout().layout(model, model.getNode(0));
 
