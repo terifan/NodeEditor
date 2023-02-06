@@ -20,7 +20,6 @@ public class Node extends BoxComponent<Node> implements Serializable
 	protected NodeModel mModel;
 	protected String mIdentity;
 	protected int mVerticalSpacing;
-	protected boolean mDoLayout;
 
 
 	public Node(String aName)
@@ -29,7 +28,6 @@ public class Node extends BoxComponent<Node> implements Serializable
 
 		mVerticalSpacing = 3;
 		mProperties = new ArrayList<>();
-		mDoLayout = true;
 	}
 
 
@@ -152,19 +150,20 @@ public class Node extends BoxComponent<Node> implements Serializable
 	@Override
 	public void layout()
 	{
-		if (mDoLayout)
-		{
-			mDoLayout = false;
-			computeBounds();
-			layoutNode();
-			layoutConnectors();
-		}
+		computeBounds();
+		layoutNode();
+		layoutConnectors();
 	}
 
 
 	public void computeBounds()
 	{
-		if (!mMinimized)
+		if (mMinimized)
+		{
+			mBounds.width = Math.max(mRestoredSize.width, mMinimumSize.width);
+			mBounds.height = MIN_HEIGHT;
+		}
+		else
 		{
 			if (mBounds.width == 0)
 			{
@@ -190,11 +189,6 @@ public class Node extends BoxComponent<Node> implements Serializable
 				mBounds.width = Math.max(mBounds.width, mMinimumSize.width);
 				mBounds.height = Math.max(mBounds.height, mMinimumSize.height);
 			}
-		}
-		else
-		{
-			mBounds.width = Math.max(MIN_WIDTH, mMinimumSize.width);
-			mBounds.height = MIN_HEIGHT;
 		}
 	}
 

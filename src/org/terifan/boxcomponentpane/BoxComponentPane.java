@@ -1,5 +1,6 @@
 package org.terifan.boxcomponentpane;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -74,7 +75,7 @@ public class BoxComponentPane<T extends BoxComponent> extends JComponent
 
 	public void setSelectedBoxes(ArrayList<T> aSelectedBoxes)
 	{
-		this.mSelectedBoxes = aSelectedBoxes;
+		mSelectedBoxes = aSelectedBoxes;
 	}
 
 
@@ -92,7 +93,7 @@ public class BoxComponentPane<T extends BoxComponent> extends JComponent
 
 	public void setSelectionRectangle(Rectangle aSelectionRectangle)
 	{
-		this.mSelectionRectangle = aSelectionRectangle;
+		mSelectionRectangle = aSelectionRectangle;
 	}
 
 
@@ -104,7 +105,7 @@ public class BoxComponentPane<T extends BoxComponent> extends JComponent
 
 	public void setDragStartLocation(Point aDragStartLocation)
 	{
-		this.mDragStartLocation = aDragStartLocation;
+		mDragStartLocation = aDragStartLocation;
 	}
 
 
@@ -116,7 +117,7 @@ public class BoxComponentPane<T extends BoxComponent> extends JComponent
 
 	public void setDragEndLocation(Point aDragEndLocation)
 	{
-		this.mDragEndLocation = aDragEndLocation;
+		mDragEndLocation = aDragEndLocation;
 	}
 
 
@@ -154,37 +155,58 @@ public class BoxComponentPane<T extends BoxComponent> extends JComponent
 	{
 		int w = getWidth();
 		int h = getHeight();
+		int sx = (int)mScroll.x;
+		int sy = (int)mScroll.y;
+
+		float gcr = Styles.PANE_GRID_COLOR_3.getRed() / 255f;
+		float gcg = Styles.PANE_GRID_COLOR_3.getGreen() / 255f;
+		float gcb = Styles.PANE_GRID_COLOR_3.getBlue() / 255f;
 
 		aGraphics.setColor(Styles.PANE_BACKGROUND_COLOR);
 		aGraphics.fillRect(0, 0, w, h);
 
-		int step = Math.max((int)(24 * mScale), 1);
+		for (int i = 0; i < 10; i++)
+		{
+			double s = mScale * Math.pow(5, i);
+			if (s > 15 && s < w)
+			{
+				aGraphics.setColor(new Color(gcr, gcg, gcb, Math.min((float)(s / 200), 1f)));
+				drawGrid(aGraphics, w, h, s);
+			}
+		}
 
 		aGraphics.setColor(Styles.PANE_GRID_COLOR_1);
-		for (int x = ((int)mScroll.x) % step; x < w; x += step)
-		{
-			aGraphics.drawLine(x, 0, x, h);
-		}
-		for (int y = ((int)mScroll.y) % step; y < h; y += step)
-		{
-			aGraphics.drawLine(0, y, w, y);
-		}
-
+		aGraphics.drawLine(0, sy - 1, w, sy - 1);
+		aGraphics.drawLine(0, sy + 1, w, sy + 1);
+		aGraphics.drawLine(sx - 1, 0, sx - 1, h);
+		aGraphics.drawLine(sx + 1, 0, sx + 1, h);
 		aGraphics.setColor(Styles.PANE_GRID_COLOR_2);
-		for (int x = ((int)mScroll.x) % (5 * step); x < w; x += 5 * step)
-		{
-			aGraphics.drawLine(x, 0, x, h);
-		}
-		for (int y = ((int)mScroll.y) % (5 * step); y < h; y += 5 * step)
-		{
-			aGraphics.drawLine(0, y, w, y);
-		}
-
-		int sx = (int)mScroll.x;
-		int sy = (int)mScroll.y;
-		aGraphics.setColor(Styles.PANE_GRID_COLOR_3);
 		aGraphics.drawLine(0, sy, w, sy);
 		aGraphics.drawLine(sx, 0, sx, h);
+	}
+
+
+	private void drawGrid(Graphics2D aGraphics, int aW, int aH, double aScale)
+	{
+		int xi = (int)((mScroll.x - aW / 2) / aScale);
+		int yi = (int)((mScroll.y - aH / 2) / aScale);
+		int wr = (int)Math.ceil(1 + aW / 2 / aScale);
+		int hr = (int)Math.ceil(1 + aH / 2 / aScale);
+
+		for (int i = 0; i < wr; i++)
+		{
+			int x0 = (int)((-i - xi) * aScale + mScroll.x);
+			int x1 = (int)((+i - xi) * aScale + mScroll.x);
+			aGraphics.drawLine(x0, 0, x0, aH);
+			aGraphics.drawLine(x1, 0, x1, aH);
+		}
+		for (int i = 0; i < hr; i++)
+		{
+			int y0 = (int)((-i - yi) * aScale + mScroll.y);
+			int y1 = (int)((+i - yi) * aScale + mScroll.y);
+			aGraphics.drawLine(0, y0, aW, y0);
+			aGraphics.drawLine(0, y1, aW, y1);
+		}
 	}
 
 

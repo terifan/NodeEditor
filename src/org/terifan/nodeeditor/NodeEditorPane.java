@@ -25,9 +25,8 @@ public class NodeEditorPane extends BoxComponentPane<Node>
 
 	private transient final ArrayList<OnClickHandler> mButtonHandlers;
 	private transient final ArrayList<ImagePainter> mImagePainters;
-	private transient Popup mPopup;
 	private transient Property mClickedItem;
-
+	private transient Popup mPopup;
 	private Connection mSelectedConnection;
 	private Connector mDragConnector;
 	private boolean mConnectorSelectionAllowed;
@@ -101,7 +100,7 @@ public class NodeEditorPane extends BoxComponentPane<Node>
 
 	public void setClickedItem(Property aClickedItem)
 	{
-		this.mClickedItem = aClickedItem;
+		mClickedItem = aClickedItem;
 	}
 
 
@@ -113,7 +112,7 @@ public class NodeEditorPane extends BoxComponentPane<Node>
 
 	public void setSelectedConnection(Connection aSelectedConnection)
 	{
-		this.mSelectedConnection = aSelectedConnection;
+		mSelectedConnection = aSelectedConnection;
 	}
 
 
@@ -125,7 +124,7 @@ public class NodeEditorPane extends BoxComponentPane<Node>
 
 	public void setDragConnector(Connector aDragConnector)
 	{
-		this.mDragConnector = aDragConnector;
+		mDragConnector = aDragConnector;
 	}
 
 

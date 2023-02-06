@@ -41,9 +41,9 @@ public class Styles
 	public static Color BOX_BORDER_TITLE_SEPARATOR_COLOR = new Color(68,68,68, 128);
 	public static Color BOX_TITLE_TEXT_SHADOW_COLOR = new Color(90, 90, 90, a);
 	public static Color PANE_BACKGROUND_COLOR = new Color(57, 57, 57);
-	public static Color PANE_GRID_COLOR_1 = new Color(47, 47, 47);
-	public static Color PANE_GRID_COLOR_2 = new Color(41, 41, 41);
-	public static Color PANE_GRID_COLOR_3 = new Color(30, 30, 30);
+	public static Color PANE_GRID_COLOR_1 = new Color(40, 40, 40);
+	public static Color PANE_GRID_COLOR_2 = new Color(0, 0, 0);
+	public static Color PANE_GRID_COLOR_3 = new Color(0, 0, 0);
 	public static Color PANE_SELECTION_RECTANGLE_LINE = new Color(255, 255, 255);
 	public static Color PANE_SELECTION_RECTANGLE_BACKGROUND = new Color(255, 255, 255, 15);
 
