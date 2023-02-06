@@ -45,7 +45,7 @@ public class NodeModel extends BoxComponentModel<Node> implements Serializable
 
 		Node node = null;
 
-		for (Node tmp : getNodes())
+		for (Node tmp : getComponents())
 		{
 			if (nodeId.equals(tmp.getIdentity()))
 			{
@@ -172,7 +172,7 @@ public class NodeModel extends BoxComponentModel<Node> implements Serializable
 
 	private Connector getConnector(int aRef)
 	{
-		for (Node node : getNodes())
+		for (Node node : getComponents())
 		{
 			for (Property item : node.mProperties)
 			{

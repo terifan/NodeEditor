@@ -20,6 +20,7 @@ public class Node extends BoxComponent<Node> implements Serializable
 	protected NodeModel mModel;
 	protected String mIdentity;
 	protected int mVerticalSpacing;
+	protected boolean mDoLayout;
 
 
 	public Node(String aName)
@@ -28,6 +29,7 @@ public class Node extends BoxComponent<Node> implements Serializable
 
 		mVerticalSpacing = 3;
 		mProperties = new ArrayList<>();
+		mDoLayout = true;
 	}
 
 
@@ -150,9 +152,13 @@ public class Node extends BoxComponent<Node> implements Serializable
 	@Override
 	public void layout()
 	{
-		computeBounds();
-		layoutNode();
-		layoutConnectors();
+		if (mDoLayout)
+		{
+			mDoLayout = false;
+			computeBounds();
+			layoutNode();
+			layoutConnectors();
+		}
 	}
 
 

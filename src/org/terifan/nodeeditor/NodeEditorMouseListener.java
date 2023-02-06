@@ -1,12 +1,12 @@
 package org.terifan.nodeeditor;
 
-import org.terifan.boxcomponentpane.*;
 import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,16 +25,21 @@ class NodeEditorMouseListener extends MouseAdapter
 	private Node mHoverBox;
 	private Rectangle mStartBounds;
 	private boolean mIgnoreNextMouseRelease;
-	private int mCursor = Cursor.DEFAULT_CURSOR;
+	private int mCursor;
 	private NodeEditorPane mNodeEditorPane;
 	private Property mClickedItem;
 	private Connection mSelectedConnection;
-	private boolean mConnectorSelectionAllowed = true;
-	private boolean mRemoveInConnectionsOnDrop = true;
+	private boolean mConnectorSelectionAllowed;
+	private boolean mRemoveInConnectionsOnDrop;
+	private double mZoomSpeed;
 
 
 	public NodeEditorMouseListener(NodeEditorPane aNodeEditorPane)
 	{
+		mZoomSpeed = 1.1;
+		mCursor = Cursor.DEFAULT_CURSOR;
+		mRemoveInConnectionsOnDrop = true;
+		mConnectorSelectionAllowed = true;
 		mNodeEditorPane = aNodeEditorPane;
 	}
 
@@ -54,7 +59,7 @@ class NodeEditorMouseListener extends MouseAdapter
 
 		NodeModel mModel = (NodeModel)mNodeEditorPane.getModel();
 
-		ArrayList<Node> nodes = mModel.getNodes();
+		ArrayList<Node> nodes = mModel.getComponents();
 		for (int i = nodes.size(); --i >= 0; )
 		{
 			Node box = nodes.get(i);
@@ -103,8 +108,8 @@ class NodeEditorMouseListener extends MouseAdapter
 		{
 			mStartBounds = new Rectangle(mHoverBox.getBounds());
 
-			mNodeEditorPane.getModel().getNodes().remove(mHoverBox);
-			mNodeEditorPane.getModel().getNodes().add(mHoverBox);
+			mNodeEditorPane.getModel().getComponents().remove(mHoverBox);
+			mNodeEditorPane.getModel().getComponents().add(mHoverBox);
 
 			mNodeEditorPane.getSelectedBoxes().clear();
 			mNodeEditorPane.getSelectedBoxes().add(mHoverBox);
@@ -118,7 +123,7 @@ class NodeEditorMouseListener extends MouseAdapter
 
 		Node clickedBox = null;
 
-		for (Node box : (ArrayList<Node>)mModel.getNodes())
+		for (Node box : (ArrayList<Node>)mModel.getComponents())
 		{
 			Rectangle b = box.getBounds();
 
@@ -269,7 +274,7 @@ class NodeEditorMouseListener extends MouseAdapter
 			mNodeEditorPane.getSelectionRectangle().width /= mNodeEditorPane.getScale();
 			mNodeEditorPane.getSelectionRectangle().height /= mNodeEditorPane.getScale();
 
-			for (Node box : mNodeEditorPane.getModel().getNodes())
+			for (Node box : mNodeEditorPane.getModel().getComponents())
 			{
 				if (mNodeEditorPane.getSelectionRectangle().intersects(box.getBounds()))
 				{
@@ -301,7 +306,7 @@ class NodeEditorMouseListener extends MouseAdapter
 		}
 
 		Rectangle mSelectionRectangle = mNodeEditorPane.getSelectionRectangle();
-		Point mPaneScroll = mNodeEditorPane.getPaneScroll();
+		Point2D.Double mPaneScroll = mNodeEditorPane.getPaneScroll();
 
 		Point newPoint = calcMousePoint(aEvent);
 
@@ -373,23 +378,22 @@ class NodeEditorMouseListener extends MouseAdapter
 			return;
 		}
 
-		Point mPaneScroll = mNodeEditorPane.getPaneScroll();
+		Point2D.Double mPaneScroll = mNodeEditorPane.getPaneScroll();
 
 		mPaneScroll.x -= aEvent.getX();
 		mPaneScroll.y -= aEvent.getY();
 
-		double d = 1.1;
 		if (aEvent.getWheelRotation() == 1)
 		{
-			mNodeEditorPane.setScale(mNodeEditorPane.getScale() * d);
-			mPaneScroll.x *= d;
-			mPaneScroll.y *= d;
+			mNodeEditorPane.setScale(mNodeEditorPane.getScale() * mZoomSpeed);
+			mPaneScroll.x *= mZoomSpeed;
+			mPaneScroll.y *= mZoomSpeed;
 		}
 		else
 		{
-			mNodeEditorPane.setScale(mNodeEditorPane.getScale() / d);
-			mPaneScroll.x /= d;
-			mPaneScroll.y /= d;
+			mNodeEditorPane.setScale(mNodeEditorPane.getScale() / mZoomSpeed);
+			mPaneScroll.x /= mZoomSpeed;
+			mPaneScroll.y /= mZoomSpeed;
 		}
 
 		mPaneScroll.x += aEvent.getX();
@@ -443,8 +447,8 @@ class NodeEditorMouseListener extends MouseAdapter
 
 		if (mHitBox)
 		{
-			mNodeEditorPane.getModel().getNodes().remove(clickedBox);
-			mNodeEditorPane.getModel().getNodes().add(clickedBox);
+			mNodeEditorPane.getModel().getComponents().remove(clickedBox);
+			mNodeEditorPane.getModel().getComponents().add(clickedBox);
 			mSelectedConnection = null;
 		}
 		else if (mConnectorSelectionAllowed)

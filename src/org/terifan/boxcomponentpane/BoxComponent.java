@@ -163,6 +163,7 @@ public abstract class BoxComponent<T extends BoxComponent> implements Serializab
 	}
 
 
+	@Override
 	public Rectangle getBounds()
 	{
 		return mBounds;

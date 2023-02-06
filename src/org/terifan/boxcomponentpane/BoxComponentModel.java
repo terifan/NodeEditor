@@ -7,36 +7,36 @@ import java.util.ArrayList;
 public class BoxComponentModel<T extends BoxComponent> implements Serializable
 {
 	private final static long serialVersionUID = 1L;
-	private ArrayList<T> mBoxComponents;
+	private final ArrayList<T> mComponents;
 
 
 	public BoxComponentModel()
 	{
-		mBoxComponents = new ArrayList<>();
+		mComponents = new ArrayList<>();
 	}
 
 
 	public int size()
 	{
-		return mBoxComponents.size();
+		return mComponents.size();
 	}
 
 
 	public T get(int aIndex)
 	{
-		return mBoxComponents.get(aIndex);
+		return mComponents.get(aIndex);
 	}
 
 
 	public BoxComponentModel<T> add(T aComponent)
 	{
-		mBoxComponents.add(aComponent);
+		mComponents.add(aComponent);
 		return this;
 	}
 
 
-	public ArrayList<T> getNodes()
+	public ArrayList<T> getComponents()
 	{
-		return mBoxComponents;
+		return mComponents;
 	}
 }

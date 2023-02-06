@@ -207,7 +207,7 @@ public class NodeEditorPane extends BoxComponentPane<Node>
 		Connector nearest = null;
 		double dist = 25;
 
-		for (Node box : mModel.getNodes())
+		for (Node box : mModel.getComponents())
 		{
 			if (mDragConnector != null && mDragConnector.getProperty().getNode() == box)
 			{
@@ -290,7 +290,7 @@ public class NodeEditorPane extends BoxComponentPane<Node>
 
 
 	@Override
-	protected void paintElements(Graphics2D aGraphics)
+	protected void paintBoxComponents(Graphics2D aGraphics)
 	{
 		NodeModel model = (NodeModel)mModel;
 
@@ -331,11 +331,11 @@ public class NodeEditorPane extends BoxComponentPane<Node>
 			}
 		}
 
-		super.paintElements(aGraphics);
+		super.paintBoxComponents(aGraphics);
 
 		if (mPopup != null)
 		{
-			paintBox(aGraphics, mPopup, false);
+			paintBoxComponent(aGraphics, mPopup, false);
 		}
 	}
 }

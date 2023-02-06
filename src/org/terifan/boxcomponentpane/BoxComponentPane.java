@@ -7,6 +7,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import javax.swing.JComponent;
@@ -19,7 +20,7 @@ public class BoxComponentPane<T extends BoxComponent> extends JComponent
 	private final static long serialVersionUID = 1L;
 
 	protected double mScale;
-	protected Point mPaneScroll;
+	protected Point2D.Double mScroll;
 	protected Point mDragStartLocation;
 	protected Point mDragEndLocation;
 	protected Rectangle mSelectionRectangle;
@@ -77,9 +78,9 @@ public class BoxComponentPane<T extends BoxComponent> extends JComponent
 	}
 
 
-	public Point getPaneScroll()
+	public Point2D.Double getPaneScroll()
 	{
-		return mPaneScroll;
+		return mScroll;
 	}
 
 
@@ -124,13 +125,13 @@ public class BoxComponentPane<T extends BoxComponent> extends JComponent
 	 */
 	public BoxComponentPane<T> center()
 	{
-		if (mModel.getNodes().isEmpty())
+		if (mModel.getComponents().isEmpty())
 		{
 			return this;
 		}
 
-		Rectangle bounds = new Rectangle(mModel.getNodes().get(0).getBounds());
-		for (BoxComponent box : mModel.getNodes())
+		Rectangle bounds = new Rectangle(mModel.getComponents().get(0).getBounds());
+		for (BoxComponent box : mModel.getComponents())
 		{
 			box.layout();
 			bounds.add(box.getBounds());
@@ -139,12 +140,12 @@ public class BoxComponentPane<T extends BoxComponent> extends JComponent
 		int dx = -(int)bounds.getCenterX();
 		int dy = -(int)bounds.getCenterY();
 
-		for (BoxComponent box : mModel.getNodes())
+		for (BoxComponent box : mModel.getComponents())
 		{
 			box.getBounds().translate(dx, dy);
 		}
 
-		mPaneScroll = null; // will be centered when pane is repainted
+		mScroll = null; // will be centered when pane is repainted
 		return this;
 	}
 
@@ -160,30 +161,30 @@ public class BoxComponentPane<T extends BoxComponent> extends JComponent
 		int step = Math.max((int)(24 * mScale), 1);
 
 		aGraphics.setColor(Styles.PANE_GRID_COLOR_1);
-		for (int x = mPaneScroll.x % step; x < w; x += step)
+		for (int x = ((int)mScroll.x) % step; x < w; x += step)
 		{
 			aGraphics.drawLine(x, 0, x, h);
 		}
-		for (int y = mPaneScroll.y % step; y < h; y += step)
+		for (int y = ((int)mScroll.y) % step; y < h; y += step)
 		{
 			aGraphics.drawLine(0, y, w, y);
 		}
 
 		aGraphics.setColor(Styles.PANE_GRID_COLOR_2);
-		for (int x = mPaneScroll.x % (5 * step); x < w; x += 5 * step)
+		for (int x = ((int)mScroll.x) % (5 * step); x < w; x += 5 * step)
 		{
 			aGraphics.drawLine(x, 0, x, h);
 		}
-		for (int y = mPaneScroll.y % (5 * step); y < h; y += 5 * step)
+		for (int y = ((int)mScroll.y) % (5 * step); y < h; y += 5 * step)
 		{
 			aGraphics.drawLine(0, y, w, y);
 		}
 
-		int w2 = mPaneScroll.x;
-		int h2 = mPaneScroll.y;
+		int sx = (int)mScroll.x;
+		int sy = (int)mScroll.y;
 		aGraphics.setColor(Styles.PANE_GRID_COLOR_3);
-		aGraphics.drawLine(0, h2, w, h2);
-		aGraphics.drawLine(w2, 0, w2, h);
+		aGraphics.drawLine(0, sy, w, sy);
+		aGraphics.drawLine(sx, 0, sx, h);
 	}
 
 
@@ -191,7 +192,7 @@ public class BoxComponentPane<T extends BoxComponent> extends JComponent
 	public Dimension getPreferredSize()
 	{
 		Rectangle bounds = null;
-		for (T box : mModel.getNodes())
+		for (T box : mModel.getComponents())
 		{
 			box.layout();
 			if (bounds == null)
@@ -208,7 +209,54 @@ public class BoxComponentPane<T extends BoxComponent> extends JComponent
 	}
 
 
-	protected void paintBox(Graphics2D aGraphics, Renderable aComponent, boolean aSelected)
+	@Override
+	protected void paintComponent(Graphics aGraphics)
+	{
+		if (mScroll == null)
+		{
+			mScroll = new Point.Double(getWidth() / 2.0, getHeight() / 2.0);
+		}
+
+		for (T box : mModel.getComponents())
+		{
+			box.layout();
+		}
+
+		Graphics2D g = (Graphics2D)aGraphics;
+
+		paintBackground(g);
+
+		AffineTransform oldTransform = g.getTransform();
+		g.translate((int)mScroll.x, (int)mScroll.y);
+		paintBoxComponents(g);
+		g.setTransform(oldTransform);
+	}
+
+
+	protected void paintBoxComponents(Graphics2D aGraphics)
+	{
+		aGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		aGraphics.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+
+		for (T box : mModel.getComponents())
+		{
+			paintBoxComponent(aGraphics, box, mSelectedBoxes.contains(box));
+		}
+
+		aGraphics.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_NORMALIZE);
+
+		if (mSelectionRectangle != null)
+		{
+			aGraphics.setColor(Styles.PANE_SELECTION_RECTANGLE_BACKGROUND);
+			aGraphics.fillRect(mSelectionRectangle.x, mSelectionRectangle.y, mSelectionRectangle.width + 1, mSelectionRectangle.height + 1);
+			aGraphics.setColor(Styles.PANE_SELECTION_RECTANGLE_LINE);
+			aGraphics.setStroke(SELECTION_RECTANGLE_STROKE);
+			aGraphics.draw(mSelectionRectangle);
+		}
+	}
+
+
+	protected void paintBoxComponent(Graphics2D aGraphics, Renderable aComponent, boolean aSelected)
 	{
 		Rectangle bounds = aComponent.getBounds();
 		int x = (int)(bounds.x * mScale);
@@ -228,14 +276,16 @@ public class BoxComponentPane<T extends BoxComponent> extends JComponent
 			{
 				offscreenBuffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 				ig = offscreenBuffer.createGraphics();
+
 				affineTransform = new AffineTransform();
 				affineTransform.scale(mScale, mScale);
 			}
 			else
 			{
 				ig = (Graphics2D)aGraphics.create(x, y, width, height);
+
 				affineTransform = new AffineTransform();
-				affineTransform.translate(mPaneScroll.x + x, mPaneScroll.y + y);
+				affineTransform.translate((int)(mScroll.x + x), (int)(mScroll.y + y));
 				affineTransform.scale(mScale, mScale);
 			}
 
@@ -251,56 +301,6 @@ public class BoxComponentPane<T extends BoxComponent> extends JComponent
 			{
 				aGraphics.drawImage(offscreenBuffer, x, y, null);
 			}
-		}
-	}
-
-
-	@Override
-	protected void paintComponent(Graphics aGraphics)
-	{
-		if (mPaneScroll == null)
-		{
-			mPaneScroll = new Point(getWidth() / 2, getHeight() / 2);
-		}
-
-		for (T box : mModel.getNodes())
-		{
-			box.layout();
-		}
-
-		Graphics2D g = (Graphics2D)aGraphics;
-
-		paintBackground(g);
-
-		AffineTransform oldTransform = g.getTransform();
-
-		g.translate(mPaneScroll.x, mPaneScroll.y);
-
-		paintElements(g);
-
-		g.setTransform(oldTransform);
-	}
-
-
-	protected void paintElements(Graphics2D aGraphics)
-	{
-		aGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		aGraphics.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
-
-		for (T box : mModel.getNodes())
-		{
-			paintBox(aGraphics, box, mSelectedBoxes.contains(box));
-		}
-
-		aGraphics.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_NORMALIZE);
-
-		if (mSelectionRectangle != null)
-		{
-			aGraphics.setColor(Styles.PANE_SELECTION_RECTANGLE_BACKGROUND);
-			aGraphics.fillRect(mSelectionRectangle.x, mSelectionRectangle.y, mSelectionRectangle.width + 1, mSelectionRectangle.height + 1);
-			aGraphics.setColor(Styles.PANE_SELECTION_RECTANGLE_LINE);
-			aGraphics.setStroke(SELECTION_RECTANGLE_STROKE);
-			aGraphics.draw(mSelectionRectangle);
 		}
 	}
 }
