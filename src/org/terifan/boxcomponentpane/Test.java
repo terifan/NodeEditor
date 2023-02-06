@@ -2,9 +2,7 @@ package org.terifan.boxcomponentpane;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Insets;
 import javax.swing.JFrame;
-import static org.terifan.nodeeditor.Styles.TITLE_HEIGHT_PADDED;
 
 
 public class Test
