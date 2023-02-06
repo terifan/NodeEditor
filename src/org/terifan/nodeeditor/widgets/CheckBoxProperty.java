@@ -10,10 +10,11 @@ import java.awt.Stroke;
 import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Property;
 import org.terifan.nodeeditor.Styles;
+import org.terifan.boxcomponentpane.BoxComponentPane;
 import org.terifan.ui.Anchor;
 
 
-public class CheckBoxPropertyItem extends Property<CheckBoxPropertyItem>
+public class CheckBoxProperty extends Property<CheckBoxProperty>
 {
 	private final static long serialVersionUID = 1L;
 
@@ -22,7 +23,7 @@ public class CheckBoxPropertyItem extends Property<CheckBoxPropertyItem>
 	private boolean mSelected;
 
 
-	public CheckBoxPropertyItem(String aText, boolean aState)
+	public CheckBoxProperty(String aText, boolean aState)
 	{
 		super(aText);
 
@@ -31,7 +32,7 @@ public class CheckBoxPropertyItem extends Property<CheckBoxPropertyItem>
 
 
 	@Override
-	protected void paintComponent(NodeEditorPane aEditor, Graphics2D aGraphics, boolean aHover)
+	protected void paintComponent(BoxComponentPane aEditor, Graphics2D aGraphics, boolean aHover)
 	{
 		int x = mBounds.x;
 		int y = mBounds.y;

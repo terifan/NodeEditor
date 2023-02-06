@@ -1,9 +1,9 @@
 package org.terifan.nodeeditor;
 
-import org.terifan.nodeeditor.widgets.ButtonPropertyItem;
+import org.terifan.nodeeditor.widgets.ButtonProperty;
 
 
 public interface OnClickHandler
 {
-	boolean onClick(ButtonPropertyItem aPropertyItem);
+	boolean onClick(ButtonProperty aPropertyItem);
 }

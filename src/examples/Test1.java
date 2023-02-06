@@ -1,10 +1,10 @@
 package examples;
 
-import org.terifan.nodeeditor.widgets.SliderPropertyItem;
-import org.terifan.nodeeditor.widgets.ImagePropertyItem;
-import org.terifan.nodeeditor.widgets.ComboBoxPropertyItem;
-import org.terifan.nodeeditor.widgets.CheckBoxPropertyItem;
-import org.terifan.nodeeditor.widgets.ColorChooserNodeItem;
+import org.terifan.nodeeditor.widgets.SliderProperty;
+import org.terifan.nodeeditor.widgets.ImageProperty;
+import org.terifan.nodeeditor.widgets.ComboBoxProperty;
+import org.terifan.nodeeditor.widgets.CheckBoxProperty;
+import org.terifan.nodeeditor.widgets.ColorChooserProperty;
 import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.JFrame;
@@ -16,7 +16,7 @@ import org.terifan.nodeeditor.NodeModel;
 import static org.terifan.nodeeditor.Styles.GRAY;
 import static org.terifan.nodeeditor.Styles.PURPLE;
 import static org.terifan.nodeeditor.Styles.YELLOW;
-import org.terifan.nodeeditor.widgets.TextPropertyItem;
+import org.terifan.nodeeditor.widgets.TextProperty;
 
 
 public class Test1
@@ -25,34 +25,34 @@ public class Test1
 	{
 		try
 		{
-			TextPropertyItem item0 = new TextPropertyItem("node0").addConnector(new Connector(Direction.OUT));
-			TextPropertyItem item1 = new TextPropertyItem("node1").addConnector(new Connector(Direction.OUT));
-			TextPropertyItem item2 = new TextPropertyItem("node2").addConnector(new Connector(Direction.IN));
-			TextPropertyItem item3 = new TextPropertyItem("node3").addConnector(new Connector(Direction.OUT));
-			TextPropertyItem item4 = new TextPropertyItem("node4").addConnector(new Connector(Direction.IN));
-			TextPropertyItem item5 = new TextPropertyItem("node5").addConnector(new Connector(Direction.IN));
-			TextPropertyItem item6 = new TextPropertyItem("node6").addConnector(new Connector(Direction.OUT));
-			TextPropertyItem item7 = new TextPropertyItem("node7").addConnector(new Connector(Direction.IN)).addConnector(new Connector(Direction.OUT));
-			TextPropertyItem item8 = new TextPropertyItem("node8").addConnector(new Connector(Direction.OUT));
-			TextPropertyItem item9 = new TextPropertyItem("node9").addConnector(new Connector(Direction.OUT, PURPLE));
-			ImagePropertyItem item10 = new ImagePropertyItem("node10", 200, 200).addConnector(new Connector(Direction.OUT, PURPLE)).addConnector(new Connector(Direction.OUT, PURPLE)).addConnector(new Connector(Direction.OUT, PURPLE));
-			ColorChooserNodeItem item11 = new ColorChooserNodeItem("node11", new Color(255,255,255)).addConnector(new Connector(Direction.IN, YELLOW));
-			TextPropertyItem item12 = new TextPropertyItem("node12").addConnector(new Connector(Direction.IN, PURPLE));
-			TextPropertyItem item13 = new TextPropertyItem("node13").addConnector(new Connector(Direction.IN, YELLOW));
-			TextPropertyItem item14 = new TextPropertyItem("node14").addConnector(new Connector(Direction.IN, GRAY));
-			TextPropertyItem item15 = new TextPropertyItem("node15").addConnector(new Connector(Direction.IN, GRAY));
-			TextPropertyItem item16 = new TextPropertyItem("node16").addConnector(new Connector(Direction.IN, GRAY));
-			TextPropertyItem item17 = new TextPropertyItem("node17").addConnector(new Connector(Direction.IN, GRAY));
-			TextPropertyItem item18 = new TextPropertyItem("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.");
+			TextProperty item0 = new TextProperty("node0").addConnector(new Connector(Direction.OUT));
+			TextProperty item1 = new TextProperty("node1").addConnector(new Connector(Direction.OUT));
+			TextProperty item2 = new TextProperty("node2").addConnector(new Connector(Direction.IN));
+			TextProperty item3 = new TextProperty("node3").addConnector(new Connector(Direction.OUT));
+			TextProperty item4 = new TextProperty("node4").addConnector(new Connector(Direction.IN));
+			TextProperty item5 = new TextProperty("node5").addConnector(new Connector(Direction.IN));
+			TextProperty item6 = new TextProperty("node6").addConnector(new Connector(Direction.OUT));
+			TextProperty item7 = new TextProperty("node7").addConnector(new Connector(Direction.IN)).addConnector(new Connector(Direction.OUT));
+			TextProperty item8 = new TextProperty("node8").addConnector(new Connector(Direction.OUT));
+			TextProperty item9 = new TextProperty("node9").addConnector(new Connector(Direction.OUT, PURPLE));
+			ImageProperty item10 = new ImageProperty("node10", 200, 200).addConnector(new Connector(Direction.OUT, PURPLE)).addConnector(new Connector(Direction.OUT, PURPLE)).addConnector(new Connector(Direction.OUT, PURPLE));
+			ColorChooserProperty item11 = new ColorChooserProperty("node11", new Color(255,255,255)).addConnector(new Connector(Direction.IN, YELLOW));
+			TextProperty item12 = new TextProperty("node12").addConnector(new Connector(Direction.IN, PURPLE));
+			TextProperty item13 = new TextProperty("node13").addConnector(new Connector(Direction.IN, YELLOW));
+			TextProperty item14 = new TextProperty("node14").addConnector(new Connector(Direction.IN, GRAY));
+			TextProperty item15 = new TextProperty("node15").addConnector(new Connector(Direction.IN, GRAY));
+			TextProperty item16 = new TextProperty("node16").addConnector(new Connector(Direction.IN, GRAY));
+			TextProperty item17 = new TextProperty("node17").addConnector(new Connector(Direction.IN, GRAY));
+			TextProperty item18 = new TextProperty("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.");
 //			item18.getTextBox().setMaxWidth(300);
-			SliderPropertyItem slider1 = new SliderPropertyItem("Roughness", 0, 1, 0);
-			SliderPropertyItem slider2 = new SliderPropertyItem("Roughness", 0, 1, 0.5);
-			SliderPropertyItem slider3 = new SliderPropertyItem("Roughness", 0, 1, 0.75);
-			SliderPropertyItem slider4 = new SliderPropertyItem("Roughness", 0.0, 0.1);
-			CheckBoxPropertyItem checkbox1 = new CheckBoxPropertyItem("Inverted", false);
-			CheckBoxPropertyItem checkbox2 = new CheckBoxPropertyItem("Inverted", true);
-			ComboBoxPropertyItem comboBoxNodeItem1 = new ComboBoxPropertyItem("A", 0, "GCX", "Beckmann");
-			ComboBoxPropertyItem comboBoxNodeItem2 = new ComboBoxPropertyItem("B", 1, "Alpha", "Beta");
+			SliderProperty slider1 = new SliderProperty("Roughness", 0, 1, 0);
+			SliderProperty slider2 = new SliderProperty("Roughness", 0, 1, 0.5);
+			SliderProperty slider3 = new SliderProperty("Roughness", 0, 1, 0.75);
+			SliderProperty slider4 = new SliderProperty("Roughness", 0.0, 0.1);
+			CheckBoxProperty checkbox1 = new CheckBoxProperty("Inverted", false);
+			CheckBoxProperty checkbox2 = new CheckBoxProperty("Inverted", true);
+			ComboBoxProperty comboBoxNodeItem1 = new ComboBoxProperty("A", 0, "GCX", "Beckmann");
+			ComboBoxProperty comboBoxNodeItem2 = new ComboBoxProperty("B", 1, "Alpha", "Beta");
 			Node node0 = new Node("nodeBox0", item0, item1, comboBoxNodeItem1, comboBoxNodeItem2);
 			Node node1 = new Node("nodeBox1", item2, slider1, slider2, slider3, slider4, checkbox1, checkbox2, item3);
 			Node node2 = new Node("nodeBox2", item4, item5, item10, item6);
@@ -63,12 +63,12 @@ public class Test1
 
 			NodeModel model = new NodeModel();
 
-			model.addNode(node0);
-			model.addNode(node1);
-			model.addNode(node2);
-			model.addNode(node3);
-			model.addNode(node4);
-			model.addNode(node5);
+			model.add(node0);
+			model.add(node1);
+			model.add(node2);
+			model.add(node3);
+			model.add(node4);
+			model.add(node5);
 			model.addConnection(item0, item2);
 			model.addConnection(item1, item7);
 			model.addConnection(item3, item4);

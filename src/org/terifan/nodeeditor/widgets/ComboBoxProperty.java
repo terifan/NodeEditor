@@ -12,11 +12,12 @@ import org.terifan.nodeeditor.Property;
 import org.terifan.nodeeditor.graphics.Popup;
 import org.terifan.nodeeditor.graphics.Popup.Option;
 import org.terifan.nodeeditor.Styles;
+import org.terifan.boxcomponentpane.BoxComponentPane;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.TextBox;
 
 
-public class ComboBoxPropertyItem extends Property<ComboBoxPropertyItem>
+public class ComboBoxProperty extends Property<ComboBoxProperty>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -31,7 +32,7 @@ public class ComboBoxPropertyItem extends Property<ComboBoxPropertyItem>
 	protected ArrayList<String> mOptions;
 
 
-	public ComboBoxPropertyItem(String aText, int aSelectedIndex, String... aOptions)
+	public ComboBoxProperty(String aText, int aSelectedIndex, String... aOptions)
 	{
 		super(aOptions[aSelectedIndex]);
 
@@ -43,7 +44,7 @@ public class ComboBoxPropertyItem extends Property<ComboBoxPropertyItem>
 
 
 	@Override
-	protected void paintComponent(NodeEditorPane aEditor, Graphics2D aGraphics, boolean aHover)
+	protected void paintComponent(BoxComponentPane aEditor, Graphics2D aGraphics, boolean aHover)
 	{
 		Paint oldPaint = aGraphics.getPaint();
 
@@ -136,7 +137,7 @@ public class ComboBoxPropertyItem extends Property<ComboBoxPropertyItem>
 	}
 
 
-	public ComboBoxPropertyItem setSelectedIndex(int aSelectedIndex)
+	public ComboBoxProperty setSelectedIndex(int aSelectedIndex)
 	{
 		mSelectedIndex = aSelectedIndex;
 		setText(mOptions.get(mSelectedIndex));

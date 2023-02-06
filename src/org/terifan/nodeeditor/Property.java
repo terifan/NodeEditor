@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.terifan.boxcomponentpane.BoxComponentPane;
 import org.terifan.ui.TextBox;
 
 
@@ -42,7 +43,7 @@ public abstract class Property<T extends Property> implements Serializable
 	}
 
 
-	protected abstract void paintComponent(NodeEditorPane aEditor, Graphics2D aGraphics, boolean aHover);
+	protected abstract void paintComponent(BoxComponentPane<Node> aEditor, Graphics2D aGraphics, boolean aHover);
 
 
 	void bind(Node aNode)
@@ -115,7 +116,7 @@ public abstract class Property<T extends Property> implements Serializable
 	}
 
 
-	public List<Connector> getConnectors()
+	public ArrayList<Connector> getConnectors()
 	{
 		return mConnectors;
 	}

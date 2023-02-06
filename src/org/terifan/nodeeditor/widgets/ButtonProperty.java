@@ -7,11 +7,12 @@ import java.awt.Point;
 import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Property;
 import org.terifan.nodeeditor.Styles;
+import org.terifan.boxcomponentpane.BoxComponentPane;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.ImageResizer;
 
 
-public class ButtonPropertyItem extends Property<ButtonPropertyItem>
+public class ButtonProperty extends Property<ButtonProperty>
 {
 	private final static long serialVersionUID = 1L;
 	private final static float[] RANGES = new float[]{0f,1f};
@@ -19,7 +20,7 @@ public class ButtonPropertyItem extends Property<ButtonPropertyItem>
 	private boolean mArmed;
 
 
-	public ButtonPropertyItem(String aText)
+	public ButtonProperty(String aText)
 	{
 		super(aText);
 
@@ -29,7 +30,7 @@ public class ButtonPropertyItem extends Property<ButtonPropertyItem>
 
 
 	@Override
-	public ButtonPropertyItem setText(String aText)
+	public ButtonProperty setText(String aText)
 	{
 		super.setText(aText);
 		return this;
@@ -37,7 +38,7 @@ public class ButtonPropertyItem extends Property<ButtonPropertyItem>
 
 
 	@Override
-	protected void paintComponent(NodeEditorPane aEditor, Graphics2D aGraphics, boolean aHover)
+	protected void paintComponent(BoxComponentPane aEditor, Graphics2D aGraphics, boolean aHover)
 	{
 		int x = mBounds.x;
 		int y = mBounds.y;
@@ -91,6 +92,6 @@ public class ButtonPropertyItem extends Property<ButtonPropertyItem>
 	@FunctionalInterface
 	public interface ButtonAction
 	{
-		void onClick(ButtonPropertyItem aItem);
+		void onClick(ButtonProperty aItem);
 	}
 }

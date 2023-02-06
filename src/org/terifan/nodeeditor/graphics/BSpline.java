@@ -143,8 +143,8 @@ public class BSpline
 
 		public void setValues(double[] aX, double[] aY)
 		{
-			this.mX = aX;
-			this.mY = aY;
+			mX = aX;
+			mY = aY;
 			if (aX.length > 1)
 			{
 				calculateCoefficients();
