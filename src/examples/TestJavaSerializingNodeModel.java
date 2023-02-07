@@ -24,6 +24,7 @@ import static org.terifan.nodeeditor.Direction.OUT;
 import static org.terifan.nodeeditor.Styles.GRAY;
 import static org.terifan.nodeeditor.Styles.PURPLE;
 import static org.terifan.nodeeditor.Styles.YELLOW;
+import org.terifan.util.Debug;
 
 
 public class TestJavaSerializingNodeModel
@@ -40,9 +41,11 @@ public class TestJavaSerializingNodeModel
 				model = (NodeModel)ois.readObject();
 			}
 
+			Debug.hexDump(serializedData);
+
 			NodeEditorPane editor = new NodeEditorPane(model);
 
-			editor.addImagePainter((aEditor, aNode, aProperty, aGraphics, aBounds) ->
+			editor.addImagePainter((aPane, aNode, aProperty, aGraphics, aBounds) ->
 			{
 				if (aNode.getTitle().equals("Output"))
 				{
@@ -53,7 +56,7 @@ public class TestJavaSerializingNodeModel
 				return false;
 			});
 
-			editor.addImagePainter((aEditor, aNode, aProperty, aGraphics, aBounds) ->
+			editor.addImagePainter((aPane, aNode, aProperty, aGraphics, aBounds) ->
 			{
 				BufferedImage image = ImageIO.read(TestJavaSerializingNodeModel.class.getResource(aProperty.getImagePath()));
 				aGraphics.drawImage(image, aBounds.x, aBounds.y, aBounds.width, aBounds.height, null);
@@ -81,112 +84,77 @@ public class TestJavaSerializingNodeModel
 	{
 		NodeModel model = new NodeModel();
 
-		model.addNode(new Node("Color")
-			.addProperty(new TextProperty("Color")
-				.addConnector(OUT, YELLOW))
-			.addProperty(new SliderProperty("Red", 0, 1, 0)
-				.addConnector(IN, GRAY))
-			.addProperty(new SliderProperty("Green", 0, 1, 0.5)
-				.addConnector(IN, GRAY))
-			.addProperty(new SliderProperty("Blue", 0, 1, 0.75)
-				.addConnector(IN, GRAY))
-			.addProperty(new SliderProperty("Alpha", 0, 1, 0.5)
-				.addConnector(IN, GRAY))
-		);
+		model.addNode(new Node("Color",
+			new TextProperty("Color").addConnector(OUT, YELLOW),
+			new SliderProperty("Red", 0, 1, 0).addConnector(IN, GRAY),
+			new SliderProperty("Green", 0, 1, 0.5).addConnector(IN, GRAY),
+			new SliderProperty("Blue", 0, 1, 0.75).addConnector(IN, GRAY),
+			new SliderProperty("Alpha", 0, 1, 0.5).addConnector(IN, GRAY)
+		));
 
-		model.addNode(new Node("Texture")
-			.addProperty(new TextProperty("Color")
-				.addConnector(OUT, YELLOW))
-			.addProperty(new TextProperty("Alpha")
-				.addConnector(OUT, GRAY))
-			.addProperty(new ButtonProperty("Open"))
-			.addProperty(new ImageProperty("image", 200, 200)
-				.setImagePath("Big_pebbles_pxr128.jpg"))
-			.addProperty(new TextProperty("Vector")
-				.addConnector(IN, PURPLE))
-		);
+		model.addNode(new Node("Texture",
+			new TextProperty("Color").addConnector(OUT, YELLOW),
+			new TextProperty("Alpha").addConnector(OUT, GRAY),
+			new ButtonProperty("Open"),
+			new ImageProperty("image", 200, 200).setImagePath("Big_pebbles_pxr128.jpg"),
+			new TextProperty("Vector").addConnector(IN, PURPLE)
+		));
 
-		model.addNode(new Node("Texture")
-			.addProperty(new TextProperty("Color")
-				.addConnector(OUT, YELLOW))
-			.addProperty(new TextProperty("Alpha")
-				.addConnector(OUT, GRAY))
-			.addProperty(new ButtonProperty("Open"))
-			.addProperty(new ImageProperty("image", 200, 200)
-				.setImagePath("Big_pebbles_pxr128_bmp.jpg")
-			)
-			.addProperty(new TextProperty("Vector")
-				.addConnector(IN, PURPLE))
-		);
+		model.addNode(new Node("Texture",
+			new TextProperty("Color").addConnector(OUT, YELLOW),
+			new TextProperty("Alpha").addConnector(OUT, GRAY),
+			new ButtonProperty("Open"),
+			new ImageProperty("image", 200, 200).setImagePath("Big_pebbles_pxr128_bmp.jpg"),
+			new TextProperty("Vector").addConnector(IN, PURPLE)
+		));
 
-		model.addNode(new Node("Texture")
-			.addProperty(new TextProperty("Color")
-				.addConnector(OUT, YELLOW))
-			.addProperty(new TextProperty("Alpha")
-				.addConnector(OUT, GRAY))
-			.addProperty(new ButtonProperty("Open"))
-			.addProperty(new ImageProperty("image", 200, 200)
-				.setImagePath("Big_pebbles_pxr128_normal.jpg"))
-			.addProperty(new TextProperty("Vector")
-				.addConnector(IN, PURPLE))
-		);
+		model.addNode(new Node("Texture",
+			new TextProperty("Color").addConnector(OUT, YELLOW),
+			new TextProperty("Alpha").addConnector(OUT, GRAY),
+			new ButtonProperty("Open"),
+			new ImageProperty("image", 200, 200).setImagePath("Big_pebbles_pxr128_normal.jpg"),
+			new TextProperty("Vector").addConnector(IN, PURPLE)
+		));
 
-		model.addNode(new Node("Output")
-			.addProperty(new ColorChooserProperty("Surface", new Color(0, 0, 0))
-				.addConnector(IN, YELLOW))
-			.addProperty(new SliderProperty("Alpha", 0, 1, 0.75)
-				.addConnector(IN, GRAY))
-			.addProperty(new ImageProperty("Image", 200, 200)
-			)
-		);
+		model.addNode(new Node("Output",
+			new ColorChooserProperty("Surface", new Color(0, 0, 0)).addConnector(IN, YELLOW),
+			new SliderProperty("Alpha", 0, 1, 0.75).addConnector(IN, GRAY), new ImageProperty("Image", 200, 200)
+		));
 
-		model.addNode(new Node("Alpha")
-			.addProperty(new SliderProperty("Alpha", 0, 1, 0.75)
-				.addConnector(OUT, GRAY))
-		);
+		model.addNode(new Node("Alpha",
+			new SliderProperty("Alpha", 0, 1, 0.75).addConnector(OUT, GRAY)
+		));
 
-		model.addNode(new Node("TextureCoordinate")
-			.addProperty(new TextProperty("UV")
-				.addConnector(OUT, PURPLE))
-		);
+		model.addNode(new Node("TextureCoordinate",
+			new TextProperty("UV").addConnector(OUT, PURPLE)
+		));
 
-		model.addNode(new Node("Multiply")
-			.addProperty(new TextProperty("Value")
-				.addConnector(OUT, GRAY))
-			.addProperty(new ComboBoxProperty("Operation", 2, "Add", "Subtract", "Multiply", "Divide", "Absolute", "Modulo", "Greater Than"))
-			.addProperty(new CheckBoxProperty("Clamp", false))
-			.addProperty(new SliderProperty("Value", 0.5, 0.01)
-				.addConnector(IN, GRAY))
-			.addProperty(new SliderProperty("Value", 0.5, 0.01)
-				.addConnector(IN, GRAY))
-		);
+		model.addNode(new Node("Multiply",
+			new TextProperty("Value").addConnector(OUT, GRAY),
+			new ComboBoxProperty("Operation", 2, "Add", "Subtract", "Multiply", "Divide", "Absolute", "Modulo", "Greater Than"),
+			new CheckBoxProperty("Clamp", false),
+			new SliderProperty("Value", 0.5, 0.01).addConnector(IN, GRAY),
+			new SliderProperty("Value", 0.5, 0.01).addConnector(IN, GRAY)
+		));
 
-		model.addNode(new Node("Mix")
-			.addProperty(new TextProperty("Color")
-				.addConnector(OUT, YELLOW))
-			.addProperty(new SliderProperty("Fac", 0, 1, 0.5)
-				.addConnector(IN, GRAY))
-			.addProperty(new ColorChooserProperty("Color", new Color(255, 0, 0))
-				.addConnector(IN, YELLOW))
-			.addProperty(new ColorChooserProperty("Color", new Color(0, 0, 255))
-				.addConnector(IN, YELLOW))
-		);
+		model.addNode(new Node("Mix",
+			new TextProperty("Color").addConnector(OUT, YELLOW),
+			new SliderProperty("Fac", 0, 1, 0.5).addConnector(IN, GRAY),
+			new ColorChooserProperty("Color", new Color(255, 0, 0)).addConnector(IN, YELLOW),
+			new ColorChooserProperty("Color", new Color(0, 0, 255)).addConnector(IN, YELLOW)
+		));
 
-		model.addNode(new Node("Mix")
-			.addProperty(new TextProperty("Color")
-				.addConnector(OUT, YELLOW))
-			.addProperty(new SliderProperty("Fac", 0, 1, 0.5)
-				.addConnector(IN, GRAY))
-			.addProperty(new ColorChooserProperty("Color", new Color(255, 0, 0))
-				.addConnector(IN, YELLOW))
-			.addProperty(new ColorChooserProperty("Color", new Color(0, 0, 255))
-				.addConnector(IN, YELLOW))
-		);
+		model.addNode(new Node("Mix",
+			new TextProperty("Color").addConnector(OUT, YELLOW),
+			new SliderProperty("Fac", 0, 1, 0.5).addConnector(IN, GRAY),
+			new ColorChooserProperty("Color", new Color(255, 0, 0)).addConnector(IN, YELLOW),
+			new ColorChooserProperty("Color", new Color(0, 0, 255)).addConnector(IN, YELLOW)
+		));
 
-		model.addConnection(1,0, 8,2);
-		model.addConnection(2,0, 9,2);
-		model.addConnection(9,0, 4,0);
-		model.addConnection(8,0, 9,3);
+		model.addConnection(1, 0, 8, 2);
+		model.addConnection(2, 0, 9, 2);
+		model.addConnection(9, 0, 4, 0);
+		model.addConnection(8, 0, 9, 3);
 
 		model.getNode(0).setBounds(0, 0, 200, 0);
 		model.getNode(1).setBounds(0, -350, 200, 0);

@@ -20,7 +20,7 @@ import org.terifan.util.Strings;
 
 public class Popup implements Renderable<Node, NodeEditorPane>
 {
-	protected final NodeEditorPane mEditor;
+	protected final NodeEditorPane mPane;
 	protected final Rectangle mBounds;
 	protected final Property mOwner;
 	protected final boolean mAboveField;
@@ -39,7 +39,7 @@ public class Popup implements Renderable<Node, NodeEditorPane>
 	 * @param aOptions list of selectable options, can be empty
 	 * @param aResultReceiver
 	 */
-	public Popup(NodeEditorPane aEditor, Property aOwner, String aHeader, Rectangle aBounds, List<Option> aOptions, ResultReceiver aResultReceiver)
+	public Popup(NodeEditorPane aPane, Property aOwner, String aHeader, Rectangle aBounds, List<Option> aOptions, ResultReceiver aResultReceiver)
 	{
 		mHeader = aHeader;
 		mOwner = aOwner;
@@ -70,7 +70,7 @@ public class Popup implements Renderable<Node, NodeEditorPane>
 		{
 			mBounds.y += aOwner.getBounds().height;
 		}
-		mEditor = aEditor;
+		mPane = aPane;
 	}
 
 
@@ -178,7 +178,7 @@ public class Popup implements Renderable<Node, NodeEditorPane>
 			if (mSelectedOption != s)
 			{
 				mSelectedOption = s;
-				mEditor.repaint();
+				mPane.repaint();
 			}
 		}
 	}
@@ -195,7 +195,7 @@ public class Popup implements Renderable<Node, NodeEditorPane>
 
 	public void mouseReleased(MouseEvent aEvent)
 	{
-		mOwner.fireMouseReleased(mEditor, aEvent.getPoint());
+		mOwner.fireMouseReleased(mPane, aEvent.getPoint());
 	}
 
 

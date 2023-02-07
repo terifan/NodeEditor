@@ -19,7 +19,7 @@ public class TextProperty extends Property<TextProperty>
 
 
 	@Override
-	protected void paintComponent(NodeEditorPane aEditor, Graphics2D aGraphics, boolean aHover)
+	protected void paintComponent(NodeEditorPane aPane, Graphics2D aGraphics, boolean aHover)
 	{
 		getTextBox()
 			.setBounds(getBounds())

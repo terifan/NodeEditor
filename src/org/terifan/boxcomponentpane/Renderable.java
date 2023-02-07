@@ -9,5 +9,5 @@ public interface Renderable<T extends BoxComponent, U extends BoxComponentPane>
 	Rectangle getBounds();
 
 
-	void paintComponent(U aEditor, Graphics2D aGraphics, int aWidth, int aHeight, boolean aSelected);
+	void paintComponent(U aPane, Graphics2D aGraphics, int aWidth, int aHeight, boolean aSelected);
 }

@@ -25,10 +25,10 @@ public class ComboBoxProperty extends Property<ComboBoxProperty>
 		0f, 1f
 	};
 
-	protected boolean mArmed;
-	protected int mSelectedIndex;
 	protected String mHeader;
 	protected ArrayList<String> mOptions;
+	protected int mSelectedIndex;
+	protected transient boolean mArmed;
 
 
 	public ComboBoxProperty(String aText, int aSelectedIndex, String... aOptions)
@@ -43,7 +43,7 @@ public class ComboBoxProperty extends Property<ComboBoxProperty>
 
 
 	@Override
-	protected void paintComponent(NodeEditorPane aEditor, Graphics2D aGraphics, boolean aHover)
+	protected void paintComponent(NodeEditorPane aPane, Graphics2D aGraphics, boolean aHover)
 	{
 		Paint oldPaint = aGraphics.getPaint();
 		Rectangle bounds = getBounds();
@@ -80,7 +80,7 @@ public class ComboBoxProperty extends Property<ComboBoxProperty>
 
 
 	@Override
-	protected boolean mousePressed(NodeEditorPane aEditor, Point aClickPoint)
+	protected boolean mousePressed(NodeEditorPane aPane, Point aClickPoint)
 	{
 		mArmed = true;
 
@@ -89,19 +89,17 @@ public class ComboBoxProperty extends Property<ComboBoxProperty>
 		{
 			options.add(new Option()
 			{
-				Rectangle bounds = new Rectangle(0, options.size() * Styles.POPUP_DEFAULT_OPTION_HEIGHT, getBounds().width, Styles.POPUP_DEFAULT_OPTION_HEIGHT);
-
-
 				@Override
 				public Rectangle getBounds()
 				{
-					return bounds;
+					return new Rectangle(0, options.indexOf(this) * Styles.POPUP_DEFAULT_OPTION_HEIGHT, ComboBoxProperty.this.getBounds().width, Styles.POPUP_DEFAULT_OPTION_HEIGHT);
 				}
 
 
 				@Override
 				public void paintOption(Graphics2D aGraphics, boolean aSelected)
 				{
+					Rectangle bounds = getBounds();
 					if (aSelected)
 					{
 						aGraphics.setColor(Styles.POPUP_SELECTION_BACKGROUND);
@@ -112,22 +110,22 @@ public class ComboBoxProperty extends Property<ComboBoxProperty>
 			});
 		}
 
-		Popup popup = new Popup(aEditor, this, mHeader, getBounds(), options, e -> setSelectedIndex(options.indexOf(e)));
+		Popup popup = new Popup(aPane, this, mHeader, getBounds(), options, e -> setSelectedIndex(options.indexOf(e)));
 
-		aEditor.setPopup(popup);
-		aEditor.repaint();
+		aPane.setPopup(popup);
+		aPane.repaint();
 
 		return true;
 	}
 
 
 	@Override
-	protected void mouseReleased(NodeEditorPane aEditor, Point aClickPoint)
+	protected void mouseReleased(NodeEditorPane aPane, Point aClickPoint)
 	{
 		mArmed = false;
 
-		aEditor.setPopup(null);
-		aEditor.repaint();
+		aPane.setPopup(null);
+		aPane.repaint();
 	}
 
 
@@ -140,12 +138,9 @@ public class ComboBoxProperty extends Property<ComboBoxProperty>
 	public ComboBoxProperty setSelectedIndex(int aSelectedIndex)
 	{
 		mSelectedIndex = aSelectedIndex;
+
 		setText(mOptions.get(mSelectedIndex));
 
-//		if (mResultReceiver != null)
-//		{
-//			mResultReceiver.selectionChanged(mSelectedIndex);
-//		}
 		return this;
 	}
 }

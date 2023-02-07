@@ -16,7 +16,7 @@ public class ButtonProperty extends Property<ButtonProperty>
 	private final static long serialVersionUID = 1L;
 	private final static float[] RANGES = new float[]{0f,1f};
 
-	private boolean mArmed;
+	private transient boolean mArmed;
 
 
 	public ButtonProperty(String aText)
@@ -37,7 +37,7 @@ public class ButtonProperty extends Property<ButtonProperty>
 
 
 	@Override
-	protected void paintComponent(NodeEditorPane aEditor, Graphics2D aGraphics, boolean aHover)
+	protected void paintComponent(NodeEditorPane aPane, Graphics2D aGraphics, boolean aHover)
 	{
 		int x = getBounds().x;
 		int y = getBounds().y;
@@ -55,7 +55,7 @@ public class ButtonProperty extends Property<ButtonProperty>
 		if (Styles.DIRECTORY_ICON != null)
 		{
 			int t = h - 4;
-			int s = (int)(t * aEditor.getScale());
+			int s = (int)(t * aPane.getScale());
 			aGraphics.drawImage(ImageResizer.getScaledImageAspect(Styles.DIRECTORY_ICON, s, s, true), x + 4, y + 2, t, t, null);
 		}
 
@@ -66,7 +66,7 @@ public class ButtonProperty extends Property<ButtonProperty>
 
 
 	@Override
-	protected boolean mousePressed(NodeEditorPane aEditor, Point aClickPoint)
+	protected boolean mousePressed(NodeEditorPane aPane, Point aClickPoint)
 	{
 		mArmed = true;
 		return true;
@@ -74,17 +74,17 @@ public class ButtonProperty extends Property<ButtonProperty>
 
 
 	@Override
-	protected void mouseReleased(NodeEditorPane aEditor, Point aClickPoint)
+	protected void mouseReleased(NodeEditorPane aPane, Point aClickPoint)
 	{
 		mArmed = false;
-		aEditor.repaint();
+		aPane.repaint();
 	}
 
 
 	@Override
-	protected void actionPerformed(NodeEditorPane aEditor, Point aClickPoint)
+	protected void actionPerformed(NodeEditorPane aPane, Point aClickPoint)
 	{
-		aEditor.fireButtonClicked(this);
+		aPane.fireButtonClicked(this);
 	}
 
 

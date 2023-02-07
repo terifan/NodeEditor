@@ -31,7 +31,7 @@ public class CheckBoxProperty extends Property<CheckBoxProperty>
 
 
 	@Override
-	protected void paintComponent(NodeEditorPane aEditor, Graphics2D aGraphics, boolean aHover)
+	protected void paintComponent(NodeEditorPane aPane, Graphics2D aGraphics, boolean aHover)
 	{
 		int x = getBounds().x;
 		int y = getBounds().y;
@@ -74,15 +74,15 @@ public class CheckBoxProperty extends Property<CheckBoxProperty>
 
 
 	@Override
-	protected void actionPerformed(NodeEditorPane aEditor, Point aClickPoint)
+	protected void actionPerformed(NodeEditorPane aPane, Point aClickPoint)
 	{
 		mSelected = !mSelected;
-		aEditor.repaint();
+		aPane.repaint();
 	}
 
 
 	@Override
-	protected boolean mousePressed(NodeEditorPane aEditor, Point aClickPoint)
+	protected boolean mousePressed(NodeEditorPane aPane, Point aClickPoint)
 	{
 		return true;
 	}

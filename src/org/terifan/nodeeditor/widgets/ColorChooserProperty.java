@@ -31,7 +31,7 @@ public class ColorChooserProperty extends Property<ColorChooserProperty>
 
 
 	@Override
-	protected void paintComponent(NodeEditorPane aEditor, Graphics2D aGraphics, boolean aHover)
+	protected void paintComponent(NodeEditorPane aPane, Graphics2D aGraphics, boolean aHover)
 	{
 		Rectangle bounds = getBounds();
 		TextBox textBox = getTextBox();
@@ -60,22 +60,22 @@ public class ColorChooserProperty extends Property<ColorChooserProperty>
 
 
 	@Override
-	protected void actionPerformed(NodeEditorPane aEditor, Point aClickPoint)
+	protected void actionPerformed(NodeEditorPane aPane, Point aClickPoint)
 	{
 		if (!isConnected(Direction.IN))
 		{
-			Color c = JColorChooser.showDialog(aEditor, getTextBox().getText(), mColor);
+			Color c = JColorChooser.showDialog(aPane, getTextBox().getText(), mColor);
 			if (c != null)
 			{
 				mColor = c;
-				aEditor.repaint();
+				aPane.repaint();
 			}
 		}
 	}
 
 
 	@Override
-	protected boolean mousePressed(NodeEditorPane aEditor, Point aClickPoint)
+	protected boolean mousePressed(NodeEditorPane aPane, Point aClickPoint)
 	{
 		return !isConnected(Direction.IN) && new Rectangle(getNode().getBounds().x + getBounds().x, getNode().getBounds().y + getBounds().y, COLOR_BOX_WIDTH, getBounds().height).contains(aClickPoint);
 	}

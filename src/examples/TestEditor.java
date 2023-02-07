@@ -41,7 +41,7 @@ public class TestEditor
 				((ImageProperty)item.getNode().getProperty("Image")).setImagePath(new String[]{"Big_pebbles_pxr128.jpg","Big_pebbles_pxr128_bmp.jpg","Big_pebbles_pxr128_normal.jpg"}[new Random().nextInt(3)]);
 				return true;
 			});
-			editor.addImagePainter((aEditor, aNode, aProperty, aGraphics, aBounds) ->
+			editor.addImagePainter((aPane, aNode, aProperty, aGraphics, aBounds) ->
 			{
 				if (aNode.getTitle().equals("Output") && aProperty.getImagePath() != null)
 				{

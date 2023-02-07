@@ -25,8 +25,8 @@ public class NodeEditorPane extends BoxComponentPane<Node, NodeEditorPane>
 	private transient final ArrayList<ImagePainter> mImagePainters;
 	private transient Property mClickedItem;
 	private transient Popup mPopup;
-	private Connection mSelectedConnection;
-	private Connector mDragConnector;
+	private transient Connection mSelectedConnection;
+	private transient Connector mDragConnector;
 	private boolean mConnectorSelectionAllowed;
 	private boolean mRemoveInConnectionsOnDrop;
 
@@ -168,7 +168,7 @@ public class NodeEditorPane extends BoxComponentPane<Node, NodeEditorPane>
 	}
 
 
-	private static ImagePainter FALLBACK_PAINTER = (aEditor, aNode, aProperty, aGraphics, aBounds) ->
+	private static ImagePainter FALLBACK_PAINTER = (aPane, aNode, aProperty, aGraphics, aBounds) ->
 	{
 		if (aProperty.getImagePath() != null)
 		{

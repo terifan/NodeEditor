@@ -20,29 +20,29 @@ public class Node extends BoxComponent<Node, NodeEditorPane> implements Serializ
 	protected NodeModel mModel;
 
 
-	public Node(String aName)
+	public Node(String aTitle)
 	{
-		super(aName);
+		super(aTitle);
 
 		mVerticalSpacing = 3;
 		mProperties = new ArrayList<>();
 	}
 
 
-	public Node(String aName, Property... aItems)
+	public Node(String aTitle, Property... aProperties)
 	{
-		this(aName);
+		this(aTitle);
 
-		for (Property item : aItems)
+		for (Property item : aProperties)
 		{
 			addProperty(item);
 		}
 	}
 
 
-	void bind(NodeModel aEditor)
+	void bind(NodeModel aModel)
 	{
-		mModel = aEditor;
+		mModel = aModel;
 	}
 
 

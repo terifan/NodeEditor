@@ -37,7 +37,7 @@ public class ImageProperty extends Property<ImageProperty>
 
 
 	@Override
-	protected void paintComponent(NodeEditorPane aEditor, Graphics2D aGraphics, boolean aHover)
+	protected void paintComponent(NodeEditorPane aPane, Graphics2D aGraphics, boolean aHover)
 	{
 		Rectangle bounds = getBounds();
 
@@ -57,6 +57,6 @@ public class ImageProperty extends Property<ImageProperty>
 			}
 		}
 
-		((NodeEditorPane)aEditor).paintImage(this, aGraphics, bounds);
+		aPane.paintImage(this, aGraphics, bounds);
 	}
 }

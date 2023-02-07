@@ -254,7 +254,7 @@ public abstract class BoxComponent<T extends BoxComponent, U extends BoxComponen
 
 
 	@Override
-	public void paintComponent(U aEditor, Graphics2D aGraphics, int aWidth, int aHeight, boolean aSelected)
+	public void paintComponent(U aPane, Graphics2D aGraphics, int aWidth, int aHeight, boolean aSelected)
 	{
 		paintBorder(aGraphics, 0, 0, aWidth, aHeight, aSelected);
 	}
