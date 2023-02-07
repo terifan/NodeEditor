@@ -41,7 +41,7 @@ public class BoxComponentPane<T extends BoxComponent, U extends BoxComponentPane
 
 	protected void setupListeners()
 	{
-		BoxComponentMouseListener<T> mouseListener = new BoxComponentMouseListener<>(this);
+		BoxComponentMouseListener<T, U> mouseListener = new BoxComponentMouseListener<T, U>((U)this);
 		super.addMouseMotionListener(mouseListener);
 		super.addMouseListener(mouseListener);
 		super.addMouseWheelListener(mouseListener);
@@ -330,5 +330,19 @@ public class BoxComponentPane<T extends BoxComponent, U extends BoxComponentPane
 				aGraphics.drawImage(offscreenBuffer, x, y, null);
 			}
 		}
+	}
+
+
+	public Point calcMousePoint(Point aPoint)
+	{
+		return new Point(
+			(int)((aPoint.x - mScroll.x) / mScale),
+			(int)((aPoint.y - mScroll.y) / mScale)
+		);
+
+//		aPoint.x = (int)((aPoint.x - mScroll.x) / mScale);
+//		aPoint.y = (int)((aPoint.y - mScroll.y) / mScale);
+//
+//		return aPoint;
 	}
 }

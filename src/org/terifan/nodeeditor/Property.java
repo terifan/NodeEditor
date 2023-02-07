@@ -112,7 +112,7 @@ public abstract class Property<T extends Property> implements Serializable
 	public boolean isConnected(Direction aDirection)
 	{
 		Connector c = getConnector(aDirection);
-		return c != null && c.getConnectedItems().count() > 0;
+		return c != null && !c.getConnectedItems().isEmpty();
 	}
 
 

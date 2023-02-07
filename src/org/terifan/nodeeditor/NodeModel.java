@@ -2,7 +2,8 @@ package org.terifan.nodeeditor;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.stream.Stream;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.terifan.boxcomponentpane.BoxComponentModel;
 import static org.terifan.util.Assert.*;
 
@@ -93,27 +94,27 @@ public class NodeModel extends BoxComponentModel<Node> implements Serializable
 	}
 
 
-	public Stream<Connection> getConnectionsTo(Property aItem)
+	public List<Connection> getConnectionsTo(Property aItem)
 	{
-		return mConnections.stream().filter(e -> e.getIn().getProperty() == aItem);
+		return mConnections.stream().filter(e -> e.getIn().getProperty() == aItem).collect(Collectors.toList());
 	}
 
 
-	public Stream<Connection> getConnectionsFrom(Property aItem)
+	public List<Connection> getConnectionsFrom(Property aItem)
 	{
-		return mConnections.stream().filter(e -> e.getOut().getProperty() == aItem);
+		return mConnections.stream().filter(e -> e.getOut().getProperty() == aItem).collect(Collectors.toList());
 	}
 
 
-	public Stream<Property> getConnectionsTo(Connector aConnector)
+	public List<Property> getConnectionsTo(Connector aConnector)
 	{
-		return mConnections.stream().filter(e -> e.getIn() == aConnector).map(e -> e.getIn().getProperty());
+		return mConnections.stream().filter(e -> e.getIn() == aConnector).map(e -> e.getIn().getProperty()).collect(Collectors.toList());
 	}
 
 
-	public Stream<Property> getConnectionsFrom(Connector aConnector)
+	public List<Property> getConnectionsFrom(Connector aConnector)
 	{
-		return mConnections.stream().filter(e -> e.getOut() == aConnector).map(e -> e.getOut().getProperty());
+		return mConnections.stream().filter(e -> e.getOut() == aConnector).map(e -> e.getOut().getProperty()).collect(Collectors.toList());
 	}
 
 

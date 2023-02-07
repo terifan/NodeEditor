@@ -41,7 +41,7 @@ public class TestJavaSerializingNodeModel
 				model = (NodeModel)ois.readObject();
 			}
 
-			Debug.hexDump(serializedData);
+//			Debug.hexDump(serializedData);
 
 			NodeEditorPane editor = new NodeEditorPane(model);
 
@@ -58,9 +58,13 @@ public class TestJavaSerializingNodeModel
 
 			editor.addImagePainter((aPane, aNode, aProperty, aGraphics, aBounds) ->
 			{
-				BufferedImage image = ImageIO.read(TestJavaSerializingNodeModel.class.getResource(aProperty.getImagePath()));
-				aGraphics.drawImage(image, aBounds.x, aBounds.y, aBounds.width, aBounds.height, null);
-				return true;
+				if (aProperty.getImagePath() != null)
+				{
+					BufferedImage image = ImageIO.read(TestJavaSerializingNodeModel.class.getResource(aProperty.getImagePath()));
+					aGraphics.drawImage(image, aBounds.x, aBounds.y, aBounds.width, aBounds.height, null);
+					return true;
+				}
+				return false;
 			});
 
 			editor.center();

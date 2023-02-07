@@ -4,16 +4,13 @@ import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.Serializable;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Stream;
+import java.util.List;
 import static org.terifan.nodeeditor.Styles.YELLOW;
 
 
 public class Connector implements Serializable
 {
 	private static final long serialVersionUID = 1L;
-
-	private final static AtomicInteger REF_COUNTER = new AtomicInteger();
 
 	protected final Rectangle mBounds;
 	protected Direction mDirection;
@@ -79,8 +76,10 @@ public class Connector implements Serializable
 	}
 
 
-	public Stream<Property> getConnectedItems()
+	public List<Property> getConnectedItems()
 	{
-		return mDirection == Direction.IN ? mProperty.getNode().getModel().getConnectionsTo(this) : mProperty.getNode().getModel().getConnectionsFrom(this);
+		NodeModel model = mProperty.getNode().getModel();
+
+		return mDirection == Direction.IN ? model.getConnectionsTo(this) : model.getConnectionsFrom(this);
 	}
 }
