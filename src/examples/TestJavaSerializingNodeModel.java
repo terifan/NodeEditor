@@ -81,7 +81,7 @@ public class TestJavaSerializingNodeModel
 	{
 		NodeModel model = new NodeModel();
 
-		model.add(new Node("Color")
+		model.addNode(new Node("Color")
 			.addProperty(new TextProperty("Color")
 				.addConnector(OUT, YELLOW))
 			.addProperty(new SliderProperty("Red", 0, 1, 0)
@@ -94,7 +94,7 @@ public class TestJavaSerializingNodeModel
 				.addConnector(IN, GRAY))
 		);
 
-		model.add(new Node("Texture")
+		model.addNode(new Node("Texture")
 			.addProperty(new TextProperty("Color")
 				.addConnector(OUT, YELLOW))
 			.addProperty(new TextProperty("Alpha")
@@ -106,7 +106,7 @@ public class TestJavaSerializingNodeModel
 				.addConnector(IN, PURPLE))
 		);
 
-		model.add(new Node("Texture")
+		model.addNode(new Node("Texture")
 			.addProperty(new TextProperty("Color")
 				.addConnector(OUT, YELLOW))
 			.addProperty(new TextProperty("Alpha")
@@ -119,7 +119,7 @@ public class TestJavaSerializingNodeModel
 				.addConnector(IN, PURPLE))
 		);
 
-		model.add(new Node("Texture")
+		model.addNode(new Node("Texture")
 			.addProperty(new TextProperty("Color")
 				.addConnector(OUT, YELLOW))
 			.addProperty(new TextProperty("Alpha")
@@ -131,7 +131,7 @@ public class TestJavaSerializingNodeModel
 				.addConnector(IN, PURPLE))
 		);
 
-		model.add(new Node("Output")
+		model.addNode(new Node("Output")
 			.addProperty(new ColorChooserProperty("Surface", new Color(0, 0, 0))
 				.addConnector(IN, YELLOW))
 			.addProperty(new SliderProperty("Alpha", 0, 1, 0.75)
@@ -140,17 +140,17 @@ public class TestJavaSerializingNodeModel
 			)
 		);
 
-		model.add(new Node("Alpha")
+		model.addNode(new Node("Alpha")
 			.addProperty(new SliderProperty("Alpha", 0, 1, 0.75)
 				.addConnector(OUT, GRAY))
 		);
 
-		model.add(new Node("TextureCoordinate")
+		model.addNode(new Node("TextureCoordinate")
 			.addProperty(new TextProperty("UV")
 				.addConnector(OUT, PURPLE))
 		);
 
-		model.add(new Node("Multiply")
+		model.addNode(new Node("Multiply")
 			.addProperty(new TextProperty("Value")
 				.addConnector(OUT, GRAY))
 			.addProperty(new ComboBoxProperty("Operation", 2, "Add", "Subtract", "Multiply", "Divide", "Absolute", "Modulo", "Greater Than"))
@@ -161,7 +161,7 @@ public class TestJavaSerializingNodeModel
 				.addConnector(IN, GRAY))
 		);
 
-		model.add(new Node("Mix")
+		model.addNode(new Node("Mix")
 			.addProperty(new TextProperty("Color")
 				.addConnector(OUT, YELLOW))
 			.addProperty(new SliderProperty("Fac", 0, 1, 0.5)
@@ -172,7 +172,7 @@ public class TestJavaSerializingNodeModel
 				.addConnector(IN, YELLOW))
 		);
 
-		model.add(new Node("Mix")
+		model.addNode(new Node("Mix")
 			.addProperty(new TextProperty("Color")
 				.addConnector(OUT, YELLOW))
 			.addProperty(new SliderProperty("Fac", 0, 1, 0.5)
@@ -188,16 +188,16 @@ public class TestJavaSerializingNodeModel
 		model.addConnection(9,0, 4,0);
 		model.addConnection(8,0, 9,3);
 
-		model.get(0).setBounds(0, 0, 200, 0);
-		model.get(1).setBounds(0, -350, 200, 0);
-		model.get(2).setBounds(-300, -550, 200, 0);
-		model.get(3).setBounds(-300, 0, 200, 0);
-		model.get(4).setBounds(600, 100, 200, 0);
-		model.get(5).setBounds(0, 200, 200, 0);
-		model.get(6).setBounds(-600, -150, 200, 0);
-		model.get(7).setBounds(-300, -200, 200, 0);
-		model.get(8).setBounds(300, -50, 200, 0);
-		model.get(9).setBounds(300, -330, 200, 0);
+		model.getNode(0).setBounds(0, 0, 200, 0);
+		model.getNode(1).setBounds(0, -350, 200, 0);
+		model.getNode(2).setBounds(-300, -550, 200, 0);
+		model.getNode(3).setBounds(-300, 0, 200, 0);
+		model.getNode(4).setBounds(600, 100, 200, 0);
+		model.getNode(5).setBounds(0, 200, 200, 0);
+		model.getNode(6).setBounds(-600, -150, 200, 0);
+		model.getNode(7).setBounds(-300, -200, 200, 0);
+		model.getNode(8).setBounds(300, -50, 200, 0);
+		model.getNode(9).setBounds(300, -330, 200, 0);
 
 //		new AutoLayout().layout(model, model.getNode(0));
 

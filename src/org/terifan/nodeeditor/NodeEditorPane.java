@@ -17,7 +17,7 @@ import org.terifan.nodeeditor.widgets.ButtonProperty;
 import org.terifan.nodeeditor.widgets.ImageProperty;
 
 
-public class NodeEditorPane extends BoxComponentPane<Node>
+public class NodeEditorPane extends BoxComponentPane<Node, NodeEditorPane>
 {
 	private static final long serialVersionUID = 1L;
 

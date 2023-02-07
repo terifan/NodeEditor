@@ -60,7 +60,7 @@ public class TestEditor
 				@Override
 				public void actionPerformed(ActionEvent aE)
 				{
-					model.add(new Node("TexturCoordinate")
+					model.addNode(new Node("TexturCoordinate")
 						.setSize(200, 0)
 						.addProperty(new TextProperty("UV")
 							.addConnector(OUT, PURPLE))
@@ -75,7 +75,7 @@ public class TestEditor
 				@Override
 				public void actionPerformed(ActionEvent aE)
 				{
-					model.add(new Node("SourceImage",
+					model.addNode(new Node("SourceImage",
 						new ButtonProperty("Open"),
 						new ImageProperty("Image", 200, 200),
 						new TextProperty("Color").addConnector(Direction.OUT),
@@ -94,7 +94,7 @@ public class TestEditor
 				@Override
 				public void actionPerformed(ActionEvent aE)
 				{
-					model.add(new Node("RenderOutput",
+					model.addNode(new Node("RenderOutput",
 						new TextProperty("Color").addConnector(Direction.IN),
 						new TextProperty("Alpha").addConnector(Direction.IN),
 						new ImageProperty("undefined", 200, 200)
@@ -109,7 +109,7 @@ public class TestEditor
 				@Override
 				public void actionPerformed(ActionEvent aE)
 				{
-					model.add(new Node("Math")
+					model.addNode(new Node("Math")
 						.setLocation(0, 0)
 						.setSize(200, 0)
 						.addProperty(new TextProperty("Value")
@@ -131,7 +131,7 @@ public class TestEditor
 				@Override
 				public void actionPerformed(ActionEvent aE)
 				{
-					model.add(new Node("Mix")
+					model.addNode(new Node("Mix")
 						.setSize(200, 0)
 						.addProperty(new TextProperty("Color")
 							.addConnector(OUT, YELLOW))
@@ -152,7 +152,7 @@ public class TestEditor
 				@Override
 				public void actionPerformed(ActionEvent aE)
 				{
-					model.add(new Node("Alpha")
+					model.addNode(new Node("Alpha")
 						.setSize(200, 0)
 						.addProperty(new SliderProperty("Alpha", 0, 1, 0.75)
 							.addConnector(OUT, GRAY))
@@ -167,7 +167,7 @@ public class TestEditor
 				@Override
 				public void actionPerformed(ActionEvent aE)
 				{
-					model.add(new Node("Color")
+					model.addNode(new Node("Color")
 						.setSize(200, 0)
 						.addProperty(new TextProperty("Color")
 							.addConnector(OUT, YELLOW))

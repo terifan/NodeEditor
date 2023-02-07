@@ -9,10 +9,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import static org.terifan.nodeeditor.Styles.*;
 import org.terifan.boxcomponentpane.BoxComponent;
-import org.terifan.boxcomponentpane.BoxComponentPane;
 
 
-public class Node extends BoxComponent<Node> implements Serializable
+public class Node extends BoxComponent<Node, NodeEditorPane> implements Serializable
 {
 	private final static long serialVersionUID = 1L;
 
@@ -109,7 +108,7 @@ public class Node extends BoxComponent<Node> implements Serializable
 
 
 	@Override
-	public void paintComponent(BoxComponentPane aPane, Graphics2D aGraphics, int aWidth, int aHeight, boolean aSelected)
+	public void paintComponent(NodeEditorPane aPane, Graphics2D aGraphics, int aWidth, int aHeight, boolean aSelected)
 	{
 		super.paintComponent(aPane, aGraphics, aWidth, aHeight, aSelected);
 
@@ -117,7 +116,7 @@ public class Node extends BoxComponent<Node> implements Serializable
 		{
 			for (Property item : mProperties)
 			{
-				item.paintComponent((NodeEditorPane)aPane, aGraphics, false);
+				item.paintComponent(aPane, aGraphics, false);
 			}
 		}
 

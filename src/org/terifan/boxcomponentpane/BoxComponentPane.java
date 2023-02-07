@@ -16,7 +16,7 @@ import org.terifan.nodeeditor.Styles;
 import static org.terifan.nodeeditor.Styles.SELECTION_RECTANGLE_STROKE;
 
 
-public class BoxComponentPane<T extends BoxComponent> extends JComponent
+public class BoxComponentPane<T extends BoxComponent, U extends BoxComponentPane> extends JComponent
 {
 	private final static long serialVersionUID = 1L;
 
@@ -54,10 +54,10 @@ public class BoxComponentPane<T extends BoxComponent> extends JComponent
 	}
 
 
-	public BoxComponentPane<T> setScale(double aScale)
+	public U setScale(double aScale)
 	{
 		mScale = aScale;
-		return this;
+		return (U)this;
 	}
 
 
@@ -73,9 +73,10 @@ public class BoxComponentPane<T extends BoxComponent> extends JComponent
 	}
 
 
-	public void setSelectedBoxes(ArrayList<T> aSelectedBoxes)
+	public U setSelectedBoxes(ArrayList<T> aSelectedBoxes)
 	{
 		mSelectedBoxes = aSelectedBoxes;
+		return (U)this;
 	}
 
 
@@ -124,11 +125,11 @@ public class BoxComponentPane<T extends BoxComponent> extends JComponent
 	/**
 	 * Move all nodes to the center of the screen
 	 */
-	public BoxComponentPane<T> center()
+	public U center()
 	{
 		if (mModel.getComponents().isEmpty())
 		{
-			return this;
+			return (U)this;
 		}
 
 		Rectangle bounds = new Rectangle(mModel.getComponents().get(0).getBounds());
@@ -147,7 +148,28 @@ public class BoxComponentPane<T extends BoxComponent> extends JComponent
 		}
 
 		mScroll = null; // will be centered when pane is repainted
-		return this;
+		return (U)this;
+	}
+
+
+	@Override
+	public Dimension getPreferredSize()
+	{
+		Rectangle bounds = null;
+		for (T box : mModel.getComponents())
+		{
+			box.layout();
+			if (bounds == null)
+			{
+				bounds = box.getBounds();
+			}
+			else
+			{
+				bounds.add(box.getBounds());
+			}
+		}
+
+		return bounds.getSize();
 	}
 
 
@@ -207,27 +229,6 @@ public class BoxComponentPane<T extends BoxComponent> extends JComponent
 			aGraphics.drawLine(0, y0, aW, y0);
 			aGraphics.drawLine(0, y1, aW, y1);
 		}
-	}
-
-
-	@Override
-	public Dimension getPreferredSize()
-	{
-		Rectangle bounds = null;
-		for (T box : mModel.getComponents())
-		{
-			box.layout();
-			if (bounds == null)
-			{
-				bounds = box.getBounds();
-			}
-			else
-			{
-				bounds.add(box.getBounds());
-			}
-		}
-
-		return bounds.getSize();
 	}
 
 

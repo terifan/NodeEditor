@@ -21,9 +21,9 @@ public class NodeModel extends BoxComponentModel<Node> implements Serializable
 
 
 	@Override
-	public NodeModel add(Node aNode)
+	public NodeModel addNode(Node aNode)
 	{
-		super.add(aNode);
+		super.addNode(aNode);
 
 		aNode.bind(this);
 

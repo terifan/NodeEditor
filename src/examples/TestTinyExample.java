@@ -20,26 +20,24 @@ public class TestTinyExample
 	{
 		try
 		{
-			Node color = new Node("Input")
-				.setBounds(0, 0, 150, 0)
-				.addProperty(new TextProperty("Color").addConnector(OUT, YELLOW))
-				.addProperty(new SliderProperty("Red", 0, 1, 0))
-				.addProperty(new SliderProperty("Green", 0, 1, 0.5))
-				.addProperty(new SliderProperty("Blue", 0, 1, 0.75))
-				.addProperty(new SliderProperty("Alpha", 0, 1, 0.5));
-
-			Node output = new Node("Output")
-				.setBounds(200, 0, 150, 0)
-				.addProperty(new ComboBoxProperty("Function", 0, "Add", "Subtract"))
-				.addProperty(new ColorChooserProperty("Color", new Color(0, 0, 0)).addConnector(IN, YELLOW));
-
 			NodeModel model = new NodeModel()
-				.add(color)
-				.add(output)
+				.addNode(new Node("Input")
+					.setBounds(0, 0, 150, 0)
+					.addProperty(new TextProperty("Color").addConnector(OUT, YELLOW))
+					.addProperty(new SliderProperty("Red", 0, 1, 0))
+					.addProperty(new SliderProperty("Green", 0, 1, 0.5))
+					.addProperty(new SliderProperty("Blue", 0, 1, 0.75))
+					.addProperty(new SliderProperty("Alpha", 0, 1, 0.5))
+				)
+				.addNode(new Node("Output")
+					.setBounds(200, 0, 150, 0)
+					.addProperty(new ComboBoxProperty("Function", 0, "Add", "Subtract"))
+					.addProperty(new ColorChooserProperty("Color", new Color(0, 0, 0))
+						.addConnector(IN, YELLOW)))
 				.addConnection(0, 0, 1, 0);
 
-			NodeEditorPane editor = new NodeEditorPane(model);
-			editor.center();
+			NodeEditorPane editor = new NodeEditorPane(model)
+				.center();
 
 			JFrame frame = new JFrame();
 			frame.add(editor);

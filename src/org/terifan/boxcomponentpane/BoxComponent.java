@@ -22,7 +22,7 @@ import static org.terifan.nodeeditor.Styles.COLLAPSE_BUTTON_WIDTH;
 import static org.terifan.nodeeditor.Styles.TITLE_HEIGHT_PADDED;
 
 
-public abstract class BoxComponent<T extends BoxComponent> implements Serializable, Renderable
+public abstract class BoxComponent<T extends BoxComponent, U extends BoxComponentPane> implements Serializable, Renderable<T, U>
 {
 	private final static long serialVersionUID = 1L;
 
@@ -254,7 +254,7 @@ public abstract class BoxComponent<T extends BoxComponent> implements Serializab
 
 
 	@Override
-	public void paintComponent(BoxComponentPane aEditor, Graphics2D aGraphics, int aWidth, int aHeight, boolean aSelected)
+	public void paintComponent(U aEditor, Graphics2D aGraphics, int aWidth, int aHeight, boolean aSelected)
 	{
 		paintBorder(aGraphics, 0, 0, aWidth, aHeight, aSelected);
 	}
