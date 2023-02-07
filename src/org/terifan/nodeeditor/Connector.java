@@ -19,13 +19,11 @@ public class Connector implements Serializable
 	protected Direction mDirection;
 	protected Property mProperty;
 	protected Color mColor;
-	protected int mModelRef;
 
 
 	public Connector()
 	{
 		mBounds = new Rectangle();
-		mModelRef = REF_COUNTER.getAndIncrement();
 	}
 
 
@@ -40,7 +38,6 @@ public class Connector implements Serializable
 		mBounds = new Rectangle();
 		mDirection = aDirection;
 		mColor = aColor;
-		mModelRef = REF_COUNTER.getAndIncrement();
 	}
 
 
@@ -71,12 +68,6 @@ public class Connector implements Serializable
 	public Rectangle getBounds()
 	{
 		return mBounds;
-	}
-
-
-	protected int getModelRef()
-	{
-		return mModelRef;
 	}
 
 

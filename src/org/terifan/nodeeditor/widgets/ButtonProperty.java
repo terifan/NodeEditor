@@ -7,7 +7,6 @@ import java.awt.Point;
 import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Property;
 import org.terifan.nodeeditor.Styles;
-import org.terifan.boxcomponentpane.BoxComponentPane;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.ImageResizer;
 
@@ -24,8 +23,8 @@ public class ButtonProperty extends Property<ButtonProperty>
 	{
 		super(aText);
 
-		mTextBox.setAnchor(Anchor.CENTER).setMargins(0, 0, 0, 0).setMaxLineCount(1).setFont(Styles.SLIDER_FONT);
-		mPreferredSize.height = 22;
+		getTextBox().setAnchor(Anchor.CENTER).setMargins(0, 0, 0, 0).setMaxLineCount(1).setFont(Styles.SLIDER_FONT);
+		getPreferredSize().height = 22;
 	}
 
 
@@ -38,12 +37,12 @@ public class ButtonProperty extends Property<ButtonProperty>
 
 
 	@Override
-	protected void paintComponent(BoxComponentPane aEditor, Graphics2D aGraphics, boolean aHover)
+	protected void paintComponent(NodeEditorPane aEditor, Graphics2D aGraphics, boolean aHover)
 	{
-		int x = mBounds.x;
-		int y = mBounds.y;
-		int h = mBounds.height;
-		int w = mBounds.width;
+		int x = getBounds().x;
+		int y = getBounds().y;
+		int h = getBounds().height;
+		int w = getBounds().width;
 
 		Paint oldPaint = aGraphics.getPaint();
 
@@ -62,7 +61,7 @@ public class ButtonProperty extends Property<ButtonProperty>
 
 		aGraphics.setPaint(oldPaint);
 
-		mTextBox.setForeground(mArmed ? Styles.BOX_FOREGROUND_ARMED_COLOR : Styles.BOX_FOREGROUND_COLOR).setBounds(mBounds).render(aGraphics);
+		getTextBox().setForeground(mArmed ? Styles.BOX_FOREGROUND_ARMED_COLOR : Styles.BOX_FOREGROUND_COLOR).setBounds(getBounds()).render(aGraphics);
 	}
 
 

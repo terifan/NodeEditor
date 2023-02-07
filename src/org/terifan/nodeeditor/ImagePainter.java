@@ -10,5 +10,5 @@ public interface ImagePainter
 	/**
 	 * @return true if the image was painted
 	 */
-	boolean paintImage(NodeEditorPane aEditor, ImageProperty aPropertyItem, Graphics aGraphics, Rectangle aBounds) throws Exception;
+	boolean paintImage(NodeEditorPane aPane, Node aNode, ImageProperty aPropertyItem, Graphics aGraphics, Rectangle aBounds) throws Exception;
 }

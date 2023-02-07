@@ -17,9 +17,8 @@ public class Node extends BoxComponent<Node> implements Serializable
 	private final static long serialVersionUID = 1L;
 
 	protected final ArrayList<Property> mProperties;
-	protected NodeModel mModel;
-	protected String mIdentity;
 	protected int mVerticalSpacing;
+	protected NodeModel mModel;
 
 
 	public Node(String aName)
@@ -45,19 +44,6 @@ public class Node extends BoxComponent<Node> implements Serializable
 	void bind(NodeModel aEditor)
 	{
 		mModel = aEditor;
-	}
-
-
-	public String getIdentity()
-	{
-		return mIdentity;
-	}
-
-
-	public Node setIdentity(String aIdentity)
-	{
-		mIdentity = aIdentity;
-		return this;
 	}
 
 
@@ -101,23 +87,15 @@ public class Node extends BoxComponent<Node> implements Serializable
 
 		for (Property pi : mProperties)
 		{
-			if (pi.getIdentity() != null && pi.getIdentity().equals(id))
-			{
-				item = pi;
-				break;
-			}
-			else if (pi instanceof Property)
-			{
-				Property ab = (Property)pi;
+			Property ab = (Property)pi;
 
-				if (ab.getText().equalsIgnoreCase(id))
+			if (ab.getText().equalsIgnoreCase(id))
+			{
+				if (item != null)
 				{
-					if (item != null)
-					{
-						throw new IllegalStateException("More than one NodeItem have the same name, provide an Identity to either of them: " + ab.getText());
-					}
-					item = pi;
+					throw new IllegalStateException("More than one NodeItem have the same name, provide an Identity to either of them: " + ab.getText());
 				}
+				item = pi;
 			}
 		}
 
@@ -139,7 +117,7 @@ public class Node extends BoxComponent<Node> implements Serializable
 		{
 			for (Property item : mProperties)
 			{
-				item.paintComponent(aPane, aGraphics, false);
+				item.paintComponent((NodeEditorPane)aPane, aGraphics, false);
 			}
 		}
 
@@ -203,9 +181,9 @@ public class Node extends BoxComponent<Node> implements Serializable
 			{
 				Dimension size = item.measure();
 
-				item.mBounds.setBounds(5 + 9, y, mBounds.width - (5 + 9 + 5 + 9), size.height);
+				item.getBounds().setBounds(5 + 9, y, mBounds.width - (5 + 9 + 5 + 9), size.height);
 
-				y += item.mBounds.height + mVerticalSpacing;
+				y += item.getBounds().height + mVerticalSpacing;
 			}
 
 			y += 6;
@@ -228,10 +206,10 @@ public class Node extends BoxComponent<Node> implements Serializable
 		{
 			for (Property item : mProperties)
 			{
-				int by0 = item.mBounds.y + Math.min(item.mBounds.height, TITLE_HEIGHT_PADDED + 4) / 2 - 5;
+				int by0 = item.getBounds().y + Math.min(item.getBounds().height, TITLE_HEIGHT_PADDED + 4) / 2 - 5;
 				int by1 = by0;
 
-				for (Connector connector : (ArrayList<Connector>)item.mConnectors)
+				for (Connector connector : (ArrayList<Connector>)item.getConnectors())
 				{
 					if (connector.getDirection() == Direction.IN)
 					{
@@ -253,7 +231,7 @@ public class Node extends BoxComponent<Node> implements Serializable
 
 			for (Property item : mProperties)
 			{
-				for (Connector connector : (ArrayList<Connector>)item.mConnectors)
+				for (Connector connector : (ArrayList<Connector>)item.getConnectors())
 				{
 					if (connector.getDirection() == Direction.IN)
 					{
@@ -271,7 +249,7 @@ public class Node extends BoxComponent<Node> implements Serializable
 
 			for (Property item : mProperties)
 			{
-				for (Connector connector : (ArrayList<Connector>)item.mConnectors)
+				for (Connector connector : (ArrayList<Connector>)item.getConnectors())
 				{
 					if (connector.getDirection() == Direction.IN)
 					{
@@ -306,7 +284,7 @@ public class Node extends BoxComponent<Node> implements Serializable
 	{
 		for (Property item : mProperties)
 		{
-			for (Connector connector : (ArrayList<Connector>)item.mConnectors)
+			for (Connector connector : (ArrayList<Connector>)item.getConnectors())
 			{
 				Rectangle r = connector.getBounds();
 				aGraphics.setColor(connector.getColor());
@@ -325,7 +303,7 @@ public class Node extends BoxComponent<Node> implements Serializable
 	{
 		for (Property item : mProperties)
 		{
-			if (item.mBounds.contains(aPoint.x - mBounds.x, aPoint.y - mBounds.y))
+			if (item.getBounds().contains(aPoint.x - mBounds.x, aPoint.y - mBounds.y))
 			{
 				return item;
 			}

@@ -29,7 +29,7 @@ public class NodeModel extends BoxComponentModel<Node> implements Serializable
 
 		for (Property item : aNode.mProperties)
 		{
-			for (Connector connector : (ArrayList<Connector>)item.mConnectors)
+			for (Connector connector : (ArrayList<Connector>)item.getConnectors())
 			{
 				connector.bind(item);
 			}
@@ -39,57 +39,16 @@ public class NodeModel extends BoxComponentModel<Node> implements Serializable
 	}
 
 
-	public Node getNode(String aPath)
-	{
-		String nodeId = aPath.contains(".") ? aPath.split("\\.")[0] : aPath;
-
-		Node node = null;
-
-		for (Node tmp : getComponents())
-		{
-			if (nodeId.equals(tmp.getIdentity()))
-			{
-				node = tmp;
-				break;
-			}
-			else if (tmp.getName().equalsIgnoreCase(nodeId))
-			{
-				if (node != null)
-				{
-					throw new IllegalStateException("More than one Node have the same name, provide an Identity to either of them and use identity when connecting items: " + tmp.getName());
-				}
-				node = tmp;
-			}
-		}
-
-		if (node == null)
-		{
-			throw new IllegalArgumentException("Failed to find Node, ensure name or identity is set: " + aPath);
-		}
-
-		return node;
-	}
-
-
 	public ArrayList<Connection> getConnections()
 	{
 		return mConnections;
 	}
 
 
-	public NodeModel addConnection(String aFromPath, String aToPath)
+	public NodeModel addConnection(int aFromNodeIndex, int aFromPropertyIndex, int aToNodeIndex, int aToPropertyIndex)
 	{
-		Property fromNode = getProperty(aFromPath);
-		Property toNode = getProperty(aToPath);
-
-		assertNotNull(fromNode, "From path cannot be resolved to a Node: path: %s", aFromPath);
-		assertNotNull(toNode, "To path cannot be resolved to a Node: path: %s", aToPath);
-
-		Connector out = fromNode.getConnector(Direction.OUT);
-		Connector in = toNode.getConnector(Direction.IN);
-
-		assertNotNull(out, "From path cannot be resolved to a OUT connector: path: %s", aFromPath);
-		assertNotNull(in, "To path cannot be resolved to a IN connector: path: %s", aToPath);
+		Connector out = getConnector(aFromNodeIndex, aFromPropertyIndex, Direction.OUT);
+		Connector in = getConnector(aToNodeIndex, aToPropertyIndex, Direction.IN);
 
 		return addConnection(out, in);
 	}
@@ -100,7 +59,7 @@ public class NodeModel extends BoxComponentModel<Node> implements Serializable
 		Connector out = null;
 		Connector in = null;
 
-		for (Connector connector : (ArrayList<Connector>)aFromItem.mConnectors)
+		for (Connector connector : (ArrayList<Connector>)aFromItem.getConnectors())
 		{
 			if (connector.getDirection() == Direction.OUT)
 			{
@@ -108,7 +67,7 @@ public class NodeModel extends BoxComponentModel<Node> implements Serializable
 			}
 		}
 
-		for (Connector connector : (ArrayList<Connector>)aToItem.mConnectors)
+		for (Connector connector : (ArrayList<Connector>)aToItem.getConnectors())
 		{
 			if (connector.getDirection() == Direction.IN)
 			{
@@ -158,35 +117,9 @@ public class NodeModel extends BoxComponentModel<Node> implements Serializable
 	}
 
 
-	public Property getProperty(String aPath)
+	public Connector getConnector(int aNodeIndex, int aConnectorIndex, Direction aDirection)
 	{
-		return getNode(aPath).getProperty(aPath);
-	}
-
-
-	public <T extends Property> T getProperty(Class<T> aReturnType, String aPath)
-	{
-		return (T)getProperty(aPath);
-	}
-
-
-	private Connector getConnector(int aRef)
-	{
-		for (Node node : getComponents())
-		{
-			for (Property item : node.mProperties)
-			{
-				for (Connector connector : (ArrayList<Connector>)item.mConnectors)
-				{
-					if (connector.mModelRef == aRef)
-					{
-						return connector;
-					}
-				}
-			}
-		}
-
-		return null;
+		return getComponents().get(aNodeIndex).getProperties().get(aConnectorIndex).getConnector(aDirection);
 	}
 
 

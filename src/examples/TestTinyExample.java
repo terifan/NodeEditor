@@ -3,15 +3,15 @@ package examples;
 import java.awt.Color;
 import org.terifan.nodeeditor.widgets.SliderProperty;
 import javax.swing.JFrame;
-import org.terifan.nodeeditor.widgets.ColorChooserProperty;
-import static org.terifan.nodeeditor.Direction.IN;
-import static org.terifan.nodeeditor.Direction.OUT;
 import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Node;
 import org.terifan.nodeeditor.NodeModel;
-import static org.terifan.nodeeditor.Styles.YELLOW;
+import org.terifan.nodeeditor.widgets.ColorChooserProperty;
 import org.terifan.nodeeditor.widgets.ComboBoxProperty;
 import org.terifan.nodeeditor.widgets.TextProperty;
+import static org.terifan.nodeeditor.Direction.IN;
+import static org.terifan.nodeeditor.Direction.OUT;
+import static org.terifan.nodeeditor.Styles.YELLOW;
 
 
 public class TestTinyExample
@@ -36,7 +36,7 @@ public class TestTinyExample
 			NodeModel model = new NodeModel()
 				.add(color)
 				.add(output)
-				.addConnection("Input.Color", "Output.Color");
+				.addConnection(0, 0, 1, 0);
 
 			NodeEditorPane editor = new NodeEditorPane(model);
 			editor.center();

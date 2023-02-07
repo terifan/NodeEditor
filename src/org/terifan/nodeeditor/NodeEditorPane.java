@@ -11,12 +11,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
-import org.terifan.boxcomponentpane.BoxComponent;
 import org.terifan.boxcomponentpane.BoxComponentPane;
 import org.terifan.nodeeditor.graphics.SplineRenderer;
 import org.terifan.nodeeditor.widgets.ButtonProperty;
 import org.terifan.nodeeditor.widgets.ImageProperty;
-import static org.terifan.util.Assert.assertNotNull;
 
 
 public class NodeEditorPane extends BoxComponentPane<Node>
@@ -50,6 +48,13 @@ public class NodeEditorPane extends BoxComponentPane<Node>
 		super.addMouseMotionListener(mouseListener);
 		super.addMouseListener(mouseListener);
 		super.addMouseWheelListener(mouseListener);
+	}
+
+
+	@Override
+	public NodeModel getModel()
+	{
+		return (NodeModel)super.getModel();
 	}
 
 
@@ -141,7 +146,7 @@ public class NodeEditorPane extends BoxComponentPane<Node>
 		{
 			try
 			{
-				if (rl.paintImage(this, aProperty, aGraphics, aBounds))
+				if (rl.paintImage(this, aProperty.getNode(), aProperty, aGraphics, aBounds))
 				{
 					return;
 				}
@@ -154,7 +159,7 @@ public class NodeEditorPane extends BoxComponentPane<Node>
 
 		try
 		{
-			FALLBACK_PAINTER.paintImage(this, aProperty, aGraphics, aBounds);
+			FALLBACK_PAINTER.paintImage(this, aProperty.getNode(), aProperty, aGraphics, aBounds);
 		}
 		catch (Exception e)
 		{
@@ -163,7 +168,7 @@ public class NodeEditorPane extends BoxComponentPane<Node>
 	}
 
 
-	private static ImagePainter FALLBACK_PAINTER = (aEditor, aProperty, aGraphics, aBounds) ->
+	private static ImagePainter FALLBACK_PAINTER = (aEditor, aNode, aProperty, aGraphics, aBounds) ->
 	{
 		if (aProperty.getImagePath() != null)
 		{
@@ -219,7 +224,7 @@ public class NodeEditorPane extends BoxComponentPane<Node>
 
 			for (Property item : box.getProperties())
 			{
-				for (Connector c : (ArrayList<Connector>)item.mConnectors)
+				for (Connector c : (ArrayList<Connector>)item.getConnectors())
 				{
 					double dx = x - c.getBounds().getCenterX();
 					double dy = y - c.getBounds().getCenterY();
@@ -304,13 +309,6 @@ public class NodeEditorPane extends BoxComponentPane<Node>
 			}
 			else
 			{
-				assertNotNull(connection.getIn(), "connection.getIn() == null");
-				assertNotNull(connection.getOut(), "connection.getOut() == null");
-				assertNotNull(connection.getIn().getProperty(), "connection.getIn().getNodeItem() == null");
-				assertNotNull(connection.getOut().getProperty(), "connection.getOut().getNodeItem() == null");
-				assertNotNull(connection.getIn().getProperty().getNode(), "connection.getIn().getNodeItem().getNode() == null");
-				assertNotNull(connection.getOut().getProperty().getNode(), "connection.getOut().getNodeItem().getNode() == null");
-
 				Color start = getSelectedBoxes().contains(connection.getOut().getProperty().getNode()) ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : Styles.CONNECTOR_COLOR_INNER;
 				Color end = getSelectedBoxes().contains(connection.getIn().getProperty().getNode()) ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : Styles.CONNECTOR_COLOR_INNER;
 

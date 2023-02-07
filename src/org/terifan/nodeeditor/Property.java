@@ -7,10 +7,8 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.terifan.boxcomponentpane.BoxComponentPane;
 import org.terifan.ui.TextBox;
 
 
@@ -18,20 +16,17 @@ public abstract class Property<T extends Property> implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
-	protected final ArrayList<Connector> mConnectors;
-	protected final HashMap<String, String> mProperties;
-	protected final Dimension mPreferredSize;
-	protected final Rectangle mBounds;
-	protected final TextBox mTextBox;
-	protected boolean mUserSetSize;
-	protected String mIdentity;
-	protected Node mNode;
+	private final ArrayList<Connector> mConnectors;
+	private final Dimension mPreferredSize;
+	private final Rectangle mBounds;
+	private final TextBox mTextBox;
+	private boolean mUserSetSize;
+	private Node mNode;
 
 
 	protected Property(String aText)
 	{
 		mConnectors = new ArrayList<>();
-		mProperties = new HashMap<>();
 		mPreferredSize = new Dimension();
 		mBounds = new Rectangle();
 
@@ -43,7 +38,7 @@ public abstract class Property<T extends Property> implements Serializable
 	}
 
 
-	protected abstract void paintComponent(BoxComponentPane<Node> aEditor, Graphics2D aGraphics, boolean aHover);
+	protected abstract void paintComponent(NodeEditorPane aEditor, Graphics2D aGraphics, boolean aHover);
 
 
 	void bind(Node aNode)
@@ -55,32 +50,6 @@ public abstract class Property<T extends Property> implements Serializable
 	public Node getNode()
 	{
 		return mNode;
-	}
-
-
-	public String getIdentity()
-	{
-		return mIdentity;
-	}
-
-
-	public T setIdentity(String aIdentity)
-	{
-		mIdentity = aIdentity;
-		return (T)this;
-	}
-
-
-	public String getProperty(String aName)
-	{
-		return mProperties.get(aName);
-	}
-
-
-	public T putProperty(String aName, String aValue)
-	{
-		mProperties.put(aName, aValue);
-		return (T)this;
 	}
 
 
@@ -97,6 +66,12 @@ public abstract class Property<T extends Property> implements Serializable
 	}
 
 
+	public TextBox getTextBox()
+	{
+		return mTextBox;
+	}
+
+
 	public T addConnector(Connector aConnector)
 	{
 		mConnectors.add(aConnector);
@@ -104,15 +79,15 @@ public abstract class Property<T extends Property> implements Serializable
 	}
 
 
-	public T addConnector(Direction aDirection, Color aColor)
+	public T addConnector(Direction aDirection)
 	{
-		return addConnector(new Connector(aDirection, aColor));
+		return addConnector(aDirection, Color.YELLOW);
 	}
 
 
-	public T addConnector(Direction aDirection)
+	public T addConnector(Direction aDirection, Color aColor)
 	{
-		return addConnector(new Connector(aDirection, Color.YELLOW));
+		return addConnector(new Connector(aDirection, aColor));
 	}
 
 
@@ -149,6 +124,12 @@ public abstract class Property<T extends Property> implements Serializable
 		}
 
 		return (Dimension)mPreferredSize.clone();
+	}
+
+
+	public Dimension getPreferredSize()
+	{
+		return mPreferredSize;
 	}
 
 

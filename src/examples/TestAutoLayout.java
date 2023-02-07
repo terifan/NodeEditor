@@ -103,22 +103,22 @@ public class TestAutoLayout
 				new TextProperty("19").addConnector(Direction.IN)
 			).setLocation(300, 0));
 
-			model.addConnection("0.1", "1.1");
-			model.addConnection("0.2", "2.2");
-			model.addConnection("0.3", "3.3");
-			model.addConnection("0.4", "4.4");
-			model.addConnection("1.5", "5.5");
-			model.addConnection("1.6", "6.6");
-			model.addConnection("3.7", "7.7");
-			model.addConnection("3.8", "8.8");
-			model.addConnection("3.9", "9.9");
-			model.addConnection("4.10", "10.10");
-			model.addConnection("4.11", "11.11");
-			model.addConnection("6.12", "12.12");
-			model.addConnection("6.13", "13.13");
-			model.addConnection("5.14", "14.14");
-			model.addConnection("14.15", "15.15");
-			model.addConnection("14.19", "19.19");
+//			model.addConnection("0.1", "1.1");
+//			model.addConnection("0.2", "2.2");
+//			model.addConnection("0.3", "3.3");
+//			model.addConnection("0.4", "4.4");
+//			model.addConnection("1.5", "5.5");
+//			model.addConnection("1.6", "6.6");
+//			model.addConnection("3.7", "7.7");
+//			model.addConnection("3.8", "8.8");
+//			model.addConnection("3.9", "9.9");
+//			model.addConnection("4.10", "10.10");
+//			model.addConnection("4.11", "11.11");
+//			model.addConnection("6.12", "12.12");
+//			model.addConnection("6.13", "13.13");
+//			model.addConnection("5.14", "14.14");
+//			model.addConnection("14.15", "15.15");
+//			model.addConnection("14.19", "19.19");
 
 			new AutoLayout().layout(model, model.get(0));
 
