@@ -206,7 +206,7 @@ public class NodeEditorPane extends BoxComponentPane<Node>
 		Connector nearest = null;
 		double dist = 25;
 
-		for (Node box : mModel.getComponents())
+		for (Node box : (ArrayList<Node>)getModel().getComponents())
 		{
 			if (mDragConnector != null && mDragConnector.getProperty().getNode() == box)
 			{
@@ -291,7 +291,7 @@ public class NodeEditorPane extends BoxComponentPane<Node>
 	@Override
 	protected void paintBoxComponents(Graphics2D aGraphics)
 	{
-		NodeModel model = (NodeModel)mModel;
+		NodeModel model = (NodeModel)getModel();
 
 		aGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		aGraphics.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
@@ -300,7 +300,7 @@ public class NodeEditorPane extends BoxComponentPane<Node>
 		{
 			if (mSelectedConnection == connection)
 			{
-				SplineRenderer.drawSpline(aGraphics, connection, mScale, Styles.CONNECTOR_COLOR_OUTER_SELECTED, Styles.CONNECTOR_COLOR_INNER_SELECTED, Styles.CONNECTOR_COLOR_INNER_SELECTED);
+				SplineRenderer.drawSpline(aGraphics, connection, getScale(), Styles.CONNECTOR_COLOR_OUTER_SELECTED, Styles.CONNECTOR_COLOR_INNER_SELECTED, Styles.CONNECTOR_COLOR_INNER_SELECTED);
 			}
 			else
 			{
@@ -311,22 +311,22 @@ public class NodeEditorPane extends BoxComponentPane<Node>
 				assertNotNull(connection.getIn().getProperty().getNode(), "connection.getIn().getNodeItem().getNode() == null");
 				assertNotNull(connection.getOut().getProperty().getNode(), "connection.getOut().getNodeItem().getNode() == null");
 
-				Color start = mSelectedBoxes.contains(connection.getOut().getProperty().getNode()) ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : Styles.CONNECTOR_COLOR_INNER;
-				Color end = mSelectedBoxes.contains(connection.getIn().getProperty().getNode()) ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : Styles.CONNECTOR_COLOR_INNER;
+				Color start = getSelectedBoxes().contains(connection.getOut().getProperty().getNode()) ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : Styles.CONNECTOR_COLOR_INNER;
+				Color end = getSelectedBoxes().contains(connection.getIn().getProperty().getNode()) ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : Styles.CONNECTOR_COLOR_INNER;
 
-				SplineRenderer.drawSpline(aGraphics, connection, mScale, Styles.CONNECTOR_COLOR_OUTER, start, end);
+				SplineRenderer.drawSpline(aGraphics, connection, getScale(), Styles.CONNECTOR_COLOR_OUTER, start, end);
 			}
 		}
 
-		if (mDragEndLocation != null)
+		if (getDragEndLocation() != null)
 		{
 			if (mDragConnector.getDirection() == Direction.OUT)
 			{
-				SplineRenderer.drawSpline(aGraphics, mDragStartLocation, mDragEndLocation, mScale, Styles.CONNECTOR_COLOR_OUTER, Styles.CONNECTOR_COLOR_INNER_DRAGGED, Styles.CONNECTOR_COLOR_INNER_DRAGGED);
+				SplineRenderer.drawSpline(aGraphics, getDragStartLocation(), getDragEndLocation(), getScale(), Styles.CONNECTOR_COLOR_OUTER, Styles.CONNECTOR_COLOR_INNER_DRAGGED, Styles.CONNECTOR_COLOR_INNER_DRAGGED);
 			}
 			else
 			{
-				SplineRenderer.drawSpline(aGraphics, mDragEndLocation, mDragStartLocation, mScale, Styles.CONNECTOR_COLOR_OUTER, Styles.CONNECTOR_COLOR_INNER_DRAGGED, Styles.CONNECTOR_COLOR_INNER_DRAGGED);
+				SplineRenderer.drawSpline(aGraphics, getDragEndLocation(), getDragStartLocation(), getScale(), Styles.CONNECTOR_COLOR_OUTER, Styles.CONNECTOR_COLOR_INNER_DRAGGED, Styles.CONNECTOR_COLOR_INNER_DRAGGED);
 			}
 		}
 

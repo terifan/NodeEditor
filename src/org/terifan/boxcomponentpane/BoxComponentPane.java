@@ -20,13 +20,13 @@ public class BoxComponentPane<T extends BoxComponent> extends JComponent
 {
 	private final static long serialVersionUID = 1L;
 
-	protected double mScale;
-	protected Point2D.Double mScroll;
-	protected Point mDragStartLocation;
-	protected Point mDragEndLocation;
-	protected Rectangle mSelectionRectangle;
-	protected BoxComponentModel<T> mModel;
-	protected ArrayList<T> mSelectedBoxes;
+	private double mScale;
+	private Point2D.Double mScroll;
+	private Point mDragStartLocation;
+	private Point mDragEndLocation;
+	private Rectangle mSelectionRectangle;
+	private BoxComponentModel<T> mModel;
+	private ArrayList<T> mSelectedBoxes;
 
 
 	public BoxComponentPane(BoxComponentModel aModel)
@@ -251,6 +251,7 @@ public class BoxComponentPane<T extends BoxComponent> extends JComponent
 		AffineTransform oldTransform = g.getTransform();
 		g.translate((int)mScroll.x, (int)mScroll.y);
 		paintBoxComponents(g);
+		paintSelectionRectangle(g);
 		g.setTransform(oldTransform);
 	}
 
@@ -266,7 +267,11 @@ public class BoxComponentPane<T extends BoxComponent> extends JComponent
 		}
 
 		aGraphics.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_NORMALIZE);
+	}
 
+
+	protected void paintSelectionRectangle(Graphics2D aGraphics)
+	{
 		if (mSelectionRectangle != null)
 		{
 			aGraphics.setColor(Styles.PANE_SELECTION_RECTANGLE_BACKGROUND);
