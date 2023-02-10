@@ -8,8 +8,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Path2D;
 import java.util.List;
-import org.terifan.boxcomponentpane.BoxComponentPane;
 import org.terifan.boxcomponentpane.Renderable;
+import org.terifan.nodeeditor.Node;
 import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Property;
 import org.terifan.nodeeditor.Styles;
@@ -18,9 +18,9 @@ import org.terifan.ui.TextBox;
 import org.terifan.util.Strings;
 
 
-public class Popup implements Renderable
+public class Popup implements Renderable<Node, NodeEditorPane>
 {
-	protected final NodeEditorPane mEditor;
+	protected final NodeEditorPane mPane;
 	protected final Rectangle mBounds;
 	protected final Property mOwner;
 	protected final boolean mAboveField;
@@ -39,7 +39,7 @@ public class Popup implements Renderable
 	 * @param aOptions list of selectable options, can be empty
 	 * @param aResultReceiver
 	 */
-	public Popup(NodeEditorPane aEditor, Property aOwner, String aHeader, Rectangle aBounds, List<Option> aOptions, ResultReceiver aResultReceiver)
+	public Popup(NodeEditorPane aPane, Property aOwner, String aHeader, Rectangle aBounds, List<Option> aOptions, ResultReceiver aResultReceiver)
 	{
 		mHeader = aHeader;
 		mOwner = aOwner;
@@ -70,7 +70,7 @@ public class Popup implements Renderable
 		{
 			mBounds.y += aOwner.getBounds().height;
 		}
-		mEditor = aEditor;
+		mPane = aPane;
 	}
 
 
@@ -88,7 +88,7 @@ public class Popup implements Renderable
 
 
 	@Override
-	public void paintComponent(BoxComponentPane aEditor, Graphics2D aGraphics, int aWidth, int aHeight, boolean aSelected)
+	public void paintComponent(NodeEditorPane aPane, Graphics2D aGraphics, int aWidth, int aHeight, boolean aSelected)
 	{
 		int w = aWidth;
 		int h = aHeight;
@@ -178,7 +178,7 @@ public class Popup implements Renderable
 			if (mSelectedOption != s)
 			{
 				mSelectedOption = s;
-				mEditor.repaint();
+				mPane.repaint();
 			}
 		}
 	}
@@ -195,7 +195,7 @@ public class Popup implements Renderable
 
 	public void mouseReleased(MouseEvent aEvent)
 	{
-		mOwner.fireMouseReleased(mEditor, aEvent.getPoint());
+		mOwner.fireMouseReleased(mPane, aEvent.getPoint());
 	}
 
 

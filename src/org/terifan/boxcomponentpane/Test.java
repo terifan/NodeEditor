@@ -12,8 +12,8 @@ public class Test
 		try
 		{
 			BoxComponentModel model = new BoxComponentModel();
-			model.add(new EmptyBoxComponent("test").setLocation(-120, -50));
-			model.add(new EmptyBoxComponent("test").setLocation(20, -50));
+			model.addNode(new EmptyBoxComponent("test").setLocation(-120, -50));
+			model.addNode(new EmptyBoxComponent("test").setLocation(20, -50));
 			BoxComponentPane pane = new BoxComponentPane(model);
 
 			JFrame frame = new JFrame();

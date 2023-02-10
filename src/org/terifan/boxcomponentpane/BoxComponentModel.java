@@ -22,13 +22,13 @@ public class BoxComponentModel<T extends BoxComponent> implements Serializable
 	}
 
 
-	public T get(int aIndex)
+	public T getNode(int aIndex)
 	{
 		return mComponents.get(aIndex);
 	}
 
 
-	public BoxComponentModel<T> add(T aComponent)
+	public BoxComponentModel<T> addNode(T aComponent)
 	{
 		mComponents.add(aComponent);
 		return this;

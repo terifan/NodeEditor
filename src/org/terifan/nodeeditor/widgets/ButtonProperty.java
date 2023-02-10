@@ -7,7 +7,6 @@ import java.awt.Point;
 import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Property;
 import org.terifan.nodeeditor.Styles;
-import org.terifan.boxcomponentpane.BoxComponentPane;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.ImageResizer;
 
@@ -17,15 +16,15 @@ public class ButtonProperty extends Property<ButtonProperty>
 	private final static long serialVersionUID = 1L;
 	private final static float[] RANGES = new float[]{0f,1f};
 
-	private boolean mArmed;
+	private transient boolean mArmed;
 
 
 	public ButtonProperty(String aText)
 	{
 		super(aText);
 
-		mTextBox.setAnchor(Anchor.CENTER).setMargins(0, 0, 0, 0).setMaxLineCount(1).setFont(Styles.SLIDER_FONT);
-		mPreferredSize.height = 22;
+		getTextBox().setAnchor(Anchor.CENTER).setMargins(0, 0, 0, 0).setMaxLineCount(1).setFont(Styles.SLIDER_FONT);
+		getPreferredSize().height = 22;
 	}
 
 
@@ -38,12 +37,12 @@ public class ButtonProperty extends Property<ButtonProperty>
 
 
 	@Override
-	protected void paintComponent(BoxComponentPane aEditor, Graphics2D aGraphics, boolean aHover)
+	protected void paintComponent(NodeEditorPane aPane, Graphics2D aGraphics, boolean aHover)
 	{
-		int x = mBounds.x;
-		int y = mBounds.y;
-		int h = mBounds.height;
-		int w = mBounds.width;
+		int x = getBounds().x;
+		int y = getBounds().y;
+		int h = getBounds().height;
+		int w = getBounds().width;
 
 		Paint oldPaint = aGraphics.getPaint();
 
@@ -56,18 +55,18 @@ public class ButtonProperty extends Property<ButtonProperty>
 		if (Styles.DIRECTORY_ICON != null)
 		{
 			int t = h - 4;
-			int s = (int)(t * aEditor.getScale());
+			int s = (int)(t * aPane.getScale());
 			aGraphics.drawImage(ImageResizer.getScaledImageAspect(Styles.DIRECTORY_ICON, s, s, true), x + 4, y + 2, t, t, null);
 		}
 
 		aGraphics.setPaint(oldPaint);
 
-		mTextBox.setForeground(mArmed ? Styles.BOX_FOREGROUND_ARMED_COLOR : Styles.BOX_FOREGROUND_COLOR).setBounds(mBounds).render(aGraphics);
+		getTextBox().setForeground(mArmed ? Styles.BOX_FOREGROUND_ARMED_COLOR : Styles.BOX_FOREGROUND_COLOR).setBounds(getBounds()).render(aGraphics);
 	}
 
 
 	@Override
-	protected boolean mousePressed(NodeEditorPane aEditor, Point aClickPoint)
+	protected boolean mousePressed(NodeEditorPane aPane, Point aClickPoint)
 	{
 		mArmed = true;
 		return true;
@@ -75,17 +74,17 @@ public class ButtonProperty extends Property<ButtonProperty>
 
 
 	@Override
-	protected void mouseReleased(NodeEditorPane aEditor, Point aClickPoint)
+	protected void mouseReleased(NodeEditorPane aPane, Point aClickPoint)
 	{
 		mArmed = false;
-		aEditor.repaint();
+		aPane.repaint();
 	}
 
 
 	@Override
-	protected void actionPerformed(NodeEditorPane aEditor, Point aClickPoint)
+	protected void actionPerformed(NodeEditorPane aPane, Point aClickPoint)
 	{
-		aEditor.fireButtonClicked(this);
+		aPane.fireButtonClicked(this);
 	}
 
 

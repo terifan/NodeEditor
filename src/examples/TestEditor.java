@@ -2,8 +2,6 @@ package examples;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import static java.awt.Color.GRAY;
-import static java.awt.Color.YELLOW;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.util.Random;
@@ -12,20 +10,22 @@ import javax.swing.AbstractAction;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
-import org.terifan.nodeeditor.widgets.ButtonProperty;
-import org.terifan.nodeeditor.widgets.CheckBoxProperty;
-import org.terifan.nodeeditor.widgets.ComboBoxProperty;
 import org.terifan.nodeeditor.Direction;
-import static org.terifan.nodeeditor.Direction.IN;
-import static org.terifan.nodeeditor.Direction.OUT;
-import org.terifan.nodeeditor.widgets.ImageProperty;
 import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Node;
 import org.terifan.nodeeditor.NodeModel;
-import static org.terifan.nodeeditor.Styles.PURPLE;
+import org.terifan.nodeeditor.widgets.ButtonProperty;
+import org.terifan.nodeeditor.widgets.CheckBoxProperty;
+import org.terifan.nodeeditor.widgets.ComboBoxProperty;
+import org.terifan.nodeeditor.widgets.ImageProperty;
 import org.terifan.nodeeditor.widgets.ColorChooserProperty;
 import org.terifan.nodeeditor.widgets.SliderProperty;
 import org.terifan.nodeeditor.widgets.TextProperty;
+import static org.terifan.nodeeditor.Direction.IN;
+import static org.terifan.nodeeditor.Direction.OUT;
+import static org.terifan.nodeeditor.Styles.GRAY;
+import static org.terifan.nodeeditor.Styles.PURPLE;
+import static org.terifan.nodeeditor.Styles.YELLOW;
 
 
 public class TestEditor
@@ -41,9 +41,9 @@ public class TestEditor
 				((ImageProperty)item.getNode().getProperty("Image")).setImagePath(new String[]{"Big_pebbles_pxr128.jpg","Big_pebbles_pxr128_bmp.jpg","Big_pebbles_pxr128_normal.jpg"}[new Random().nextInt(3)]);
 				return true;
 			});
-			editor.addImagePainter((aEditor, aProperty, aGraphics, aBounds) ->
+			editor.addImagePainter((aPane, aNode, aProperty, aGraphics, aBounds) ->
 			{
-				if (aProperty.getImagePath() != null)
+				if (aNode.getTitle().equals("Output") && aProperty.getImagePath() != null)
 				{
 					BufferedImage image = ImageIO.read(TestJavaSerializingNodeModel.class.getResource(aProperty.getImagePath()));
 					aGraphics.drawImage(image, aBounds.x, aBounds.y, aBounds.width, aBounds.height, null);
@@ -60,7 +60,7 @@ public class TestEditor
 				@Override
 				public void actionPerformed(ActionEvent aE)
 				{
-					model.add(new Node("TexturCoordinate")
+					model.addNode(new Node("TexturCoordinate")
 						.setSize(200, 0)
 						.addProperty(new TextProperty("UV")
 							.addConnector(OUT, PURPLE))
@@ -75,7 +75,7 @@ public class TestEditor
 				@Override
 				public void actionPerformed(ActionEvent aE)
 				{
-					model.add(new Node("SourceImage",
+					model.addNode(new Node("SourceImage",
 						new ButtonProperty("Open"),
 						new ImageProperty("Image", 200, 200),
 						new TextProperty("Color").addConnector(Direction.OUT),
@@ -94,7 +94,7 @@ public class TestEditor
 				@Override
 				public void actionPerformed(ActionEvent aE)
 				{
-					model.add(new Node("RenderOutput",
+					model.addNode(new Node("RenderOutput",
 						new TextProperty("Color").addConnector(Direction.IN),
 						new TextProperty("Alpha").addConnector(Direction.IN),
 						new ImageProperty("undefined", 200, 200)
@@ -109,7 +109,7 @@ public class TestEditor
 				@Override
 				public void actionPerformed(ActionEvent aE)
 				{
-					model.add(new Node("Math")
+					model.addNode(new Node("Math")
 						.setLocation(0, 0)
 						.setSize(200, 0)
 						.addProperty(new TextProperty("Value")
@@ -117,10 +117,8 @@ public class TestEditor
 						.addProperty(new ComboBoxProperty("Operation", 2, "Add", "Subtract", "Multiply", "Divide", "Absolute", "Modulo", "Greater Than"))
 						.addProperty(new CheckBoxProperty("Clamp", false))
 						.addProperty(new SliderProperty("Value", 0.5, 0.01)
-							.setIdentity("value1")
 							.addConnector(IN, GRAY))
 						.addProperty(new SliderProperty("Value", 0.5, 0.01)
-							.setIdentity("value2")
 							.addConnector(IN, GRAY))
 					);
 
@@ -133,17 +131,15 @@ public class TestEditor
 				@Override
 				public void actionPerformed(ActionEvent aE)
 				{
-					model.add(new Node("Mix")
+					model.addNode(new Node("Mix")
 						.setSize(200, 0)
 						.addProperty(new TextProperty("Color")
 							.addConnector(OUT, YELLOW))
 						.addProperty(new SliderProperty("Fac", 0, 1, 0.5)
 							.addConnector(IN, GRAY))
 						.addProperty(new ColorChooserProperty("Color", new Color(255, 0, 0))
-							.setIdentity("colorIn1")
 							.addConnector(IN, YELLOW))
 						.addProperty(new ColorChooserProperty("Color", new Color(0, 0, 255))
-							.setIdentity("colorIn2")
 							.addConnector(IN, YELLOW))
 					);
 
@@ -156,7 +152,7 @@ public class TestEditor
 				@Override
 				public void actionPerformed(ActionEvent aE)
 				{
-					model.add(new Node("Alpha")
+					model.addNode(new Node("Alpha")
 						.setSize(200, 0)
 						.addProperty(new SliderProperty("Alpha", 0, 1, 0.75)
 							.addConnector(OUT, GRAY))
@@ -171,7 +167,7 @@ public class TestEditor
 				@Override
 				public void actionPerformed(ActionEvent aE)
 				{
-					model.add(new Node("Color")
+					model.addNode(new Node("Color")
 						.setSize(200, 0)
 						.addProperty(new TextProperty("Color")
 							.addConnector(OUT, YELLOW))

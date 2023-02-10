@@ -9,8 +9,8 @@ import org.terifan.nodeeditor.Direction;
 import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Property;
 import org.terifan.nodeeditor.Styles;
-import org.terifan.boxcomponentpane.BoxComponentPane;
 import org.terifan.ui.Anchor;
+import org.terifan.ui.TextBox;
 
 
 public class ColorChooserProperty extends Property<ColorChooserProperty>
@@ -26,30 +26,33 @@ public class ColorChooserProperty extends Property<ColorChooserProperty>
 		super(aText);
 
 		mColor = aColor;
-		mPreferredSize.height = 20;
+		getPreferredSize().height = 20;
 	}
 
 
 	@Override
-	protected void paintComponent(BoxComponentPane aEditor, Graphics2D aGraphics, boolean aHover)
+	protected void paintComponent(NodeEditorPane aPane, Graphics2D aGraphics, boolean aHover)
 	{
+		Rectangle bounds = getBounds();
+		TextBox textBox = getTextBox();
+
 		if (isConnected(Direction.IN))
 		{
-			mTextBox.setMargins(0, 0, 0, 0);
+			textBox.setMargins(0, 0, 0, 0);
 		}
 		else
 		{
 			aGraphics.setColor(new Color(48, 48, 48));
-			aGraphics.fillRoundRect(mBounds.x, mBounds.y, COLOR_BOX_WIDTH, mBounds.height, 8, 8);
+			aGraphics.fillRoundRect(bounds.x, bounds.y, COLOR_BOX_WIDTH, bounds.height, 8, 8);
 
 			aGraphics.setColor(mColor);
-			aGraphics.fillRoundRect(mBounds.x + 1, mBounds.y + 1, COLOR_BOX_WIDTH - 2, mBounds.height - 2, 8, 8);
+			aGraphics.fillRoundRect(bounds.x + 1, bounds.y + 1, COLOR_BOX_WIDTH - 2, bounds.height - 2, 8, 8);
 
-			mTextBox.setMargins(0, COLOR_BOX_WIDTH + 10, 0, 0);
+			textBox.setMargins(0, COLOR_BOX_WIDTH + 10, 0, 0);
 		}
 
-		mTextBox
-			.setBounds(mBounds)
+		textBox
+			.setBounds(bounds)
 			.setAnchor(Anchor.WEST)
 			.setForeground(Styles.BOX_FOREGROUND_COLOR)
 			.render(aGraphics);
@@ -57,23 +60,23 @@ public class ColorChooserProperty extends Property<ColorChooserProperty>
 
 
 	@Override
-	protected void actionPerformed(NodeEditorPane aEditor, Point aClickPoint)
+	protected void actionPerformed(NodeEditorPane aPane, Point aClickPoint)
 	{
 		if (!isConnected(Direction.IN))
 		{
-			Color c = JColorChooser.showDialog(aEditor, mTextBox.getText(), mColor);
+			Color c = JColorChooser.showDialog(aPane, getTextBox().getText(), mColor);
 			if (c != null)
 			{
 				mColor = c;
-				aEditor.repaint();
+				aPane.repaint();
 			}
 		}
 	}
 
 
 	@Override
-	protected boolean mousePressed(NodeEditorPane aEditor, Point aClickPoint)
+	protected boolean mousePressed(NodeEditorPane aPane, Point aClickPoint)
 	{
-		return !isConnected(Direction.IN) && new Rectangle(mNode.getBounds().x + mBounds.x, mNode.getBounds().y + mBounds.y, COLOR_BOX_WIDTH, mBounds.height).contains(aClickPoint);
+		return !isConnected(Direction.IN) && new Rectangle(getNode().getBounds().x + getBounds().x, getNode().getBounds().y + getBounds().y, COLOR_BOX_WIDTH, getBounds().height).contains(aClickPoint);
 	}
 }

@@ -10,7 +10,6 @@ import java.awt.Stroke;
 import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Property;
 import org.terifan.nodeeditor.Styles;
-import org.terifan.boxcomponentpane.BoxComponentPane;
 import org.terifan.ui.Anchor;
 
 
@@ -32,11 +31,11 @@ public class CheckBoxProperty extends Property<CheckBoxProperty>
 
 
 	@Override
-	protected void paintComponent(BoxComponentPane aEditor, Graphics2D aGraphics, boolean aHover)
+	protected void paintComponent(NodeEditorPane aPane, Graphics2D aGraphics, boolean aHover)
 	{
-		int x = mBounds.x;
-		int y = mBounds.y;
-		int h = mBounds.height;
+		int x = getBounds().x;
+		int y = getBounds().y;
+		int h = getBounds().height;
 		int sx = x+1;
 		int sy = y+1;
 		int ss = h-1;
@@ -64,8 +63,8 @@ public class CheckBoxProperty extends Property<CheckBoxProperty>
 
 		aGraphics.setPaint(oldPaint);
 
-		mTextBox
-			.setBounds(mBounds)
+		getTextBox()
+			.setBounds(getBounds())
 			.setAnchor(Anchor.WEST)
 			.setMargins(3, ss + 5, 0, 0)
 			.setForeground(mSelected ? Styles.BOX_FOREGROUND_SELECTED_COLOR : Styles.BOX_FOREGROUND_COLOR)
@@ -75,15 +74,15 @@ public class CheckBoxProperty extends Property<CheckBoxProperty>
 
 
 	@Override
-	protected void actionPerformed(NodeEditorPane aEditor, Point aClickPoint)
+	protected void actionPerformed(NodeEditorPane aPane, Point aClickPoint)
 	{
 		mSelected = !mSelected;
-		aEditor.repaint();
+		aPane.repaint();
 	}
 
 
 	@Override
-	protected boolean mousePressed(NodeEditorPane aEditor, Point aClickPoint)
+	protected boolean mousePressed(NodeEditorPane aPane, Point aClickPoint)
 	{
 		return true;
 	}

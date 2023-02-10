@@ -10,7 +10,6 @@ import org.terifan.nodeeditor.Direction;
 import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Property;
 import org.terifan.nodeeditor.Styles;
-import org.terifan.boxcomponentpane.BoxComponentPane;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.TextBox;
 
@@ -27,9 +26,9 @@ public class SliderProperty extends Property<SliderProperty>
 	private double mMin;
 	private double mMax;
 	private double mValue;
-	private double mStartValue;
-	private boolean mArmed;
 	private double mStep;
+	private transient double mStartValue;
+	private transient boolean mArmed;
 
 
 	public SliderProperty(String aText, double aValue, double aStepSize)
@@ -47,7 +46,7 @@ public class SliderProperty extends Property<SliderProperty>
 		mMin = aMin;
 		mMax = aMax;
 		mValue = aValue;
-		mPreferredSize.height = 20;
+		getPreferredSize().height = 20;
 	}
 
 
@@ -65,20 +64,21 @@ public class SliderProperty extends Property<SliderProperty>
 
 
 	@Override
-	protected void paintComponent(BoxComponentPane aEditor, Graphics2D aGraphics, boolean aHover)
+	protected void paintComponent(NodeEditorPane aPane, Graphics2D aGraphics, boolean aHover)
 	{
+		TextBox textBox = getTextBox();
+		Rectangle bounds = getBounds();
+
 		if (isConnected(Direction.IN))
 		{
-			mTextBox.setMargins(0, 0, 0, 0);
-
-			mTextBox.setSuffix("").setBounds(mBounds).setAnchor(Anchor.WEST).setMargins(0, 0, 0, 0).setForeground(Styles.SLIDER_COLORS[0][2][1]).setMaxLineCount(1).setFont(Styles.BOX_ITEM_FONT).render(aGraphics);
+			textBox.setMargins(0, 0, 0, 0).setSuffix("").setBounds(bounds).setAnchor(Anchor.WEST).setMargins(0, 0, 0, 0).setForeground(Styles.SLIDER_COLORS[0][2][1]).setMaxLineCount(1).setFont(Styles.BOX_ITEM_FONT).render(aGraphics);
 		}
 		else
 		{
-			int x = mBounds.x;
-			int y = mBounds.y;
-			int h = mBounds.height;
-			int w = mBounds.width;
+			int x = bounds.x;
+			int y = bounds.y;
+			int h = bounds.height;
+			int w = bounds.width;
 			int i = aHover ? 1 : mArmed ? 2 : 0;
 
 			Paint oldPaint = aGraphics.getPaint();
@@ -121,21 +121,21 @@ public class SliderProperty extends Property<SliderProperty>
 
 			aGraphics.setPaint(oldPaint);
 
-			Rectangle m = new TextBox(String.format("%3.3f", mValue)).setBounds(mBounds).setAnchor(Anchor.EAST).setMargins(0, 0, 0, 15).setForeground(Styles.SLIDER_COLORS[i][2][0]).setMaxLineCount(1).setFont(Styles.SLIDER_FONT).render(aGraphics).measure();
+			Rectangle m = new TextBox(String.format("%3.3f", mValue)).setBounds(bounds).setAnchor(Anchor.EAST).setMargins(0, 0, 0, 15).setForeground(Styles.SLIDER_COLORS[i][2][0]).setMaxLineCount(1).setFont(Styles.SLIDER_FONT).render(aGraphics).measure();
 
-			mTextBox.setSuffix(":").setBounds(mBounds).setAnchor(Anchor.WEST).setMargins(0, 15, 0, m.width).setForeground(Styles.SLIDER_COLORS[i][2][1]).setMaxLineCount(1).setFont(Styles.SLIDER_FONT).render(aGraphics);
+			textBox.setSuffix(":").setBounds(bounds).setAnchor(Anchor.WEST).setMargins(0, 15, 0, m.width).setForeground(Styles.SLIDER_COLORS[i][2][1]).setMaxLineCount(1).setFont(Styles.SLIDER_FONT).render(aGraphics);
 		}
 	}
 
 
 	@Override
-	protected boolean mousePressed(NodeEditorPane aEditor, Point aClickPoint)
+	protected boolean mousePressed(NodeEditorPane aPane, Point aClickPoint)
 	{
 		if (!isConnected(Direction.IN))
 		{
 			mArmed = true;
 			mStartValue = mValue;
-			aEditor.repaint();
+			aPane.repaint();
 			return true;
 		}
 
@@ -144,31 +144,31 @@ public class SliderProperty extends Property<SliderProperty>
 
 
 	@Override
-	protected void mouseReleased(NodeEditorPane aEditor, Point aClickPoint)
+	protected void mouseReleased(NodeEditorPane aPane, Point aClickPoint)
 	{
 		if (!isConnected(Direction.IN))
 		{
 			mArmed = false;
-			if (mStartValue != mValue)
-			{
+//			if (mStartValue != mValue)
+//			{
 //				if (mOnChangeListener != null)
 //				{
 //					mOnChangeListener.onChange(this, false);
 //				}
-			}
-			aEditor.repaint();
+//			}
+			aPane.repaint();
 		}
 	}
 
 
 	@Override
-	protected void mouseDragged(NodeEditorPane aEditor, Point aClickPoint, Point aDragPoint)
+	protected void mouseDragged(NodeEditorPane aPane, Point aClickPoint, Point aDragPoint)
 	{
 		if (!isConnected(Direction.IN))
 		{
 			if (mStep == 0)
 			{
-				double delta = (aDragPoint.x - aClickPoint.x) / (double)mBounds.width;
+				double delta = (aDragPoint.x - aClickPoint.x) / (double)getBounds().width;
 				mValue = Math.max(mMin, Math.min(mMax, mStartValue + delta));
 			}
 			else
@@ -181,7 +181,7 @@ public class SliderProperty extends Property<SliderProperty>
 //			{
 //				mOnChangeListener.onChange(this, true);
 //			}
-			aEditor.repaint();
+			aPane.repaint();
 		}
 	}
 }

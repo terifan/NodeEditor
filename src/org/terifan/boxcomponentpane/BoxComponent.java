@@ -22,7 +22,7 @@ import static org.terifan.nodeeditor.Styles.COLLAPSE_BUTTON_WIDTH;
 import static org.terifan.nodeeditor.Styles.TITLE_HEIGHT_PADDED;
 
 
-public abstract class BoxComponent<T extends BoxComponent> implements Serializable, Renderable
+public abstract class BoxComponent<T extends BoxComponent, U extends BoxComponentPane> implements Serializable, Renderable<T, U>
 {
 	private final static long serialVersionUID = 1L;
 
@@ -34,32 +34,30 @@ public abstract class BoxComponent<T extends BoxComponent> implements Serializab
 	protected boolean mResizableHorizontal;
 	protected boolean mResizableVertical;
 	protected boolean mMinimized;
-	protected String mName;
+	protected String mTitle;
 
 
-	public BoxComponent(String aName)
+	public BoxComponent(String aTitle)
 	{
 		mBounds = new Rectangle();
 		mMinimumSize = new Dimension(0, 0);
 		mMaximumSize = new Dimension(Short.MAX_VALUE, Short.MAX_VALUE);
 		mResizableHorizontal = true;
 		mResizableVertical = true;
-
-		mName = aName;
-
 		mInsets = new Insets(TITLE_HEIGHT_PADDED + 6 + 4, 5 + 9, 6 + 4, 5 + 9);
+		mTitle = aTitle;
 	}
 
 
-	public String getName()
+	public String getTitle()
 	{
-		return mName;
+		return mTitle;
 	}
 
 
-	public T setName(String aName)
+	public T setTitle(String aTitle)
 	{
-		mName = aName;
+		mTitle = aTitle;
 		return (T)this;
 	}
 
@@ -122,7 +120,7 @@ public abstract class BoxComponent<T extends BoxComponent> implements Serializab
 	}
 
 
-	public void setMinimized(boolean aMinimized)
+	public T setMinimized(boolean aMinimized)
 	{
 		mMinimized = aMinimized;
 
@@ -135,6 +133,7 @@ public abstract class BoxComponent<T extends BoxComponent> implements Serializab
 			mRestoredSize = mBounds.getSize();
 			setSize(mBounds.width, TITLE_HEIGHT + 6 + 2 * 4);
 		}
+		return (T)this;
 	}
 
 
@@ -214,7 +213,7 @@ public abstract class BoxComponent<T extends BoxComponent> implements Serializab
 
 		int inset = 6 + 4 + COLLAPSE_BUTTON_WIDTH;
 
-		new TextBox(mName)
+		new TextBox(mTitle)
 			.setShadow(BOX_TITLE_TEXT_SHADOW_COLOR, 1, 1)
 			.setAnchor(Anchor.WEST)
 			.setBounds(aX + inset, aY + 3, aWidth - inset - 4, TITLE_HEIGHT)
@@ -255,7 +254,7 @@ public abstract class BoxComponent<T extends BoxComponent> implements Serializab
 
 
 	@Override
-	public void paintComponent(BoxComponentPane aEditor, Graphics2D aGraphics, int aWidth, int aHeight, boolean aSelected)
+	public void paintComponent(U aPane, Graphics2D aGraphics, int aWidth, int aHeight, boolean aSelected)
 	{
 		paintBorder(aGraphics, 0, 0, aWidth, aHeight, aSelected);
 	}
