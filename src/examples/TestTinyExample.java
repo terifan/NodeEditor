@@ -34,7 +34,7 @@ public class TestTinyExample
 					.addProperty(new ComboBoxProperty("Function", 0, "Add", "Subtract"))
 					.addProperty(new ColorChooserProperty("Color", new Color(0, 0, 0))
 						.addConnector(IN, YELLOW)))
-				.addConnection(0, 0, 1, 0);
+				.addConnection(0, 0, 1, 1);
 
 			NodeEditorPane editor = new NodeEditorPane(model)
 				.center();

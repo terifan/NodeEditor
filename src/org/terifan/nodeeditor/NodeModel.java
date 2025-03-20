@@ -51,6 +51,9 @@ public class NodeModel extends BoxComponentModel<Node> implements Serializable
 		Connector out = getConnector(aFromNodeIndex, aFromPropertyIndex, Direction.OUT);
 		Connector in = getConnector(aToNodeIndex, aToPropertyIndex, Direction.IN);
 
+		assertNotNull(out, "The 'From' parameters are not referencing a node/property with direction OUT.");
+		assertNotNull(in, "The 'To' parameters are not referencing a node/property with direction IN.");
+
 		return addConnection(out, in);
 	}
 
@@ -85,6 +88,8 @@ public class NodeModel extends BoxComponentModel<Node> implements Serializable
 
 	public NodeModel addConnection(Connector aFromConnector, Connector aToConnector)
 	{
+		assertNotNull(aFromConnector, "Expected OUT connector");
+		assertNotNull(aToConnector, "Expected IN connector");
 		assertEquals(aFromConnector.getDirection(), Direction.OUT, "Expected OUT connector");
 		assertEquals(aToConnector.getDirection(), Direction.IN, "Expected IN connector");
 
