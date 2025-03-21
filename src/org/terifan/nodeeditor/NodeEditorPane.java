@@ -329,13 +329,6 @@ public class NodeEditorPane extends BoxComponentPane<Node, NodeEditorPane>
 
 
 	@Override
-	protected void paintComponent(Graphics aGraphics)
-	{
-		super.paintComponent(aGraphics);
-	}
-
-
-	@Override
 	protected void paintBoxComponents(Graphics2D aGraphics)
 	{
 		NodeModel model = (NodeModel)getModel();

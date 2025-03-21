@@ -9,7 +9,6 @@ import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import javax.swing.JComponent;
 import org.terifan.nodeeditor.Styles;
@@ -294,41 +293,20 @@ public class BoxComponentPane<T extends BoxComponent, U extends BoxComponentPane
 
 		if (aGraphics.hitClip(x, y, width, height))
 		{
-			boolean offscreen = false;
+			AffineTransform ot = aGraphics.getTransform();
 
-			Graphics2D ig;
-			AffineTransform affineTransform;
-			BufferedImage offscreenBuffer = null;
+			AffineTransform transform = aGraphics.getTransform();
+			transform.translate(x, y);
+			transform.scale(mScale, mScale);
 
-			if (offscreen)
-			{
-				offscreenBuffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-				ig = offscreenBuffer.createGraphics();
-
-				affineTransform = new AffineTransform();
-				affineTransform.scale(mScale, mScale);
-			}
-			else
-			{
-				ig = (Graphics2D)aGraphics.create(x, y, width, height);
-
-				affineTransform = new AffineTransform();
-				affineTransform.translate((int)(mScroll.x + x), (int)(mScroll.y + y));
-				affineTransform.scale(mScale, mScale);
-			}
-
-			ig.setTransform(affineTransform);
+			Graphics2D ig = (Graphics2D)aGraphics.create();
+			ig.setTransform(transform);
 			ig.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			ig.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
 			aComponent.paintComponent(this, ig, bounds.width, bounds.height, aSelected);
 
-			ig.dispose();
-
-			if (offscreen)
-			{
-				aGraphics.drawImage(offscreenBuffer, x, y, null);
-			}
+			aGraphics.setTransform(ot);
 		}
 	}
 
