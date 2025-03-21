@@ -21,7 +21,9 @@ public abstract class Property<T extends Property> implements Serializable
 	private final Rectangle mBounds;
 	private final TextBox mTextBox;
 	private boolean mUserSetSize;
-	private Node mNode;
+
+	protected Node mNode;
+	protected String mId;
 
 
 	protected Property(String aText)
@@ -39,6 +41,24 @@ public abstract class Property<T extends Property> implements Serializable
 
 
 	protected abstract void paintComponent(NodeEditorPane aPane, Graphics2D aGraphics, boolean aHover);
+
+
+	public void execute(Context aContext)
+	{
+	}
+
+
+	public String getId()
+	{
+		return mId;
+	}
+
+
+	public T setId(String aId)
+	{
+		mId = aId;
+		return (T)this;
+	}
 
 
 	void bind(Node aNode)
@@ -112,7 +132,7 @@ public abstract class Property<T extends Property> implements Serializable
 	public boolean isConnected(Direction aDirection)
 	{
 		Connector c = getConnector(aDirection);
-		return c != null && !c.getConnectedItems().isEmpty();
+		return c != null && !c.getConnectedProperties().isEmpty();
 	}
 
 
@@ -146,12 +166,12 @@ public abstract class Property<T extends Property> implements Serializable
 	}
 
 
-	/**
-	 * Perform the action of this item, for instance after a mouse click.
-	 */
-	protected void actionPerformed(NodeEditorPane aPane, Point aClickPoint)
-	{
-	}
+//	/**
+//	 * Perform the action of this item, for instance after a mouse click.
+//	 */
+//	protected void actionPerformed(NodeEditorPane aPane, Point aClickPoint)
+//	{
+//	}
 
 
 	protected void connectionsChanged(NodeEditorPane aPane, Point aClickPoint)
@@ -182,5 +202,12 @@ public abstract class Property<T extends Property> implements Serializable
 	public void fireMouseReleased(NodeEditorPane aPane, Point aPoint)
 	{
 		mouseReleased(aPane, aPoint);
+	}
+
+
+	@Override
+	public String toString()
+	{
+		return "Property{" + "mId=" + getId() + ", Node=" + mNode + "}";
 	}
 }

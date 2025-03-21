@@ -5,7 +5,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.Serializable;
 import java.util.List;
-import static org.terifan.nodeeditor.Styles.YELLOW;
+import static org.terifan.nodeeditor.Styles.DefaultColors.YELLOW;
 
 
 public class Connector implements Serializable
@@ -76,10 +76,17 @@ public class Connector implements Serializable
 	}
 
 
-	public List<Property> getConnectedItems()
+	public List<Property> getConnectedProperties()
 	{
 		NodeModel model = mProperty.getNode().getModel();
 
 		return mDirection == Direction.IN ? model.getConnectionsTo(this) : model.getConnectionsFrom(this);
+	}
+
+
+	@Override
+	public String toString()
+	{
+		return "Connector{" + "Node:" + getProperty().getNode().getTitle() + ", Property:" + getProperty().getId() + ", " + "mDirection=" + mDirection + '}';
 	}
 }

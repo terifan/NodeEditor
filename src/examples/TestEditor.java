@@ -20,12 +20,12 @@ import org.terifan.nodeeditor.widgets.ComboBoxProperty;
 import org.terifan.nodeeditor.widgets.ImageProperty;
 import org.terifan.nodeeditor.widgets.ColorChooserProperty;
 import org.terifan.nodeeditor.widgets.SliderProperty;
-import org.terifan.nodeeditor.widgets.TextProperty;
+import org.terifan.nodeeditor.widgets.ValueProperty;
 import static org.terifan.nodeeditor.Direction.IN;
 import static org.terifan.nodeeditor.Direction.OUT;
-import static org.terifan.nodeeditor.Styles.GRAY;
-import static org.terifan.nodeeditor.Styles.PURPLE;
-import static org.terifan.nodeeditor.Styles.YELLOW;
+import static org.terifan.nodeeditor.Styles.DefaultColors.GRAY;
+import static org.terifan.nodeeditor.Styles.DefaultColors.PURPLE;
+import static org.terifan.nodeeditor.Styles.DefaultColors.YELLOW;
 
 
 public class TestEditor
@@ -62,7 +62,7 @@ public class TestEditor
 				{
 					model.addNode(new Node("TexturCoordinate")
 						.setSize(200, 0)
-						.addProperty(new TextProperty("UV")
+						.addProperty(new ValueProperty("UV")
 							.addConnector(OUT, PURPLE))
 					);
 
@@ -78,10 +78,10 @@ public class TestEditor
 					model.addNode(new Node("SourceImage",
 						new ButtonProperty("Open"),
 						new ImageProperty("Image", 200, 200),
-						new TextProperty("Color").addConnector(Direction.OUT),
-						new TextProperty("Alpha").addConnector(Direction.OUT)
+						new ValueProperty("Color").addConnector(Direction.OUT),
+						new ValueProperty("Alpha").addConnector(Direction.OUT)
 					).setLocation(0, 0)
-					.addProperty(new TextProperty("Vector")
+					.addProperty(new ValueProperty("Vector")
 						.addConnector(IN, PURPLE))
 					);
 
@@ -95,8 +95,8 @@ public class TestEditor
 				public void actionPerformed(ActionEvent aE)
 				{
 					model.addNode(new Node("RenderOutput",
-						new TextProperty("Color").addConnector(Direction.IN),
-						new TextProperty("Alpha").addConnector(Direction.IN),
+						new ValueProperty("Color").addConnector(Direction.IN),
+						new ValueProperty("Alpha").addConnector(Direction.IN),
 						new ImageProperty("undefined", 200, 200)
 					).setLocation(0, 0));
 
@@ -112,7 +112,7 @@ public class TestEditor
 					model.addNode(new Node("Math")
 						.setLocation(0, 0)
 						.setSize(200, 0)
-						.addProperty(new TextProperty("Value")
+						.addProperty(new ValueProperty("Value")
 							.addConnector(OUT, GRAY))
 						.addProperty(new ComboBoxProperty("Operation", 2, "Add", "Subtract", "Multiply", "Divide", "Absolute", "Modulo", "Greater Than"))
 						.addProperty(new CheckBoxProperty("Clamp", false))
@@ -133,7 +133,7 @@ public class TestEditor
 				{
 					model.addNode(new Node("Mix")
 						.setSize(200, 0)
-						.addProperty(new TextProperty("Color")
+						.addProperty(new ValueProperty("Color")
 							.addConnector(OUT, YELLOW))
 						.addProperty(new SliderProperty("Fac", 0, 1, 0.5)
 							.addConnector(IN, GRAY))
@@ -169,7 +169,7 @@ public class TestEditor
 				{
 					model.addNode(new Node("Color")
 						.setSize(200, 0)
-						.addProperty(new TextProperty("Color")
+						.addProperty(new ValueProperty("Color")
 							.addConnector(OUT, YELLOW))
 						.addProperty(new SliderProperty("Red", 0, 1, 0)
 							.addConnector(IN, GRAY))

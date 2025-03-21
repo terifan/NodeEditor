@@ -7,8 +7,8 @@ import static org.terifan.nodeeditor.Direction.OUT;
 import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Node;
 import org.terifan.nodeeditor.NodeModel;
-import static org.terifan.nodeeditor.Styles.YELLOW;
-import org.terifan.nodeeditor.widgets.TextProperty;
+import static org.terifan.nodeeditor.Styles.DefaultColors.YELLOW;
+import org.terifan.nodeeditor.widgets.ValueProperty;
 
 
 public class TestFactory
@@ -25,29 +25,29 @@ public class TestFactory
 			mFactoryMap.put("trip", e->
 				new Node(e)
 					.setSize(200, 0)
-					.addProperty(new TextProperty("CLOSED"))
-					.addProperty(new TextProperty("stops")
+					.addProperty(new ValueProperty("CLOSED"))
+					.addProperty(new ValueProperty("stops")
 						.addConnector(OUT, YELLOW))
 				);
 
 			mFactoryMap.put("stop", e->
 				new Node(e)
 					.setSize(200, 0)
-					.addProperty(new TextProperty("trip")
+					.addProperty(new ValueProperty("trip")
 						.addConnector(IN, YELLOW))
-					.addProperty(new TextProperty("CLOSED"))
-					.addProperty(new TextProperty("activities")
+					.addProperty(new ValueProperty("CLOSED"))
+					.addProperty(new ValueProperty("activities")
 						.addConnector(OUT, YELLOW))
 				);
 
 			mFactoryMap.put("activity", e->
 				new Node(e)
 					.setSize(200, 0)
-					.addProperty(new TextProperty("stop")
+					.addProperty(new ValueProperty("stop")
 						.addConnector(IN, YELLOW))
-					.addProperty(new TextProperty("LOADING"))
-					.addProperty(new TextProperty("CLOSED"))
-					.addProperty(new TextProperty("events")
+					.addProperty(new ValueProperty("LOADING"))
+					.addProperty(new ValueProperty("CLOSED"))
+					.addProperty(new ValueProperty("events")
 						.addConnector(OUT, YELLOW))
 				);
 

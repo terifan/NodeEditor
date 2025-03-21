@@ -79,16 +79,17 @@ public class Node extends BoxComponent<Node, NodeEditorPane> implements Serializ
 	}
 
 
-	public Property getProperty(String aPath)
+	public <T extends Property> T getProperty(String aPath)
 	{
-		String id = aPath.contains(".") ? aPath.split("\\.")[1] : aPath;
+//		String id = aPath.contains(".") ? aPath.split("\\.")[1] : aPath;
+		String id = aPath;
 		Property item = null;
 
 		for (Property pi : mProperties)
 		{
 			Property ab = (Property)pi;
 
-			if (ab.getText().equalsIgnoreCase(id))
+			if (id.equals(ab.getId()))
 			{
 				if (item != null)
 				{
@@ -96,6 +97,14 @@ public class Node extends BoxComponent<Node, NodeEditorPane> implements Serializ
 				}
 				item = pi;
 			}
+//			else if (ab.getText().equalsIgnoreCase(id))
+//			{
+//				if (item != null)
+//				{
+//					throw new IllegalStateException("More than one NodeItem have the same name, provide an Identity to either of them: " + ab.getText());
+//				}
+//				item = pi;
+//			}
 		}
 
 		if (item == null)
@@ -103,7 +112,7 @@ public class Node extends BoxComponent<Node, NodeEditorPane> implements Serializ
 			throw new IllegalArgumentException("Failed to find NodeItem, ensure text or identity is set: " + id + " (" + aPath + ")");
 		}
 
-		return item;
+		return (T)item;
 	}
 
 
@@ -315,5 +324,12 @@ public class Node extends BoxComponent<Node, NodeEditorPane> implements Serializ
 	public ArrayList<Node> getConnectedNodes()
 	{
 		return mModel.getConnectedNodes(this);
+	}
+
+
+	@Override
+	public String toString()
+	{
+		return "Node{" + mTitle + '}';
 	}
 }

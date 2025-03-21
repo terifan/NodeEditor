@@ -40,4 +40,11 @@ public class Connection implements Serializable
 	{
 		mIn = aIn;
 	}
+
+
+	@Override
+	public String toString()
+	{
+		return "Connection{" + "mOut=" + mOut + ", mIn=" + mIn + '}';
+	}
 }

@@ -13,10 +13,10 @@ import org.terifan.nodeeditor.Direction;
 import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Node;
 import org.terifan.nodeeditor.NodeModel;
-import static org.terifan.nodeeditor.Styles.GRAY;
-import static org.terifan.nodeeditor.Styles.PURPLE;
-import static org.terifan.nodeeditor.Styles.YELLOW;
-import org.terifan.nodeeditor.widgets.TextProperty;
+import static org.terifan.nodeeditor.Styles.DefaultColors.GRAY;
+import static org.terifan.nodeeditor.Styles.DefaultColors.PURPLE;
+import static org.terifan.nodeeditor.Styles.DefaultColors.YELLOW;
+import org.terifan.nodeeditor.widgets.ValueProperty;
 
 
 public class Test1
@@ -25,25 +25,25 @@ public class Test1
 	{
 		try
 		{
-			TextProperty item0 = new TextProperty("node0").addConnector(new Connector(Direction.OUT));
-			TextProperty item1 = new TextProperty("node1").addConnector(new Connector(Direction.OUT));
-			TextProperty item2 = new TextProperty("node2").addConnector(new Connector(Direction.IN));
-			TextProperty item3 = new TextProperty("node3").addConnector(new Connector(Direction.OUT));
-			TextProperty item4 = new TextProperty("node4").addConnector(new Connector(Direction.IN));
-			TextProperty item5 = new TextProperty("node5").addConnector(new Connector(Direction.IN));
-			TextProperty item6 = new TextProperty("node6").addConnector(new Connector(Direction.OUT));
-			TextProperty item7 = new TextProperty("node7").addConnector(new Connector(Direction.IN)).addConnector(new Connector(Direction.OUT));
-			TextProperty item8 = new TextProperty("node8").addConnector(new Connector(Direction.OUT));
-			TextProperty item9 = new TextProperty("node9").addConnector(new Connector(Direction.OUT, PURPLE));
+			ValueProperty item0 = new ValueProperty("node0").addConnector(new Connector(Direction.OUT));
+			ValueProperty item1 = new ValueProperty("node1").addConnector(new Connector(Direction.OUT));
+			ValueProperty item2 = new ValueProperty("node2").addConnector(new Connector(Direction.IN));
+			ValueProperty item3 = new ValueProperty("node3").addConnector(new Connector(Direction.OUT));
+			ValueProperty item4 = new ValueProperty("node4").addConnector(new Connector(Direction.IN));
+			ValueProperty item5 = new ValueProperty("node5").addConnector(new Connector(Direction.IN));
+			ValueProperty item6 = new ValueProperty("node6").addConnector(new Connector(Direction.OUT));
+			ValueProperty item7 = new ValueProperty("node7").addConnector(new Connector(Direction.IN)).addConnector(new Connector(Direction.OUT));
+			ValueProperty item8 = new ValueProperty("node8").addConnector(new Connector(Direction.OUT));
+			ValueProperty item9 = new ValueProperty("node9").addConnector(new Connector(Direction.OUT, PURPLE));
 			ImageProperty item10 = new ImageProperty("node10", 200, 200).addConnector(new Connector(Direction.OUT, PURPLE)).addConnector(new Connector(Direction.OUT, PURPLE)).addConnector(new Connector(Direction.OUT, PURPLE));
 			ColorChooserProperty item11 = new ColorChooserProperty("node11", new Color(255,255,255)).addConnector(new Connector(Direction.IN, YELLOW));
-			TextProperty item12 = new TextProperty("node12").addConnector(new Connector(Direction.IN, PURPLE));
-			TextProperty item13 = new TextProperty("node13").addConnector(new Connector(Direction.IN, YELLOW));
-			TextProperty item14 = new TextProperty("node14").addConnector(new Connector(Direction.IN, GRAY));
-			TextProperty item15 = new TextProperty("node15").addConnector(new Connector(Direction.IN, GRAY));
-			TextProperty item16 = new TextProperty("node16").addConnector(new Connector(Direction.IN, GRAY));
-			TextProperty item17 = new TextProperty("node17").addConnector(new Connector(Direction.IN, GRAY));
-			TextProperty item18 = new TextProperty("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.");
+			ValueProperty item12 = new ValueProperty("node12").addConnector(new Connector(Direction.IN, PURPLE));
+			ValueProperty item13 = new ValueProperty("node13").addConnector(new Connector(Direction.IN, YELLOW));
+			ValueProperty item14 = new ValueProperty("node14").addConnector(new Connector(Direction.IN, GRAY));
+			ValueProperty item15 = new ValueProperty("node15").addConnector(new Connector(Direction.IN, GRAY));
+			ValueProperty item16 = new ValueProperty("node16").addConnector(new Connector(Direction.IN, GRAY));
+			ValueProperty item17 = new ValueProperty("node17").addConnector(new Connector(Direction.IN, GRAY));
+			ValueProperty item18 = new ValueProperty("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.");
 //			item18.getTextBox().setMaxWidth(300);
 			SliderProperty slider1 = new SliderProperty("Roughness", 0, 1, 0);
 			SliderProperty slider2 = new SliderProperty("Roughness", 0, 1, 0.5);

@@ -59,8 +59,23 @@ public class ColorChooserProperty extends Property<ColorChooserProperty>
 	}
 
 
+//	@Override
+//	protected void actionPerformed(NodeEditorPane aPane, Point aClickPoint)
+//	{
+//		if (!isConnected(Direction.IN))
+//		{
+//			Color c = JColorChooser.showDialog(aPane, getTextBox().getText(), mColor);
+//			if (c != null)
+//			{
+//				mColor = c;
+//				aPane.repaint();
+//			}
+//		}
+//	}
+
+
 	@Override
-	protected void actionPerformed(NodeEditorPane aPane, Point aClickPoint)
+	protected boolean mousePressed(NodeEditorPane aPane, Point aClickPoint)
 	{
 		if (!isConnected(Direction.IN))
 		{
@@ -71,12 +86,7 @@ public class ColorChooserProperty extends Property<ColorChooserProperty>
 				aPane.repaint();
 			}
 		}
-	}
 
-
-	@Override
-	protected boolean mousePressed(NodeEditorPane aPane, Point aClickPoint)
-	{
 		return !isConnected(Direction.IN) && new Rectangle(getNode().getBounds().x + getBounds().x, getNode().getBounds().y + getBounds().y, COLOR_BOX_WIDTH, getBounds().height).contains(aClickPoint);
 	}
 }

@@ -6,6 +6,9 @@ import java.awt.Paint;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.util.List;
+import org.terifan.nodeeditor.Connector;
+import org.terifan.nodeeditor.Context;
 import org.terifan.nodeeditor.Direction;
 import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Property;
@@ -30,6 +33,8 @@ public class SliderProperty extends Property<SliderProperty>
 	private transient double mStartValue;
 	private transient boolean mArmed;
 
+//	private String[] mIds;
+
 
 	public SliderProperty(String aText, double aValue, double aStepSize)
 	{
@@ -48,6 +53,13 @@ public class SliderProperty extends Property<SliderProperty>
 		mValue = aValue;
 		getPreferredSize().height = 20;
 	}
+
+
+//	public SliderProperty setProvides(String... aIds)
+//	{
+//		mIds = aIds;
+//		return this;
+//	}
 
 
 	public double getValue()
@@ -182,6 +194,30 @@ public class SliderProperty extends Property<SliderProperty>
 //				mOnChangeListener.onChange(this, true);
 //			}
 			aPane.repaint();
+		}
+	}
+
+
+	@Override
+	public void execute(Context aContext)
+	{
+		List<Connector> in = getConnectors(Direction.IN);
+
+		if (!in.isEmpty())
+		{
+			for (Connector connector : in)
+			{
+				for (Property p : connector.getConnectedProperties())
+				{
+					p.execute(aContext);
+				}
+			}
+		}
+
+
+		else
+		{
+			aContext.params.put(mId, getValue());
 		}
 	}
 }

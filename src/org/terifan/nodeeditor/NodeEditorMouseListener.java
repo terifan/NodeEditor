@@ -134,7 +134,7 @@ class NodeEditorMouseListener<T extends Node, U extends NodeEditorPane> extends 
 						mSelectedProperty = tmp;
 						mPane.repaint();
 
-						tmp.actionPerformed(mPane, mClickPoint);
+//						tmp.actionPerformed(mPane, mClickPoint);
 						break;
 					}
 				}

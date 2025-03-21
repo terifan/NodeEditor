@@ -10,6 +10,9 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import javax.imageio.ImageIO;
 import org.terifan.boxcomponentpane.BoxComponentPane;
 import org.terifan.nodeeditor.graphics.SplineRenderer;
@@ -21,12 +24,18 @@ public class NodeEditorPane extends BoxComponentPane<Node, NodeEditorPane>
 {
 	private static final long serialVersionUID = 1L;
 
-	private transient final ArrayList<OnClickHandler> mButtonHandlers;
+	private transient Function<String, BufferedImage> mIconProvider;
+
+	@Deprecated
 	private transient final ArrayList<ImagePainter> mImagePainters;
+
+	private transient final ArrayList<OnClickHandler> mButtonHandlers;
 	private transient Property mClickedItem;
 	private transient Popup mPopup;
 	private transient Connection mSelectedConnection;
 	private transient Connector mDragConnector;
+	private transient HashMap<String, Consumer<Context>> mCommands;
+
 	private boolean mConnectorSelectionAllowed;
 	private boolean mRemoveInConnectionsOnDrop;
 
@@ -35,9 +44,39 @@ public class NodeEditorPane extends BoxComponentPane<Node, NodeEditorPane>
 	{
 		super(aModel);
 
-		mButtonHandlers = new ArrayList<>();
 		mImagePainters = new ArrayList<>();
+
+		mCommands = new HashMap<>();
+		mButtonHandlers = new ArrayList<>();
 		mRemoveInConnectionsOnDrop = true;
+
+		setIconProvider(Styles::loadIcon);
+	}
+
+
+	public NodeEditorPane bind(String aCommand, Consumer<Context> aConsumer)
+	{
+		mCommands.put(aCommand, aConsumer);
+		return this;
+	}
+
+
+	public void fireCommand(String aCommand, Node aNode, Property aProperty)
+	{
+		mCommands.get(aCommand).accept(new Context(this, aNode, aProperty));
+	}
+
+
+	public NodeEditorPane setIconProvider(Function<String,BufferedImage> aProvider)
+	{
+		mIconProvider = aProvider;
+		return this;
+	}
+
+
+	public Function<String, BufferedImage> getIconProvider()
+	{
+		return mIconProvider;
 	}
 
 
@@ -133,6 +172,7 @@ public class NodeEditorPane extends BoxComponentPane<Node, NodeEditorPane>
 	}
 
 
+	@Deprecated
 	public NodeEditorPane addImagePainter(ImagePainter aImagePainter)
 	{
 		mImagePainters.add(aImagePainter);
@@ -140,6 +180,7 @@ public class NodeEditorPane extends BoxComponentPane<Node, NodeEditorPane>
 	}
 
 
+	@Deprecated
 	public void paintImage(ImageProperty aProperty, Graphics aGraphics, Rectangle aBounds)
 	{
 		for (ImagePainter rl : mImagePainters)
@@ -168,6 +209,7 @@ public class NodeEditorPane extends BoxComponentPane<Node, NodeEditorPane>
 	}
 
 
+	@Deprecated
 	private static ImagePainter FALLBACK_PAINTER = (aPane, aNode, aProperty, aGraphics, aBounds) ->
 	{
 		if (aProperty.getImagePath() != null)

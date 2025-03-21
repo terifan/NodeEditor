@@ -1,5 +1,6 @@
 package org.terifan.boxcomponentpane;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Insets;
@@ -35,6 +36,8 @@ public abstract class BoxComponent<T extends BoxComponent, U extends BoxComponen
 	protected boolean mResizableVertical;
 	protected boolean mMinimized;
 	protected String mTitle;
+	protected Color mTitleColor;
+	protected Color mTitleTextColor;
 
 
 	public BoxComponent(String aTitle)
@@ -46,6 +49,34 @@ public abstract class BoxComponent<T extends BoxComponent, U extends BoxComponen
 		mResizableVertical = true;
 		mInsets = new Insets(TITLE_HEIGHT_PADDED + 6 + 4, 5 + 9, 6 + 4, 5 + 9);
 		mTitle = aTitle;
+		mTitleColor = BOX_BORDER_TITLE_COLOR;
+		mTitleTextColor = BOX_FOREGROUND_COLOR;
+	}
+
+
+	public Color getTitleColor()
+	{
+		return mTitleColor;
+	}
+
+
+	public Color getTitleTextColor()
+	{
+		return mTitleTextColor;
+	}
+
+
+	public BoxComponent<T, U> setTitleTextColor(Color aTitleTextColor)
+	{
+		mTitleTextColor = aTitleTextColor;
+		return this;
+	}
+
+
+	public BoxComponent<T, U> setTitleColor(Color aTitleColor)
+	{
+		mTitleColor = aTitleColor;
+		return this;
 	}
 
 
@@ -188,17 +219,16 @@ public abstract class BoxComponent<T extends BoxComponent, U extends BoxComponen
 
 		if (minimized)
 		{
-			aGraphics.setColor(BOX_BORDER_TITLE_COLOR);
+			aGraphics.setColor(mTitleColor);
 			aGraphics.fillRoundRect(aX, aY, aWidth, aHeight, BORDE_RADIUS, BORDE_RADIUS);
 		}
 		else
 		{
 			Shape oldClip = aGraphics.getClip();
 
-			aGraphics.setColor(BOX_BORDER_TITLE_COLOR);
+			aGraphics.setColor(mTitleColor);
 			aGraphics.clipRect(aX, aY, aWidth, th);
 			aGraphics.fillRoundRect(aX, aY, aWidth, th + 3 + 12, BORDE_RADIUS, BORDE_RADIUS);
-
 			aGraphics.setClip(oldClip);
 
 			aGraphics.setColor(BOX_BACKGROUND_COLOR);
@@ -206,10 +236,10 @@ public abstract class BoxComponent<T extends BoxComponent, U extends BoxComponen
 			aGraphics.fillRoundRect(aX, aY, aWidth, aHeight, BORDE_RADIUS, BORDE_RADIUS);
 
 			aGraphics.setClip(oldClip);
-		}
 
-		aGraphics.setColor(BOX_BORDER_TITLE_SEPARATOR_COLOR);
-		aGraphics.drawLine(aX, aY + th - 1, aX + aWidth, aY + th - 1);
+			aGraphics.setColor(BOX_BORDER_TITLE_SEPARATOR_COLOR);
+			aGraphics.drawLine(aX, aY + th - 1, aX + aWidth, aY + th - 1);
+		}
 
 		int inset = 6 + 4 + COLLAPSE_BUTTON_WIDTH;
 
@@ -217,16 +247,16 @@ public abstract class BoxComponent<T extends BoxComponent, U extends BoxComponen
 			.setShadow(BOX_TITLE_TEXT_SHADOW_COLOR, 1, 1)
 			.setAnchor(Anchor.WEST)
 			.setBounds(aX + inset, aY + 3, aWidth - inset - 4, TITLE_HEIGHT)
-			.setForeground(BOX_FOREGROUND_COLOR)
+			.setForeground(mTitleTextColor)
 			.setMaxLineCount(1)
 			.setFont(Styles.BOX_FONT)
 			.render(aGraphics);
 
-		aGraphics.setColor(aSelected ? BOX_BORDER_SELECTED_COLOR : BOX_BORDER_COLOR);
+		aGraphics.setColor(aSelected ? BOX_BORDER_SELECTED_COLOR : mTitleTextColor);
 		aGraphics.drawRoundRect(aX, aY, aWidth, aHeight, BORDE_RADIUS, BORDE_RADIUS);
 
 		aX += 10;
-		aY += 3 + th / 2;
+		aY += 2 + th / 2;
 		int w = 10;
 		int h = 5;
 

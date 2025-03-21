@@ -73,17 +73,19 @@ public class CheckBoxProperty extends Property<CheckBoxProperty>
 	}
 
 
-	@Override
-	protected void actionPerformed(NodeEditorPane aPane, Point aClickPoint)
-	{
-		mSelected = !mSelected;
-		aPane.repaint();
-	}
+//	@Override
+//	protected void actionPerformed(NodeEditorPane aPane, Point aClickPoint)
+//	{
+//		mSelected = !mSelected;
+//		aPane.repaint();
+//	}
 
 
 	@Override
 	protected boolean mousePressed(NodeEditorPane aPane, Point aClickPoint)
 	{
+		mSelected = !mSelected;
+		aPane.repaint();
 		return true;
 	}
 }
