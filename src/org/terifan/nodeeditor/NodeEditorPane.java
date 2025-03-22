@@ -340,12 +340,14 @@ public class NodeEditorPane extends BoxComponentPane<Node, NodeEditorPane>
 		{
 			if (mSelectedConnection == connection)
 			{
-				SplineRenderer.drawSpline(aGraphics, connection, getScale(), Styles.CONNECTOR_COLOR_OUTER_SELECTED, Styles.CONNECTOR_COLOR_INNER_SELECTED, Styles.CONNECTOR_COLOR_INNER_SELECTED);
+				SplineRenderer.drawSpline(aGraphics, connection, getScale(), Styles.CONNECTOR_COLOR_OUTER_SELECTED, connection.mOut.getColor(), connection.mIn.getColor());
 			}
 			else
 			{
-				Color start = getSelectedBoxes().contains(connection.getOut().getProperty().getNode()) ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : Styles.CONNECTOR_COLOR_INNER;
-				Color end = getSelectedBoxes().contains(connection.getIn().getProperty().getNode()) ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : Styles.CONNECTOR_COLOR_INNER;
+				Color start = connection.mOut.getColor();
+				Color end = connection.mIn.getColor();
+//				Color start = getSelectedBoxes().contains(connection.getOut().getProperty().getNode()) ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : connection.mOut.getColor();
+//				Color end = getSelectedBoxes().contains(connection.getIn().getProperty().getNode()) ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : connection.mIn.getColor();
 
 				SplineRenderer.drawSpline(aGraphics, connection, getScale(), Styles.CONNECTOR_COLOR_OUTER, start, end);
 			}

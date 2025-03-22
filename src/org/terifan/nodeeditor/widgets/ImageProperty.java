@@ -78,6 +78,37 @@ public class ImageProperty extends Property<ImageProperty>
 	}
 
 
+	@Override
+	protected void paintComponent(NodeEditorPane aPane, Graphics2D aGraphics, boolean aHover)
+	{
+		Rectangle bounds = getBounds();
+
+		int t = 10;
+		double sx = bounds.width / (double)t;
+		double sy = bounds.height / (double)t;
+
+		aGraphics.setColor(new Color(200, 200, 200));
+		aGraphics.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
+
+		aGraphics.setColor(new Color(220, 220, 220));
+		for (int y = 0; y < t; y++)
+		{
+			for (int x = (y & 1); x < t; x += 2)
+			{
+				aGraphics.fillRect(bounds.x + (int)(x * sx), bounds.y + (int)(y * sy), (int)sx, (int)sy);
+			}
+		}
+
+		if (mRenderedImage != null)
+		{
+			aGraphics.drawImage(mRenderedImage, bounds.x, bounds.y, bounds.width, bounds.height, null);
+		}
+
+//		aPane.paintImage(this, aGraphics, bounds);
+	}
+
+
+	@Override
 	public void execute(Context aContext)
 	{
 		mRenderedImage = new BufferedImage(mWidth, mHeight, mType);
@@ -111,35 +142,5 @@ public class ImageProperty extends Property<ImageProperty>
 		}
 
 		aContext.getEditor().repaint();
-	}
-
-
-	@Override
-	protected void paintComponent(NodeEditorPane aPane, Graphics2D aGraphics, boolean aHover)
-	{
-		Rectangle bounds = getBounds();
-
-		int t = 10;
-		double sx = bounds.width / (double)t;
-		double sy = bounds.height / (double)t;
-
-		aGraphics.setColor(new Color(200, 200, 200));
-		aGraphics.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
-
-		aGraphics.setColor(new Color(220, 220, 220));
-		for (int y = 0; y < t; y++)
-		{
-			for (int x = (y & 1); x < t; x += 2)
-			{
-				aGraphics.fillRect(bounds.x + (int)(x * sx), bounds.y + (int)(y * sy), (int)sx, (int)sy);
-			}
-		}
-
-		if (mRenderedImage != null)
-		{
-			aGraphics.drawImage(mRenderedImage, bounds.x, bounds.y, bounds.width, bounds.height, null);
-		}
-
-//		aPane.paintImage(this, aGraphics, bounds);
 	}
 }

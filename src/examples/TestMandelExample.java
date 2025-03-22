@@ -41,12 +41,12 @@ public class TestMandelExample
 			NodeModel model = new NodeModel()
 				.addNode(new Node("Mandelbrot")
 					.setTitleColor(DefaultNodeColors.GREEN)
-					.setBounds(-200, 0, 150, 0)
+					.setBounds(-200, -50, 150, 0)
 					.addProperty(new SliderProperty("Limit", 1000, 1).setId("r"))
 					.addProperty(new ValueProperty("Iterations").setProvides("r").addConnector(OUT, GRAY))
 				)
 				.addNode(n=new Node("Colors")
-					.setBounds(0, 0, 150, 0)
+					.setBounds(0, -50, 150, 0)
 					.addProperty(new ValueProperty("Color").setProvides("r", "g", "b").addConnector(OUT, YELLOW).setId("rgb"))
 					.addProperty(p=new SliderProperty("Red", 0, 1, 0).setId("r").addConnector(IN, GRAY))
 					.addProperty(new SliderProperty("Green", 0, 1, 0.5).setId("g").addConnector(IN, GRAY))
@@ -56,13 +56,21 @@ public class TestMandelExample
 					.setTitleColor(DefaultNodeColors.DARKRED)
 					.setBounds(200, 0, 220, 0)
 					.addProperty(new ValueProperty("Color").setId("rgb").addConnector(IN))
+					.addProperty(new ValueProperty("Coordinate").setId("rgb").addConnector(IN, Styles.DefaultColors.PURPLE))
 					.addProperty(new ImageProperty("", 200, 200).setId("output").setConsumes("rgb"))
 					.addProperty(new ButtonProperty("Run").setIcon(Styles.DefaultIcons.RUN).setCommand("run"))
+				)
+				.addNode(new Node("Coordinates")
+					.setTitleColor(DefaultNodeColors.PURPLE)
+					.setBounds(-200, 150, 220, 0)
+					.addProperty(new ValueProperty("XY").setId("rgb").addConnector(OUT, Styles.DefaultColors.PURPLE))
 				)
 				.addConnection(0, 1, 1, 1)
 				.addConnection(0, 1, 1, 2)
 				.addConnection(0, 1, 1, 3)
-				.addConnection(1, 0, 2, 0);
+				.addConnection(1, 0, 2, 0)
+				.addConnection(3, 0, 2, 1)
+				;
 
 			System.out.println(p.getConnector(IN).getConnectedProperties());
 			System.out.println(model.getPropertiesConnectingTo(n.getProperty(1)));

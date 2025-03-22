@@ -9,6 +9,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import static org.terifan.nodeeditor.Styles.BOX_FOREGROUND_COLOR;
+import static org.terifan.nodeeditor.Styles.BOX_FOREGROUND_SHADOW_COLOR;
 import org.terifan.ui.TextBox;
 
 
@@ -34,7 +36,8 @@ public abstract class Property<T extends Property> implements Serializable
 
 		mTextBox = new TextBox(aText)
 			.setFont(Styles.BOX_ITEM_FONT)
-			.setForeground(Styles.BOX_FOREGROUND_COLOR);
+			.setShadow(BOX_FOREGROUND_SHADOW_COLOR, 1, 1)
+			.setForeground(BOX_FOREGROUND_COLOR);
 
 		setPreferredSize(mTextBox.measure().getSize());
 	}

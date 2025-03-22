@@ -3,6 +3,7 @@ package org.terifan.nodeeditor;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Insets;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -31,19 +32,19 @@ public class Styles
 	public static int COLLAPSE_BUTTON_WIDTH = 16;
 
 	public static Color BOX_FOREGROUND_COLOR = new Color(255, 255, 255, b);
-	public static Color BOX_FOREGROUND_ARMED_COLOR = new Color(0, 0, 0);
+	public static Color BOX_FOREGROUND_SHADOW_COLOR = new Color(0,0,0, 64);
+	public static Color BOX_FOREGROUND_ARMED_COLOR = new Color(30, 30, 30);
 	public static Color BOX_FOREGROUND_SELECTED_COLOR = new Color(0, 0, 0, b);
-	public static Color BOX_BACKGROUND_COLOR = new Color(80, 80, 80, a);
+	public static Color BOX_BACKGROUND_COLOR = new Color(48, 48, 48, a);
 	public static Color BOX_BACKGROUND_SELECTED_COLOR = new Color(90, 90, 90, a);
-	public static Color BOX_BORDER_COLOR = new Color(30, 30, 30, a);
-	public static Color BOX_BORDER_SELECTED_COLOR = new Color(208, 145, 66);
+	public static Color BOX_BORDER_COLOR = new Color(10, 10, 10, a);
+	public static Color BOX_BORDER_SELECTED_COLOR = new Color(255,255,255, b);
 	public static Color BOX_BORDER_TITLE_COLOR = new Color(67, 67, 67, a);
-	public static Color BOX_BORDER_TITLE_SEPARATOR_COLOR = new Color(68, 68, 68, 128);
 	public static Color BOX_TITLE_TEXT_SHADOW_COLOR = new Color(50, 50, 50, a);
-	public static Color PANE_BACKGROUND_COLOR = new Color(37, 37, 37);
-	public static Color PANE_GRID_COLOR_1 = new Color(30, 30, 30);
-	public static Color PANE_GRID_COLOR_2 = new Color(25, 25, 25);
-	public static Color PANE_GRID_COLOR_3 = new Color(20, 20, 20);
+	public static Color PANE_BACKGROUND_COLOR = new Color(29, 29, 29);
+	public static Color PANE_GRID_COLOR_1 = new Color(27, 27, 27);
+	public static Color PANE_GRID_COLOR_2 = new Color(26, 26, 26);
+	public static Color PANE_GRID_COLOR_3 = new Color(25, 25, 25);
 	public static Color PANE_SELECTION_RECTANGLE_LINE = new Color(255, 255, 255);
 	public static Color PANE_SELECTION_RECTANGLE_BACKGROUND = new Color(255, 255, 255, 15);
 
@@ -54,13 +55,35 @@ public class Styles
 	public static Color SLIDER_ARROW_COLOR = new Color(118, 118, 118);
 	public static Color COMBOBOX_ARROW_COLOR = new Color(190, 190, 190);
 
+	public static BufferedImage BOX_SHADOW;
+	public static Insets[] BOX_SHADOW_INSETS =
+	{
+		new Insets(0, 10, 10, 10), new Insets(10, 10, 10, 10)
+	};
+	public static Insets[] BOX_SHADOW_STRENGTH =
+	{
+		new Insets(20, 20, 20, 20), new Insets(20, 20, 20, 20)
+	};
+
+	static
+	{
+		try
+		{
+			BOX_SHADOW = ImageIO.read(Styles.class.getResource("background.png"));
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace(System.out);
+		}
+	}
+
 	public static Color[][][] SLIDER_COLORS =
 	{
 		// normal
 		{
 			new Color[]
 			{
-				new Color(159, 159, 159), new Color(179, 179, 179)
+				new Color(84, 84, 84), new Color(84, 84, 84)
 			},
 			new Color[]
 			{
