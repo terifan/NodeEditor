@@ -7,7 +7,6 @@ import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.io.Serializable;
-import javax.imageio.ImageIO;
 import org.terifan.nodeeditor.Styles;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.TextBox;
@@ -17,13 +16,15 @@ import static org.terifan.nodeeditor.Styles.BOX_BORDER_COLOR;
 import static org.terifan.nodeeditor.Styles.BOX_BORDER_SELECTED_COLOR;
 import static org.terifan.nodeeditor.Styles.BOX_BORDER_TITLE_COLOR;
 import static org.terifan.nodeeditor.Styles.BOX_FOREGROUND_COLOR;
-import static org.terifan.nodeeditor.Styles.BOX_TITLE_TEXT_SHADOW_COLOR;
 import static org.terifan.nodeeditor.Styles.TITLE_HEIGHT;
 import static org.terifan.nodeeditor.Styles.COLLAPSE_BUTTON_WIDTH;
 import static org.terifan.nodeeditor.Styles.TITLE_HEIGHT_PADDED;
 import static org.terifan.nodeeditor.Styles.BOX_SHADOW;
 import static org.terifan.nodeeditor.Styles.BOX_SHADOW_INSETS;
 import static org.terifan.nodeeditor.Styles.BOX_SHADOW_STRENGTH;
+import static org.terifan.nodeeditor.Styles.BOX_TITLE_TEXT_SHADOW_COLOR;
+import static org.terifan.nodeeditor.Styles.COMBOBOX_ARROW_COLOR;
+import org.terifan.nodeeditor.graphics.Arrow;
 
 
 public abstract class BoxComponent<T extends BoxComponent, U extends BoxComponentPane> implements Serializable, Renderable<T, U>
@@ -39,46 +40,46 @@ public abstract class BoxComponent<T extends BoxComponent, U extends BoxComponen
 	protected boolean mResizableVertical;
 	protected boolean mMinimized;
 	protected String mTitle;
-	protected Color mTitleColor;
-	protected Color mTitleTextColor;
+	protected Color mTitleBackground;
+	protected Color mTitleForeground;
 
 
 	public BoxComponent(String aTitle)
 	{
+		mTitle = aTitle;
+		mResizableVertical = true;
+		mResizableHorizontal = true;
 		mBounds = new Rectangle();
 		mMinimumSize = new Dimension(0, 0);
 		mMaximumSize = new Dimension(Short.MAX_VALUE, Short.MAX_VALUE);
-		mResizableHorizontal = true;
-		mResizableVertical = true;
 		mInsets = new Insets(TITLE_HEIGHT_PADDED + 6 + 4, 5 + 9, 6 + 4, 5 + 9);
-		mTitle = aTitle;
-		mTitleColor = BOX_BORDER_TITLE_COLOR;
-		mTitleTextColor = BOX_FOREGROUND_COLOR;
+		mTitleBackground = BOX_BORDER_TITLE_COLOR;
+		mTitleForeground = BOX_FOREGROUND_COLOR;
 	}
 
 
-	public Color getTitleColor()
+	public Color getTitleBackground()
 	{
-		return mTitleColor;
+		return mTitleBackground;
 	}
 
 
-	public Color getTitleTextColor()
+	public Color getTitleForeground()
 	{
-		return mTitleTextColor;
+		return mTitleForeground;
 	}
 
 
-	public BoxComponent<T, U> setTitleTextColor(Color aTitleTextColor)
+	public BoxComponent<T, U> setTitleForeground(Color aColor)
 	{
-		mTitleTextColor = aTitleTextColor;
+		mTitleForeground = aColor;
 		return this;
 	}
 
 
-	public BoxComponent<T, U> setTitleColor(Color aTitleColor)
+	public BoxComponent<T, U> setTitleBackground(Color aColor)
 	{
-		mTitleColor = aTitleColor;
+		mTitleBackground = aColor;
 		return this;
 	}
 
@@ -217,14 +218,14 @@ public abstract class BoxComponent<T extends BoxComponent, U extends BoxComponen
 
 		if (minimized)
 		{
-			aGraphics.setColor(mTitleColor);
+			aGraphics.setColor(mTitleBackground);
 			aGraphics.fillRoundRect(aX, aY, aWidth, aHeight, BORDE_RADIUS, BORDE_RADIUS);
 		}
 		else
 		{
 			Shape oldClip = aGraphics.getClip();
 
-			aGraphics.setColor(mTitleColor);
+			aGraphics.setColor(mTitleBackground);
 			aGraphics.clipRect(aX, aY, aWidth, th);
 			aGraphics.fillRoundRect(aX, aY, aWidth, th + 3 + 12, BORDE_RADIUS, BORDE_RADIUS);
 			aGraphics.setClip(oldClip);
@@ -242,7 +243,7 @@ public abstract class BoxComponent<T extends BoxComponent, U extends BoxComponen
 			.setShadow(BOX_TITLE_TEXT_SHADOW_COLOR, 1, 1)
 			.setAnchor(Anchor.WEST)
 			.setBounds(aX + inset, aY + 3, aWidth - inset - 4, TITLE_HEIGHT)
-			.setForeground(mTitleTextColor)
+			.setForeground(mTitleForeground)
 			.setMaxLineCount(1)
 			.setFont(Styles.BOX_FONT)
 			.render(aGraphics);
@@ -250,28 +251,7 @@ public abstract class BoxComponent<T extends BoxComponent, U extends BoxComponen
 		aGraphics.setColor(aSelected ? BOX_BORDER_SELECTED_COLOR : BOX_BORDER_COLOR);
 		aGraphics.drawRoundRect(aX, aY, aWidth, aHeight, BORDE_RADIUS, BORDE_RADIUS);
 
-		aX += 1 + 17;
-		aY += 1 + 2 + th / 2;
-		int w = 4;
-		int h = 4;
-
-		aGraphics.setColor(BOX_TITLE_TEXT_SHADOW_COLOR);
-		for (int i = 0; i < 2; i++)
-		{
-			if (mMinimized)
-			{
-				aGraphics.drawLine(aX - w / 2, aY - h, aX + w / 2, aY);
-				aGraphics.drawLine(aX - w / 2, aY + h, aX + w / 2, aY);
-			}
-			else
-			{
-				aGraphics.drawLine(aX - w, aY - h / 2, aX, aY + h / 2);
-				aGraphics.drawLine(aX + w, aY - h / 2, aX, aY + h / 2);
-			}
-			aX--;
-			aY--;
-			aGraphics.setColor(mTitleTextColor);
-		}
+		Arrow.paintArrow(aGraphics, mMinimized ? 1 : 2, aX + 17, aY + 2 + th / 2, 4, 4, BOX_TITLE_TEXT_SHADOW_COLOR, mTitleForeground);
 	}
 
 

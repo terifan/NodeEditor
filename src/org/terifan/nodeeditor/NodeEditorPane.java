@@ -67,7 +67,7 @@ public class NodeEditorPane extends BoxComponentPane<Node, NodeEditorPane>
 	}
 
 
-	public NodeEditorPane setIconProvider(Function<String,BufferedImage> aProvider)
+	public NodeEditorPane setIconProvider(Function<String, BufferedImage> aProvider)
 	{
 		mIconProvider = aProvider;
 		return this;
@@ -208,7 +208,6 @@ public class NodeEditorPane extends BoxComponentPane<Node, NodeEditorPane>
 		}
 	}
 
-
 	@Deprecated
 	private static ImagePainter FALLBACK_PAINTER = (aPane, aNode, aProperty, aGraphics, aBounds) ->
 	{
@@ -344,10 +343,11 @@ public class NodeEditorPane extends BoxComponentPane<Node, NodeEditorPane>
 			}
 			else
 			{
-				Color start = connection.mOut.getColor();
-				Color end = connection.mIn.getColor();
-//				Color start = getSelectedBoxes().contains(connection.getOut().getProperty().getNode()) ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : connection.mOut.getColor();
-//				Color end = getSelectedBoxes().contains(connection.getIn().getProperty().getNode()) ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : connection.mIn.getColor();
+				ArrayList<Node> selectedBoxes = getSelectedBoxes();
+				boolean selected = selectedBoxes.contains(connection.getOut().getProperty().getNode()) || selectedBoxes.contains(connection.getIn().getProperty().getNode());
+
+				Color start = selected ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : connection.mOut.getColor();
+				Color end = selected ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : connection.mIn.getColor();
 
 				SplineRenderer.drawSpline(aGraphics, connection, getScale(), Styles.CONNECTOR_COLOR_OUTER, start, end);
 			}

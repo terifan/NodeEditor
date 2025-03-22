@@ -15,6 +15,8 @@ import org.terifan.nodeeditor.Property;
 import org.terifan.nodeeditor.Styles;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.TextBox;
+import static org.terifan.nodeeditor.Styles.FIELD_CORNER;
+import org.terifan.nodeeditor.graphics.Arrow;
 
 
 public class SliderProperty extends Property<SliderProperty>
@@ -96,10 +98,10 @@ public class SliderProperty extends Property<SliderProperty>
 			Paint oldPaint = aGraphics.getPaint();
 
 			aGraphics.setColor(Styles.SLIDER_BORDER_COLOR);
-			aGraphics.fillRoundRect(x, y, w, h, 18, 18);
+			aGraphics.fillRoundRect(x, y, w, h, FIELD_CORNER, FIELD_CORNER);
 
 			aGraphics.setPaint(new LinearGradientPaint(0, y, 0, y + h, RANGES, Styles.SLIDER_COLORS[i][0]));
-			aGraphics.fillRoundRect(x + 1, y + 1, w - 2, h - 2, 18, 18);
+			aGraphics.fillRoundRect(x + 1, y + 1, w - 2, h - 2, FIELD_CORNER, FIELD_CORNER);
 
 			if (mStep == 0)
 			{
@@ -107,28 +109,13 @@ public class SliderProperty extends Property<SliderProperty>
 
 				aGraphics.setClip(x, y, 7 + (int)((w - 7) * mValue), h);
 				aGraphics.setPaint(new LinearGradientPaint(0, y, 0, y + h, RANGES, Styles.SLIDER_COLORS[i][1]));
-				aGraphics.fillRoundRect(x + 1, y + 1, w - 2, h - 2, 18, 18);
+				aGraphics.fillRoundRect(x + 1, y + 1, w - 2, h - 2, FIELD_CORNER, FIELD_CORNER);
 				aGraphics.setClip(oldClip);
 			}
 			else
 			{
-				int pw = 4;
-				int ph = 3;
-				int s = 6;
-				int[] py = new int[]
-				{
-					y + h / 2, y + h / 2 - ph, y + h / 2 + ph
-				};
-
-				aGraphics.setColor(Styles.SLIDER_ARROW_COLOR);
-				aGraphics.fillPolygon(new int[]
-				{
-					x + s, x + s + pw, x + s + pw
-				}, py, 3);
-				aGraphics.fillPolygon(new int[]
-				{
-					x + w - s, x + w - s - pw, x + w - s - pw
-				}, py, 3);
+				Arrow.paintArrow(aGraphics, 3, x+8, y+h/2, 3, 3, Styles.BOX_FOREGROUND_SHADOW_COLOR, Styles.BOX_FOREGROUND_COLOR);
+				Arrow.paintArrow(aGraphics, 1, x+w-8, y+h/2, 3, 3, Styles.BOX_FOREGROUND_SHADOW_COLOR, Styles.BOX_FOREGROUND_COLOR);
 			}
 
 			aGraphics.setPaint(oldPaint);

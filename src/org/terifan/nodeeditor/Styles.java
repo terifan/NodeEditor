@@ -3,6 +3,7 @@ package org.terifan.nodeeditor;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -32,13 +33,13 @@ public class Styles
 	public static int COLLAPSE_BUTTON_WIDTH = 16;
 
 	public static Color BOX_FOREGROUND_COLOR = new Color(255, 255, 255, b);
-	public static Color BOX_FOREGROUND_SHADOW_COLOR = new Color(0,0,0, 64);
+	public static Color BOX_FOREGROUND_SHADOW_COLOR = new Color(0, 0, 0, 64);
 	public static Color BOX_FOREGROUND_ARMED_COLOR = new Color(30, 30, 30);
 	public static Color BOX_FOREGROUND_SELECTED_COLOR = new Color(0, 0, 0, b);
 	public static Color BOX_BACKGROUND_COLOR = new Color(48, 48, 48, a);
 	public static Color BOX_BACKGROUND_SELECTED_COLOR = new Color(90, 90, 90, a);
 	public static Color BOX_BORDER_COLOR = new Color(10, 10, 10, a);
-	public static Color BOX_BORDER_SELECTED_COLOR = new Color(255,255,255, b);
+	public static Color BOX_BORDER_SELECTED_COLOR = new Color(255, 255, 255, b);
 	public static Color BOX_BORDER_TITLE_COLOR = new Color(67, 67, 67, a);
 	public static Color BOX_TITLE_TEXT_SHADOW_COLOR = new Color(50, 50, 50, a);
 	public static Color PANE_BACKGROUND_COLOR = new Color(29, 29, 29);
@@ -55,6 +56,8 @@ public class Styles
 	public static Color SLIDER_ARROW_COLOR = new Color(118, 118, 118);
 	public static Color COMBOBOX_ARROW_COLOR = new Color(190, 190, 190);
 
+	public static final int FIELD_CORNER = 9;
+
 	public static BufferedImage BOX_SHADOW;
 	public static Insets[] BOX_SHADOW_INSETS =
 	{
@@ -64,6 +67,7 @@ public class Styles
 	{
 		new Insets(20, 20, 20, 20), new Insets(20, 20, 20, 20)
 	};
+
 
 	static
 	{
@@ -87,7 +91,7 @@ public class Styles
 			},
 			new Color[]
 			{
-				new Color(126, 126, 126), new Color(107, 107, 107)
+				new Color(71, 114, 179), new Color(71, 114, 179)
 			},
 			new Color[]
 			{
@@ -98,11 +102,11 @@ public class Styles
 		{
 			new Color[]
 			{
-				new Color(174, 174, 174), new Color(194, 194, 194)
+				new Color(101, 101, 101), new Color(101, 101, 101)
 			},
 			new Color[]
 			{
-				new Color(127, 127, 127), new Color(147, 147, 147)
+				new Color(71, 114, 179), new Color(71, 114, 179)
 			},
 			new Color[]
 			{
@@ -113,15 +117,15 @@ public class Styles
 		{
 			new Color[]
 			{
-				new Color(132, 132, 132), new Color(152, 152, 152)
+				new Color(34, 34, 34), new Color(34, 34, 34)
 			},
 			new Color[]
 			{
-				new Color(107, 107, 107), new Color(127, 127, 127)
+				new Color(71, 114, 179), new Color(71, 114, 179)
 			},
 			new Color[]
 			{
-				BOX_FOREGROUND_ARMED_COLOR, BOX_FOREGROUND_ARMED_COLOR
+				BOX_FOREGROUND_COLOR, BOX_FOREGROUND_COLOR
 			}
 		}
 	};
@@ -137,6 +141,24 @@ public class Styles
 		new Color[]
 		{
 			new Color(55, 55, 55), new Color(83, 83, 83)
+		}
+	};
+
+	public static Color[][] COMBOBOX_COLORS =
+	{
+		// normal
+		new Color[]
+		{
+			new Color(40, 40, 40), new Color(40, 40, 40)
+		},
+		// selected
+		new Color[]
+		{
+			new Color(71, 114, 179), new Color(71, 114, 179)
+		},
+		new Color[]
+		{
+			new Color(61, 61, 61)
 		}
 	};
 
@@ -161,7 +183,7 @@ public class Styles
 	public static int POPUP_DEFAULT_OPTION_HEIGHT = 20;
 	public static Color POPUP_FOREGROUND = new Color(255, 255, 255);
 	public static Color POPUP_HEADER_FOREGROUND = new Color(128, 128, 128);
-	public static Color POPUP_SELECTION_BACKGROUND = new Color(255, 0, 0, 128);
+	public static Color POPUP_SELECTION_BACKGROUND = new Color(71,114,179);
 	public static Color POPUP_HEADER_LINE = new Color(55, 55, 55);
 	public static Color POPUP_BACKGROUND = new Color(16, 16, 16, 220);
 
