@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Property;
 import org.terifan.nodeeditor.Styles;
+import static org.terifan.nodeeditor.Styles.FIELD_CORNER;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.ImageResizer;
 
@@ -72,19 +73,19 @@ public class ButtonProperty extends Property<ButtonProperty>
 		Paint oldPaint = aGraphics.getPaint();
 
 		aGraphics.setColor(Styles.SLIDER_BORDER_COLOR);
-		aGraphics.fillRoundRect(x, y, w, h, 4, 4);
+		aGraphics.fillRoundRect(x, y, w, h, FIELD_CORNER, FIELD_CORNER);
 
 		aGraphics.setPaint(new LinearGradientPaint(0, y, 0, y + h, RANGES, Styles.BUTTON_COLORS[mArmed ? 2 : aHover ? 1 : 0]));
-		aGraphics.fillRoundRect(x + 1, y + 1, w - 2, h - 2, 4, 4);
+		aGraphics.fillRoundRect(x + 1, y + 1, w - 2, h - 2, FIELD_CORNER, FIELD_CORNER);
 
 		if (mIcon != null)
 		{
 			BufferedImage image = aPane.getIconProvider().apply(mIcon);
 			if (image != null)
 			{
-				int t = h - 4;
+				int t = h - 6;
 				int s = (int)(t * aPane.getScale());
-				aGraphics.drawImage(ImageResizer.getScaledImageAspect(image, s, s, true), x + 4, y + 2, t, t, null);
+				aGraphics.drawImage(ImageResizer.getScaledImageAspect(image, s, s, true), x + 4, y + 3, t, t, null);
 			}
 		}
 

@@ -12,6 +12,8 @@ public class Context
 
 	public final HashMap<String, Object> params;
 
+	public Object result;
+
 
 	Context(NodeEditorPane aEditor, Node aNode, Property aProperty)
 	{

@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import org.terifan.nodeeditor.Context;
 import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Property;
@@ -123,19 +124,23 @@ public class ImageProperty extends Property<ImageProperty>
 				Property property = getNode().getProperty(mSourceRGB);
 				property.execute(aContext);
 
-				int r = (int)(255 * (Double)aContext.params.getOrDefault("r", 0.0));
-				int g = (int)(255 * (Double)aContext.params.getOrDefault("g", 0.0));
-				int b = (int)(255 * (Double)aContext.params.getOrDefault("b", 0.0));
+				HashMap<String, Object> map = (HashMap<String,Object>)aContext.result;
+
+				System.out.println(map);
+
+				int r = (int)(255 * (Double)map.getOrDefault("r", 0.0));
+				int g = (int)(255 * (Double)map.getOrDefault("g", 0.0));
+				int b = (int)(255 * (Double)map.getOrDefault("b", 0.0));
 
 				int alpha = 0xff000000;
 
-				if (mSourceAlpha != null)
-				{
-					property = getNode().getProperty(mSourceAlpha);
-					property.execute(aContext);
-
-					alpha = ((int)(255 * (Double)aContext.params.getOrDefault("alpha", 1.0))) << 24;
-				}
+//				if (mSourceAlpha != null)
+//				{
+//					property = getNode().getProperty(mSourceAlpha);
+//					property.execute(aContext);
+//
+//					alpha = ((int)(255 * (Double)aContext.params.getOrDefault("alpha", 1.0))) << 24;
+//				}
 
 				mRenderedImage.setRGB(x, y, alpha | (r<<16)+(g<<8)+b);
 			}

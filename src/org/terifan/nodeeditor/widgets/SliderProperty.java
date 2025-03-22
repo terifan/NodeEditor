@@ -6,6 +6,7 @@ import java.awt.Paint;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.util.HashMap;
 import java.util.List;
 import org.terifan.nodeeditor.Connector;
 import org.terifan.nodeeditor.Context;
@@ -188,23 +189,35 @@ public class SliderProperty extends Property<SliderProperty>
 	@Override
 	public void execute(Context aContext)
 	{
+		HashMap<String,Object> total = new HashMap<>();
+
 		List<Connector> in = getConnectors(Direction.IN);
 
 		if (!in.isEmpty())
 		{
+//			HashMap<String,Object> total = new HashMap<>();
+
 			for (Connector connector : in)
 			{
 				for (Property p : connector.getConnectedProperties())
 				{
 					p.execute(aContext);
+
+					total.put(mId, aContext.result);
+
+//					aContext.result = aContext.result;
 				}
 			}
+
+//			aContext.result = total;
 		}
-
-
 		else
 		{
-			aContext.params.put(mId, getValue());
+//			aContext.params.put(mId, getValue());
+
+			total.put(mId, getValue());
 		}
+
+		aContext.result = total;
 	}
 }

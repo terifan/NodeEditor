@@ -11,14 +11,14 @@ import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.ui.Anchor;
 
 
-public class ValueProperty extends Property<ValueProperty>
+public abstract class ProducerProperty extends Property<ProducerProperty>
 {
 	private static final long serialVersionUID = 1L;
 
 	private String[] mIds;
 
 
-	public ValueProperty(String aLabel)
+	public ProducerProperty(String aLabel)
 	{
 		super(aLabel);
 	}
@@ -34,38 +34,43 @@ public class ValueProperty extends Property<ValueProperty>
 	}
 
 
-	public ValueProperty setProvides(String... aIds)
+	public ProducerProperty setProvides(String... aIds)
 	{
 		mIds = aIds;
 		return this;
 	}
 
 
+	public abstract Object produce(Context aContext);
+
+
 	@Override
 	public void execute(Context aContext)
 	{
-		Connector in = getConnector(Direction.IN);
+		aContext.result = produce(aContext);
 
-		if (in != null)
-		{
-			for (Property p : in.getConnectedProperties())
-			{
-				p.execute(aContext);
-			}
-		}
-		else
-		{
-			HashMap<String,Object> total = new HashMap<>();
-
-			for (String id : mIds)
-			{
-				Property p = getNode().getProperty(id);
-				p.execute(aContext);
-				total.put(id, aContext.result);
-			}
-
-			aContext.result = total;
-		}
+//		Connector in = getConnector(Direction.IN);
+//
+//		if (in != null)
+//		{
+//			for (Property p : in.getConnectedProperties())
+//			{
+//				p.execute(aContext);
+//			}
+//		}
+//		else
+//		{
+//			HashMap<String,Object> total = new HashMap<>();
+//
+//			for (String id : mIds)
+//			{
+//				Property p = getNode().getProperty(id);
+//				p.execute(aContext);
+//				total.put(id, aContext.result);
+//			}
+//
+//			aContext.result = total;
+//		}
 	}
 
 

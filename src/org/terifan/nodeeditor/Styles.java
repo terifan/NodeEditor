@@ -3,8 +3,6 @@ package org.terifan.nodeeditor;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.Insets;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -35,9 +33,10 @@ public class Styles
 	public static Color BOX_FOREGROUND_COLOR = new Color(255, 255, 255, b);
 	public static Color BOX_FOREGROUND_SHADOW_COLOR = new Color(0, 0, 0, 64);
 	public static Color BOX_FOREGROUND_ARMED_COLOR = new Color(30, 30, 30);
-	public static Color BOX_FOREGROUND_SELECTED_COLOR = new Color(0, 0, 0, b);
+	public static Color BOX_FOREGROUND_SELECTED_COLOR = new Color(255, 255, 255, b);
 	public static Color BOX_BACKGROUND_COLOR = new Color(48, 48, 48, a);
-	public static Color BOX_BACKGROUND_SELECTED_COLOR = new Color(90, 90, 90, a);
+	public static Color FIELD_BACKGROUND_COLOR = new Color(84, 84, 84);
+	public static Color FIELD_BACKGROUND_SELECTED_COLOR = new Color(71, 114, 179);
 	public static Color BOX_BORDER_COLOR = new Color(10, 10, 10, a);
 	public static Color BOX_BORDER_SELECTED_COLOR = new Color(255, 255, 255, b);
 	public static Color BOX_BORDER_TITLE_COLOR = new Color(67, 67, 67, a);
@@ -56,17 +55,11 @@ public class Styles
 	public static Color SLIDER_ARROW_COLOR = new Color(118, 118, 118);
 	public static Color COMBOBOX_ARROW_COLOR = new Color(190, 190, 190);
 
-	public static final int FIELD_CORNER = 9;
+	public static final int FIELD_CORNER = 8;
 
 	public static BufferedImage BOX_SHADOW;
-	public static Insets[] BOX_SHADOW_INSETS =
-	{
-		new Insets(0, 10, 10, 10), new Insets(10, 10, 10, 10)
-	};
-	public static Insets[] BOX_SHADOW_STRENGTH =
-	{
-		new Insets(20, 20, 20, 20), new Insets(20, 20, 20, 20)
-	};
+	public static int BOX_SHADOW_STRENGTH = 20;
+	public static int BOX_SHADOW_SIZE = 10;
 
 
 	static
@@ -87,11 +80,11 @@ public class Styles
 		{
 			new Color[]
 			{
-				new Color(84, 84, 84), new Color(84, 84, 84)
+				FIELD_BACKGROUND_COLOR, FIELD_BACKGROUND_COLOR
 			},
 			new Color[]
 			{
-				new Color(71, 114, 179), new Color(71, 114, 179)
+				FIELD_BACKGROUND_SELECTED_COLOR, FIELD_BACKGROUND_SELECTED_COLOR
 			},
 			new Color[]
 			{
@@ -106,7 +99,7 @@ public class Styles
 			},
 			new Color[]
 			{
-				new Color(71, 114, 179), new Color(71, 114, 179)
+				FIELD_BACKGROUND_SELECTED_COLOR, FIELD_BACKGROUND_SELECTED_COLOR
 			},
 			new Color[]
 			{
@@ -121,7 +114,7 @@ public class Styles
 			},
 			new Color[]
 			{
-				new Color(71, 114, 179), new Color(71, 114, 179)
+				FIELD_BACKGROUND_SELECTED_COLOR, FIELD_BACKGROUND_SELECTED_COLOR
 			},
 			new Color[]
 			{
@@ -135,12 +128,12 @@ public class Styles
 		// normal
 		new Color[]
 		{
-			new Color(83, 83, 83), new Color(55, 55, 55)
+			FIELD_BACKGROUND_COLOR, FIELD_BACKGROUND_COLOR
 		},
 		// selected
 		new Color[]
 		{
-			new Color(55, 55, 55), new Color(83, 83, 83)
+			FIELD_BACKGROUND_SELECTED_COLOR, FIELD_BACKGROUND_SELECTED_COLOR
 		}
 	};
 
@@ -154,7 +147,7 @@ public class Styles
 		// selected
 		new Color[]
 		{
-			new Color(71, 114, 179), new Color(71, 114, 179)
+			FIELD_BACKGROUND_SELECTED_COLOR, FIELD_BACKGROUND_SELECTED_COLOR
 		},
 		new Color[]
 		{

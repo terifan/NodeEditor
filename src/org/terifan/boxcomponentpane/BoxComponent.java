@@ -20,10 +20,9 @@ import static org.terifan.nodeeditor.Styles.TITLE_HEIGHT;
 import static org.terifan.nodeeditor.Styles.COLLAPSE_BUTTON_WIDTH;
 import static org.terifan.nodeeditor.Styles.TITLE_HEIGHT_PADDED;
 import static org.terifan.nodeeditor.Styles.BOX_SHADOW;
-import static org.terifan.nodeeditor.Styles.BOX_SHADOW_INSETS;
+import static org.terifan.nodeeditor.Styles.BOX_SHADOW_SIZE;
 import static org.terifan.nodeeditor.Styles.BOX_SHADOW_STRENGTH;
 import static org.terifan.nodeeditor.Styles.BOX_TITLE_TEXT_SHADOW_COLOR;
-import static org.terifan.nodeeditor.Styles.COMBOBOX_ARROW_COLOR;
 import org.terifan.nodeeditor.graphics.Arrow;
 
 
@@ -248,8 +247,11 @@ public abstract class BoxComponent<T extends BoxComponent, U extends BoxComponen
 			.setFont(Styles.BOX_FONT)
 			.render(aGraphics);
 
-		aGraphics.setColor(aSelected ? BOX_BORDER_SELECTED_COLOR : BOX_BORDER_COLOR);
-		aGraphics.drawRoundRect(aX, aY, aWidth, aHeight, BORDE_RADIUS, BORDE_RADIUS);
+		if (aSelected)
+		{
+			aGraphics.setColor(aSelected ? BOX_BORDER_SELECTED_COLOR : BOX_BORDER_COLOR);
+			aGraphics.drawRoundRect(aX, aY, aWidth, aHeight, BORDE_RADIUS, BORDE_RADIUS);
+		}
 
 		Arrow.paintArrow(aGraphics, mMinimized ? 1 : 2, aX + 17, aY + 2 + th / 2, 4, 4, BOX_TITLE_TEXT_SHADOW_COLOR, mTitleForeground);
 	}
@@ -263,27 +265,27 @@ public abstract class BoxComponent<T extends BoxComponent, U extends BoxComponen
 
 	protected void paintShadow(Graphics2D aGraphics, int aX, int aY, int aWidth, int aHeight)
 	{
-		int state = isMinimizedState(aHeight) ? 1 : 0;
+		boolean state = isMinimizedState(aHeight);
 
 		int bw = BOX_SHADOW.getWidth();
 		int bh = BOX_SHADOW.getHeight();
 		int r = 4;
 
-		int dx0 = aX - BOX_SHADOW_INSETS[state].left;
-		int dy0 = aY - BOX_SHADOW_INSETS[state].top;
+		int dx0 = aX - BOX_SHADOW_SIZE;
+		int dy0 = aY - (state ? BOX_SHADOW_SIZE : 0);
 		int dx1 = aX + r;
-		int dy1 = aY + r;
+		int dy1 = aY + r + (state ? 0 : BOX_SHADOW_SIZE);
 		int dx2 = aX + aWidth - r;
 		int dy2 = aY + aHeight - r;
-		int dx3 = aX + aWidth + BOX_SHADOW_INSETS[state].right;
-		int dy3 = aY + aHeight + BOX_SHADOW_INSETS[state].bottom;
+		int dx3 = aX + aWidth + BOX_SHADOW_SIZE;
+		int dy3 = aY + aHeight + BOX_SHADOW_SIZE;
 
 		int sx0 = 0;
 		int sy0 = 0;
-		int sx1 = BOX_SHADOW_STRENGTH[state].left;
-		int sy1 = BOX_SHADOW_STRENGTH[state].top;
-		int sx2 = bw - BOX_SHADOW_STRENGTH[state].right;
-		int sy2 = bh - BOX_SHADOW_STRENGTH[state].bottom;
+		int sx1 = BOX_SHADOW_STRENGTH;
+		int sy1 = BOX_SHADOW_STRENGTH;
+		int sx2 = bw - BOX_SHADOW_STRENGTH;
+		int sy2 = bh - BOX_SHADOW_STRENGTH;
 		int sx3 = bw;
 		int sy3 = bh;
 
