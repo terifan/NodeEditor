@@ -1,5 +1,6 @@
 package org.terifan.boxcomponentpane;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Insets;
@@ -14,12 +15,15 @@ import static org.terifan.nodeeditor.Styles.BOX_BACKGROUND_COLOR;
 import static org.terifan.nodeeditor.Styles.BOX_BORDER_COLOR;
 import static org.terifan.nodeeditor.Styles.BOX_BORDER_SELECTED_COLOR;
 import static org.terifan.nodeeditor.Styles.BOX_BORDER_TITLE_COLOR;
-import static org.terifan.nodeeditor.Styles.BOX_BORDER_TITLE_SEPARATOR_COLOR;
 import static org.terifan.nodeeditor.Styles.BOX_FOREGROUND_COLOR;
-import static org.terifan.nodeeditor.Styles.BOX_TITLE_TEXT_SHADOW_COLOR;
 import static org.terifan.nodeeditor.Styles.TITLE_HEIGHT;
 import static org.terifan.nodeeditor.Styles.COLLAPSE_BUTTON_WIDTH;
 import static org.terifan.nodeeditor.Styles.TITLE_HEIGHT_PADDED;
+import static org.terifan.nodeeditor.Styles.BOX_SHADOW;
+import static org.terifan.nodeeditor.Styles.BOX_SHADOW_SIZE;
+import static org.terifan.nodeeditor.Styles.BOX_SHADOW_STRENGTH;
+import static org.terifan.nodeeditor.Styles.BOX_TITLE_TEXT_SHADOW_COLOR;
+import org.terifan.nodeeditor.graphics.Arrow;
 
 
 public abstract class BoxComponent<T extends BoxComponent, U extends BoxComponentPane> implements Serializable, Renderable<T, U>
@@ -35,17 +39,47 @@ public abstract class BoxComponent<T extends BoxComponent, U extends BoxComponen
 	protected boolean mResizableVertical;
 	protected boolean mMinimized;
 	protected String mTitle;
+	protected Color mTitleBackground;
+	protected Color mTitleForeground;
 
 
 	public BoxComponent(String aTitle)
 	{
+		mTitle = aTitle;
+		mResizableVertical = true;
+		mResizableHorizontal = true;
 		mBounds = new Rectangle();
 		mMinimumSize = new Dimension(0, 0);
 		mMaximumSize = new Dimension(Short.MAX_VALUE, Short.MAX_VALUE);
-		mResizableHorizontal = true;
-		mResizableVertical = true;
 		mInsets = new Insets(TITLE_HEIGHT_PADDED + 6 + 4, 5 + 9, 6 + 4, 5 + 9);
-		mTitle = aTitle;
+		mTitleBackground = BOX_BORDER_TITLE_COLOR;
+		mTitleForeground = BOX_FOREGROUND_COLOR;
+	}
+
+
+	public Color getTitleBackground()
+	{
+		return mTitleBackground;
+	}
+
+
+	public Color getTitleForeground()
+	{
+		return mTitleForeground;
+	}
+
+
+	public BoxComponent<T, U> setTitleForeground(Color aColor)
+	{
+		mTitleForeground = aColor;
+		return this;
+	}
+
+
+	public BoxComponent<T, U> setTitleBackground(Color aColor)
+	{
+		mTitleBackground = aColor;
+		return this;
 	}
 
 
@@ -178,27 +212,21 @@ public abstract class BoxComponent<T extends BoxComponent, U extends BoxComponen
 
 	protected void paintBorder(Graphics2D aGraphics, int aX, int aY, int aWidth, int aHeight, boolean aSelected)
 	{
-		aX += 5;
-		aY += 4;
-		aWidth -= 10;
-		aHeight -= 8;
-
-		boolean minimized = mMinimized || aHeight <= 4 + 4 + TITLE_HEIGHT;
+		boolean minimized = isMinimizedState(aHeight);
 		int th = minimized ? TITLE_HEIGHT : TITLE_HEIGHT_PADDED;
 
 		if (minimized)
 		{
-			aGraphics.setColor(BOX_BORDER_TITLE_COLOR);
+			aGraphics.setColor(mTitleBackground);
 			aGraphics.fillRoundRect(aX, aY, aWidth, aHeight, BORDE_RADIUS, BORDE_RADIUS);
 		}
 		else
 		{
 			Shape oldClip = aGraphics.getClip();
 
-			aGraphics.setColor(BOX_BORDER_TITLE_COLOR);
+			aGraphics.setColor(mTitleBackground);
 			aGraphics.clipRect(aX, aY, aWidth, th);
 			aGraphics.fillRoundRect(aX, aY, aWidth, th + 3 + 12, BORDE_RADIUS, BORDE_RADIUS);
-
 			aGraphics.setClip(oldClip);
 
 			aGraphics.setColor(BOX_BACKGROUND_COLOR);
@@ -208,54 +236,79 @@ public abstract class BoxComponent<T extends BoxComponent, U extends BoxComponen
 			aGraphics.setClip(oldClip);
 		}
 
-		aGraphics.setColor(BOX_BORDER_TITLE_SEPARATOR_COLOR);
-		aGraphics.drawLine(aX, aY + th - 1, aX + aWidth, aY + th - 1);
-
 		int inset = 6 + 4 + COLLAPSE_BUTTON_WIDTH;
 
 		new TextBox(mTitle)
 			.setShadow(BOX_TITLE_TEXT_SHADOW_COLOR, 1, 1)
 			.setAnchor(Anchor.WEST)
 			.setBounds(aX + inset, aY + 3, aWidth - inset - 4, TITLE_HEIGHT)
-			.setForeground(BOX_FOREGROUND_COLOR)
+			.setForeground(mTitleForeground)
 			.setMaxLineCount(1)
 			.setFont(Styles.BOX_FONT)
 			.render(aGraphics);
 
-		aGraphics.setColor(aSelected ? BOX_BORDER_SELECTED_COLOR : BOX_BORDER_COLOR);
-		aGraphics.drawRoundRect(aX, aY, aWidth, aHeight, BORDE_RADIUS, BORDE_RADIUS);
-
-		aX += 10;
-		aY += 3 + th / 2;
-		int w = 10;
-		int h = 5;
-
-		if (mMinimized)
+		if (aSelected)
 		{
-			aGraphics.fillPolygon(new int[]
-			{
-				aX, aX + w, aX
-			}, new int[]
-			{
-				aY - h, aY, aY + h
-			}, 3);
+			aGraphics.setColor(aSelected ? BOX_BORDER_SELECTED_COLOR : BOX_BORDER_COLOR);
+			aGraphics.drawRoundRect(aX, aY, aWidth, aHeight, BORDE_RADIUS, BORDE_RADIUS);
 		}
-		else
-		{
-			aGraphics.fillPolygon(new int[]
-			{
-				aX, aX + w, aX + w / 2
-			}, new int[]
-			{
-				aY - h, aY - h, aY + h
-			}, 3);
-		}
+
+		Arrow.paintArrow(aGraphics, mMinimized ? 1 : 2, aX + 17, aY + 2 + th / 2, 4, 4, BOX_TITLE_TEXT_SHADOW_COLOR, mTitleForeground);
+	}
+
+
+	private boolean isMinimizedState(int aHeight)
+	{
+		return mMinimized || aHeight <= 4 + 4 + TITLE_HEIGHT;
+	}
+
+
+	protected void paintShadow(Graphics2D aGraphics, int aX, int aY, int aWidth, int aHeight)
+	{
+		boolean state = isMinimizedState(aHeight);
+
+		int bw = BOX_SHADOW.getWidth();
+		int bh = BOX_SHADOW.getHeight();
+		int r = 4;
+
+		int dx0 = aX - BOX_SHADOW_SIZE;
+		int dy0 = aY - (state ? BOX_SHADOW_SIZE : 0);
+		int dx1 = aX + r;
+		int dy1 = aY + r + (state ? 0 : BOX_SHADOW_SIZE);
+		int dx2 = aX + aWidth - r;
+		int dy2 = aY + aHeight - r;
+		int dx3 = aX + aWidth + BOX_SHADOW_SIZE;
+		int dy3 = aY + aHeight + BOX_SHADOW_SIZE;
+
+		int sx0 = 0;
+		int sy0 = 0;
+		int sx1 = BOX_SHADOW_STRENGTH;
+		int sy1 = BOX_SHADOW_STRENGTH;
+		int sx2 = bw - BOX_SHADOW_STRENGTH;
+		int sy2 = bh - BOX_SHADOW_STRENGTH;
+		int sx3 = bw;
+		int sy3 = bh;
+
+		aGraphics.drawImage(BOX_SHADOW, dx0, dy0, dx1, dy1, sx0, sy0, sx1, sy1, null);
+		aGraphics.drawImage(BOX_SHADOW, dx1, dy0, dx2, dy1, sx1, sy0, sx2, sy1, null);
+		aGraphics.drawImage(BOX_SHADOW, dx2, dy0, dx3, dy1, sx2, sy0, sx3, sy1, null);
+		aGraphics.drawImage(BOX_SHADOW, dx0, dy1, dx1, dy2, sx0, sy1, sx1, sy2, null);
+		aGraphics.drawImage(BOX_SHADOW, dx2, dy1, dx3, dy2, sx2, sy1, sx3, sy2, null);
+		aGraphics.drawImage(BOX_SHADOW, dx0, dy2, dx1, dy3, sx0, sy2, sx1, sy3, null);
+		aGraphics.drawImage(BOX_SHADOW, dx1, dy2, dx2, dy3, sx1, sy2, sx2, sy3, null);
+		aGraphics.drawImage(BOX_SHADOW, dx2, dy2, dx3, dy3, sx2, sy2, sx3, sy3, null);
 	}
 
 
 	@Override
 	public void paintComponent(U aPane, Graphics2D aGraphics, int aWidth, int aHeight, boolean aSelected)
 	{
-		paintBorder(aGraphics, 0, 0, aWidth, aHeight, aSelected);
+		int x = 5;
+		int y = 5;
+		int w = aWidth - 10;
+		int h = aHeight - 10;
+
+		paintShadow(aGraphics, x, y, w, h);
+		paintBorder(aGraphics, x, y, w, h, aSelected);
 	}
 }

@@ -9,6 +9,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import static org.terifan.nodeeditor.Styles.BOX_FOREGROUND_COLOR;
+import static org.terifan.nodeeditor.Styles.BOX_FOREGROUND_SHADOW_COLOR;
 import org.terifan.ui.TextBox;
 
 
@@ -21,24 +23,53 @@ public abstract class Property<T extends Property> implements Serializable
 	private final Rectangle mBounds;
 	private final TextBox mTextBox;
 	private boolean mUserSetSize;
-	private Node mNode;
+
+	protected Node mNode;
+	protected String mId;
 
 
-	protected Property(String aText)
+	public Property()
 	{
 		mConnectors = new ArrayList<>();
 		mPreferredSize = new Dimension();
 		mBounds = new Rectangle();
-
-		mTextBox = new TextBox(aText)
+		mTextBox = new TextBox("")
 			.setFont(Styles.BOX_ITEM_FONT)
-			.setForeground(Styles.BOX_FOREGROUND_COLOR);
+			.setShadow(BOX_FOREGROUND_SHADOW_COLOR, 1, 1)
+			.setForeground(BOX_FOREGROUND_COLOR);
+	}
+
+
+	protected Property(String aText)
+	{
+		this();
+
+		mTextBox.setText(aText);
 
 		setPreferredSize(mTextBox.measure().getSize());
 	}
 
 
 	protected abstract void paintComponent(NodeEditorPane aPane, Graphics2D aGraphics, boolean aHover);
+
+
+	public Object execute()
+	{
+		return null;
+	}
+
+
+	public String getId()
+	{
+		return mId;
+	}
+
+
+	public T setId(String aId)
+	{
+		mId = aId;
+		return (T)this;
+	}
 
 
 	void bind(Node aNode)
@@ -112,7 +143,7 @@ public abstract class Property<T extends Property> implements Serializable
 	public boolean isConnected(Direction aDirection)
 	{
 		Connector c = getConnector(aDirection);
-		return c != null && !c.getConnectedItems().isEmpty();
+		return c != null && !c.getConnectedProperties().isEmpty();
 	}
 
 
@@ -146,12 +177,12 @@ public abstract class Property<T extends Property> implements Serializable
 	}
 
 
-	/**
-	 * Perform the action of this item, for instance after a mouse click.
-	 */
-	protected void actionPerformed(NodeEditorPane aPane, Point aClickPoint)
-	{
-	}
+//	/**
+//	 * Perform the action of this item, for instance after a mouse click.
+//	 */
+//	protected void actionPerformed(NodeEditorPane aPane, Point aClickPoint)
+//	{
+//	}
 
 
 	protected void connectionsChanged(NodeEditorPane aPane, Point aClickPoint)
@@ -182,5 +213,12 @@ public abstract class Property<T extends Property> implements Serializable
 	public void fireMouseReleased(NodeEditorPane aPane, Point aPoint)
 	{
 		mouseReleased(aPane, aPoint);
+	}
+
+
+	@Override
+	public String toString()
+	{
+		return "Property{" + "mId=" + getId() + ", Node=" + mNode + "}";
 	}
 }

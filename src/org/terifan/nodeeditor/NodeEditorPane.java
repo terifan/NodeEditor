@@ -10,6 +10,9 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import javax.imageio.ImageIO;
 import org.terifan.boxcomponentpane.BoxComponentPane;
 import org.terifan.nodeeditor.graphics.SplineRenderer;
@@ -21,12 +24,18 @@ public class NodeEditorPane extends BoxComponentPane<Node, NodeEditorPane>
 {
 	private static final long serialVersionUID = 1L;
 
-	private transient final ArrayList<OnClickHandler> mButtonHandlers;
+	private transient Function<String, BufferedImage> mIconProvider;
+
+	@Deprecated
 	private transient final ArrayList<ImagePainter> mImagePainters;
+
+	private transient final ArrayList<OnClickHandler> mButtonHandlers;
 	private transient Property mClickedItem;
 	private transient Popup mPopup;
 	private transient Connection mSelectedConnection;
 	private transient Connector mDragConnector;
+	private transient HashMap<String, Consumer<Property>> mCommands;
+
 	private boolean mConnectorSelectionAllowed;
 	private boolean mRemoveInConnectionsOnDrop;
 
@@ -35,9 +44,39 @@ public class NodeEditorPane extends BoxComponentPane<Node, NodeEditorPane>
 	{
 		super(aModel);
 
-		mButtonHandlers = new ArrayList<>();
 		mImagePainters = new ArrayList<>();
+
+		mCommands = new HashMap<>();
+		mButtonHandlers = new ArrayList<>();
 		mRemoveInConnectionsOnDrop = true;
+
+		setIconProvider(Styles::loadIcon);
+	}
+
+
+	public NodeEditorPane bind(String aCommand, Consumer<Property> aConsumer)
+	{
+		mCommands.put(aCommand, aConsumer);
+		return this;
+	}
+
+
+	public void fireCommand(String aCommand, Node aNode, Property aProperty)
+	{
+		mCommands.get(aCommand).accept(aProperty);
+	}
+
+
+	public NodeEditorPane setIconProvider(Function<String, BufferedImage> aProvider)
+	{
+		mIconProvider = aProvider;
+		return this;
+	}
+
+
+	public Function<String, BufferedImage> getIconProvider()
+	{
+		return mIconProvider;
 	}
 
 
@@ -133,6 +172,7 @@ public class NodeEditorPane extends BoxComponentPane<Node, NodeEditorPane>
 	}
 
 
+	@Deprecated
 	public NodeEditorPane addImagePainter(ImagePainter aImagePainter)
 	{
 		mImagePainters.add(aImagePainter);
@@ -140,6 +180,7 @@ public class NodeEditorPane extends BoxComponentPane<Node, NodeEditorPane>
 	}
 
 
+	@Deprecated
 	public void paintImage(ImageProperty aProperty, Graphics aGraphics, Rectangle aBounds)
 	{
 		for (ImagePainter rl : mImagePainters)
@@ -167,7 +208,7 @@ public class NodeEditorPane extends BoxComponentPane<Node, NodeEditorPane>
 		}
 	}
 
-
+	@Deprecated
 	private static ImagePainter FALLBACK_PAINTER = (aPane, aNode, aProperty, aGraphics, aBounds) ->
 	{
 		if (aProperty.getImagePath() != null)
@@ -287,13 +328,6 @@ public class NodeEditorPane extends BoxComponentPane<Node, NodeEditorPane>
 
 
 	@Override
-	protected void paintComponent(Graphics aGraphics)
-	{
-		super.paintComponent(aGraphics);
-	}
-
-
-	@Override
 	protected void paintBoxComponents(Graphics2D aGraphics)
 	{
 		NodeModel model = (NodeModel)getModel();
@@ -305,12 +339,15 @@ public class NodeEditorPane extends BoxComponentPane<Node, NodeEditorPane>
 		{
 			if (mSelectedConnection == connection)
 			{
-				SplineRenderer.drawSpline(aGraphics, connection, getScale(), Styles.CONNECTOR_COLOR_OUTER_SELECTED, Styles.CONNECTOR_COLOR_INNER_SELECTED, Styles.CONNECTOR_COLOR_INNER_SELECTED);
+				SplineRenderer.drawSpline(aGraphics, connection, getScale(), Styles.CONNECTOR_COLOR_OUTER_SELECTED, connection.mOut.getColor(), connection.mIn.getColor());
 			}
 			else
 			{
-				Color start = getSelectedBoxes().contains(connection.getOut().getProperty().getNode()) ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : Styles.CONNECTOR_COLOR_INNER;
-				Color end = getSelectedBoxes().contains(connection.getIn().getProperty().getNode()) ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : Styles.CONNECTOR_COLOR_INNER;
+				ArrayList<Node> selectedBoxes = getSelectedBoxes();
+				boolean selected = selectedBoxes.contains(connection.getOut().getProperty().getNode()) || selectedBoxes.contains(connection.getIn().getProperty().getNode());
+
+				Color start = selected ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : connection.mOut.getColor();
+				Color end = selected ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : connection.mIn.getColor();
 
 				SplineRenderer.drawSpline(aGraphics, connection, getScale(), Styles.CONNECTOR_COLOR_OUTER, start, end);
 			}

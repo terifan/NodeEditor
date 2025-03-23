@@ -79,16 +79,21 @@ public class Node extends BoxComponent<Node, NodeEditorPane> implements Serializ
 	}
 
 
-	public Property getProperty(String aPath)
+	public <T extends Property> T getProperty(String aPath)
 	{
-		String id = aPath.contains(".") ? aPath.split("\\.")[1] : aPath;
+		if (aPath == null)
+		{
+			throw new IllegalArgumentException("Path is null");
+		}
+
+		String id = aPath;
 		Property item = null;
 
 		for (Property pi : mProperties)
 		{
 			Property ab = (Property)pi;
 
-			if (ab.getText().equalsIgnoreCase(id))
+			if (id.equals(ab.getId()))
 			{
 				if (item != null)
 				{
@@ -100,10 +105,10 @@ public class Node extends BoxComponent<Node, NodeEditorPane> implements Serializ
 
 		if (item == null)
 		{
-			throw new IllegalArgumentException("Failed to find NodeItem, ensure text or identity is set: " + id + " (" + aPath + ")");
+			throw new IllegalArgumentException("Failed to find property: id: " + id + ", node: " + mTitle);
 		}
 
-		return item;
+		return (T)item;
 	}
 
 
@@ -315,5 +320,12 @@ public class Node extends BoxComponent<Node, NodeEditorPane> implements Serializ
 	public ArrayList<Node> getConnectedNodes()
 	{
 		return mModel.getConnectedNodes(this);
+	}
+
+
+	@Override
+	public String toString()
+	{
+		return "Node{" + mTitle + '}';
 	}
 }

@@ -1,4 +1,4 @@
-package examples;
+package examples.deprecated;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
@@ -18,13 +18,12 @@ import org.terifan.nodeeditor.widgets.ComboBoxProperty;
 import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Node;
 import org.terifan.nodeeditor.NodeModel;
-import org.terifan.nodeeditor.widgets.TextProperty;
+import org.terifan.nodeeditor.widgets.ValueProperty;
 import static org.terifan.nodeeditor.Direction.IN;
 import static org.terifan.nodeeditor.Direction.OUT;
-import static org.terifan.nodeeditor.Styles.GRAY;
-import static org.terifan.nodeeditor.Styles.PURPLE;
-import static org.terifan.nodeeditor.Styles.YELLOW;
-import org.terifan.util.Debug;
+import static org.terifan.nodeeditor.Styles.DefaultColors.GRAY;
+import static org.terifan.nodeeditor.Styles.DefaultColors.PURPLE;
+import static org.terifan.nodeeditor.Styles.DefaultColors.YELLOW;
 
 
 public class TestJavaSerializingNodeModel
@@ -89,7 +88,7 @@ public class TestJavaSerializingNodeModel
 		NodeModel model = new NodeModel();
 
 		model.addNode(new Node("Color",
-			new TextProperty("Color").addConnector(OUT, YELLOW),
+			new ValueProperty("Color").addConnector(OUT, YELLOW),
 			new SliderProperty("Red", 0, 1, 0).addConnector(IN, GRAY),
 			new SliderProperty("Green", 0, 1, 0.5).addConnector(IN, GRAY),
 			new SliderProperty("Blue", 0, 1, 0.75).addConnector(IN, GRAY),
@@ -97,27 +96,27 @@ public class TestJavaSerializingNodeModel
 		));
 
 		model.addNode(new Node("Texture",
-			new TextProperty("Color").addConnector(OUT, YELLOW),
-			new TextProperty("Alpha").addConnector(OUT, GRAY),
+			new ValueProperty("Color").addConnector(OUT, YELLOW),
+			new ValueProperty("Alpha").addConnector(OUT, GRAY),
 			new ButtonProperty("Open"),
 			new ImageProperty("image", 200, 200).setImagePath("Big_pebbles_pxr128.jpg"),
-			new TextProperty("Vector").addConnector(IN, PURPLE)
+			new ValueProperty("Vector").addConnector(IN, PURPLE)
 		));
 
 		model.addNode(new Node("Texture",
-			new TextProperty("Color").addConnector(OUT, YELLOW),
-			new TextProperty("Alpha").addConnector(OUT, GRAY),
+			new ValueProperty("Color").addConnector(OUT, YELLOW),
+			new ValueProperty("Alpha").addConnector(OUT, GRAY),
 			new ButtonProperty("Open"),
 			new ImageProperty("image", 200, 200).setImagePath("Big_pebbles_pxr128_bmp.jpg"),
-			new TextProperty("Vector").addConnector(IN, PURPLE)
+			new ValueProperty("Vector").addConnector(IN, PURPLE)
 		));
 
 		model.addNode(new Node("Texture",
-			new TextProperty("Color").addConnector(OUT, YELLOW),
-			new TextProperty("Alpha").addConnector(OUT, GRAY),
+			new ValueProperty("Color").addConnector(OUT, YELLOW),
+			new ValueProperty("Alpha").addConnector(OUT, GRAY),
 			new ButtonProperty("Open"),
 			new ImageProperty("image", 200, 200).setImagePath("Big_pebbles_pxr128_normal.jpg"),
-			new TextProperty("Vector").addConnector(IN, PURPLE)
+			new ValueProperty("Vector").addConnector(IN, PURPLE)
 		));
 
 		model.addNode(new Node("Output",
@@ -130,11 +129,11 @@ public class TestJavaSerializingNodeModel
 		));
 
 		model.addNode(new Node("TextureCoordinate",
-			new TextProperty("UV").addConnector(OUT, PURPLE)
+			new ValueProperty("UV").addConnector(OUT, PURPLE)
 		));
 
 		model.addNode(new Node("Multiply",
-			new TextProperty("Value").addConnector(OUT, GRAY),
+			new ValueProperty("Value").addConnector(OUT, GRAY),
 			new ComboBoxProperty("Operation", 2, "Add", "Subtract", "Multiply", "Divide", "Absolute", "Modulo", "Greater Than"),
 			new CheckBoxProperty("Clamp", false),
 			new SliderProperty("Value", 0.5, 0.01).addConnector(IN, GRAY),
@@ -142,14 +141,14 @@ public class TestJavaSerializingNodeModel
 		));
 
 		model.addNode(new Node("Mix",
-			new TextProperty("Color").addConnector(OUT, YELLOW),
+			new ValueProperty("Color").addConnector(OUT, YELLOW),
 			new SliderProperty("Fac", 0, 1, 0.5).addConnector(IN, GRAY),
 			new ColorChooserProperty("Color", new Color(255, 0, 0)).addConnector(IN, YELLOW),
 			new ColorChooserProperty("Color", new Color(0, 0, 255)).addConnector(IN, YELLOW)
 		));
 
 		model.addNode(new Node("Mix",
-			new TextProperty("Color").addConnector(OUT, YELLOW),
+			new ValueProperty("Color").addConnector(OUT, YELLOW),
 			new SliderProperty("Fac", 0, 1, 0.5).addConnector(IN, GRAY),
 			new ColorChooserProperty("Color", new Color(255, 0, 0)).addConnector(IN, YELLOW),
 			new ColorChooserProperty("Color", new Color(0, 0, 255)).addConnector(IN, YELLOW)

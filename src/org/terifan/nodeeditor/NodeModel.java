@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.terifan.boxcomponentpane.BoxComponentModel;
+import org.terifan.nodeeditor.widgets.ValueProperty;
 import static org.terifan.util.Assert.*;
 
 
@@ -51,8 +52,8 @@ public class NodeModel extends BoxComponentModel<Node> implements Serializable
 		Connector out = getConnector(aFromNodeIndex, aFromPropertyIndex, Direction.OUT);
 		Connector in = getConnector(aToNodeIndex, aToPropertyIndex, Direction.IN);
 
-		assertNotNull(out, "The 'From' parameters are not referencing a node/property with direction OUT.");
-		assertNotNull(in, "The 'To' parameters are not referencing a node/property with direction IN.");
+		assertNotNull(out, "The 'From' parameters are not referencing a node/property with direction OUT: " + aFromNodeIndex+", "+aFromPropertyIndex);
+		assertNotNull(in, "The 'To' parameters are not referencing a node/property with direction IN: " + aToNodeIndex+", "+aToPropertyIndex);
 
 		return addConnection(out, in);
 	}
@@ -99,27 +100,27 @@ public class NodeModel extends BoxComponentModel<Node> implements Serializable
 	}
 
 
-	public List<Connection> getConnectionsTo(Property aItem)
+	public List<Connection> getConnectionsTo(Property aProperty)
 	{
-		return mConnections.stream().filter(e -> e.getIn().getProperty() == aItem).collect(Collectors.toList());
-	}
-
-
-	public List<Connection> getConnectionsFrom(Property aItem)
-	{
-		return mConnections.stream().filter(e -> e.getOut().getProperty() == aItem).collect(Collectors.toList());
+		return mConnections.stream().filter(e -> e.getIn().getProperty() == aProperty).collect(Collectors.toList());
 	}
 
 
 	public List<Property> getConnectionsTo(Connector aConnector)
 	{
-		return mConnections.stream().filter(e -> e.getIn() == aConnector).map(e -> e.getIn().getProperty()).collect(Collectors.toList());
+		return mConnections.stream().filter(e -> e.getIn() == aConnector).map(e -> e.getOut().getProperty()).collect(Collectors.toList());
+	}
+
+
+	public List<Connection> getConnectionsFrom(Property aProperty)
+	{
+		return mConnections.stream().filter(e -> e.getOut().getProperty() == aProperty).collect(Collectors.toList());
 	}
 
 
 	public List<Property> getConnectionsFrom(Connector aConnector)
 	{
-		return mConnections.stream().filter(e -> e.getOut() == aConnector).map(e -> e.getOut().getProperty()).collect(Collectors.toList());
+		return mConnections.stream().filter(e -> e.getOut() == aConnector).map(e -> e.getIn().getProperty()).collect(Collectors.toList());
 	}
 
 
@@ -142,5 +143,18 @@ public class NodeModel extends BoxComponentModel<Node> implements Serializable
 		}
 
 		return result;
+	}
+
+
+	public List<Property> getPropertiesConnectingTo(Property aProperty)
+	{
+		return getConnectionsTo(aProperty).stream().map(e->e.getOut()).map(e->e.mProperty).collect(Collectors.toList());
+	}
+
+
+	@Override
+	public String toString()
+	{
+		return "NodeModel{" + "mConnections=" + mConnections + '}';
 	}
 }

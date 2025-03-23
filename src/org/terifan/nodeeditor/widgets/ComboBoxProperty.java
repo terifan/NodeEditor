@@ -12,6 +12,9 @@ import org.terifan.nodeeditor.Property;
 import org.terifan.nodeeditor.graphics.Popup;
 import org.terifan.nodeeditor.graphics.Popup.Option;
 import org.terifan.nodeeditor.Styles;
+import static org.terifan.nodeeditor.Styles.BOX_TITLE_TEXT_SHADOW_COLOR;
+import static org.terifan.nodeeditor.Styles.COMBOBOX_ARROW_COLOR;
+import org.terifan.nodeeditor.graphics.Arrow;
 import org.terifan.ui.Anchor;
 import org.terifan.ui.TextBox;
 
@@ -51,31 +54,22 @@ public class ComboBoxProperty extends Property<ComboBoxProperty>
 		aGraphics.setColor(Styles.SLIDER_BORDER_COLOR);
 		aGraphics.fillRoundRect(bounds.x, bounds.y, bounds.width, bounds.height, 4, 4);
 
-		aGraphics.setPaint(new LinearGradientPaint(0, bounds.y + 1, 0, bounds.y + bounds.height - 2, RANGES, Styles.CHECKBOX_COLORS[mArmed ? 1 : 0]));
+		aGraphics.setPaint(new LinearGradientPaint(0, bounds.y + 1, 0, bounds.y + bounds.height - 2, RANGES, Styles.COMBOBOX_COLORS[mArmed ? 1 : 0]));
 		aGraphics.fillRoundRect(bounds.x + 1, bounds.y + 1, bounds.width - 2, bounds.height - 2, 4, 4);
 
-		int pw = 2;
-		int ph = 4;
-		int ax = bounds.x + bounds.width - 7;
-		int ay = bounds.y + bounds.height / 2;
-		int[] px = new int[]
-		{
-			ax - pw, ax, ax + pw
-		};
+		aGraphics.setPaint(Styles.COMBOBOX_COLORS[2][0]);
+		aGraphics.drawRoundRect(bounds.x + 1, bounds.y + 1, bounds.width - 2, bounds.height - 2, 4, 4);
 
-		aGraphics.setColor(Styles.COMBOBOX_ARROW_COLOR);
-		aGraphics.fillPolygon(px, new int[]
-		{
-			ay - 1, ay - ph, ay - 1
-		}, 3);
-		aGraphics.fillPolygon(px, new int[]
-		{
-			ay + 1, ay + ph, ay + 1
-		}, 3);
+		int x = bounds.x + bounds.width - 12;
+		int y = bounds.y + bounds.height / 2 + 1;
+		int w = 4;
+		int h = 4;
+
+		Arrow.paintArrow(aGraphics, 2, x, y, w, h, BOX_TITLE_TEXT_SHADOW_COLOR, COMBOBOX_ARROW_COLOR);
 
 		aGraphics.setPaint(oldPaint);
 
-		getTextBox().setBounds(bounds).setAnchor(Anchor.WEST).setMargins(0, 8, 0, 15).setForeground(Styles.BOX_FOREGROUND_SELECTED_COLOR).setMaxLineCount(1).setFont(Styles.SLIDER_FONT).render(aGraphics);
+		getTextBox().setBounds(bounds).setAnchor(Anchor.WEST).setMargins(0, 8, 0, 15).setForeground(Styles.BOX_FOREGROUND_COLOR).setMaxLineCount(1).setFont(Styles.SLIDER_FONT).render(aGraphics);
 	}
 
 

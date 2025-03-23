@@ -117,11 +117,11 @@ class NodeEditorMouseListener<T extends Node, U extends NodeEditorPane> extends 
 			{
 				clickedBox = node;
 
-				if (new Rectangle(b.x + 11, b.y + 7, 14, 16).contains(mClickPoint))
+				if (new Rectangle(b.x + 11, b.y + 7, 20, 20).contains(mClickPoint))
 				{
 					node.setMinimized(!node.isMinimized());
 					updateSelections(aEvent, clickedBox);
-					break;
+					return;
 				}
 
 				Property tmp = node.mousePressed(mClickPoint);
@@ -134,7 +134,7 @@ class NodeEditorMouseListener<T extends Node, U extends NodeEditorPane> extends 
 						mSelectedProperty = tmp;
 						mPane.repaint();
 
-						tmp.actionPerformed(mPane, mClickPoint);
+//						tmp.actionPerformed(mPane, mClickPoint);
 						break;
 					}
 				}
