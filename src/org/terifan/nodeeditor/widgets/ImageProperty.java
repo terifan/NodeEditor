@@ -18,7 +18,7 @@ public class ImageProperty extends Property<ImageProperty>
 {
 	private static final long serialVersionUID = 1L;
 
-	protected transient BufferedImage mRenderedImage;
+	protected transient BufferedImage mImage;
 
 	@Deprecated
 	protected String mImagePath;
@@ -58,9 +58,16 @@ public class ImageProperty extends Property<ImageProperty>
 	}
 
 
-	public BufferedImage getRenderedImage()
+	public BufferedImage getImage()
 	{
-		return mRenderedImage;
+		return mImage;
+	}
+
+
+	public ImageProperty setImage(BufferedImage aImage)
+	{
+		mImage = aImage;
+		return this;
 	}
 
 
@@ -100,52 +107,7 @@ public class ImageProperty extends Property<ImageProperty>
 			}
 		}
 
-		if (mRenderedImage != null)
-		{
-			aGraphics.drawImage(mRenderedImage, bounds.x, bounds.y, bounds.width, bounds.height, null);
-		}
-
+		aGraphics.drawImage(mImage, bounds.x, bounds.y, bounds.width, bounds.height, null);
 //		aPane.paintImage(this, aGraphics, bounds);
-	}
-
-
-	@Override
-	public void execute(Context aContext)
-	{
-		mRenderedImage = new BufferedImage(mWidth, mHeight, mType);
-
-		for (int y = 0; y < mHeight; y++)
-		{
-			for (int x = 0; x < mWidth; x++)
-			{
-				aContext.params.put("x", x / (double)mWidth);
-				aContext.params.put("y", y / (double)mHeight);
-
-				Property property = getNode().getProperty(mSourceRGB);
-				property.execute(aContext);
-
-				HashMap<String, Object> map = (HashMap<String,Object>)aContext.result;
-
-				System.out.println(map);
-
-				int r = (int)(255 * (Double)map.getOrDefault("r", 0.0));
-				int g = (int)(255 * (Double)map.getOrDefault("g", 0.0));
-				int b = (int)(255 * (Double)map.getOrDefault("b", 0.0));
-
-				int alpha = 0xff000000;
-
-//				if (mSourceAlpha != null)
-//				{
-//					property = getNode().getProperty(mSourceAlpha);
-//					property.execute(aContext);
-//
-//					alpha = ((int)(255 * (Double)aContext.params.getOrDefault("alpha", 1.0))) << 24;
-//				}
-
-				mRenderedImage.setRGB(x, y, alpha | (r<<16)+(g<<8)+b);
-			}
-		}
-
-		aContext.getEditor().repaint();
 	}
 }

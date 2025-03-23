@@ -1,4 +1,4 @@
-package examples;
+package examples.deprecated;
 
 import javax.swing.JFrame;
 import org.terifan.nodeeditor.util.AutoLayout;

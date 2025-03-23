@@ -58,13 +58,6 @@ public class SliderProperty extends Property<SliderProperty>
 	}
 
 
-//	public SliderProperty setProvides(String... aIds)
-//	{
-//		mIds = aIds;
-//		return this;
-//	}
-
-
 	public double getValue()
 	{
 		return mValue;
@@ -123,7 +116,7 @@ public class SliderProperty extends Property<SliderProperty>
 
 			Rectangle m = new TextBox(String.format("%3.3f", mValue)).setBounds(bounds).setAnchor(Anchor.EAST).setMargins(0, 0, 0, 15).setForeground(Styles.SLIDER_COLORS[i][2][0]).setMaxLineCount(1).setFont(Styles.SLIDER_FONT).render(aGraphics).measure();
 
-			textBox.setSuffix(":").setBounds(bounds).setAnchor(Anchor.WEST).setMargins(0, 15, 0, m.width).setForeground(Styles.SLIDER_COLORS[i][2][1]).setMaxLineCount(1).setFont(Styles.SLIDER_FONT).render(aGraphics);
+			textBox.setBounds(bounds).setAnchor(Anchor.WEST).setMargins(0, 15, 0, m.width).setForeground(Styles.SLIDER_COLORS[i][2][1]).setMaxLineCount(1).setFont(Styles.SLIDER_FONT).render(aGraphics);
 		}
 	}
 
@@ -187,37 +180,15 @@ public class SliderProperty extends Property<SliderProperty>
 
 
 	@Override
-	public void execute(Context aContext)
+	public Object execute()
 	{
-		HashMap<String,Object> total = new HashMap<>();
+		Connector in = getConnector(Direction.IN);
 
-		List<Connector> in = getConnectors(Direction.IN);
-
-		if (!in.isEmpty())
+		if (in != null && !in.getConnectedProperties().isEmpty())
 		{
-//			HashMap<String,Object> total = new HashMap<>();
-
-			for (Connector connector : in)
-			{
-				for (Property p : connector.getConnectedProperties())
-				{
-					p.execute(aContext);
-
-					total.put(mId, aContext.result);
-
-//					aContext.result = aContext.result;
-				}
-			}
-
-//			aContext.result = total;
-		}
-		else
-		{
-//			aContext.params.put(mId, getValue());
-
-			total.put(mId, getValue());
+			return in.getConnectedProperties().get(0).execute();
 		}
 
-		aContext.result = total;
+		return mValue;
 	}
 }

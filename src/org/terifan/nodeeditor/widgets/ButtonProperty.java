@@ -100,7 +100,14 @@ public class ButtonProperty extends Property<ButtonProperty>
 	{
 		mArmed = true;
 
-		aPane.fireCommand(mCommand, getNode(), this);
+		try
+		{
+			aPane.fireCommand(mCommand, getNode(), this);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace(System.out);
+		}
 
 		return true;
 	}
@@ -112,11 +119,4 @@ public class ButtonProperty extends Property<ButtonProperty>
 		mArmed = false;
 		aPane.repaint();
 	}
-
-
-//	@Override
-//	protected void actionPerformed(NodeEditorPane aPane, Point aClickPoint)
-//	{
-//		aPane.fireButtonClicked(this);
-//	}
 }

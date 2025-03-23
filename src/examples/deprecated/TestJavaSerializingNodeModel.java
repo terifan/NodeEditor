@@ -1,4 +1,4 @@
-package examples;
+package examples.deprecated;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;

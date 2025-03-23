@@ -1,4 +1,4 @@
-package examples;
+package examples.deprecated;
 
 import java.util.HashMap;
 import javax.swing.JFrame;

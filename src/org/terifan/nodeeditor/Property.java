@@ -28,16 +28,23 @@ public abstract class Property<T extends Property> implements Serializable
 	protected String mId;
 
 
-	protected Property(String aText)
+	public Property()
 	{
 		mConnectors = new ArrayList<>();
 		mPreferredSize = new Dimension();
 		mBounds = new Rectangle();
-
-		mTextBox = new TextBox(aText)
+		mTextBox = new TextBox("")
 			.setFont(Styles.BOX_ITEM_FONT)
 			.setShadow(BOX_FOREGROUND_SHADOW_COLOR, 1, 1)
 			.setForeground(BOX_FOREGROUND_COLOR);
+	}
+
+
+	protected Property(String aText)
+	{
+		this();
+
+		mTextBox.setText(aText);
 
 		setPreferredSize(mTextBox.measure().getSize());
 	}
@@ -46,8 +53,9 @@ public abstract class Property<T extends Property> implements Serializable
 	protected abstract void paintComponent(NodeEditorPane aPane, Graphics2D aGraphics, boolean aHover);
 
 
-	public void execute(Context aContext)
+	public Object execute()
 	{
+		return null;
 	}
 
 

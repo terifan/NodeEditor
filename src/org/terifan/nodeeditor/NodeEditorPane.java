@@ -34,7 +34,7 @@ public class NodeEditorPane extends BoxComponentPane<Node, NodeEditorPane>
 	private transient Popup mPopup;
 	private transient Connection mSelectedConnection;
 	private transient Connector mDragConnector;
-	private transient HashMap<String, Consumer<Context>> mCommands;
+	private transient HashMap<String, Consumer<Property>> mCommands;
 
 	private boolean mConnectorSelectionAllowed;
 	private boolean mRemoveInConnectionsOnDrop;
@@ -54,7 +54,7 @@ public class NodeEditorPane extends BoxComponentPane<Node, NodeEditorPane>
 	}
 
 
-	public NodeEditorPane bind(String aCommand, Consumer<Context> aConsumer)
+	public NodeEditorPane bind(String aCommand, Consumer<Property> aConsumer)
 	{
 		mCommands.put(aCommand, aConsumer);
 		return this;
@@ -63,7 +63,7 @@ public class NodeEditorPane extends BoxComponentPane<Node, NodeEditorPane>
 
 	public void fireCommand(String aCommand, Node aNode, Property aProperty)
 	{
-		mCommands.get(aCommand).accept(new Context(this, aNode, aProperty));
+		mCommands.get(aCommand).accept(aProperty);
 	}
 
 

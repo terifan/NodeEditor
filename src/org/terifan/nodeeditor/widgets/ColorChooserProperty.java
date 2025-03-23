@@ -16,17 +16,23 @@ import org.terifan.ui.Anchor;
 public class ColorChooserProperty extends Property<ColorChooserProperty>
 {
 	private static final long serialVersionUID = 1L;
-	private transient Rectangle mColorButtonBounds;
+	private final Rectangle mColorButtonBounds;
 
 	private Color mColor;
+
+
+	public ColorChooserProperty()
+	{
+		this("", Color.BLACK);
+	}
 
 
 	public ColorChooserProperty(String aText, Color aColor)
 	{
 		super(aText);
 
-		mColor = aColor;
 		mColorButtonBounds = new Rectangle();
+		mColor = aColor;
 
 		getPreferredSize().height = 20;
 	}
@@ -63,19 +69,6 @@ public class ColorChooserProperty extends Property<ColorChooserProperty>
 	}
 
 
-//	@Override
-//	protected void actionPerformed(NodeEditorPane aPane, Point aClickPoint)
-//	{
-//		if (!isConnected(Direction.IN))
-//		{
-//			Color c = JColorChooser.showDialog(aPane, getTextBox().getText(), mColor);
-//			if (c != null)
-//			{
-//				mColor = c;
-//				aPane.repaint();
-//			}
-//		}
-//	}
 	@Override
 	protected boolean mousePressed(NodeEditorPane aPane, Point aClickPoint)
 	{

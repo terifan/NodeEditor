@@ -1,8 +1,8 @@
 package org.terifan.nodeeditor.widgets;
 
 import java.awt.Graphics2D;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import org.terifan.nodeeditor.Connector;
 import org.terifan.nodeeditor.Context;
 import org.terifan.nodeeditor.Direction;
@@ -15,7 +15,9 @@ public class ValueProperty extends Property<ValueProperty>
 {
 	private static final long serialVersionUID = 1L;
 
-	private String[] mIds;
+	private String mProvide;
+	private Object mValue;
+	private Function<ValueProperty, Object> mProducer;
 
 
 	public ValueProperty(String aLabel)
@@ -34,38 +36,55 @@ public class ValueProperty extends Property<ValueProperty>
 	}
 
 
-	public ValueProperty setProvides(String... aIds)
+	public Object getValue()
 	{
-		mIds = aIds;
+		return mValue;
+	}
+
+
+	public ValueProperty setValue(Object aValue)
+	{
+		mValue = aValue;
+		return this;
+	}
+
+
+	public ValueProperty setProvides(String aProvide)
+	{
+		mProvide = aProvide;
+		return this;
+	}
+
+
+	public ValueProperty setProducer(Function<ValueProperty, Object> aProducer)
+	{
+		mProducer = aProducer;
 		return this;
 	}
 
 
 	@Override
-	public void execute(Context aContext)
+	public Object execute()
 	{
-		Connector in = getConnector(Direction.IN);
-
-		if (in != null)
+		if (mValue == null)
 		{
-			for (Property p : in.getConnectedProperties())
+			Connector in = getConnector(Direction.IN);
+
+			if (in != null)
 			{
-				p.execute(aContext);
+				return in.getConnectedProperties().get(0).execute();
+			}
+			else if (mProducer != null)
+			{
+				return mProducer.apply(this);
+			}
+			else if (mProvide != null)
+			{
+				return mNode.getProperty(mProvide).execute();
 			}
 		}
-		else
-		{
-			HashMap<String,Object> total = new HashMap<>();
 
-			for (String id : mIds)
-			{
-				Property p = getNode().getProperty(id);
-				p.execute(aContext);
-				total.put(id, aContext.result);
-			}
-
-			aContext.result = total;
-		}
+		return mValue;
 	}
 
 

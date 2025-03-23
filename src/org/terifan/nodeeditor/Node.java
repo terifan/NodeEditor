@@ -81,7 +81,11 @@ public class Node extends BoxComponent<Node, NodeEditorPane> implements Serializ
 
 	public <T extends Property> T getProperty(String aPath)
 	{
-//		String id = aPath.contains(".") ? aPath.split("\\.")[1] : aPath;
+		if (aPath == null)
+		{
+			throw new IllegalArgumentException("Path is null");
+		}
+
 		String id = aPath;
 		Property item = null;
 
@@ -97,19 +101,11 @@ public class Node extends BoxComponent<Node, NodeEditorPane> implements Serializ
 				}
 				item = pi;
 			}
-//			else if (ab.getText().equalsIgnoreCase(id))
-//			{
-//				if (item != null)
-//				{
-//					throw new IllegalStateException("More than one NodeItem have the same name, provide an Identity to either of them: " + ab.getText());
-//				}
-//				item = pi;
-//			}
 		}
 
 		if (item == null)
 		{
-			throw new IllegalArgumentException("Failed to find NodeItem, ensure text or identity is set: " + id + " (" + aPath + ")");
+			throw new IllegalArgumentException("Failed to find property: id: " + id + ", node: " + mTitle);
 		}
 
 		return (T)item;

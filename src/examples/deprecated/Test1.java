@@ -1,4 +1,4 @@
-package examples;
+package examples.deprecated;
 
 import org.terifan.nodeeditor.widgets.SliderProperty;
 import org.terifan.nodeeditor.widgets.ImageProperty;

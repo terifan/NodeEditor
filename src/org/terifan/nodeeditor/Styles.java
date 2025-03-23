@@ -159,7 +159,7 @@ public class Styles
 	{
 		new Color[]
 		{
-			new Color(166, 166, 166), new Color(137, 137, 137)
+			new Color(84, 84, 84), new Color(84, 84, 84)
 		},
 		new Color[]
 		{
