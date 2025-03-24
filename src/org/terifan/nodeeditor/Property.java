@@ -22,11 +22,12 @@ public abstract class Property<T extends Property> implements Serializable
 	private final Rectangle mBounds;
 	private final TextBox mTextBox;
 
+	protected Node mNode;
 	protected Dimension mPreferredSize;
 	protected boolean mUserSetSize;
-	protected Node mNode;
 	protected String mId;
 	protected String mModelId;
+	protected String mProducer;
 
 
 	public Property()
@@ -53,8 +54,32 @@ public abstract class Property<T extends Property> implements Serializable
 	protected abstract void paintComponent(NodeEditorPane aPane, Graphics2D aGraphics, boolean aHover);
 
 
+	public String getProducer()
+	{
+		return mProducer;
+	}
+
+
+	public T setProducer(String aProducer)
+	{
+		mProducer = aProducer;
+		return (T)this;
+	}
+
+
 	public Object execute(Context aContext)
 	{
+		Connector in = getConnector(Direction.IN);
+
+		if (in != null)
+		{
+			return in.getConnectedProperties().get(0).execute(aContext);
+		}
+		else if (mProducer != null)
+		{
+			return aContext.invoke(this, mProducer);
+		}
+
 		return null;
 	}
 

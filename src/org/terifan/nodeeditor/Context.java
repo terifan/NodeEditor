@@ -23,6 +23,6 @@ public class Context
 
 	public Object invoke(Property aProperty, String aProducer)
 	{
-		return mEditor.getBindings().get(aProducer).apply(this, aProperty);
+		return mEditor.getBindings().get(aProducer).invoke(this, aProperty);
 	}
 }

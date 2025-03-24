@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class BoxComponentModel<T extends BoxComponent> implements Serializable
 {
 	private final static long serialVersionUID = 1L;
-	private final ArrayList<T> mComponents;
+	protected final ArrayList<T> mComponents;
 
 
 	public BoxComponentModel()

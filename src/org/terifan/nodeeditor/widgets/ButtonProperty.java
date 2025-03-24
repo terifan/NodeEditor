@@ -93,7 +93,7 @@ public class ButtonProperty extends Property<ButtonProperty>
 
 		try
 		{
-			aEditor.fireCommand(mModelId, getNode(), this);
+			aEditor.invoke(mModelId, this);
 		}
 		catch (Exception e)
 		{
@@ -105,9 +105,9 @@ public class ButtonProperty extends Property<ButtonProperty>
 
 
 	@Override
-	protected void mouseReleased(NodeEditorPane aPane, Point aClickPoint)
+	protected void mouseReleased(NodeEditorPane aEditor, Point aClickPoint)
 	{
 		mArmed = false;
-		aPane.repaint();
+		aEditor.repaint();
 	}
 }

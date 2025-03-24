@@ -53,9 +53,13 @@ public class NodeEditorPane extends BoxComponentPane<Node, NodeEditorPane>
 	}
 
 
-	public NodeEditorPane bind(String aCommand, NodeFunction aConsumer)
+	public NodeEditorPane bind(String aId, NodeFunction aFunction)
 	{
-		mBindings.put(aCommand, aConsumer);
+		if (mBindings.containsKey(aId))
+		{
+			throw new IllegalArgumentException("ID already bound: " + aId);
+		}
+		mBindings.put(aId, aFunction);
 		return this;
 	}
 
@@ -66,9 +70,9 @@ public class NodeEditorPane extends BoxComponentPane<Node, NodeEditorPane>
 	}
 
 
-	public void fireCommand(String aCommand, Node aNode, Property aProperty)
+	public void invoke(String aId, Property aProperty)
 	{
-		mBindings.get(aCommand).apply(new Context(this), aProperty);
+		mBindings.get(aId).invoke(new Context(this), aProperty);
 	}
 
 

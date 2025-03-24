@@ -126,6 +126,8 @@ public class MandelbrotExample
 				.addConnection(0, 1, 2, 1)
 				.addConnection(1, 0, 2, 0);
 
+			__model.print();
+
 			// -- serialize/deserialize model to ensure it's stateless
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			try (ObjectOutputStream dos = new ObjectOutputStream(baos))
@@ -144,6 +146,8 @@ public class MandelbrotExample
 				.bind("mandelbrot", mandelbrot)
 				.bind("run", buttonAction)
 				.center();
+
+			SimpleNodesFactory.install(editor);
 
 			JFrame frame = new JFrame();
 			frame.add(editor);

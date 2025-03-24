@@ -125,18 +125,13 @@ class NodeEditorMouseListener<T extends Node, U extends NodeEditorPane> extends 
 				}
 
 				Property tmp = node.mousePressed(mClickPoint);
-				if (tmp != null)
+				if (tmp != null && tmp.mousePressed(mPane, mClickPoint))
 				{
-					if (tmp.mousePressed(mPane, mClickPoint))
-					{
-						mPane.getSelectedBoxes().clear();
-						mPane.getSelectedBoxes().add(node);
-						mSelectedProperty = tmp;
-						mPane.repaint();
-
-//						tmp.actionPerformed(mPane, mClickPoint);
-						break;
-					}
+					mPane.getSelectedBoxes().clear();
+					mPane.getSelectedBoxes().add(node);
+					mSelectedProperty = tmp;
+					mPane.repaint();
+					break;
 				}
 			}
 		}

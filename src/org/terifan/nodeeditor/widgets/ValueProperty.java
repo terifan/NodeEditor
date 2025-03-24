@@ -13,9 +13,7 @@ public class ValueProperty extends Property<ValueProperty>
 {
 	private static final long serialVersionUID = 1L;
 
-	private String mProvide;
 	private Object mValue;
-	private String mProducer;
 
 
 	public ValueProperty(String aLabel)
@@ -47,39 +45,18 @@ public class ValueProperty extends Property<ValueProperty>
 	}
 
 
-	public ValueProperty setProvides(String aProvide)
-	{
-		mProvide = aProvide;
-		return this;
-	}
-
-
-	public ValueProperty setProducer(String aProducer)
-	{
-		mProducer = aProducer;
-		return this;
-	}
-
-
 	@Override
 	public Object execute(Context aContext)
 	{
-		if (mValue == null)
-		{
-			Connector in = getConnector(Direction.IN);
+		Connector in = getConnector(Direction.IN);
 
-			if (in != null)
-			{
-				return in.getConnectedProperties().get(0).execute(aContext);
-			}
-			else if (mProducer != null)
-			{
-				return aContext.invoke(this, mProducer);
-			}
-			else if (mProvide != null)
-			{
-				return mNode.getProperty(mProvide).execute(aContext);
-			}
+		if (in != null)
+		{
+			return in.getConnectedProperties().get(0).execute(aContext);
+		}
+		else if (mProducer != null)
+		{
+			return aContext.invoke(this, mProducer);
 		}
 
 		return mValue;
