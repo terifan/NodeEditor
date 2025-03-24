@@ -46,7 +46,7 @@ public class BoxComponentModel<T extends BoxComponent> implements Serializable
 	public void moveTop(T aComponent)
 	{
 		mComponents.remove(aComponent);
-		mComponents.addFirst(aComponent);
+		mComponents.addLast(aComponent);
 	}
 
 

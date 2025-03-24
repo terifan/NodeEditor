@@ -262,7 +262,7 @@ public class BoxComponentPane<T extends BoxComponent, U extends BoxComponentPane
 		aGraphics.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 		aGraphics.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
 
-		for (T box : mModel.getComponents())
+		for (T box : mModel.getComponents().reversed())
 		{
 			paintBoxComponent(aGraphics, box, mSelectedBoxes.contains(box));
 		}

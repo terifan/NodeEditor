@@ -77,11 +77,11 @@ public class BoxComponentMouseListener<T extends BoxComponent, U extends BoxComp
 			return;
 		}
 
+		model.moveTop(mHoverNode);
+
 		if (mCursor != Cursor.DEFAULT_CURSOR)
 		{
 			mStartBounds = new Rectangle(mHoverNode.getBounds());
-
-			model.moveTop(mHoverNode);
 
 			mPane.getSelectedBoxes().clear();
 			mPane.getSelectedBoxes().add(mHoverNode);
