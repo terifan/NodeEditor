@@ -1,6 +1,10 @@
 package examples;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import org.terifan.nodeeditor.widgets.SliderProperty;
 import javax.swing.JFrame;
 import static org.terifan.nodeeditor.Direction.IN;
@@ -10,9 +14,10 @@ import org.terifan.nodeeditor.NodeModel;
 import org.terifan.nodeeditor.widgets.ValueProperty;
 import static org.terifan.nodeeditor.Direction.OUT;
 import org.terifan.nodeeditor.NodeFunction;
-import org.terifan.nodeeditor.Styles;
-import static org.terifan.nodeeditor.Styles.DefaultColors.GRAY;
-import static org.terifan.nodeeditor.Styles.DefaultColors.YELLOW;
+import static org.terifan.nodeeditor.Styles.DefaultConnectorColors.GRAY;
+import static org.terifan.nodeeditor.Styles.DefaultConnectorColors.PURPLE;
+import static org.terifan.nodeeditor.Styles.DefaultConnectorColors.YELLOW;
+import org.terifan.nodeeditor.Styles.DefaultIcons;
 import org.terifan.nodeeditor.Styles.DefaultNodeColors;
 import org.terifan.nodeeditor.util.SimpleNodesFactory;
 import org.terifan.nodeeditor.widgets.ButtonProperty;
@@ -23,19 +28,78 @@ import org.terifan.vecmath.Vec4d;
 
 public class MandelbrotExample
 {
+	private static NodeFunction mandelbrot = (aContext, self) ->
+	{
+		Vec2d coord = (Vec2d)self.getNode().getProperty("coord").execute(aContext);
+		int limit = ((Number)self.getNode().getProperty("limit").execute(aContext)).intValue();
+
+		double x0 = -2 + (4 * coord.x);
+		double y0 = -2 + (4 * coord.y);
+		int iteration = 0;
+		for (double x = 0, y = 0; x * x + y * y <= 4 && iteration < limit;)
+		{
+			double xtemp = x * x - y * y + x0;
+			y = 2 * x * y + y0;
+			x = xtemp;
+			iteration++;
+		}
+		return iteration >= limit ? -1 : iteration / (double)limit;
+	};
+
+	private static NodeFunction palette = (aContext, self) ->
+	{
+		double it = (Double)self.getNode().getProperty("iterations").execute(aContext);
+		if (it < 0)
+		{
+			return new Vec4d();
+		}
+
+		double rf = (Double)self.getNode().getProperty("rf").execute(aContext);
+		double gf = (Double)self.getNode().getProperty("gf").execute(aContext);
+		double bf = (Double)self.getNode().getProperty("bf").execute(aContext);
+		double sf = (Double)self.getNode().getProperty("sf").execute(aContext);
+		Vec4d v = new Vec4d(it, it, it, 0).scale(sf).scale(rf, gf, bf, 0).add(0, 0, 0, 1);
+		v.x %= 1;
+		v.y %= 1;
+		v.z %= 1;
+		return v;
+	};
+
+	private static NodeFunction buttonAction = (aContext, self) ->
+	{
+		ImageProperty ip = aContext.getEditor().getModel().getProperty("image");
+		ValueProperty cp = aContext.getEditor().getModel().getProperty("coordinate");
+
+		ip.setImage(new BufferedImage(200, 200, BufferedImage.TYPE_INT_ARGB));
+
+		for (int y = 0; y < 200; y++)
+		{
+			for (int x = 0; x < 200; x++)
+			{
+				cp.setValue(new Vec2d(x / 200.0, y / 200.0));
+
+				Vec2d coord = (Vec2d)self.getNode().getProperty("coord").execute(aContext);
+				Vec4d argb = (Vec4d)self.getNode().getProperty("argb").execute(aContext);
+
+				ip.getImage().setRGB((int)(coord.x * 200 + 0.5), (int)(coord.y * 200 + 0.5), argb.intValue());
+			}
+		}
+
+		aContext.getEditor().repaint();
+		return null;
+	};
+
+
 	public static void main(String... args)
 	{
 		try
 		{
-			ImageProperty __image;
-			ValueProperty __coordinate;
-
-			NodeModel model = new NodeModel()
+			NodeModel __model = new NodeModel()
 				.addNode(new Node("Mandelbrot")
 					.setTitleBackground(DefaultNodeColors.GREEN)
 					.setBounds(-200, 0, 150, 0)
 					.addProperty(new ValueProperty("Iterations").addConnector(OUT, GRAY).setProducer("mandelbrot"))
-					.addProperty(__coordinate = new ValueProperty("Coordinate").setId("coord").addConnector(OUT, Styles.DefaultColors.PURPLE))
+					.addProperty(new ValueProperty("Coordinate").setId("coord").addConnector(OUT, PURPLE).bind("coordinate"))
 					.addProperty(new SliderProperty("Limit", 5000, 1).setId("limit"))
 				)
 				.addNode(new Node("Palette")
@@ -51,82 +115,35 @@ public class MandelbrotExample
 					.setTitleBackground(DefaultNodeColors.DARKRED)
 					.setBounds(200, 50, 220, 0)
 					.addProperty(new ValueProperty("Color").setId("argb").addConnector(IN))
-					.addProperty(new ValueProperty("Coordinate").setId("coord").addConnector(IN, Styles.DefaultColors.PURPLE))
-					.addProperty(__image = new ImageProperty("", 200, 200))
-					.addProperty(new ButtonProperty("Run").setIcon(Styles.DefaultIcons.RUN).setCommand("run"))
+					.addProperty(new ValueProperty("Coordinate").setId("coord").addConnector(IN, PURPLE))
+					.addProperty(new ImageProperty("", 200, 200).bind("image"))
+					.addProperty(new ButtonProperty("Run").setIcon(DefaultIcons.RUN).bind("run"))
 				)
 				.addNode(SimpleNodesFactory.createSourceColorRGBA())
 				.addNode(SimpleNodesFactory.createIntermediateMath())
 				.addNode(SimpleNodesFactory.createIntermediateColorMix())
 				.addConnection(0, 0, 1, 5)
 				.addConnection(0, 1, 2, 1)
-				.addConnection(1, 0, 2, 0)
-				;
+				.addConnection(1, 0, 2, 0);
+
+			// -- serialize/deserialize model to ensure it's stateless
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			try (ObjectOutputStream dos = new ObjectOutputStream(baos))
+			{
+				dos.writeObject(__model);
+			}
+			NodeModel model;
+			try (ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(baos.toByteArray())))
+			{
+				model = (NodeModel)ois.readObject();
+			}
+			// --
 
 			NodeEditorPane editor = new NodeEditorPane(model)
+				.bind("palette", palette)
+				.bind("mandelbrot", mandelbrot)
+				.bind("run", buttonAction)
 				.center();
-
-			NodeFunction mandelbrot = (aContext, self) ->
-			{
-				Vec2d coord = (Vec2d)self.getNode().getProperty("coord").execute(aContext);
-				int limit = ((Number)self.getNode().getProperty("limit").execute(aContext)).intValue();
-
-				double x0 = -2 + (4 * coord.x);
-				double y0 = -2 + (4 * coord.y);
-				int iteration = 0;
-				for (double x = 0, y = 0; x * x + y * y <= 4 && iteration < limit;)
-				{
-					double xtemp = x * x - y * y + x0;
-					y = 2 * x * y + y0;
-					x = xtemp;
-					iteration++;
-				}
-				return iteration >= limit ? -1 : iteration / (double)limit;
-			};
-
-			NodeFunction palette = (aContext, self) ->
-			{
-				double it = (Double)self.getNode().getProperty("iterations").execute(aContext);
-				if (it < 0)
-				{
-					return new Vec4d();
-				}
-
-				double rf = (Double)self.getNode().getProperty("rf").execute(aContext);
-				double gf = (Double)self.getNode().getProperty("gf").execute(aContext);
-				double bf = (Double)self.getNode().getProperty("bf").execute(aContext);
-				double sf = (Double)self.getNode().getProperty("sf").execute(aContext);
-				Vec4d v = new Vec4d(it, it, it, 0).scale(sf).scale(rf, gf, bf, 0).add(0, 0, 0, 1);
-				v.x %= 1;
-				v.y %= 1;
-				v.z %= 1;
-				return v;
-			};
-
-			NodeFunction runner = (aContext, self) ->
-			{
-				__image.setImage(new BufferedImage(200, 200, BufferedImage.TYPE_INT_ARGB));
-
-				for (int y = 0; y < 200; y++)
-				{
-					for (int x = 0; x < 200; x++)
-					{
-						__coordinate.setValue(new Vec2d(x / 200.0, y / 200.0));
-
-						Vec2d coord = (Vec2d)self.getNode().getProperty("coord").execute(aContext);
-						Vec4d argb = (Vec4d)self.getNode().getProperty("argb").execute(aContext);
-
-						__image.getImage().setRGB((int)(coord.x * 200 + 0.5), (int)(coord.y * 200 + 0.5), argb.intValue());
-					}
-				}
-
-				editor.repaint();
-				return null;
-			};
-
-			editor.bind("palette", palette);
-			editor.bind("mandelbrot", mandelbrot);
-			editor.bind("run", runner);
 
 			JFrame frame = new JFrame();
 			frame.add(editor);

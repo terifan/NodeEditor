@@ -188,7 +188,7 @@ public class Styles
 	}
 
 
-	public static interface DefaultColors
+	public static interface DefaultConnectorColors
 	{
 		public Color PURPLE = new Color(0x6363C7);
 		public Color GRAY = new Color(0xA1A1A1);

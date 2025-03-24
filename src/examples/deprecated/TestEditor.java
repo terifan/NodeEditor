@@ -16,7 +16,7 @@ import org.terifan.nodeeditor.NodeModel;
 import org.terifan.nodeeditor.widgets.ImageProperty;
 import org.terifan.nodeeditor.widgets.ValueProperty;
 import static org.terifan.nodeeditor.Direction.OUT;
-import static org.terifan.nodeeditor.Styles.DefaultColors.PURPLE;
+import static org.terifan.nodeeditor.Styles.DefaultConnectorColors.PURPLE;
 import org.terifan.nodeeditor.util.SimpleNodesFactory;
 
 

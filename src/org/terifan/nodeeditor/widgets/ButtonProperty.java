@@ -21,7 +21,6 @@ public class ButtonProperty extends Property<ButtonProperty>
 	private transient boolean mArmed;
 
 	private String mIcon;
-	private String mCommand;
 
 
 	public ButtonProperty(String aText)
@@ -30,13 +29,6 @@ public class ButtonProperty extends Property<ButtonProperty>
 
 		setIcon(Styles.DefaultIcons.FOLDER);
 		getTextBox().setAnchor(Anchor.CENTER).setMargins(4, 0, 4, 0).setMaxLineCount(1).setFont(Styles.SLIDER_FONT);
-	}
-	
-
-	public ButtonProperty setCommand(String aCommand)
-	{
-		mCommand = aCommand;
-		return this;
 	}
 
 
@@ -95,13 +87,13 @@ public class ButtonProperty extends Property<ButtonProperty>
 
 
 	@Override
-	protected boolean mousePressed(NodeEditorPane aPane, Point aClickPoint)
+	protected boolean mousePressed(NodeEditorPane aEditor, Point aClickPoint)
 	{
 		mArmed = true;
 
 		try
 		{
-			aPane.fireCommand(mCommand, getNode(), this);
+			aEditor.fireCommand(mModelId, getNode(), this);
 		}
 		catch (Exception e)
 		{

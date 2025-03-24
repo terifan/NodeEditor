@@ -26,6 +26,7 @@ public abstract class Property<T extends Property> implements Serializable
 	protected boolean mUserSetSize;
 	protected Node mNode;
 	protected String mId;
+	protected String mModelId;
 
 
 	public Property()
@@ -80,6 +81,19 @@ public abstract class Property<T extends Property> implements Serializable
 	public Node getNode()
 	{
 		return mNode;
+	}
+
+
+	public T bind(String aModelId)
+	{
+		mModelId = aModelId;
+		return (T)this;
+	}
+
+
+	public String getModelId()
+	{
+		return mModelId;
 	}
 
 
@@ -174,14 +188,6 @@ public abstract class Property<T extends Property> implements Serializable
 	{
 		return mBounds;
 	}
-
-
-//	/**
-//	 * Perform the action of this item, for instance after a mouse click.
-//	 */
-//	protected void actionPerformed(NodeEditorPane aPane, Point aClickPoint)
-//	{
-//	}
 
 
 	protected void connectionsChanged(NodeEditorPane aPane, Point aClickPoint)

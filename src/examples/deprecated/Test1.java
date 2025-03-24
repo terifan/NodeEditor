@@ -13,9 +13,9 @@ import org.terifan.nodeeditor.Direction;
 import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Node;
 import org.terifan.nodeeditor.NodeModel;
-import static org.terifan.nodeeditor.Styles.DefaultColors.GRAY;
-import static org.terifan.nodeeditor.Styles.DefaultColors.PURPLE;
-import static org.terifan.nodeeditor.Styles.DefaultColors.YELLOW;
+import static org.terifan.nodeeditor.Styles.DefaultConnectorColors.GRAY;
+import static org.terifan.nodeeditor.Styles.DefaultConnectorColors.PURPLE;
+import static org.terifan.nodeeditor.Styles.DefaultConnectorColors.YELLOW;
 import org.terifan.nodeeditor.widgets.ValueProperty;
 
 

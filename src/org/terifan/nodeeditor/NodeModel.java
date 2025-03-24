@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.terifan.boxcomponentpane.BoxComponentModel;
-import org.terifan.nodeeditor.widgets.ValueProperty;
 import static org.terifan.util.Assert.*;
 
 
@@ -146,9 +145,20 @@ public class NodeModel extends BoxComponentModel<Node> implements Serializable
 	}
 
 
-	public List<Property> getPropertiesConnectingTo(Property aProperty)
+	public <T extends Property> T getProperty(String aBindId)
 	{
-		return getConnectionsTo(aProperty).stream().map(e->e.getOut()).map(e->e.mProperty).collect(Collectors.toList());
+		for (int i = 0; i < size(); i++)
+		{
+			Node node = getNode(i);
+			for (Property p : node.getProperties())
+			{
+				if (aBindId.equals(p.getModelId()))
+				{
+					return (T)p;
+				}
+			}
+		}
+		return null;
 	}
 
 

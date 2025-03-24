@@ -7,7 +7,7 @@ import static org.terifan.nodeeditor.Direction.OUT;
 import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Node;
 import org.terifan.nodeeditor.NodeModel;
-import static org.terifan.nodeeditor.Styles.DefaultColors.YELLOW;
+import static org.terifan.nodeeditor.Styles.DefaultConnectorColors.YELLOW;
 import org.terifan.nodeeditor.widgets.ValueProperty;
 
 
