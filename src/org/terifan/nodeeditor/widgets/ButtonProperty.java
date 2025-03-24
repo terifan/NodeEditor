@@ -29,10 +29,9 @@ public class ButtonProperty extends Property<ButtonProperty>
 		super(aText);
 
 		setIcon(Styles.DefaultIcons.FOLDER);
-		getTextBox().setAnchor(Anchor.CENTER).setMargins(0, 0, 0, 0).setMaxLineCount(1).setFont(Styles.SLIDER_FONT);
-		getPreferredSize().height = 22;
+		getTextBox().setAnchor(Anchor.CENTER).setMargins(4, 0, 4, 0).setMaxLineCount(1).setFont(Styles.SLIDER_FONT);
 	}
-
+	
 
 	public ButtonProperty setCommand(String aCommand)
 	{

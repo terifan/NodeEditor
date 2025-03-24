@@ -6,9 +6,8 @@ import java.awt.Paint;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
-import java.util.HashMap;
-import java.util.List;
 import org.terifan.nodeeditor.Connector;
+import org.terifan.nodeeditor.Context;
 import org.terifan.nodeeditor.Direction;
 import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Property;
@@ -177,13 +176,13 @@ public class SliderProperty extends Property<SliderProperty>
 
 
 	@Override
-	public Object execute()
+	public Object execute(Context aContext)
 	{
 		Connector in = getConnector(Direction.IN);
 
 		if (in != null && !in.getConnectedProperties().isEmpty())
 		{
-			return in.getConnectedProperties().get(0).execute();
+			return in.getConnectedProperties().get(0).execute(aContext);
 		}
 
 		return mValue;

@@ -5,8 +5,6 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.util.HashMap;
-import org.terifan.nodeeditor.Context;
 import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Property;
 
@@ -37,8 +35,7 @@ public class ImageProperty extends Property<ImageProperty>
 		mWidth = aWidth;
 		mHeight = aHeight;
 		mType = BufferedImage.TYPE_INT_ARGB;
-
-		setPreferredSize(new Dimension(aWidth, aHeight));
+		mPreferredSize = new Dimension(aWidth, aHeight);
 	}
 
 

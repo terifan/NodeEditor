@@ -6,6 +6,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import javax.swing.JColorChooser;
 import org.terifan.nodeeditor.Connector;
+import org.terifan.nodeeditor.Context;
 import org.terifan.nodeeditor.Direction;
 import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Property;
@@ -90,13 +91,13 @@ public class ColorChooserProperty extends Property<ColorChooserProperty>
 
 
 	@Override
-	public Object execute()
+	public Object execute(Context aContext)
 	{
 		Connector in = getConnector(Direction.IN);
 
 		if (in != null && !in.getConnectedProperties().isEmpty())
 		{
-			return in.getConnectedProperties().get(0).execute();
+			return in.getConnectedProperties().get(0).execute(aContext);
 		}
 
 		return new Vec4d(mColor.getRed() / 255.0, mColor.getGreen() / 255.0, mColor.getBlue() / 255.0, 0);

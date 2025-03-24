@@ -7,6 +7,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Arrays;
+import org.terifan.nodeeditor.Context;
 import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Property;
 import org.terifan.nodeeditor.graphics.Popup;
@@ -124,7 +125,7 @@ public class ComboBoxProperty extends Property<ComboBoxProperty>
 
 
 	@Override
-	public Object execute()
+	public Object execute(Context aContext)
 	{
 		return mOptions.get(mSelectedIndex);
 	}

@@ -1,8 +1,6 @@
 package examples;
 
 import java.awt.image.BufferedImage;
-import java.util.function.Consumer;
-import java.util.function.Function;
 import org.terifan.nodeeditor.widgets.SliderProperty;
 import javax.swing.JFrame;
 import static org.terifan.nodeeditor.Direction.IN;
@@ -11,7 +9,7 @@ import org.terifan.nodeeditor.Node;
 import org.terifan.nodeeditor.NodeModel;
 import org.terifan.nodeeditor.widgets.ValueProperty;
 import static org.terifan.nodeeditor.Direction.OUT;
-import org.terifan.nodeeditor.Property;
+import org.terifan.nodeeditor.NodeFunction;
 import org.terifan.nodeeditor.Styles;
 import static org.terifan.nodeeditor.Styles.DefaultColors.GRAY;
 import static org.terifan.nodeeditor.Styles.DefaultColors.YELLOW;
@@ -29,10 +27,49 @@ public class MandelbrotExample
 	{
 		try
 		{
-			Function<ValueProperty, Object> mandelbrot = self ->
+			ImageProperty __image;
+			ValueProperty __coordinate;
+
+			NodeModel model = new NodeModel()
+				.addNode(new Node("Mandelbrot")
+					.setTitleBackground(DefaultNodeColors.GREEN)
+					.setBounds(-200, 0, 150, 0)
+					.addProperty(new ValueProperty("Iterations").addConnector(OUT, GRAY).setProducer("mandelbrot"))
+					.addProperty(__coordinate = new ValueProperty("Coordinate").setId("coord").addConnector(OUT, Styles.DefaultColors.PURPLE))
+					.addProperty(new SliderProperty("Limit", 5000, 1).setId("limit"))
+				)
+				.addNode(new Node("Palette")
+					.setBounds(0, -150, 150, 0)
+					.addProperty(new ValueProperty("Color").addConnector(OUT, YELLOW).setProducer("palette"))
+					.addProperty(new SliderProperty("Red", 2.3, 0.01).setId("rf"))
+					.addProperty(new SliderProperty("Green", 9.2, 0.01).setId("gf"))
+					.addProperty(new SliderProperty("Blue", 17.5, 0.01).setId("bf"))
+					.addProperty(new SliderProperty("Scale", 20.5, 0.01).setId("sf"))
+					.addProperty(new ValueProperty("Iterations").setId("iterations").addConnector(IN, GRAY))
+				)
+				.addNode(new Node("RenderOutput")
+					.setTitleBackground(DefaultNodeColors.DARKRED)
+					.setBounds(200, 50, 220, 0)
+					.addProperty(new ValueProperty("Color").setId("argb").addConnector(IN))
+					.addProperty(new ValueProperty("Coordinate").setId("coord").addConnector(IN, Styles.DefaultColors.PURPLE))
+					.addProperty(__image = new ImageProperty("", 200, 200))
+					.addProperty(new ButtonProperty("Run").setIcon(Styles.DefaultIcons.RUN).setCommand("run"))
+				)
+				.addNode(SimpleNodesFactory.createSourceColorRGBA())
+				.addNode(SimpleNodesFactory.createIntermediateMath())
+				.addNode(SimpleNodesFactory.createIntermediateColorMix())
+				.addConnection(0, 0, 1, 5)
+				.addConnection(0, 1, 2, 1)
+				.addConnection(1, 0, 2, 0)
+				;
+
+			NodeEditorPane editor = new NodeEditorPane(model)
+				.center();
+
+			NodeFunction mandelbrot = (aContext, self) ->
 			{
-				Vec2d coord = (Vec2d)self.getNode().getProperty("coord").execute();
-				int limit = ((Number)self.getNode().getProperty("limit").execute()).intValue();
+				Vec2d coord = (Vec2d)self.getNode().getProperty("coord").execute(aContext);
+				int limit = ((Number)self.getNode().getProperty("limit").execute(aContext)).intValue();
 
 				double x0 = -2 + (4 * coord.x);
 				double y0 = -2 + (4 * coord.y);
@@ -47,18 +84,18 @@ public class MandelbrotExample
 				return iteration >= limit ? -1 : iteration / (double)limit;
 			};
 
-			Function<ValueProperty, Object> palette = self ->
+			NodeFunction palette = (aContext, self) ->
 			{
-				double it = (Double)self.getNode().getProperty("iterations").execute();
+				double it = (Double)self.getNode().getProperty("iterations").execute(aContext);
 				if (it < 0)
 				{
 					return new Vec4d();
 				}
 
-				double rf = (Double)self.getNode().getProperty("rf").execute();
-				double gf = (Double)self.getNode().getProperty("gf").execute();
-				double bf = (Double)self.getNode().getProperty("bf").execute();
-				double sf = (Double)self.getNode().getProperty("sf").execute();
+				double rf = (Double)self.getNode().getProperty("rf").execute(aContext);
+				double gf = (Double)self.getNode().getProperty("gf").execute(aContext);
+				double bf = (Double)self.getNode().getProperty("bf").execute(aContext);
+				double sf = (Double)self.getNode().getProperty("sf").execute(aContext);
 				Vec4d v = new Vec4d(it, it, it, 0).scale(sf).scale(rf, gf, bf, 0).add(0, 0, 0, 1);
 				v.x %= 1;
 				v.y %= 1;
@@ -66,65 +103,29 @@ public class MandelbrotExample
 				return v;
 			};
 
-			ImageProperty o;
-			ValueProperty co;
-
-			NodeModel model = new NodeModel()
-				.addNode(new Node("Mandelbrot")
-					.setTitleBackground(DefaultNodeColors.GREEN)
-					.setBounds(-200, 0, 150, 0)
-					.addProperty(new ValueProperty("Iterations").addConnector(OUT, GRAY).setProducer(mandelbrot))
-					.addProperty(co = new ValueProperty("Coordinate").setId("coord").addConnector(OUT, Styles.DefaultColors.PURPLE))
-					.addProperty(new SliderProperty("Limit", 5000, 1).setId("limit"))
-				)
-				.addNode(new Node("Palette")
-					.setBounds(0, -150, 150, 0)
-					.addProperty(new ValueProperty("Color").addConnector(OUT, YELLOW).setProducer(palette))
-					.addProperty(new SliderProperty("Red", 2.3, 0.01).setId("rf"))
-					.addProperty(new SliderProperty("Green", 9.2, 0.01).setId("gf"))
-					.addProperty(new SliderProperty("Blue", 17.5, 0.01).setId("bf"))
-					.addProperty(new SliderProperty("Scale", 20.5, 0.01).setId("sf"))
-					.addProperty(new ValueProperty("Iterations").setId("iterations").addConnector(IN, GRAY))
-				)
-				.addNode(new Node("RenderOutput")
-					.setTitleBackground(DefaultNodeColors.DARKRED)
-					.setBounds(200, 50, 220, 0)
-					.addProperty(new ValueProperty("Color").setId("argb").addConnector(IN))
-					.addProperty(new ValueProperty("Coordinate").setId("coord").addConnector(IN, Styles.DefaultColors.PURPLE))
-					.addProperty(o = new ImageProperty("", 200, 200))
-					.addProperty(new ButtonProperty("Run").setIcon(Styles.DefaultIcons.RUN).setCommand("run"))
-				)
-				.addNode(SimpleNodesFactory.createSourceColorRGBA())
-				.addNode(SimpleNodesFactory.createIntermediateMath())
-				.addNode(SimpleNodesFactory.createIntermediateColorMix())
-				.addConnection(0, 0, 1, 5)
-				.addConnection(0, 1, 2, 1)
-				.addConnection(1, 0, 2, 0)
-				;
-
-			NodeEditorPane editor = new NodeEditorPane(model)
-				.center();
-
-			Consumer<Property> runner = property ->
+			NodeFunction runner = (aContext, self) ->
 			{
-				o.setImage(new BufferedImage(200, 200, BufferedImage.TYPE_INT_ARGB));
+				__image.setImage(new BufferedImage(200, 200, BufferedImage.TYPE_INT_ARGB));
 
 				for (int y = 0; y < 200; y++)
 				{
 					for (int x = 0; x < 200; x++)
 					{
-						co.setValue(new Vec2d(x / 200.0, y / 200.0));
+						__coordinate.setValue(new Vec2d(x / 200.0, y / 200.0));
 
-						Vec2d coord = (Vec2d)property.getNode().getProperty("coord").execute();
-						Vec4d argb = (Vec4d)property.getNode().getProperty("argb").execute();
+						Vec2d coord = (Vec2d)self.getNode().getProperty("coord").execute(aContext);
+						Vec4d argb = (Vec4d)self.getNode().getProperty("argb").execute(aContext);
 
-						o.getImage().setRGB((int)(coord.x * 200 + 0.5), (int)(coord.y * 200 + 0.5), argb.intValue());
+						__image.getImage().setRGB((int)(coord.x * 200 + 0.5), (int)(coord.y * 200 + 0.5), argb.intValue());
 					}
 				}
 
 				editor.repaint();
+				return null;
 			};
 
+			editor.bind("palette", palette);
+			editor.bind("mandelbrot", mandelbrot);
 			editor.bind("run", runner);
 
 			JFrame frame = new JFrame();

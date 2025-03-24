@@ -1,8 +1,6 @@
 package org.terifan.nodeeditor.widgets;
 
 import java.awt.Graphics2D;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 import org.terifan.nodeeditor.Connector;
 import org.terifan.nodeeditor.Context;
 import org.terifan.nodeeditor.Direction;
@@ -17,7 +15,7 @@ public class ValueProperty extends Property<ValueProperty>
 
 	private String mProvide;
 	private Object mValue;
-	private Function<ValueProperty, Object> mProducer;
+	private String mProducer;
 
 
 	public ValueProperty(String aLabel)
@@ -56,7 +54,7 @@ public class ValueProperty extends Property<ValueProperty>
 	}
 
 
-	public ValueProperty setProducer(Function<ValueProperty, Object> aProducer)
+	public ValueProperty setProducer(String aProducer)
 	{
 		mProducer = aProducer;
 		return this;
@@ -64,7 +62,7 @@ public class ValueProperty extends Property<ValueProperty>
 
 
 	@Override
-	public Object execute()
+	public Object execute(Context aContext)
 	{
 		if (mValue == null)
 		{
@@ -72,15 +70,15 @@ public class ValueProperty extends Property<ValueProperty>
 
 			if (in != null)
 			{
-				return in.getConnectedProperties().get(0).execute();
+				return in.getConnectedProperties().get(0).execute(aContext);
 			}
 			else if (mProducer != null)
 			{
-				return mProducer.apply(this);
+				return aContext.invoke(this, mProducer);
 			}
 			else if (mProvide != null)
 			{
-				return mNode.getProperty(mProvide).execute();
+				return mNode.getProperty(mProvide).execute(aContext);
 			}
 		}
 

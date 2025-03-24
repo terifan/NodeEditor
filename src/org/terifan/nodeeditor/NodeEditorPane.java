@@ -11,7 +11,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import javax.imageio.ImageIO;
 import org.terifan.boxcomponentpane.BoxComponentPane;
@@ -34,7 +33,7 @@ public class NodeEditorPane extends BoxComponentPane<Node, NodeEditorPane>
 	private transient Popup mPopup;
 	private transient Connection mSelectedConnection;
 	private transient Connector mDragConnector;
-	private transient HashMap<String, Consumer<Property>> mCommands;
+	private transient HashMap<String, NodeFunction> mBindings;
 
 	private boolean mConnectorSelectionAllowed;
 	private boolean mRemoveInConnectionsOnDrop;
@@ -46,7 +45,7 @@ public class NodeEditorPane extends BoxComponentPane<Node, NodeEditorPane>
 
 		mImagePainters = new ArrayList<>();
 
-		mCommands = new HashMap<>();
+		mBindings = new HashMap<>();
 		mButtonHandlers = new ArrayList<>();
 		mRemoveInConnectionsOnDrop = true;
 
@@ -54,16 +53,22 @@ public class NodeEditorPane extends BoxComponentPane<Node, NodeEditorPane>
 	}
 
 
-	public NodeEditorPane bind(String aCommand, Consumer<Property> aConsumer)
+	public NodeEditorPane bind(String aCommand, NodeFunction aConsumer)
 	{
-		mCommands.put(aCommand, aConsumer);
+		mBindings.put(aCommand, aConsumer);
 		return this;
+	}
+
+
+	public HashMap<String, NodeFunction> getBindings()
+	{
+		return mBindings;
 	}
 
 
 	public void fireCommand(String aCommand, Node aNode, Property aProperty)
 	{
-		mCommands.get(aCommand).accept(aProperty);
+		mBindings.get(aCommand).apply(new Context(this), aProperty);
 	}
 
 

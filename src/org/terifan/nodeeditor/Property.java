@@ -19,11 +19,11 @@ public abstract class Property<T extends Property> implements Serializable
 	private static final long serialVersionUID = 1L;
 
 	private final ArrayList<Connector> mConnectors;
-	private final Dimension mPreferredSize;
 	private final Rectangle mBounds;
 	private final TextBox mTextBox;
-	private boolean mUserSetSize;
 
+	protected Dimension mPreferredSize;
+	protected boolean mUserSetSize;
 	protected Node mNode;
 	protected String mId;
 
@@ -45,15 +45,14 @@ public abstract class Property<T extends Property> implements Serializable
 		this();
 
 		mTextBox.setText(aText);
-
-		setPreferredSize(mTextBox.measure().getSize());
+		mPreferredSize.setSize(mTextBox.measure().getSize());
 	}
 
 
 	protected abstract void paintComponent(NodeEditorPane aPane, Graphics2D aGraphics, boolean aHover);
 
 
-	public Object execute()
+	public Object execute(Context aContext)
 	{
 		return null;
 	}

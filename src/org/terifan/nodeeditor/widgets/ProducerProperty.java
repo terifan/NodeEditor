@@ -30,7 +30,7 @@ public abstract class ProducerProperty extends Property<ProducerProperty>
 
 
 	@Override
-	public abstract Object execute();
+	public abstract Object execute(Context aContext);
 
 
 	@Override
