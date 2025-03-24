@@ -53,7 +53,7 @@ class NodeEditorMouseListener<T extends Node, U extends NodeEditorPane> extends 
 		{
 			T node = nodes.get(i);
 			Rectangle bounds = node.getBounds();
-			if (!node.isMinimized() && bounds.contains(point) && mViewPort.findNearestConnector(point, node) == null)
+			if (bounds.contains(point) && mViewPort.findNearestConnector(point, node) == null)
 			{
 				mHoverNode = node;
 				updateCursor(getCursor(point, node));
@@ -90,12 +90,11 @@ class NodeEditorMouseListener<T extends Node, U extends NodeEditorPane> extends 
 			return;
 		}
 
+		mViewPort.getModel().moveTop(mHoverNode);
+
 		if (mCursor != Cursor.DEFAULT_CURSOR)
 		{
 			mStartBounds = new Rectangle(mHoverNode.getBounds());
-
-			mViewPort.getModel().getComponents().remove(mHoverNode);
-			mViewPort.getModel().getComponents().add(mHoverNode);
 
 			mViewPort.getSelectedBoxes().clear();
 			mViewPort.getSelectedBoxes().add(mHoverNode);
@@ -111,6 +110,12 @@ class NodeEditorMouseListener<T extends Node, U extends NodeEditorPane> extends 
 
 		if (node != null)
 		{
+			Rectangle b = node.getBounds();
+			if (b.contains(mClickPoint) && new Rectangle(b.x + 11, b.y + 7, 20, 20).contains(mClickPoint))
+			{
+				updateMinimize(aEvent, node);
+			}
+
 			Property tmp = node.mousePressed(mClickPoint);
 			if (tmp != null)
 			{
@@ -126,6 +131,12 @@ class NodeEditorMouseListener<T extends Node, U extends NodeEditorPane> extends 
 		}
 
 		Connector dragConnector = mViewPort.findNearestConnector(mClickPoint);
+
+		if (dragConnector != null && dragConnector.getProperty().getNode() != node)
+		{
+			dragConnector = null;
+		}
+
 		mViewPort.setDragConnector(dragConnector);
 
 		if (dragConnector != null)
@@ -429,8 +440,7 @@ class NodeEditorMouseListener<T extends Node, U extends NodeEditorPane> extends 
 
 		if (mClickedBox)
 		{
-			mViewPort.getModel().getComponents().remove(newClickedBox);
-			mViewPort.getModel().getComponents().add(newClickedBox);
+			mViewPort.getModel().moveTop(newClickedBox);
 			mViewPort.setSelectedConnection(null);
 		}
 		else if (mConnectorSelectionAllowed)

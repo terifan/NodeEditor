@@ -10,6 +10,7 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.SwingUtilities;
+import org.terifan.nodeeditor.Node;
 import static org.terifan.nodeeditor.Styles.MIN_HEIGHT;
 import static org.terifan.nodeeditor.Styles.MIN_WIDTH;
 
@@ -89,30 +90,24 @@ public class BoxComponentMouseListener<T extends BoxComponent, U extends BoxComp
 			return;
 		}
 
-		T clickedBox = null;
+		T target = (T)model.getComponentAt(mClickPoint);
 
-		for (T box : (ArrayList<T>)model.getComponents())
+		if (target != null)
 		{
-			Rectangle b = box.getBounds();
+			Rectangle b = target.getBounds();
 
-			if (b.contains(mClickPoint))
+			if (b.contains(mClickPoint) && new Rectangle(b.x + 11, b.y + 7, 20, 20).contains(mClickPoint))
 			{
-				clickedBox = box;
-
-				if (new Rectangle(b.x + 11, b.y + 7, 20, 20).contains(mClickPoint))
-				{
-					updateMinimize(aEvent, box);
-					break;
-				}
+				updateMinimize(aEvent, target);
 			}
 		}
 
-		if (clickedBox == null)
+		if (target == null)
 		{
 			mViewPort.setSelectionRectangle(new Rectangle(mClickPoint));
 		}
 
-		updateSelections(aEvent, clickedBox);
+		updateSelections(aEvent, target);
 	}
 
 
