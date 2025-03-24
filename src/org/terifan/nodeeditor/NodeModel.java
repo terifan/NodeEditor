@@ -1,5 +1,7 @@
 package org.terifan.nodeeditor;
 
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +24,9 @@ public class NodeModel extends BoxComponentModel<Node> implements Serializable
 
 
 	@Override
-	public NodeModel addNode(Node aNode)
+	public NodeModel addComponent(Node aNode)
 	{
-		super.addNode(aNode);
+		super.addComponent(aNode);
 
 		aNode.bind(this);
 
@@ -149,7 +151,7 @@ public class NodeModel extends BoxComponentModel<Node> implements Serializable
 	{
 		for (int i = 0; i < size(); i++)
 		{
-			Node node = getNode(i);
+			Node node = getComponent(i);
 			for (Property p : node.getProperties())
 			{
 				if (aBindId.equals(p.getModelId()))
@@ -174,7 +176,7 @@ public class NodeModel extends BoxComponentModel<Node> implements Serializable
 		System.out.println("NodeModel model = new NodeModel()");
 		for (int i = 0; i < size(); i++)
 		{
-			Node node = getNode(i);
+			Node node = getComponent(i);
 
 			System.out.println("\t.addNode(new Node(\"" + node.getTitle() + "\")");
 			System.out.println("\t\t.setTitleForeground(" + "new Color(0x" + ("%06X".formatted(0xffffffL & node.getTitleForeground().getRGB())) + ")");

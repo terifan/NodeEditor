@@ -17,76 +17,76 @@ public class TestAutoLayout
 		{
 			NodeModel model = new NodeModel();
 
-			model.addNode(new Node("0",
+			model.addComponent(new Node("0",
 				new ValueProperty("1").addConnector(Direction.OUT),
 				new ValueProperty("2").addConnector(Direction.OUT),
 				new ValueProperty("3").addConnector(Direction.OUT),
 				new ValueProperty("4").addConnector(Direction.OUT)
 			).setLocation(-300, 0));
 
-			model.addNode(new Node("1",
+			model.addComponent(new Node("1",
 				new ValueProperty("1").addConnector(Direction.IN),
 				new ValueProperty("5").addConnector(Direction.OUT),
 				new ValueProperty("6").addConnector(Direction.OUT)
 			).setLocation(0, -150));
 
-			model.addNode(new Node("2",
+			model.addComponent(new Node("2",
 				new ValueProperty("2").addConnector(Direction.IN)
 			).setLocation(0, -50));
 
-			model.addNode(new Node("3",
+			model.addComponent(new Node("3",
 				new ValueProperty("3").addConnector(Direction.IN),
 				new ValueProperty("7").addConnector(Direction.OUT),
 				new ValueProperty("8").addConnector(Direction.OUT),
 				new ValueProperty("9").addConnector(Direction.OUT)
 			).setLocation(0, 50));
 
-			model.addNode(new Node("4",
+			model.addComponent(new Node("4",
 				new ValueProperty("4").addConnector(Direction.IN),
 				new ValueProperty("10").addConnector(Direction.OUT),
 				new ValueProperty("11").addConnector(Direction.OUT)
 			).setLocation(0, 150));
 
-			model.addNode(new Node("5",
+			model.addComponent(new Node("5",
 				new ValueProperty("5").addConnector(Direction.IN),
 				new ValueProperty("14").addConnector(Direction.OUT)
 			).setLocation(300, 0));
 
-			model.addNode(new Node("6",
+			model.addComponent(new Node("6",
 				new ValueProperty("6").addConnector(Direction.IN),
 				new ValueProperty("12").addConnector(Direction.OUT),
 				new ValueProperty("13").addConnector(Direction.OUT)
 			).setLocation(300, 0));
 
-			model.addNode(new Node("7",
+			model.addComponent(new Node("7",
 				new ValueProperty("7").addConnector(Direction.IN)
 			).setLocation(300, 0));
 
-			model.addNode(new Node("8",
+			model.addComponent(new Node("8",
 				new ValueProperty("8").addConnector(Direction.IN)
 			).setLocation(300, 0));
 
-			model.addNode(new Node("9",
+			model.addComponent(new Node("9",
 				new ValueProperty("9").addConnector(Direction.IN)
 			).setLocation(300, 0));
 
-			model.addNode(new Node("10",
+			model.addComponent(new Node("10",
 				new ValueProperty("10").addConnector(Direction.IN)
 			).setLocation(300, 0));
 
-			model.addNode(new Node("11",
+			model.addComponent(new Node("11",
 				new ValueProperty("11").addConnector(Direction.IN)
 			).setLocation(300, 0));
 
-			model.addNode(new Node("12",
+			model.addComponent(new Node("12",
 				new ValueProperty("12").addConnector(Direction.IN)
 			).setLocation(300, 0));
 
-			model.addNode(new Node("13",
+			model.addComponent(new Node("13",
 				new ValueProperty("13").addConnector(Direction.IN)
 			).setLocation(300, 0));
 
-			model.addNode(new Node("14",
+			model.addComponent(new Node("14",
 				new ValueProperty("14").addConnector(Direction.IN),
 				new ValueProperty("15").addConnector(Direction.OUT),
 				new ValueProperty("16").addConnector(Direction.OUT),
@@ -95,11 +95,11 @@ public class TestAutoLayout
 				new ValueProperty("19").addConnector(Direction.OUT)
 			).setLocation(300, 0));
 
-			model.addNode(new Node("15",
+			model.addComponent(new Node("15",
 				new ValueProperty("15").addConnector(Direction.IN)
 			).setLocation(300, 0));
 
-			model.addNode(new Node("19",
+			model.addComponent(new Node("19",
 				new ValueProperty("19").addConnector(Direction.IN)
 			).setLocation(300, 0));
 
@@ -120,7 +120,7 @@ public class TestAutoLayout
 //			model.addConnection("14.15", "15.15");
 //			model.addConnection("14.19", "19.19");
 
-			new AutoLayout().layout(model, model.getNode(0));
+			new AutoLayout().layout(model, model.getComponent(0));
 
 			NodeEditorPane editor = new NodeEditorPane(model);
 			editor.center();

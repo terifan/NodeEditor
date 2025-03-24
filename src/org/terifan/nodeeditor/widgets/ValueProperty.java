@@ -19,13 +19,15 @@ public class ValueProperty extends Property<ValueProperty>
 	public ValueProperty(String aLabel)
 	{
 		super(aLabel);
+
+		mTextBox.setMargins(2, 0, 2, 0);
 	}
 
 
 	@Override
 	protected void paintComponent(NodeEditorPane aPane, Graphics2D aGraphics, boolean aHover)
 	{
-		getTextBox()
+		mTextBox
 			.setBounds(getBounds())
 			.setAnchor(getConnectors().isEmpty() || getConnectors().get(0).getDirection() == Direction.IN ? Anchor.WEST : Anchor.EAST)
 			.render(aGraphics);

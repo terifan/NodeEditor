@@ -50,7 +50,8 @@ public class SliderProperty extends Property<SliderProperty>
 		mMin = aMin;
 		mMax = aMax;
 		mValue = aValue;
-		getPreferredSize().height = 20;
+
+		mTextBox.setMargins(4, 0, 4, 0).setFont(Styles.SLIDER_FONT).setMaxLineCount(1).setAnchor(Anchor.WEST);
 	}
 
 
@@ -70,12 +71,11 @@ public class SliderProperty extends Property<SliderProperty>
 	@Override
 	protected void paintComponent(NodeEditorPane aPane, Graphics2D aGraphics, boolean aHover)
 	{
-		TextBox textBox = getTextBox();
 		Rectangle bounds = getBounds();
 
 		if (isConnected(Direction.IN))
 		{
-			textBox.setMargins(0, 0, 0, 0).setSuffix("").setBounds(bounds).setAnchor(Anchor.WEST).setMargins(0, 0, 0, 0).setForeground(Styles.SLIDER_COLORS[0][2][1]).setMaxLineCount(1).setFont(Styles.BOX_ITEM_FONT).render(aGraphics);
+			mTextBox.setMargins(4, 0, 4, 0).setSuffix("").setBounds(bounds).setForeground(Styles.SLIDER_COLORS[0][2][1]).setFont(Styles.BOX_ITEM_FONT).render(aGraphics);
 		}
 		else
 		{
@@ -112,7 +112,7 @@ public class SliderProperty extends Property<SliderProperty>
 
 			Rectangle m = new TextBox(String.format("%3.3f", mValue)).setBounds(bounds).setAnchor(Anchor.EAST).setMargins(0, 0, 0, 15).setForeground(Styles.SLIDER_COLORS[i][2][0]).setMaxLineCount(1).setFont(Styles.SLIDER_FONT).render(aGraphics).measure();
 
-			textBox.setBounds(bounds).setAnchor(Anchor.WEST).setMargins(0, 15, 0, m.width).setForeground(Styles.SLIDER_COLORS[i][2][1]).setMaxLineCount(1).setFont(Styles.SLIDER_FONT).render(aGraphics);
+			mTextBox.setBounds(bounds).setMargins(4, 15, 4, m.width).setForeground(Styles.SLIDER_COLORS[i][2][1]).setFont(Styles.SLIDER_FONT).render(aGraphics);
 		}
 	}
 

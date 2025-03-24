@@ -52,7 +52,7 @@ public class TestEditor
 				@Override
 				public void actionPerformed(ActionEvent aE)
 				{
-					model.addNode(new Node("TexturCoordinate")
+					model.addComponent(new Node("TexturCoordinate")
 						.setSize(200, 0)
 						.addProperty(new ValueProperty("UV")
 							.addConnector(OUT, PURPLE))
@@ -67,7 +67,7 @@ public class TestEditor
 				@Override
 				public void actionPerformed(ActionEvent aE)
 				{
-					model.addNode(SimpleNodesFactory.createSourceTexture());
+					model.addComponent(SimpleNodesFactory.createSourceTexture());
 					editor.repaint();
 				}
 			});
@@ -77,7 +77,7 @@ public class TestEditor
 				@Override
 				public void actionPerformed(ActionEvent aE)
 				{
-					model.addNode(new Node("RenderOutput",
+					model.addComponent(new Node("RenderOutput",
 						new ValueProperty("Color").addConnector(Direction.IN),
 						new ValueProperty("Alpha").addConnector(Direction.IN),
 						new ImageProperty("undefined", 200, 200)
@@ -92,7 +92,7 @@ public class TestEditor
 				@Override
 				public void actionPerformed(ActionEvent aE)
 				{
-					model.addNode(SimpleNodesFactory.createIntermediateMath());
+					model.addComponent(SimpleNodesFactory.createIntermediateMath());
 					editor.repaint();
 				}
 			});
@@ -102,7 +102,7 @@ public class TestEditor
 				@Override
 				public void actionPerformed(ActionEvent aE)
 				{
-					model.addNode(SimpleNodesFactory.createIntermediateColorMix());
+					model.addComponent(SimpleNodesFactory.createIntermediateColorMix());
 					editor.repaint();
 				}
 			});
@@ -112,7 +112,7 @@ public class TestEditor
 				@Override
 				public void actionPerformed(ActionEvent aE)
 				{
-					model.addNode(SimpleNodesFactory.createSourceAlpha());
+					model.addComponent(SimpleNodesFactory.createSourceAlpha());
 					editor.repaint();
 				}
 			});
@@ -122,7 +122,7 @@ public class TestEditor
 				@Override
 				public void actionPerformed(ActionEvent aE)
 				{
-					model.addNode(SimpleNodesFactory.createSourceColorRGBA());
+					model.addComponent(SimpleNodesFactory.createSourceColorRGBA());
 					editor.repaint();
 				}
 			});

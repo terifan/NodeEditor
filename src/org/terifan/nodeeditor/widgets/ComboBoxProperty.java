@@ -42,7 +42,8 @@ public class ComboBoxProperty extends Property<ComboBoxProperty>
 		mHeader = aText;
 		mSelectedIndex = aSelectedIndex;
 		mOptions = new ArrayList<>(Arrays.asList(aOptions));
-		getPreferredSize().height = 21;
+
+		mTextBox.setAnchor(Anchor.WEST).setMargins(6, 8, 6, 15).setForeground(Styles.BOX_FOREGROUND_COLOR).setMaxLineCount(1).setFont(Styles.SLIDER_FONT);
 	}
 
 
@@ -70,7 +71,7 @@ public class ComboBoxProperty extends Property<ComboBoxProperty>
 
 		aGraphics.setPaint(oldPaint);
 
-		getTextBox().setBounds(bounds).setAnchor(Anchor.WEST).setMargins(0, 8, 0, 15).setForeground(Styles.BOX_FOREGROUND_COLOR).setMaxLineCount(1).setFont(Styles.SLIDER_FONT).render(aGraphics);
+		mTextBox.setBounds(bounds).render(aGraphics);
 	}
 
 

@@ -45,7 +45,7 @@ public class ColorChooserProperty extends Property<ColorChooserProperty>
 	protected void paintComponent(NodeEditorPane aPane, Graphics2D aGraphics, boolean aHover)
 	{
 		Rectangle bounds = getBounds();
-		Rectangle tb = getTextBox()
+		Rectangle tb = mTextBox
 			.setBounds(bounds)
 			.setAnchor(Anchor.WEST)
 			.setForeground(Styles.BOX_FOREGROUND_COLOR)
@@ -77,7 +77,7 @@ public class ColorChooserProperty extends Property<ColorChooserProperty>
 	{
 		if (!isConnected(Direction.IN) && mColorButtonBounds.contains(aClickPoint))
 		{
-			Color c = JColorChooser.showDialog(aPane, getTextBox().getText(), mColor);
+			Color c = JColorChooser.showDialog(aPane, mTextBox.getText(), mColor);
 			if (c != null)
 			{
 				mColor = c;

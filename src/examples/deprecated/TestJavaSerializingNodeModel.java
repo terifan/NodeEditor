@@ -88,41 +88,41 @@ public class TestJavaSerializingNodeModel
 	{
 		NodeModel model = new NodeModel();
 
-		model.addNode(SimpleNodesFactory.createSourceColorRGBA());
-		model.addNode(SimpleNodesFactory.createSourceTexture());
-		model.addNode(SimpleNodesFactory.createSourceTexture());
-		model.addNode(SimpleNodesFactory.createSourceTexture());
+		model.addComponent(SimpleNodesFactory.createSourceColorRGBA());
+		model.addComponent(SimpleNodesFactory.createSourceTexture());
+		model.addComponent(SimpleNodesFactory.createSourceTexture());
+		model.addComponent(SimpleNodesFactory.createSourceTexture());
 
-		model.addNode(new Node("Output",
+		model.addComponent(new Node("Output",
 			new ColorChooserProperty("Surface", new Color(0, 0, 0)).addConnector(IN, YELLOW),
 			new SliderProperty("Alpha", 0, 1, 0.75).addConnector(IN, GRAY), new ImageProperty("Image", 200, 200)
 		));
 
-		model.addNode(SimpleNodesFactory.createSourceAlpha());
+		model.addComponent(SimpleNodesFactory.createSourceAlpha());
 
-		model.addNode(new Node("TextureCoordinate",
+		model.addComponent(new Node("TextureCoordinate",
 			new ValueProperty("UV").addConnector(OUT, PURPLE)
 		));
 
-		model.addNode(SimpleNodesFactory.createIntermediateMath());
-		model.addNode(SimpleNodesFactory.createIntermediateColorMix());
-		model.addNode(SimpleNodesFactory.createIntermediateColorMix());
+		model.addComponent(SimpleNodesFactory.createIntermediateMath());
+		model.addComponent(SimpleNodesFactory.createIntermediateColorMix());
+		model.addComponent(SimpleNodesFactory.createIntermediateColorMix());
 
 		model.addConnection(1, 0, 8, 2);
 		model.addConnection(2, 0, 9, 2);
 		model.addConnection(9, 0, 4, 0);
 		model.addConnection(8, 0, 9, 3);
 
-		model.getNode(0).setBounds(0, 0, 200, 0);
-		model.getNode(1).setBounds(0, -350, 200, 0);
-		model.getNode(2).setBounds(-300, -550, 200, 0);
-		model.getNode(3).setBounds(-300, 0, 200, 0);
-		model.getNode(4).setBounds(600, 100, 200, 0);
-		model.getNode(5).setBounds(0, 200, 200, 0);
-		model.getNode(6).setBounds(-600, -150, 200, 0);
-		model.getNode(7).setBounds(-300, -200, 200, 0);
-		model.getNode(8).setBounds(300, -50, 200, 0);
-		model.getNode(9).setBounds(300, -330, 200, 0);
+		model.getComponent(0).setBounds(0, 0, 200, 0);
+		model.getComponent(1).setBounds(0, -350, 200, 0);
+		model.getComponent(2).setBounds(-300, -550, 200, 0);
+		model.getComponent(3).setBounds(-300, 0, 200, 0);
+		model.getComponent(4).setBounds(600, 100, 200, 0);
+		model.getComponent(5).setBounds(0, 200, 200, 0);
+		model.getComponent(6).setBounds(-600, -150, 200, 0);
+		model.getComponent(7).setBounds(-300, -200, 200, 0);
+		model.getComponent(8).setBounds(300, -50, 200, 0);
+		model.getComponent(9).setBounds(300, -330, 200, 0);
 
 //		new AutoLayout().layout(model, model.getNode(0));
 

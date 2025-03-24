@@ -49,7 +49,7 @@ class NodeEditorMouseListener<T extends Node, U extends NodeEditorPane> extends 
 		NodeModel model = mPane.getModel();
 
 		List<T> nodes = (List<T>)model.getComponents();
-		for (int i = nodes.size(); --i >= 0; )
+		for (int i = nodes.size(); --i >= 0;)
 		{
 			T node = nodes.get(i);
 			Rectangle bounds = node.getBounds();
@@ -107,31 +107,29 @@ class NodeEditorMouseListener<T extends Node, U extends NodeEditorPane> extends 
 
 		mSelectedProperty = null;
 
-		Node clickedBox = null;
+		Node node = model.getComponentAt(mClickPoint);
 
-		for (Node node : (ArrayList<Node>)model.getComponents())
+		if (node != null)
 		{
 			Rectangle b = node.getBounds();
 
-			if (b.contains(mClickPoint))
+			if (new Rectangle(b.x + 11, b.y + 7, 20, 20).contains(mClickPoint))
 			{
-				clickedBox = node;
+				node.setMinimized(!node.isMinimized());
+				updateSelections(aEvent, node);
+				return;
+			}
 
-				if (new Rectangle(b.x + 11, b.y + 7, 20, 20).contains(mClickPoint))
-				{
-					node.setMinimized(!node.isMinimized());
-					updateSelections(aEvent, clickedBox);
-					return;
-				}
-
-				Property tmp = node.mousePressed(mClickPoint);
-				if (tmp != null && tmp.mousePressed(mPane, mClickPoint))
+			Property tmp = node.mousePressed(mClickPoint);
+			if (tmp != null)
+			{
+				if (tmp.mousePressed(mPane, mClickPoint))
 				{
 					mPane.getSelectedBoxes().clear();
 					mPane.getSelectedBoxes().add(node);
 					mSelectedProperty = tmp;
 					mPane.repaint();
-					break;
+					return;
 				}
 			}
 		}
@@ -166,7 +164,7 @@ class NodeEditorMouseListener<T extends Node, U extends NodeEditorPane> extends 
 		}
 		else
 		{
-			updateSelections(aEvent, clickedBox);
+			updateSelections(aEvent, node);
 
 			if (!mClickedBox && dragConnector == null)
 			{

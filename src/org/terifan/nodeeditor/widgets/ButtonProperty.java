@@ -28,7 +28,7 @@ public class ButtonProperty extends Property<ButtonProperty>
 		super(aText);
 
 		setIcon(Styles.DefaultIcons.FOLDER);
-		getTextBox().setAnchor(Anchor.CENTER).setMargins(4, 0, 4, 0).setMaxLineCount(1).setFont(Styles.SLIDER_FONT);
+		mTextBox.setAnchor(Anchor.CENTER).setMargins(4, 0, 4, 0).setMaxLineCount(1).setFont(Styles.SLIDER_FONT);
 	}
 
 
@@ -82,7 +82,7 @@ public class ButtonProperty extends Property<ButtonProperty>
 
 		aGraphics.setPaint(oldPaint);
 
-		getTextBox().setForeground(mArmed ? Styles.BOX_FOREGROUND_ARMED_COLOR : Styles.BOX_FOREGROUND_COLOR).setBounds(getBounds()).render(aGraphics);
+		mTextBox.setForeground(mArmed ? Styles.BOX_FOREGROUND_ARMED_COLOR : Styles.BOX_FOREGROUND_COLOR).setBounds(getBounds()).render(aGraphics);
 	}
 
 

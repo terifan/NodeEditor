@@ -22,7 +22,7 @@ public abstract class ProducerProperty extends Property<ProducerProperty>
 	@Override
 	protected void paintComponent(NodeEditorPane aPane, Graphics2D aGraphics, boolean aHover)
 	{
-		getTextBox()
+		mTextBox
 			.setBounds(getBounds())
 			.setAnchor(getConnectors().isEmpty() || getConnectors().get(0).getDirection() == Direction.IN ? Anchor.WEST : Anchor.EAST)
 			.render(aGraphics);

@@ -61,7 +61,7 @@ public class BoxComponentMouseListener<T extends BoxComponent, U extends BoxComp
 	@Override
 	public void mousePressed(MouseEvent aEvent)
 	{
-		BoxComponentModel mModel = mPane.getModel();
+		BoxComponentModel model = mPane.getModel();
 
 		boolean left = SwingUtilities.isLeftMouseButton(aEvent);
 
@@ -81,8 +81,7 @@ public class BoxComponentMouseListener<T extends BoxComponent, U extends BoxComp
 		{
 			mStartBounds = new Rectangle(mHoverNode.getBounds());
 
-			mPane.getModel().getComponents().remove(mHoverNode);
-			mPane.getModel().getComponents().add(mHoverNode);
+			model.moveTop(mHoverNode);
 
 			mPane.getSelectedBoxes().clear();
 			mPane.getSelectedBoxes().add(mHoverNode);
@@ -93,7 +92,7 @@ public class BoxComponentMouseListener<T extends BoxComponent, U extends BoxComp
 
 		T clickedBox = null;
 
-		for (T box : (ArrayList<T>)mModel.getComponents())
+		for (T box : (ArrayList<T>)model.getComponents())
 		{
 			Rectangle b = box.getBounds();
 
@@ -286,8 +285,7 @@ public class BoxComponentMouseListener<T extends BoxComponent, U extends BoxComp
 
 		if (mClickedBox)
 		{
-			mPane.getModel().getComponents().remove(clickedBox);
-			mPane.getModel().getComponents().add(clickedBox);
+			mPane.getModel().moveTop(clickedBox);
 		}
 
 		mPane.repaint();

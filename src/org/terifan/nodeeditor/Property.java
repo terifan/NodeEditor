@@ -20,7 +20,6 @@ public abstract class Property<T extends Property> implements Serializable
 
 	private final ArrayList<Connector> mConnectors;
 	private final Rectangle mBounds;
-	private final TextBox mTextBox;
 
 	protected Node mNode;
 	protected Dimension mPreferredSize;
@@ -28,6 +27,7 @@ public abstract class Property<T extends Property> implements Serializable
 	protected String mId;
 	protected String mModelId;
 	protected String mProducer;
+	protected TextBox mTextBox;
 
 
 	public Property()
@@ -132,12 +132,6 @@ public abstract class Property<T extends Property> implements Serializable
 	{
 		mTextBox.setText(aText);
 		return (T)this;
-	}
-
-
-	public TextBox getTextBox()
-	{
-		return mTextBox;
 	}
 
 
