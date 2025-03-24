@@ -16,7 +16,7 @@ import static org.terifan.nodeeditor.Styles.MIN_WIDTH;
 
 public class BoxComponentMouseListener<T extends BoxComponent, U extends BoxComponentPane> extends MouseAdapter
 {
-	protected U mPane;
+	protected U mViewPort;
 	protected Point mClickPoint;
 	protected Point mDragPoint;
 	protected boolean mClickedBox;
@@ -30,16 +30,16 @@ public class BoxComponentMouseListener<T extends BoxComponent, U extends BoxComp
 	{
 		mZoomSpeed = 1.1;
 		mCursor = Cursor.DEFAULT_CURSOR;
-		mPane = aPane;
+		mViewPort = aPane;
 	}
 
 
 	@Override
 	public void mouseMoved(MouseEvent aEvent)
 	{
-		Point point = mPane.calcMousePoint(aEvent.getPoint());
+		Point point = mViewPort.calcMousePoint(aEvent.getPoint());
 
-		BoxComponentModel model = mPane.getModel();
+		BoxComponentModel model = mViewPort.getModel();
 
 		List<T> nodes = model.getComponents();
 		for (int i = nodes.size(); --i >= 0; )
@@ -61,12 +61,12 @@ public class BoxComponentMouseListener<T extends BoxComponent, U extends BoxComp
 	@Override
 	public void mousePressed(MouseEvent aEvent)
 	{
-		BoxComponentModel model = mPane.getModel();
+		BoxComponentModel model = mViewPort.getModel();
 
 		boolean left = SwingUtilities.isLeftMouseButton(aEvent);
 
 		mDragPoint = aEvent.getPoint();
-		mClickPoint = mPane.calcMousePoint(aEvent.getPoint());
+		mClickPoint = mViewPort.calcMousePoint(aEvent.getPoint());
 
 		if (SwingUtilities.isMiddleMouseButton(aEvent))
 		{
@@ -83,10 +83,9 @@ public class BoxComponentMouseListener<T extends BoxComponent, U extends BoxComp
 		{
 			mStartBounds = new Rectangle(mHoverNode.getBounds());
 
-			mPane.getSelectedBoxes().clear();
-			mPane.getSelectedBoxes().add(mHoverNode);
-			mPane.repaint();
-
+			mViewPort.getSelectedBoxes().clear();
+			mViewPort.getSelectedBoxes().add(mHoverNode);
+			mViewPort.repaint();
 			return;
 		}
 
@@ -100,9 +99,9 @@ public class BoxComponentMouseListener<T extends BoxComponent, U extends BoxComp
 			{
 				clickedBox = box;
 
-				if (new Rectangle(b.x + 11, b.y + 7, 14, 16).contains(mClickPoint))
+				if (new Rectangle(b.x + 11, b.y + 7, 20, 20).contains(mClickPoint))
 				{
-					box.setMinimized(!box.isMinimized());
+					updateMinimize(aEvent, box);
 					break;
 				}
 			}
@@ -110,17 +109,23 @@ public class BoxComponentMouseListener<T extends BoxComponent, U extends BoxComp
 
 		if (clickedBox == null)
 		{
-			mPane.setSelectionRectangle(new Rectangle(mClickPoint));
+			mViewPort.setSelectionRectangle(new Rectangle(mClickPoint));
 		}
 
 		updateSelections(aEvent, clickedBox);
 	}
 
 
+	protected void updateMinimize(MouseEvent aEvent, T aComponent)
+	{
+		aComponent.setMinimized(!aComponent.isMinimized());
+	}
+
+
 	@Override
 	public void mouseReleased(MouseEvent aEvent)
 	{
-		mClickPoint = mPane.calcMousePoint(aEvent.getPoint());
+		mClickPoint = mViewPort.calcMousePoint(aEvent.getPoint());
 
 		if (mCursor != Cursor.DEFAULT_CURSOR)
 		{
@@ -128,37 +133,37 @@ public class BoxComponentMouseListener<T extends BoxComponent, U extends BoxComp
 			return;
 		}
 
-		Rectangle selectionRectangle = mPane.getSelectionRectangle();
+		Rectangle selectionRectangle = mViewPort.getSelectionRectangle();
 		if (selectionRectangle != null)
 		{
 			if (!aEvent.isControlDown())
 			{
-				mPane.getSelectedBoxes().clear();
+				mViewPort.getSelectedBoxes().clear();
 			}
 
-			double scale = mPane.getScale();
+			double scale = mViewPort.getScale();
 			selectionRectangle.x /= scale;
 			selectionRectangle.y /= scale;
 			selectionRectangle.width /= scale;
 			selectionRectangle.height /= scale;
 
-			for (BoxComponent box : (List<BoxComponent>)mPane.getModel().getComponents())
+			for (BoxComponent box : (List<BoxComponent>)mViewPort.getModel().getComponents())
 			{
 				if (selectionRectangle.intersects(box.getBounds()))
 				{
-					if (!mPane.getSelectedBoxes().contains(box))
+					if (!mViewPort.getSelectedBoxes().contains(box))
 					{
-						mPane.getSelectedBoxes().add(box);
+						mViewPort.getSelectedBoxes().add(box);
 					}
 					else if (aEvent.isControlDown())
 					{
-						mPane.getSelectedBoxes().remove(box);
+						mViewPort.getSelectedBoxes().remove(box);
 					}
 				}
 			}
 
-			mPane.setSelectionRectangle(null);
-			mPane.repaint();
+			mViewPort.setSelectionRectangle(null);
+			mViewPort.repaint();
 		}
 	}
 
@@ -166,9 +171,9 @@ public class BoxComponentMouseListener<T extends BoxComponent, U extends BoxComp
 	@Override
 	public void mouseDragged(MouseEvent aEvent)
 	{
-		Rectangle selectionRectangle = mPane.getSelectionRectangle();
+		Rectangle selectionRectangle = mViewPort.getSelectionRectangle();
 
-		Point newPoint = mPane.calcMousePoint(aEvent.getPoint());
+		Point newPoint = mViewPort.calcMousePoint(aEvent.getPoint());
 
 		if (mCursor != Cursor.DEFAULT_CURSOR && SwingUtilities.isLeftMouseButton(aEvent))
 		{
@@ -178,10 +183,10 @@ public class BoxComponentMouseListener<T extends BoxComponent, U extends BoxComp
 
 		if (selectionRectangle != null)
 		{
-			int x0 = (int)(Math.min(mClickPoint.x, newPoint.x) * mPane.getScale());
-			int y0 = (int)(Math.min(mClickPoint.y, newPoint.y) * mPane.getScale());
-			int x1 = (int)(Math.max(mClickPoint.x, newPoint.x) * mPane.getScale());
-			int y1 = (int)(Math.max(mClickPoint.y, newPoint.y) * mPane.getScale());
+			int x0 = (int)(Math.min(mClickPoint.x, newPoint.x) * mViewPort.getScale());
+			int y0 = (int)(Math.min(mClickPoint.y, newPoint.y) * mViewPort.getScale());
+			int x1 = (int)(Math.max(mClickPoint.x, newPoint.x) * mViewPort.getScale());
+			int y1 = (int)(Math.max(mClickPoint.y, newPoint.y) * mViewPort.getScale());
 
 			selectionRectangle.setBounds(x0, y0, x1 - x0, y1 - y0);
 		}
@@ -192,14 +197,14 @@ public class BoxComponentMouseListener<T extends BoxComponent, U extends BoxComp
 
 			if (SwingUtilities.isMiddleMouseButton(aEvent))
 			{
-				Point2D.Double scroll = mPane.getPaneScroll();
+				Point2D.Double scroll = mViewPort.getPaneScroll();
 				scroll.x += (aEvent.getX() - mDragPoint.x);
 				scroll.y += (aEvent.getY() - mDragPoint.y);
 				mDragPoint = aEvent.getPoint();
 			}
 			else if (mClickedBox || SwingUtilities.isRightMouseButton(aEvent))
 			{
-				for (T box : (ArrayList<T>)mPane.getSelectedBoxes())
+				for (T box : (ArrayList<T>)mViewPort.getSelectedBoxes())
 				{
 					Point pt = box.getBounds().getLocation();
 					pt.x += mClickPoint.x - oldPoint.x;
@@ -209,14 +214,14 @@ public class BoxComponentMouseListener<T extends BoxComponent, U extends BoxComp
 			}
 		}
 
-		mPane.repaint();
+		mViewPort.repaint();
 	}
 
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent aEvent)
 	{
-		Point2D.Double scroll = mPane.getPaneScroll();
+		Point2D.Double scroll = mViewPort.getPaneScroll();
 
 		scroll.x -= aEvent.getX();
 		scroll.y -= aEvent.getY();
@@ -224,13 +229,13 @@ public class BoxComponentMouseListener<T extends BoxComponent, U extends BoxComp
 		double d = mZoomSpeed;
 		if (aEvent.getWheelRotation() == 1)
 		{
-			mPane.setScale(mPane.getScale() * d);
+			mViewPort.setScale(mViewPort.getScale() * d);
 			scroll.x *= d;
 			scroll.y *= d;
 		}
 		else
 		{
-			mPane.setScale(mPane.getScale() / d);
+			mViewPort.setScale(mViewPort.getScale() / d);
 			scroll.x /= d;
 			scroll.y /= d;
 		}
@@ -238,7 +243,7 @@ public class BoxComponentMouseListener<T extends BoxComponent, U extends BoxComp
 		scroll.x += aEvent.getX();
 		scroll.y += aEvent.getY();
 
-		mPane.repaint();
+		mViewPort.repaint();
 	}
 
 
@@ -256,12 +261,12 @@ public class BoxComponentMouseListener<T extends BoxComponent, U extends BoxComp
 			{
 				clickedBox = aClickedBox;
 
-				boolean b = mPane.getSelectedBoxes().contains(aClickedBox);
+				boolean b = mViewPort.getSelectedBoxes().contains(aClickedBox);
 				if (aEvent.isControlDown())
 				{
 					if (b)
 					{
-						mPane.getSelectedBoxes().remove(aClickedBox);
+						mViewPort.getSelectedBoxes().remove(aClickedBox);
 					}
 					else
 					{
@@ -270,7 +275,7 @@ public class BoxComponentMouseListener<T extends BoxComponent, U extends BoxComp
 				}
 				else if (!b)
 				{
-					mPane.getSelectedBoxes().clear();
+					mViewPort.getSelectedBoxes().clear();
 					newSelection = aClickedBox;
 				}
 			}
@@ -280,15 +285,15 @@ public class BoxComponentMouseListener<T extends BoxComponent, U extends BoxComp
 
 		if (newSelection != null)
 		{
-			mPane.getSelectedBoxes().add(newSelection);
+			mViewPort.getSelectedBoxes().add(newSelection);
 		}
 
 		if (mClickedBox)
 		{
-			mPane.getModel().moveTop(clickedBox);
+			mViewPort.getModel().moveTop(clickedBox);
 		}
 
-		mPane.repaint();
+		mViewPort.repaint();
 	}
 
 
@@ -297,7 +302,7 @@ public class BoxComponentMouseListener<T extends BoxComponent, U extends BoxComp
 		if (mCursor != aCursor)
 		{
 			mCursor = aCursor;
-			SwingUtilities.invokeLater(() -> mPane.setCursor(Cursor.getPredefinedCursor(aCursor < -1 ? Cursor.DEFAULT_CURSOR : aCursor)));
+			SwingUtilities.invokeLater(() -> mViewPort.setCursor(Cursor.getPredefinedCursor(aCursor < -1 ? Cursor.DEFAULT_CURSOR : aCursor)));
 		}
 	}
 
@@ -410,6 +415,6 @@ public class BoxComponentMouseListener<T extends BoxComponent, U extends BoxComp
 		b.height = Math.min(aBox.getMaximumSize().height, Math.max(minHeight, b.height));
 
 		aBox.getBounds().setBounds(b);
-		mPane.repaint();
+		mViewPort.repaint();
 	}
 }

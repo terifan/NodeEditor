@@ -37,8 +37,8 @@ class NodeEditorMouseListener<T extends Node, U extends NodeEditorPane> extends 
 	@Override
 	public void mouseMoved(MouseEvent aEvent)
 	{
-		Popup popup = mPane.getPopup();
-		Point point = mPane.calcMousePoint(aEvent.getPoint());
+		Popup popup = mViewPort.getPopup();
+		Point point = mViewPort.calcMousePoint(aEvent.getPoint());
 
 		if (popup != null)
 		{
@@ -46,14 +46,14 @@ class NodeEditorMouseListener<T extends Node, U extends NodeEditorPane> extends 
 			return;
 		}
 
-		NodeModel model = mPane.getModel();
+		NodeModel model = mViewPort.getModel();
 
 		List<T> nodes = (List<T>)model.getComponents();
 		for (int i = nodes.size(); --i >= 0;)
 		{
 			T node = nodes.get(i);
 			Rectangle bounds = node.getBounds();
-			if (!node.isMinimized() && bounds.contains(point) && mPane.findNearestConnector(point, node) == null)
+			if (!node.isMinimized() && bounds.contains(point) && mViewPort.findNearestConnector(point, node) == null)
 			{
 				mHoverNode = node;
 				updateCursor(getCursor(point, node));
@@ -68,8 +68,8 @@ class NodeEditorMouseListener<T extends Node, U extends NodeEditorPane> extends 
 	@Override
 	public void mousePressed(MouseEvent aEvent)
 	{
-		NodeModel model = mPane.getModel();
-		Popup popup = mPane.getPopup();
+		NodeModel model = mViewPort.getModel();
+		Popup popup = mViewPort.getPopup();
 
 		if (popup != null)
 		{
@@ -79,7 +79,7 @@ class NodeEditorMouseListener<T extends Node, U extends NodeEditorPane> extends 
 		}
 
 		mDragPoint = aEvent.getPoint();
-		mClickPoint = mPane.calcMousePoint(aEvent.getPoint());
+		mClickPoint = mViewPort.calcMousePoint(aEvent.getPoint());
 
 		if (SwingUtilities.isMiddleMouseButton(aEvent))
 		{
@@ -94,13 +94,13 @@ class NodeEditorMouseListener<T extends Node, U extends NodeEditorPane> extends 
 		{
 			mStartBounds = new Rectangle(mHoverNode.getBounds());
 
-			mPane.getModel().getComponents().remove(mHoverNode);
-			mPane.getModel().getComponents().add(mHoverNode);
+			mViewPort.getModel().getComponents().remove(mHoverNode);
+			mViewPort.getModel().getComponents().add(mHoverNode);
 
-			mPane.getSelectedBoxes().clear();
-			mPane.getSelectedBoxes().add(mHoverNode);
-			mPane.setSelectedConnection(null);
-			mPane.repaint();
+			mViewPort.getSelectedBoxes().clear();
+			mViewPort.getSelectedBoxes().add(mHoverNode);
+			mViewPort.setSelectedConnection(null);
+			mViewPort.repaint();
 
 			return;
 		}
@@ -111,31 +111,22 @@ class NodeEditorMouseListener<T extends Node, U extends NodeEditorPane> extends 
 
 		if (node != null)
 		{
-			Rectangle b = node.getBounds();
-
-			if (new Rectangle(b.x + 11, b.y + 7, 20, 20).contains(mClickPoint))
-			{
-				node.setMinimized(!node.isMinimized());
-				updateSelections(aEvent, node);
-				return;
-			}
-
 			Property tmp = node.mousePressed(mClickPoint);
 			if (tmp != null)
 			{
-				if (tmp.mousePressed(mPane, mClickPoint))
+				if (tmp.mousePressed(mViewPort, mClickPoint))
 				{
-					mPane.getSelectedBoxes().clear();
-					mPane.getSelectedBoxes().add(node);
+					mViewPort.getSelectedBoxes().clear();
+					mViewPort.getSelectedBoxes().add(node);
 					mSelectedProperty = tmp;
-					mPane.repaint();
+					mViewPort.repaint();
 					return;
 				}
 			}
 		}
 
-		Connector dragConnector = mPane.findNearestConnector(mClickPoint);
-		mPane.setDragConnector(dragConnector);
+		Connector dragConnector = mViewPort.findNearestConnector(mClickPoint);
+		mViewPort.setDragConnector(dragConnector);
 
 		if (dragConnector != null)
 		{
@@ -147,9 +138,9 @@ class NodeEditorMouseListener<T extends Node, U extends NodeEditorPane> extends 
 				{
 					Connector out = list.get(0).getOut();
 
-					mPane.setDragConnector(out);
-					mPane.setDragEndLocation(out.getConnectorPoint());
-					mPane.setDragStartLocation(out.getConnectorPoint());
+					mViewPort.setDragConnector(out);
+					mViewPort.setDragEndLocation(out.getConnectorPoint());
+					mViewPort.setDragStartLocation(out.getConnectorPoint());
 
 					model.getConnections().remove(list.get(0));
 
@@ -159,7 +150,7 @@ class NodeEditorMouseListener<T extends Node, U extends NodeEditorPane> extends 
 
 			if (!done)
 			{
-				mPane.setDragStartLocation(dragConnector.getConnectorPoint());
+				mViewPort.setDragStartLocation(dragConnector.getConnectorPoint());
 			}
 		}
 		else
@@ -168,17 +159,25 @@ class NodeEditorMouseListener<T extends Node, U extends NodeEditorPane> extends 
 
 			if (!mClickedBox && dragConnector == null)
 			{
-				mPane.setSelectionRectangle(new Rectangle(mClickPoint));
+				mViewPort.setSelectionRectangle(new Rectangle(mClickPoint));
 			}
 		}
 	}
 
 
 	@Override
+	protected void updateMinimize(MouseEvent aEvent, Node aNode)
+	{
+		super.updateMinimize(aEvent, aNode);
+		updateSelections(aEvent, aNode);
+	}
+
+
+	@Override
 	public void mouseReleased(MouseEvent aEvent)
 	{
-		Popup popup = mPane.getPopup();
-		NodeModel model = mPane.getModel();
+		Popup popup = mViewPort.getPopup();
+		NodeModel model = mViewPort.getModel();
 
 		if (popup != null)
 		{
@@ -188,11 +187,11 @@ class NodeEditorMouseListener<T extends Node, U extends NodeEditorPane> extends 
 			}
 			mIgnoreNextMouseRelease = false;
 			mSelectedProperty = null;
-			mPane.setSelectionRectangle(null);
+			mViewPort.setSelectionRectangle(null);
 			return;
 		}
 
-		mClickPoint = mPane.calcMousePoint(aEvent.getPoint());
+		mClickPoint = mViewPort.calcMousePoint(aEvent.getPoint());
 
 		if (mCursor != Cursor.DEFAULT_CURSOR)
 		{
@@ -202,17 +201,17 @@ class NodeEditorMouseListener<T extends Node, U extends NodeEditorPane> extends 
 
 		if (mSelectedProperty != null)
 		{
-			mSelectedProperty.mouseReleased(mPane, mClickPoint);
+			mSelectedProperty.mouseReleased(mViewPort, mClickPoint);
 			mSelectedProperty = null;
-			mPane.repaint();
+			mViewPort.repaint();
 			return;
 		}
 
-		if (mPane.getDragConnector() != null)
+		if (mViewPort.getDragConnector() != null)
 		{
-			Connector nearestConnector = mPane.findNearestConnector(mClickPoint);
+			Connector nearestConnector = mViewPort.findNearestConnector(mClickPoint);
 
-			if (nearestConnector != null && mPane.getDragConnector().getDirection() != nearestConnector.getDirection())
+			if (nearestConnector != null && mViewPort.getDragConnector().getDirection() != nearestConnector.getDirection())
 			{
 				if (mRemoveInConnectionsOnDrop)
 				{
@@ -222,76 +221,76 @@ class NodeEditorMouseListener<T extends Node, U extends NodeEditorPane> extends 
 					}
 					if (nearestConnector.getDirection() == Direction.OUT)
 					{
-						model.getConnections().removeAll(model.getConnectionsTo(mPane.getDragConnector().getProperty()));
+						model.getConnections().removeAll(model.getConnectionsTo(mViewPort.getDragConnector().getProperty()));
 					}
 				}
 
-				if (mPane.getDragConnector().getDirection() == Direction.IN)
+				if (mViewPort.getDragConnector().getDirection() == Direction.IN)
 				{
-					model.addConnection(nearestConnector, mPane.getDragConnector());
+					model.addConnection(nearestConnector, mViewPort.getDragConnector());
 				}
 				else
 				{
-					model.addConnection(mPane.getDragConnector(), nearestConnector);
+					model.addConnection(mViewPort.getDragConnector(), nearestConnector);
 				}
 
-				nearestConnector.getProperty().connectionsChanged(mPane, mClickPoint);
+				nearestConnector.getProperty().connectionsChanged(mViewPort, mClickPoint);
 			}
 
-			mPane.setDragConnector(null);
-			mPane.setDragStartLocation(null);
-			mPane.setDragEndLocation(null);
+			mViewPort.setDragConnector(null);
+			mViewPort.setDragStartLocation(null);
+			mViewPort.setDragEndLocation(null);
 		}
 
-		Rectangle selectionRectangle = mPane.getSelectionRectangle();
+		Rectangle selectionRectangle = mViewPort.getSelectionRectangle();
 		if (selectionRectangle != null)
 		{
 			if (!aEvent.isControlDown())
 			{
-				mPane.getSelectedBoxes().clear();
+				mViewPort.getSelectedBoxes().clear();
 			}
 
-			double scale = mPane.getScale();
+			double scale = mViewPort.getScale();
 			selectionRectangle.x /= scale;
 			selectionRectangle.y /= scale;
 			selectionRectangle.width /= scale;
 			selectionRectangle.height /= scale;
 
-			for (Node box : mPane.getModel().getComponents())
+			for (Node box : mViewPort.getModel().getComponents())
 			{
 				if (selectionRectangle.intersects(box.getBounds()))
 				{
-					if (!mPane.getSelectedBoxes().contains(box))
+					if (!mViewPort.getSelectedBoxes().contains(box))
 					{
-						mPane.getSelectedBoxes().add(box);
+						mViewPort.getSelectedBoxes().add(box);
 					}
 					else if (aEvent.isControlDown())
 					{
-						mPane.getSelectedBoxes().remove(box);
+						mViewPort.getSelectedBoxes().remove(box);
 					}
 				}
 			}
-			mPane.setSelectionRectangle(null);
+			mViewPort.setSelectionRectangle(null);
 		}
 
-		mPane.repaint();
+		mViewPort.repaint();
 	}
 
 
 	@Override
 	public void mouseDragged(MouseEvent aEvent)
 	{
-		Popup popup = mPane.getPopup();
+		Popup popup = mViewPort.getPopup();
 
 		if (popup != null)
 		{
 			return;
 		}
 
-		Rectangle selectionRectangle = mPane.getSelectionRectangle();
-		Point2D.Double paneScroll = mPane.getPaneScroll();
+		Rectangle selectionRectangle = mViewPort.getSelectionRectangle();
+		Point2D.Double paneScroll = mViewPort.getPaneScroll();
 
-		Point newPoint = mPane.calcMousePoint(aEvent.getPoint());
+		Point newPoint = mViewPort.calcMousePoint(aEvent.getPoint());
 
 		if (mCursor != Cursor.DEFAULT_CURSOR && SwingUtilities.isLeftMouseButton(aEvent))
 		{
@@ -301,15 +300,15 @@ class NodeEditorMouseListener<T extends Node, U extends NodeEditorPane> extends 
 
 		if (mSelectedProperty != null)
 		{
-			mSelectedProperty.mouseDragged(mPane, mClickPoint, newPoint);
+			mSelectedProperty.mouseDragged(mViewPort, mClickPoint, newPoint);
 			return;
 		}
 		if (selectionRectangle != null)
 		{
-			int x0 = (int)(Math.min(mClickPoint.x, newPoint.x) * mPane.getScale());
-			int y0 = (int)(Math.min(mClickPoint.y, newPoint.y) * mPane.getScale());
-			int x1 = (int)(Math.max(mClickPoint.x, newPoint.x) * mPane.getScale());
-			int y1 = (int)(Math.max(mClickPoint.y, newPoint.y) * mPane.getScale());
+			int x0 = (int)(Math.min(mClickPoint.x, newPoint.x) * mViewPort.getScale());
+			int y0 = (int)(Math.min(mClickPoint.y, newPoint.y) * mViewPort.getScale());
+			int x1 = (int)(Math.max(mClickPoint.x, newPoint.x) * mViewPort.getScale());
+			int y1 = (int)(Math.max(mClickPoint.y, newPoint.y) * mViewPort.getScale());
 
 			selectionRectangle.setBounds(x0, y0, x1 - x0, y1 - y0);
 		}
@@ -324,19 +323,19 @@ class NodeEditorMouseListener<T extends Node, U extends NodeEditorPane> extends 
 				paneScroll.y += (aEvent.getY() - mDragPoint.y);
 				mDragPoint = aEvent.getPoint();
 			}
-			else if (mPane.getDragConnector() != null)
+			else if (mViewPort.getDragConnector() != null)
 			{
-				mPane.setDragEndLocation(mClickPoint);
+				mViewPort.setDragEndLocation(mClickPoint);
 
-				Connector connector = mPane.findNearestConnector(mPane.getDragEndLocation());
-				if (connector != null && mPane.getDragConnector().getDirection() != connector.getDirection())
+				Connector connector = mViewPort.findNearestConnector(mViewPort.getDragEndLocation());
+				if (connector != null && mViewPort.getDragConnector().getDirection() != connector.getDirection())
 				{
-					mPane.setDragEndLocation(connector.getConnectorPoint());
+					mViewPort.setDragEndLocation(connector.getConnectorPoint());
 				}
 			}
 			else if (mClickedBox || SwingUtilities.isRightMouseButton(aEvent))
 			{
-				for (Node box : (ArrayList<Node>)mPane.getSelectedBoxes())
+				for (Node box : (ArrayList<Node>)mViewPort.getSelectedBoxes())
 				{
 					Point pt = box.getBounds().getLocation();
 					pt.x += mClickPoint.x - oldPoint.x;
@@ -346,14 +345,14 @@ class NodeEditorMouseListener<T extends Node, U extends NodeEditorPane> extends 
 			}
 		}
 
-		mPane.repaint();
+		mViewPort.repaint();
 	}
 
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent aEvent)
 	{
-		Popup popup = mPane.getPopup();
+		Popup popup = mViewPort.getPopup();
 
 		if (popup != null)
 		{
@@ -361,20 +360,20 @@ class NodeEditorMouseListener<T extends Node, U extends NodeEditorPane> extends 
 			return;
 		}
 
-		Point2D.Double scroll = mPane.getPaneScroll();
+		Point2D.Double scroll = mViewPort.getPaneScroll();
 
 		scroll.x -= aEvent.getX();
 		scroll.y -= aEvent.getY();
 
 		if (aEvent.getWheelRotation() == 1)
 		{
-			mPane.setScale(mPane.getScale() * mZoomSpeed);
+			mViewPort.setScale(mViewPort.getScale() * mZoomSpeed);
 			scroll.x *= mZoomSpeed;
 			scroll.y *= mZoomSpeed;
 		}
 		else
 		{
-			mPane.setScale(mPane.getScale() / mZoomSpeed);
+			mViewPort.setScale(mViewPort.getScale() / mZoomSpeed);
 			scroll.x /= mZoomSpeed;
 			scroll.y /= mZoomSpeed;
 		}
@@ -382,13 +381,13 @@ class NodeEditorMouseListener<T extends Node, U extends NodeEditorPane> extends 
 		scroll.x += aEvent.getX();
 		scroll.y += aEvent.getY();
 
-		mPane.repaint();
+		mViewPort.repaint();
 	}
 
 
 	private void updateSelections(MouseEvent aEvent, Node aClickedBox)
 	{
-		NodeModel model = mPane.getModel();
+		NodeModel model = mViewPort.getModel();
 		Node newSelection = null;
 		Node newClickedBox = null;
 
@@ -401,12 +400,12 @@ class NodeEditorMouseListener<T extends Node, U extends NodeEditorPane> extends 
 			{
 				newClickedBox = aClickedBox;
 
-				boolean b = mPane.getSelectedBoxes().contains(aClickedBox);
+				boolean b = mViewPort.getSelectedBoxes().contains(aClickedBox);
 				if (aEvent.isControlDown())
 				{
 					if (b)
 					{
-						mPane.getSelectedBoxes().remove(aClickedBox);
+						mViewPort.getSelectedBoxes().remove(aClickedBox);
 					}
 					else
 					{
@@ -415,7 +414,7 @@ class NodeEditorMouseListener<T extends Node, U extends NodeEditorPane> extends 
 				}
 				else if (!b)
 				{
-					mPane.getSelectedBoxes().clear();
+					mViewPort.getSelectedBoxes().clear();
 					newSelection = aClickedBox;
 				}
 			}
@@ -425,14 +424,14 @@ class NodeEditorMouseListener<T extends Node, U extends NodeEditorPane> extends 
 
 		if (newSelection != null)
 		{
-			mPane.getSelectedBoxes().add(newSelection);
+			mViewPort.getSelectedBoxes().add(newSelection);
 		}
 
 		if (mClickedBox)
 		{
-			mPane.getModel().getComponents().remove(newClickedBox);
-			mPane.getModel().getComponents().add(newClickedBox);
-			mPane.setSelectedConnection(null);
+			mViewPort.getModel().getComponents().remove(newClickedBox);
+			mViewPort.getModel().getComponents().add(newClickedBox);
+			mViewPort.setSelectedConnection(null);
 		}
 		else if (mConnectorSelectionAllowed)
 		{
@@ -449,12 +448,12 @@ class NodeEditorMouseListener<T extends Node, U extends NodeEditorPane> extends 
 			}
 			if (nearest != null)
 			{
-				mPane.setSelectedConnection(mPane.getSelectedConnection());
-				mPane.getSelectedBoxes().clear();
+				mViewPort.setSelectedConnection(mViewPort.getSelectedConnection());
+				mViewPort.getSelectedBoxes().clear();
 			}
 		}
 
-		mPane.repaint();
+		mViewPort.repaint();
 	}
 
 
@@ -567,6 +566,6 @@ class NodeEditorMouseListener<T extends Node, U extends NodeEditorPane> extends 
 		b.height = Math.min(aBox.getMaximumSize().height, Math.max(minHeight, b.height));
 
 		aBox.getBounds().setBounds(b);
-		mPane.repaint();
+		mViewPort.repaint();
 	}
 }
