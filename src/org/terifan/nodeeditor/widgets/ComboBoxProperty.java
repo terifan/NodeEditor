@@ -123,6 +123,13 @@ public class ComboBoxProperty extends Property<ComboBoxProperty>
 	}
 
 
+	@Override
+	public Object execute()
+	{
+		return mOptions.get(mSelectedIndex);
+	}
+
+
 	public int getSelectedIndex()
 	{
 		return mSelectedIndex;

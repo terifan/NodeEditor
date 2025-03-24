@@ -5,12 +5,14 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import javax.swing.JColorChooser;
+import org.terifan.nodeeditor.Connector;
 import org.terifan.nodeeditor.Direction;
 import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Property;
 import org.terifan.nodeeditor.Styles;
 import static org.terifan.nodeeditor.Styles.FIELD_CORNER;
 import org.terifan.ui.Anchor;
+import org.terifan.vecmath.Vec4d;
 
 
 public class ColorChooserProperty extends Property<ColorChooserProperty>
@@ -84,5 +86,19 @@ public class ColorChooserProperty extends Property<ColorChooserProperty>
 		}
 
 		return false;
+	}
+
+
+	@Override
+	public Object execute()
+	{
+		Connector in = getConnector(Direction.IN);
+
+		if (in != null && !in.getConnectedProperties().isEmpty())
+		{
+			return in.getConnectedProperties().get(0).execute();
+		}
+
+		return new Vec4d(mColor.getRed() / 255.0, mColor.getGreen() / 255.0, mColor.getBlue() / 255.0, 0);
 	}
 }

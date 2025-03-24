@@ -16,6 +16,7 @@ import org.terifan.nodeeditor.Styles;
 import static org.terifan.nodeeditor.Styles.DefaultColors.GRAY;
 import static org.terifan.nodeeditor.Styles.DefaultColors.YELLOW;
 import org.terifan.nodeeditor.Styles.DefaultNodeColors;
+import org.terifan.nodeeditor.util.SimpleNodesFactory;
 import org.terifan.nodeeditor.widgets.ButtonProperty;
 import org.terifan.nodeeditor.widgets.ImageProperty;
 import org.terifan.vecmath.Vec2d;
@@ -93,6 +94,9 @@ public class MandelbrotExample
 					.addProperty(o = new ImageProperty("", 200, 200))
 					.addProperty(new ButtonProperty("Run").setIcon(Styles.DefaultIcons.RUN).setCommand("run"))
 				)
+				.addNode(SimpleNodesFactory.createSourceColorRGBA())
+				.addNode(SimpleNodesFactory.createIntermediateMath())
+				.addNode(SimpleNodesFactory.createIntermediateColorMix())
 				.addConnection(0, 0, 1, 5)
 				.addConnection(0, 1, 2, 1)
 				.addConnection(1, 0, 2, 0)

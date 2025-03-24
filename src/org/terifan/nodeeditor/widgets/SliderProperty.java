@@ -9,7 +9,6 @@ import java.awt.Shape;
 import java.util.HashMap;
 import java.util.List;
 import org.terifan.nodeeditor.Connector;
-import org.terifan.nodeeditor.Context;
 import org.terifan.nodeeditor.Direction;
 import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Property;
@@ -35,8 +34,6 @@ public class SliderProperty extends Property<SliderProperty>
 	private double mStep;
 	private transient double mStartValue;
 	private transient boolean mArmed;
-
-//	private String[] mIds;
 
 
 	public SliderProperty(String aText, double aValue, double aStepSize)
