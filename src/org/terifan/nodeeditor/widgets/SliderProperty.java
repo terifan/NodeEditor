@@ -6,8 +6,6 @@ import java.awt.Paint;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
-import java.util.HashMap;
-import java.util.List;
 import org.terifan.nodeeditor.Connector;
 import org.terifan.nodeeditor.Context;
 import org.terifan.nodeeditor.Direction;
@@ -29,32 +27,48 @@ public class SliderProperty extends Property<SliderProperty>
 		0f, 1f
 	};
 
+	private transient double mStartValue;
+	private transient boolean mArmed;
+
+	private TextBox mValueTextBox;
 	private double mMin;
 	private double mMax;
 	private double mValue;
 	private double mStep;
-	private transient double mStartValue;
-	private transient boolean mArmed;
-
-//	private String[] mIds;
 
 
-	public SliderProperty(String aText, double aValue, double aStepSize)
+	public SliderProperty()
 	{
-		this(aText, 0.0, 1.0, aValue);
-
-		mStep = aStepSize;
+		mTextBox.setMargins(4, 0, 4, 0).setFont(Styles.SLIDER_FONT).setMaxLineCount(1).setAnchor(Anchor.WEST);
+		mValueTextBox = new TextBox("").setAnchor(Anchor.EAST).setMargins(0, 0, 0, 15).setMaxLineCount(1).setFont(Styles.SLIDER_FONT);
 	}
 
 
-	public SliderProperty(String aText, double aMin, double aMax, double aValue)
+	public SliderProperty(String aText)
 	{
-		super(aText);
+		this(aText, 0, 0.001);
+	}
 
+
+	public SliderProperty(String aText, double aValue, double aStep)
+	{
+		this();
+
+		mMin = -Float.MAX_VALUE;
+		mMax = Float.MAX_VALUE;
+		mValue = aValue;
+		mStep = aStep;
+		setText(aText);
+	}
+
+
+	public SliderProperty setRange(double aMin, double aMax, double aValue, double aStep)
+	{
 		mMin = aMin;
 		mMax = aMax;
 		mValue = aValue;
-		getPreferredSize().height = 20;
+		mStep = aStep;
+		return this;
 	}
 
 
@@ -71,15 +85,53 @@ public class SliderProperty extends Property<SliderProperty>
 	}
 
 
+	public double getMin()
+	{
+		return mMin;
+	}
+
+
+	public SliderProperty setMin(double aMin)
+	{
+		mMin = aMin;
+		return this;
+	}
+
+
+	public double getMax()
+	{
+		return mMax;
+	}
+
+
+	public SliderProperty setMax(double aMax)
+	{
+		mMax = aMax;
+		return this;
+	}
+
+
+	public double getStep()
+	{
+		return mStep;
+	}
+
+
+	public SliderProperty setStep(double aStep)
+	{
+		mStep = aStep;
+		return this;
+	}
+
+
 	@Override
 	protected void paintComponent(NodeEditorPane aPane, Graphics2D aGraphics, boolean aHover)
 	{
-		TextBox textBox = getTextBox();
 		Rectangle bounds = getBounds();
 
 		if (isConnected(Direction.IN))
 		{
-			textBox.setMargins(0, 0, 0, 0).setSuffix("").setBounds(bounds).setAnchor(Anchor.WEST).setMargins(0, 0, 0, 0).setForeground(Styles.SLIDER_COLORS[0][2][1]).setMaxLineCount(1).setFont(Styles.BOX_ITEM_FONT).render(aGraphics);
+			mTextBox.setMargins(4, 0, 4, 0).setSuffix("").setBounds(bounds).setForeground(Styles.SLIDER_COLORS[0][2][1]).setFont(Styles.BOX_ITEM_FONT).render(aGraphics);
 		}
 		else
 		{
@@ -108,15 +160,39 @@ public class SliderProperty extends Property<SliderProperty>
 			}
 			else
 			{
-				Arrow.paintArrow(aGraphics, 3, x+8, y+h/2, 3, 3, Styles.BOX_FOREGROUND_SHADOW_COLOR, Styles.BOX_FOREGROUND_COLOR);
-				Arrow.paintArrow(aGraphics, 1, x+w-8, y+h/2, 3, 3, Styles.BOX_FOREGROUND_SHADOW_COLOR, Styles.BOX_FOREGROUND_COLOR);
+				Arrow.paintArrow(aGraphics, 3, x + 8, y + h / 2, 3, 3, Styles.BOX_FOREGROUND_SHADOW_COLOR, Styles.BOX_FOREGROUND_COLOR);
+				Arrow.paintArrow(aGraphics, 1, x + w - 8, y + h / 2, 3, 3, Styles.BOX_FOREGROUND_SHADOW_COLOR, Styles.BOX_FOREGROUND_COLOR);
 			}
 
 			aGraphics.setPaint(oldPaint);
 
-			Rectangle m = new TextBox(String.format("%3.3f", mValue)).setBounds(bounds).setAnchor(Anchor.EAST).setMargins(0, 0, 0, 15).setForeground(Styles.SLIDER_COLORS[i][2][0]).setMaxLineCount(1).setFont(Styles.SLIDER_FONT).render(aGraphics).measure();
+			String value;
+			if (mStep >= 1 && mValue == (long)mValue)
+			{
+				value = String.format("%d", (long)mValue);
+			}
+			else if (mStep < 0.01)
+			{
+				value = String.format("%3.3f", mValue);
+			}
+			else if (mStep < 0.1)
+			{
+				value = String.format("%3.2f", mValue);
+			}
+			else
+			{
+				value = String.format("%3.1f", mValue);
+			}
 
-			textBox.setBounds(bounds).setAnchor(Anchor.WEST).setMargins(0, 15, 0, m.width).setForeground(Styles.SLIDER_COLORS[i][2][1]).setMaxLineCount(1).setFont(Styles.SLIDER_FONT).render(aGraphics);
+			if (mTextBox.getText().isEmpty())
+			{
+				mValueTextBox.setAnchor(Anchor.CENTER).setMargins(0, 0, 0, 0).setForeground(Styles.SLIDER_COLORS[i][2][0]).setBounds(bounds).setText(value).render(aGraphics).measure();
+			}
+			else
+			{
+				Rectangle m = mValueTextBox.setAnchor(Anchor.EAST).setMargins(0, 0, 0, 15).setForeground(Styles.SLIDER_COLORS[i][2][0]).setBounds(bounds).setText(value).render(aGraphics).measure();
+				mTextBox.setBounds(bounds).setMargins(4, 15, 4, m.width).setForeground(Styles.SLIDER_COLORS[i][2][1]).render(aGraphics);
+			}
 		}
 	}
 
@@ -142,13 +218,6 @@ public class SliderProperty extends Property<SliderProperty>
 		if (!isConnected(Direction.IN))
 		{
 			mArmed = false;
-//			if (mStartValue != mValue)
-//			{
-//				if (mOnChangeListener != null)
-//				{
-//					mOnChangeListener.onChange(this, false);
-//				}
-//			}
 			aPane.repaint();
 		}
 	}
@@ -170,23 +239,21 @@ public class SliderProperty extends Property<SliderProperty>
 				mValue = mStartValue + delta;
 			}
 
-//			if (mOnChangeListener != null)
-//			{
-//				mOnChangeListener.onChange(this, true);
-//			}
+			mValue = Math.max(Math.min(mValue, mMax), mMin);
+
 			aPane.repaint();
 		}
 	}
 
 
 	@Override
-	public Object execute()
+	public Object execute(Context aContext)
 	{
 		Connector in = getConnector(Direction.IN);
 
 		if (in != null && !in.getConnectedProperties().isEmpty())
 		{
-			return in.getConnectedProperties().get(0).execute();
+			return in.getConnectedProperties().get(0).execute(aContext);
 		}
 
 		return mValue;

@@ -32,6 +32,7 @@ public class CheckBoxProperty extends Property<CheckBoxProperty>
 		super(aText);
 
 		mSelected = aState;
+		mTextBox.setMargins(2, 0, 2, 0);
 	}
 
 
@@ -66,10 +67,10 @@ public class CheckBoxProperty extends Property<CheckBoxProperty>
 
 			aGraphics.drawPolyline(new int[]
 			{
-				sx + ss*7/38, sx + ss*15/38, sx + ss*29/38
+				sx + ss * 7 / 38, sx + ss * 14 / 38, sx + ss * 28 / 38
 			}, new int[]
 			{
-				sy + ss*24/38, sy + ss*30/38, sy + ss*14/38
+				sy + ss * 22 / 38, sy + ss * 30 / 38, sy + ss * 14 / 38
 			}, 3);
 
 			aGraphics.setStroke(stroke);
@@ -77,7 +78,7 @@ public class CheckBoxProperty extends Property<CheckBoxProperty>
 
 		aGraphics.setPaint(oldPaint);
 
-		getTextBox()
+		mTextBox
 			.setBounds(getBounds())
 			.setAnchor(Anchor.WEST)
 			.setMargins(3, ss + 5, 0, 0)
@@ -87,12 +88,6 @@ public class CheckBoxProperty extends Property<CheckBoxProperty>
 	}
 
 
-//	@Override
-//	protected void actionPerformed(NodeEditorPane aPane, Point aClickPoint)
-//	{
-//		mSelected = !mSelected;
-//		aPane.repaint();
-//	}
 	@Override
 	protected boolean mousePressed(NodeEditorPane aPane, Point aClickPoint)
 	{

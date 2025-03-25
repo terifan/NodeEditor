@@ -19,13 +19,15 @@ public abstract class Property<T extends Property> implements Serializable
 	private static final long serialVersionUID = 1L;
 
 	private final ArrayList<Connector> mConnectors;
-	private final Dimension mPreferredSize;
 	private final Rectangle mBounds;
-	private final TextBox mTextBox;
-	private boolean mUserSetSize;
 
 	protected Node mNode;
+	protected Dimension mPreferredSize;
+	protected boolean mUserSetSize;
 	protected String mId;
+	protected String mModelId;
+	protected String mProducer;
+	protected TextBox mTextBox;
 
 
 	public Property()
@@ -45,16 +47,39 @@ public abstract class Property<T extends Property> implements Serializable
 		this();
 
 		mTextBox.setText(aText);
-
-		setPreferredSize(mTextBox.measure().getSize());
+		mPreferredSize.setSize(mTextBox.measure().getSize());
 	}
 
 
 	protected abstract void paintComponent(NodeEditorPane aPane, Graphics2D aGraphics, boolean aHover);
 
 
-	public Object execute()
+	public String getProducer()
 	{
+		return mProducer;
+	}
+
+
+	public T setProducer(String aProducer)
+	{
+		mProducer = aProducer;
+		return (T)this;
+	}
+
+
+	public Object execute(Context aContext)
+	{
+		Connector in = getConnector(Direction.IN);
+
+		if (in != null)
+		{
+			return in.getConnectedProperties().get(0).execute(aContext);
+		}
+		else if (mProducer != null)
+		{
+			return aContext.invoke(this, mProducer);
+		}
+
 		return null;
 	}
 
@@ -84,6 +109,19 @@ public abstract class Property<T extends Property> implements Serializable
 	}
 
 
+	public T bind(String aModelId)
+	{
+		mModelId = aModelId;
+		return (T)this;
+	}
+
+
+	public String getModelId()
+	{
+		return mModelId;
+	}
+
+
 	public String getText()
 	{
 		return mTextBox.getText();
@@ -94,12 +132,6 @@ public abstract class Property<T extends Property> implements Serializable
 	{
 		mTextBox.setText(aText);
 		return (T)this;
-	}
-
-
-	public TextBox getTextBox()
-	{
-		return mTextBox;
 	}
 
 
@@ -175,14 +207,6 @@ public abstract class Property<T extends Property> implements Serializable
 	{
 		return mBounds;
 	}
-
-
-//	/**
-//	 * Perform the action of this item, for instance after a mouse click.
-//	 */
-//	protected void actionPerformed(NodeEditorPane aPane, Point aClickPoint)
-//	{
-//	}
 
 
 	protected void connectionsChanged(NodeEditorPane aPane, Point aClickPoint)

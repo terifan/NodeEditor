@@ -2,22 +2,17 @@ package org.terifan.nodeeditor;
 
 import java.awt.Color;
 import org.terifan.nodeeditor.graphics.Popup;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.function.Consumer;
 import java.util.function.Function;
-import javax.imageio.ImageIO;
 import org.terifan.boxcomponentpane.BoxComponentPane;
 import org.terifan.nodeeditor.graphics.SplineRenderer;
 import org.terifan.nodeeditor.widgets.ButtonProperty;
-import org.terifan.nodeeditor.widgets.ImageProperty;
 
 
 public class NodeEditorPane extends BoxComponentPane<Node, NodeEditorPane>
@@ -26,15 +21,12 @@ public class NodeEditorPane extends BoxComponentPane<Node, NodeEditorPane>
 
 	private transient Function<String, BufferedImage> mIconProvider;
 
-	@Deprecated
-	private transient final ArrayList<ImagePainter> mImagePainters;
-
 	private transient final ArrayList<OnClickHandler> mButtonHandlers;
 	private transient Property mClickedItem;
 	private transient Popup mPopup;
 	private transient Connection mSelectedConnection;
-	private transient Connector mDragConnector;
-	private transient HashMap<String, Consumer<Property>> mCommands;
+	private transient Connector mConnectorDragFrom;
+	private transient HashMap<String, NodeFunction> mBindings;
 
 	private boolean mConnectorSelectionAllowed;
 	private boolean mRemoveInConnectionsOnDrop;
@@ -44,9 +36,7 @@ public class NodeEditorPane extends BoxComponentPane<Node, NodeEditorPane>
 	{
 		super(aModel);
 
-		mImagePainters = new ArrayList<>();
-
-		mCommands = new HashMap<>();
+		mBindings = new HashMap<>();
 		mButtonHandlers = new ArrayList<>();
 		mRemoveInConnectionsOnDrop = true;
 
@@ -54,16 +44,26 @@ public class NodeEditorPane extends BoxComponentPane<Node, NodeEditorPane>
 	}
 
 
-	public NodeEditorPane bind(String aCommand, Consumer<Property> aConsumer)
+	public NodeEditorPane bind(String aId, NodeFunction aFunction)
 	{
-		mCommands.put(aCommand, aConsumer);
+		if (mBindings.containsKey(aId))
+		{
+			throw new IllegalArgumentException("ID already bound: " + aId);
+		}
+		mBindings.put(aId, aFunction);
 		return this;
 	}
 
 
-	public void fireCommand(String aCommand, Node aNode, Property aProperty)
+	public HashMap<String, NodeFunction> getBindings()
 	{
-		mCommands.get(aCommand).accept(aProperty);
+		return mBindings;
+	}
+
+
+	public void invoke(String aId, Property aProperty)
+	{
+		mBindings.get(aId).invoke(new Context(this), aProperty);
 	}
 
 
@@ -160,72 +160,16 @@ public class NodeEditorPane extends BoxComponentPane<Node, NodeEditorPane>
 	}
 
 
-	public Connector getDragConnector()
+	public Connector getConnectorDragFrom()
 	{
-		return mDragConnector;
+		return mConnectorDragFrom;
 	}
 
 
-	public void setDragConnector(Connector aDragConnector)
+	public void setConnectorDragFrom(Connector aConnectorDragFrom)
 	{
-		mDragConnector = aDragConnector;
+		mConnectorDragFrom = aConnectorDragFrom;
 	}
-
-
-	@Deprecated
-	public NodeEditorPane addImagePainter(ImagePainter aImagePainter)
-	{
-		mImagePainters.add(aImagePainter);
-		return this;
-	}
-
-
-	@Deprecated
-	public void paintImage(ImageProperty aProperty, Graphics aGraphics, Rectangle aBounds)
-	{
-		for (ImagePainter rl : mImagePainters)
-		{
-			try
-			{
-				if (rl.paintImage(this, aProperty.getNode(), aProperty, aGraphics, aBounds))
-				{
-					return;
-				}
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace(System.out);
-			}
-		}
-
-		try
-		{
-			FALLBACK_PAINTER.paintImage(this, aProperty.getNode(), aProperty, aGraphics, aBounds);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace(System.out);
-		}
-	}
-
-	@Deprecated
-	private static ImagePainter FALLBACK_PAINTER = (aPane, aNode, aProperty, aGraphics, aBounds) ->
-	{
-		if (aProperty.getImagePath() != null)
-		{
-			File file = new File(aProperty.getImagePath());
-			if (file.exists())
-			{
-				BufferedImage image = ImageIO.read(file);
-				if (image != null)
-				{
-					aGraphics.drawImage(image, aBounds.x, aBounds.y, aBounds.width, aBounds.height, null);
-					return true;
-				}
-			}
-		}
-		return false;
-	};
 
 
 	public NodeEditorPane addButtonHandler(OnClickHandler aHandler)
@@ -247,30 +191,30 @@ public class NodeEditorPane extends BoxComponentPane<Node, NodeEditorPane>
 	}
 
 
-	public Connector findNearestConnector(Point aPoint)
+	public Connector findNearestConnector(Point aPoint, Node aPrioritizeNode, boolean aDropTarget)
 	{
 		Connector nearest = null;
-		double dist = 25;
+		double dist = aDropTarget ? 16 : 8;
 
-		for (Node box : (ArrayList<Node>)getModel().getComponents())
+		for (Node node : (ArrayList<Node>)getModel().getComponents())
 		{
-			if (mDragConnector != null && mDragConnector.getProperty().getNode() == box)
+			if (mConnectorDragFrom != null && mConnectorDragFrom.getProperty().getNode() == node)
 			{
 				continue;
 			}
 
-			Rectangle b = box.getBounds();
+			Rectangle b = node.getBounds();
 			int x = aPoint.x - b.x;
 			int y = aPoint.y - b.y;
 
-			for (Property item : box.getProperties())
+			for (Property item : node.getProperties())
 			{
 				for (Connector c : (ArrayList<Connector>)item.getConnectors())
 				{
 					double dx = x - c.getBounds().getCenterX();
 					double dy = y - c.getBounds().getCenterY();
 					double d = Math.sqrt(dx * dx + dy * dy);
-					if (d < dist)
+					if (d < dist && (aPrioritizeNode == null || node == aPrioritizeNode || nearest == null))
 					{
 						nearest = c;
 						dist = d;
@@ -279,52 +223,47 @@ public class NodeEditorPane extends BoxComponentPane<Node, NodeEditorPane>
 			}
 		}
 
-		if (nearest != null && dist > 16)
-		{
-			nearest = null;
-		}
-
 		return nearest;
 	}
 
 
-	public Connector findNearestConnector(Point aPoint, Node box)
-	{
-		Connector nearest = null;
-		double dist = 25;
-		boolean hitBox = false;
-
-		if (mDragConnector != null && mDragConnector.getProperty().getNode() == box)
-		{
-			return null;
-		}
-
-		int x = aPoint.x - box.getBounds().x;
-		int y = aPoint.y - box.getBounds().y;
-
-		for (Property item : box.getProperties())
-		{
-			for (Connector c : (ArrayList<Connector>)item.getConnectors())
-			{
-				double dx = x - c.getBounds().getCenterX();
-				double dy = y - c.getBounds().getCenterY();
-				double d = Math.sqrt(dx * dx + dy * dy);
-				if (d < dist)
-				{
-					hitBox = box.getBounds().contains(aPoint);
-					nearest = c;
-					dist = d;
-				}
-			}
-		}
-
-		if (hitBox && nearest != null && dist > 8)
-		{
-			nearest = null;
-		}
-
-		return nearest;
-	}
+//	public Connector findNearestNodeConnector(Point aPoint, Node aNode)
+//	{
+//		Connector nearest = null;
+//		double dist = 25;
+//		boolean hitBox = false;
+//
+//		if (mDragConnector != null && mDragConnector.getProperty().getNode() == aNode)
+//		{
+//			return null;
+//		}
+//
+//		int x = aPoint.x - aNode.getBounds().x;
+//		int y = aPoint.y - aNode.getBounds().y;
+//
+//		for (Property item : aNode.getProperties())
+//		{
+//			for (Connector c : (ArrayList<Connector>)item.getConnectors())
+//			{
+//				double dx = x - c.getBounds().getCenterX();
+//				double dy = y - c.getBounds().getCenterY();
+//				double d = Math.sqrt(dx * dx + dy * dy);
+//				if (d < dist)
+//				{
+//					hitBox = aNode.getBounds().contains(aPoint);
+//					nearest = c;
+//					dist = d;
+//				}
+//			}
+//		}
+//
+//		if (hitBox && nearest != null && dist > 8)
+//		{
+//			nearest = null;
+//		}
+//
+//		return nearest;
+//	}
 
 
 	@Override
@@ -337,13 +276,9 @@ public class NodeEditorPane extends BoxComponentPane<Node, NodeEditorPane>
 
 		for (Connection connection : model.getConnections())
 		{
-			if (mSelectedConnection == connection)
+			if (connection != mSelectedConnection)
 			{
-				SplineRenderer.drawSpline(aGraphics, connection, getScale(), Styles.CONNECTOR_COLOR_OUTER_SELECTED, connection.mOut.getColor(), connection.mIn.getColor());
-			}
-			else
-			{
-				ArrayList<Node> selectedBoxes = getSelectedBoxes();
+				ArrayList<Node> selectedBoxes = getSelectedNodes();
 				boolean selected = selectedBoxes.contains(connection.getOut().getProperty().getNode()) || selectedBoxes.contains(connection.getIn().getProperty().getNode());
 
 				Color start = selected ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : connection.mOut.getColor();
@@ -353,9 +288,11 @@ public class NodeEditorPane extends BoxComponentPane<Node, NodeEditorPane>
 			}
 		}
 
+		super.paintBoxComponents(aGraphics);
+
 		if (getDragEndLocation() != null)
 		{
-			if (mDragConnector.getDirection() == Direction.OUT)
+			if (mConnectorDragFrom.getDirection() == Direction.OUT)
 			{
 				SplineRenderer.drawSpline(aGraphics, getDragStartLocation(), getDragEndLocation(), getScale(), Styles.CONNECTOR_COLOR_OUTER, Styles.CONNECTOR_COLOR_INNER_DRAGGED, Styles.CONNECTOR_COLOR_INNER_DRAGGED);
 			}
@@ -365,7 +302,10 @@ public class NodeEditorPane extends BoxComponentPane<Node, NodeEditorPane>
 			}
 		}
 
-		super.paintBoxComponents(aGraphics);
+		if (mSelectedConnection != null)
+		{
+			SplineRenderer.drawSpline(aGraphics, mSelectedConnection, getScale(), Styles.CONNECTOR_COLOR_OUTER_SELECTED, mSelectedConnection.mOut.getColor(), mSelectedConnection.mIn.getColor());
+		}
 
 		if (mPopup != null)
 		{

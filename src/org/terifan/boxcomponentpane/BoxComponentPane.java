@@ -66,7 +66,7 @@ public class BoxComponentPane<T extends BoxComponent, U extends BoxComponentPane
 	}
 
 
-	public ArrayList<T> getSelectedBoxes()
+	public ArrayList<T> getSelectedNodes()
 	{
 		return mSelectedBoxes;
 	}
@@ -245,14 +245,16 @@ public class BoxComponentPane<T extends BoxComponent, U extends BoxComponentPane
 		}
 
 		Graphics2D g = (Graphics2D)aGraphics;
+		AffineTransform oldTransform = g.getTransform();
 
 		paintBackground(g);
 
-		AffineTransform oldTransform = g.getTransform();
 		g.translate((int)mScroll.x, (int)mScroll.y);
 		paintBoxComponents(g);
 		paintSelectionRectangle(g);
 		g.setTransform(oldTransform);
+
+		paintOverlay(g);
 	}
 
 
@@ -281,6 +283,11 @@ public class BoxComponentPane<T extends BoxComponent, U extends BoxComponentPane
 			aGraphics.setStroke(SELECTION_RECTANGLE_STROKE);
 			aGraphics.draw(mSelectionRectangle);
 		}
+	}
+
+
+	protected void paintOverlay(Graphics2D aGraphics)
+	{
 	}
 
 
@@ -318,10 +325,5 @@ public class BoxComponentPane<T extends BoxComponent, U extends BoxComponentPane
 			(int)((aPoint.x - mScroll.x) / mScale),
 			(int)((aPoint.y - mScroll.y) / mScale)
 		);
-
-//		aPoint.x = (int)((aPoint.x - mScroll.x) / mScale);
-//		aPoint.y = (int)((aPoint.y - mScroll.y) / mScale);
-//
-//		return aPoint;
 	}
 }

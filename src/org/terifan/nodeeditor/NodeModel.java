@@ -1,11 +1,12 @@
 package org.terifan.nodeeditor;
 
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.terifan.boxcomponentpane.BoxComponentModel;
-import org.terifan.nodeeditor.widgets.ValueProperty;
 import static org.terifan.util.Assert.*;
 
 
@@ -23,9 +24,9 @@ public class NodeModel extends BoxComponentModel<Node> implements Serializable
 
 
 	@Override
-	public NodeModel addNode(Node aNode)
+	public NodeModel addComponent(Node aNode)
 	{
-		super.addNode(aNode);
+		super.addComponent(aNode);
 
 		aNode.bind(this);
 
@@ -52,8 +53,8 @@ public class NodeModel extends BoxComponentModel<Node> implements Serializable
 		Connector out = getConnector(aFromNodeIndex, aFromPropertyIndex, Direction.OUT);
 		Connector in = getConnector(aToNodeIndex, aToPropertyIndex, Direction.IN);
 
-		assertNotNull(out, "The 'From' parameters are not referencing a node/property with direction OUT: " + aFromNodeIndex+", "+aFromPropertyIndex);
-		assertNotNull(in, "The 'To' parameters are not referencing a node/property with direction IN: " + aToNodeIndex+", "+aToPropertyIndex);
+		assertNotNull(out, "The 'From' parameters are not referencing a node/property with direction OUT: " + aFromNodeIndex + ", " + aFromPropertyIndex);
+		assertNotNull(in, "The 'To' parameters are not referencing a node/property with direction IN: " + aToNodeIndex + ", " + aToPropertyIndex);
 
 		return addConnection(out, in);
 	}
@@ -146,9 +147,20 @@ public class NodeModel extends BoxComponentModel<Node> implements Serializable
 	}
 
 
-	public List<Property> getPropertiesConnectingTo(Property aProperty)
+	public <T extends Property> T getProperty(String aBindId)
 	{
-		return getConnectionsTo(aProperty).stream().map(e->e.getOut()).map(e->e.mProperty).collect(Collectors.toList());
+		for (int i = 0; i < size(); i++)
+		{
+			Node node = getComponent(i);
+			for (Property p : node.getProperties())
+			{
+				if (aBindId.equals(p.getModelId()))
+				{
+					return (T)p;
+				}
+			}
+		}
+		return null;
 	}
 
 
@@ -156,5 +168,57 @@ public class NodeModel extends BoxComponentModel<Node> implements Serializable
 	public String toString()
 	{
 		return "NodeModel{" + "mConnections=" + mConnections + '}';
+	}
+
+
+	public void print()
+	{
+		System.out.println("NodeModel model = new NodeModel()");
+		for (int i = 0; i < size(); i++)
+		{
+			Node node = getComponent(i);
+
+			System.out.println("\t.addNode(new Node(\"" + node.getTitle() + "\")");
+			System.out.println("\t\t.setTitleForeground(" + "new Color(0x" + ("%06X".formatted(0xffffffL & node.getTitleForeground().getRGB())) + ")");
+			System.out.println("\t\t.setTitleBackground(" + "new Color(0x" + ("%06X".formatted(0xffffffL & node.getTitleBackground().getRGB())) + ")");
+			System.out.print("\t\t.setBounds(" + node.getBounds().x + "," + node.getBounds().y + "," + node.getBounds().width + "," + node.getBounds().height + ")");
+			for (Property p : node.getProperties())
+			{
+				System.out.println();
+				System.out.print("\t\t.addProperty(new " + p.getClass().getSimpleName() + "(\"" + p.getText() + "\")");
+				ArrayList<Connector> connectors = p.getConnectors();
+				for (Connector c : connectors)
+				{
+					System.out.print(".addConnector(" + c.getDirection() + ", new Color(0x" + ("%06X".formatted(0xffffffL & c.getColor().getRGB())) + "))");
+				}
+				if (p.getProducer() != null)
+				{
+					System.out.print(".setProducer(\"" + p.getProducer() + "\")");
+				}
+				if (p.getId() != null)
+				{
+					System.out.print(".setId(\"" + p.getId() + "\")");
+				}
+				if (p.getModelId() != null)
+				{
+					System.out.print(".bind(\"" + p.getModelId() + "\")");
+				}
+			}
+			System.out.println();
+			System.out.print("\t)");
+			System.out.println();
+		}
+		for (int i = 0; i < mConnections.size(); i++)
+		{
+			Connection c = mConnections.get(i);
+			int n0 = mComponents.indexOf(c.getOut().getProperty().getNode());
+			int c0 = c.getOut().mProperty.getNode().getProperties().indexOf(c.getOut().getProperty());
+			int n1 = mComponents.indexOf(c.getIn().getProperty().getNode());
+			int c1 = c.getIn().mProperty.getNode().getProperties().indexOf(c.getIn().getProperty());
+
+			if(i>0)System.out.println();
+			System.out.print("\t.addConnection("+n0+","+c0+","+n1+","+c1+")");
+		}
+		System.out.println(";");
 	}
 }

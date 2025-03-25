@@ -1,44 +1,28 @@
 package org.terifan.nodeeditor;
 
-import java.util.HashMap;
+import org.terifan.nodeeditor.widgets.ValueProperty;
 
 
 
 public class Context
 {
 	private final NodeEditorPane mEditor;
-	private final Node mNode;
-	private final Property mProperty;
 
 
-	Context(NodeEditorPane aEditor, Node aNode, Property aProperty)
+	public Context(NodeEditorPane aEditor)
 	{
 		mEditor = aEditor;
-		mNode = aNode;
-		mProperty = aProperty;
 	}
 
 
-//	public NodeEditorPane getEditor()
-//	{
-//		return mEditor;
-//	}
-//
-//
-//	public Node getNode()
-//	{
-//		return mNode;
-//	}
-//
-//
-//	public Property getProperty()
-//	{
-//		return mProperty;
-//	}
-//
-//
-//	public NodeModel getModel()
-//	{
-//		return mEditor.getModel();
-//	}
+	public NodeEditorPane getEditor()
+	{
+		return mEditor;
+	}
+
+
+	public Object invoke(Property aProperty, String aProducer)
+	{
+		return mEditor.getBindings().get(aProducer).invoke(this, aProperty);
+	}
 }

@@ -12,8 +12,10 @@ public class Test
 		try
 		{
 			BoxComponentModel model = new BoxComponentModel();
-			model.addNode(new EmptyBoxComponent("test").setLocation(-120, -50));
-			model.addNode(new EmptyBoxComponent("test").setLocation(20, -50));
+			model.addComponent(new EmptyBoxComponent("test1").setLocation(-200, -120));
+			model.addComponent(new EmptyBoxComponent("test2").setLocation(20, -150));
+			model.addComponent(new EmptyBoxComponent("test3").setLocation(-180, 50));
+			model.addComponent(new EmptyBoxComponent("test4").setLocation(20, 20));
 			BoxComponentPane pane = new BoxComponentPane(model);
 
 			JFrame frame = new JFrame();
@@ -36,7 +38,7 @@ public class Test
 		{
 			super(aName);
 
-			mBounds.setSize(100, 100);
+			mBounds.setSize(300, 300);
 		}
 
 

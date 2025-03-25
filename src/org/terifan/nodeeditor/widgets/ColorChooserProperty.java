@@ -5,12 +5,15 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import javax.swing.JColorChooser;
+import org.terifan.nodeeditor.Connector;
+import org.terifan.nodeeditor.Context;
 import org.terifan.nodeeditor.Direction;
 import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Property;
 import org.terifan.nodeeditor.Styles;
 import static org.terifan.nodeeditor.Styles.FIELD_CORNER;
 import org.terifan.ui.Anchor;
+import org.terifan.vecmath.Vec4d;
 
 
 public class ColorChooserProperty extends Property<ColorChooserProperty>
@@ -42,7 +45,7 @@ public class ColorChooserProperty extends Property<ColorChooserProperty>
 	protected void paintComponent(NodeEditorPane aPane, Graphics2D aGraphics, boolean aHover)
 	{
 		Rectangle bounds = getBounds();
-		Rectangle tb = getTextBox()
+		Rectangle tb = mTextBox
 			.setBounds(bounds)
 			.setAnchor(Anchor.WEST)
 			.setForeground(Styles.BOX_FOREGROUND_COLOR)
@@ -74,7 +77,7 @@ public class ColorChooserProperty extends Property<ColorChooserProperty>
 	{
 		if (!isConnected(Direction.IN) && mColorButtonBounds.contains(aClickPoint))
 		{
-			Color c = JColorChooser.showDialog(aPane, getTextBox().getText(), mColor);
+			Color c = JColorChooser.showDialog(aPane, mTextBox.getText(), mColor);
 			if (c != null)
 			{
 				mColor = c;
@@ -84,5 +87,19 @@ public class ColorChooserProperty extends Property<ColorChooserProperty>
 		}
 
 		return false;
+	}
+
+
+	@Override
+	public Object execute(Context aContext)
+	{
+		Connector in = getConnector(Direction.IN);
+
+		if (in != null && !in.getConnectedProperties().isEmpty())
+		{
+			return in.getConnectedProperties().get(0).execute(aContext);
+		}
+
+		return new Vec4d(mColor.getRed() / 255.0, mColor.getGreen() / 255.0, mColor.getBlue() / 255.0, 0);
 	}
 }

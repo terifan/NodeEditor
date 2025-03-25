@@ -21,7 +21,6 @@ public class ButtonProperty extends Property<ButtonProperty>
 	private transient boolean mArmed;
 
 	private String mIcon;
-	private String mCommand;
 
 
 	public ButtonProperty(String aText)
@@ -29,15 +28,7 @@ public class ButtonProperty extends Property<ButtonProperty>
 		super(aText);
 
 		setIcon(Styles.DefaultIcons.FOLDER);
-		getTextBox().setAnchor(Anchor.CENTER).setMargins(0, 0, 0, 0).setMaxLineCount(1).setFont(Styles.SLIDER_FONT);
-		getPreferredSize().height = 22;
-	}
-
-
-	public ButtonProperty setCommand(String aCommand)
-	{
-		mCommand = aCommand;
-		return this;
+		mTextBox.setAnchor(Anchor.CENTER).setMargins(4, 0, 4, 0).setMaxLineCount(1).setFont(Styles.SLIDER_FONT);
 	}
 
 
@@ -91,18 +82,18 @@ public class ButtonProperty extends Property<ButtonProperty>
 
 		aGraphics.setPaint(oldPaint);
 
-		getTextBox().setForeground(mArmed ? Styles.BOX_FOREGROUND_ARMED_COLOR : Styles.BOX_FOREGROUND_COLOR).setBounds(getBounds()).render(aGraphics);
+		mTextBox.setForeground(mArmed ? Styles.BOX_FOREGROUND_ARMED_COLOR : Styles.BOX_FOREGROUND_COLOR).setBounds(getBounds()).render(aGraphics);
 	}
 
 
 	@Override
-	protected boolean mousePressed(NodeEditorPane aPane, Point aClickPoint)
+	protected boolean mousePressed(NodeEditorPane aEditor, Point aClickPoint)
 	{
 		mArmed = true;
 
 		try
 		{
-			aPane.fireCommand(mCommand, getNode(), this);
+			aEditor.invoke(mModelId, this);
 		}
 		catch (Exception e)
 		{
@@ -114,9 +105,9 @@ public class ButtonProperty extends Property<ButtonProperty>
 
 
 	@Override
-	protected void mouseReleased(NodeEditorPane aPane, Point aClickPoint)
+	protected void mouseReleased(NodeEditorPane aEditor, Point aClickPoint)
 	{
 		mArmed = false;
-		aPane.repaint();
+		aEditor.repaint();
 	}
 }

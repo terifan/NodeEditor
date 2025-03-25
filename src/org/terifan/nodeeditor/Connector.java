@@ -5,7 +5,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.Serializable;
 import java.util.List;
-import static org.terifan.nodeeditor.Styles.DefaultColors.YELLOW;
+import static org.terifan.nodeeditor.Styles.DefaultConnectorColors.YELLOW;
 
 
 public class Connector implements Serializable
