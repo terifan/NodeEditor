@@ -256,30 +256,30 @@ public class NodeEditorPane extends BoxComponentPane<Node, NodeEditorPane>
 	}
 
 
-	public Connector findNearestConnector(Point aPoint)
+	public Connector findNearestConnector(Point aPoint, Node aPrioritizeNode, boolean aDropTarget)
 	{
 		Connector nearest = null;
-		double dist = 25;
+		double dist = aDropTarget ? 16 : 8;
 
-		for (Node box : (ArrayList<Node>)getModel().getComponents())
+		for (Node node : (ArrayList<Node>)getModel().getComponents())
 		{
-			if (mDragConnector != null && mDragConnector.getProperty().getNode() == box)
+			if (mDragConnector != null && mDragConnector.getProperty().getNode() == node)
 			{
 				continue;
 			}
 
-			Rectangle b = box.getBounds();
+			Rectangle b = node.getBounds();
 			int x = aPoint.x - b.x;
 			int y = aPoint.y - b.y;
 
-			for (Property item : box.getProperties())
+			for (Property item : node.getProperties())
 			{
 				for (Connector c : (ArrayList<Connector>)item.getConnectors())
 				{
 					double dx = x - c.getBounds().getCenterX();
 					double dy = y - c.getBounds().getCenterY();
 					double d = Math.sqrt(dx * dx + dy * dy);
-					if (d < dist)
+					if (d < dist && (aPrioritizeNode == null || node == aPrioritizeNode || nearest == null))
 					{
 						nearest = c;
 						dist = d;
@@ -288,52 +288,47 @@ public class NodeEditorPane extends BoxComponentPane<Node, NodeEditorPane>
 			}
 		}
 
-		if (nearest != null && dist > 16)
-		{
-			nearest = null;
-		}
-
 		return nearest;
 	}
 
 
-	public Connector findNearestConnector(Point aPoint, Node box)
-	{
-		Connector nearest = null;
-		double dist = 25;
-		boolean hitBox = false;
-
-		if (mDragConnector != null && mDragConnector.getProperty().getNode() == box)
-		{
-			return null;
-		}
-
-		int x = aPoint.x - box.getBounds().x;
-		int y = aPoint.y - box.getBounds().y;
-
-		for (Property item : box.getProperties())
-		{
-			for (Connector c : (ArrayList<Connector>)item.getConnectors())
-			{
-				double dx = x - c.getBounds().getCenterX();
-				double dy = y - c.getBounds().getCenterY();
-				double d = Math.sqrt(dx * dx + dy * dy);
-				if (d < dist)
-				{
-					hitBox = box.getBounds().contains(aPoint);
-					nearest = c;
-					dist = d;
-				}
-			}
-		}
-
-		if (hitBox && nearest != null && dist > 8)
-		{
-			nearest = null;
-		}
-
-		return nearest;
-	}
+//	public Connector findNearestNodeConnector(Point aPoint, Node aNode)
+//	{
+//		Connector nearest = null;
+//		double dist = 25;
+//		boolean hitBox = false;
+//
+//		if (mDragConnector != null && mDragConnector.getProperty().getNode() == aNode)
+//		{
+//			return null;
+//		}
+//
+//		int x = aPoint.x - aNode.getBounds().x;
+//		int y = aPoint.y - aNode.getBounds().y;
+//
+//		for (Property item : aNode.getProperties())
+//		{
+//			for (Connector c : (ArrayList<Connector>)item.getConnectors())
+//			{
+//				double dx = x - c.getBounds().getCenterX();
+//				double dy = y - c.getBounds().getCenterY();
+//				double d = Math.sqrt(dx * dx + dy * dy);
+//				if (d < dist)
+//				{
+//					hitBox = aNode.getBounds().contains(aPoint);
+//					nearest = c;
+//					dist = d;
+//				}
+//			}
+//		}
+//
+//		if (hitBox && nearest != null && dist > 8)
+//		{
+//			nearest = null;
+//		}
+//
+//		return nearest;
+//	}
 
 
 	@Override

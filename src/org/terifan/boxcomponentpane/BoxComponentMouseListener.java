@@ -10,7 +10,6 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.SwingUtilities;
-import org.terifan.nodeeditor.Node;
 import static org.terifan.nodeeditor.Styles.MIN_HEIGHT;
 import static org.terifan.nodeeditor.Styles.MIN_WIDTH;
 
@@ -21,7 +20,7 @@ public class BoxComponentMouseListener<T extends BoxComponent, U extends BoxComp
 	protected Point mClickPoint;
 	protected Point mDragPoint;
 	protected boolean mClickedBox;
-	protected T mHoverNode;
+	protected T mSelectedNode;
 	protected Rectangle mStartBounds;
 	protected double mZoomSpeed;
 	protected int mCursor;
@@ -39,81 +38,49 @@ public class BoxComponentMouseListener<T extends BoxComponent, U extends BoxComp
 	public void mouseMoved(MouseEvent aEvent)
 	{
 		Point point = mViewPort.calcMousePoint(aEvent.getPoint());
-
-		BoxComponentModel model = mViewPort.getModel();
-
-		List<T> nodes = model.getComponents();
-		for (int i = nodes.size(); --i >= 0; )
-		{
-			T node = nodes.get(i);
-			Rectangle bounds = node.getBounds();
-			if (!node.isMinimized() && bounds.contains(point))
-			{
-				mHoverNode = node;
-				updateCursor(getCursor(point, node));
-				return;
-			}
-		}
-
-		updateCursor(Cursor.DEFAULT_CURSOR);
+		updateCursor(getCursor(point, mViewPort.getModel().getComponentAt(point)));
 	}
 
 
 	@Override
 	public void mousePressed(MouseEvent aEvent)
 	{
-		BoxComponentModel model = mViewPort.getModel();
-
-		boolean left = SwingUtilities.isLeftMouseButton(aEvent);
-
+		BoxComponentModel<T> model = mViewPort.getModel();
 		mDragPoint = aEvent.getPoint();
 		mClickPoint = mViewPort.calcMousePoint(aEvent.getPoint());
+		mSelectedNode = model.getComponentAt(mClickPoint);
 
 		if (SwingUtilities.isMiddleMouseButton(aEvent))
 		{
 			updateCursor(Cursor.MOVE_CURSOR);
 		}
-		if (!left)
+		else if (SwingUtilities.isLeftMouseButton(aEvent))
 		{
-			return;
-		}
-
-		model.moveTop(mHoverNode);
-
-		if (mCursor != Cursor.DEFAULT_CURSOR)
-		{
-			mStartBounds = new Rectangle(mHoverNode.getBounds());
-
-			mViewPort.getSelectedBoxes().clear();
-			mViewPort.getSelectedBoxes().add(mHoverNode);
-			mViewPort.repaint();
-			return;
-		}
-
-		T target = (T)model.getComponentAt(mClickPoint);
-
-		if (target != null)
-		{
-			Rectangle b = target.getBounds();
-
-			if (b.contains(mClickPoint) && new Rectangle(b.x + 11, b.y + 7, 20, 20).contains(mClickPoint))
+			if (mSelectedNode == null)
 			{
-				updateMinimize(aEvent, target);
+				mViewPort.setSelectionRectangle(new Rectangle(mClickPoint));
 			}
+			else
+			{
+				model.moveTop(mSelectedNode);
+
+				if (mCursor != Cursor.DEFAULT_CURSOR)
+				{
+					mStartBounds = new Rectangle(mSelectedNode.getBounds());
+					mViewPort.getSelectedBoxes().clear();
+					mViewPort.getSelectedBoxes().add(mSelectedNode);
+					mViewPort.repaint();
+				}
+
+				Rectangle bounds = mSelectedNode.getBounds();
+				if (bounds.contains(mClickPoint) && getMinimizeButtonBounds(mSelectedNode).contains(mClickPoint))
+				{
+					updateMinimize(aEvent, mSelectedNode);
+				}
+			}
+
+			updateSelections(aEvent, mSelectedNode);
 		}
-
-		if (target == null)
-		{
-			mViewPort.setSelectionRectangle(new Rectangle(mClickPoint));
-		}
-
-		updateSelections(aEvent, target);
-	}
-
-
-	protected void updateMinimize(MouseEvent aEvent, T aComponent)
-	{
-		aComponent.setMinimized(!aComponent.isMinimized());
 	}
 
 
@@ -172,7 +139,7 @@ public class BoxComponentMouseListener<T extends BoxComponent, U extends BoxComp
 
 		if (mCursor != Cursor.DEFAULT_CURSOR && SwingUtilities.isLeftMouseButton(aEvent))
 		{
-			resizeBox(mHoverNode, newPoint);
+			resizeBox(mSelectedNode, newPoint);
 			return;
 		}
 
@@ -242,6 +209,19 @@ public class BoxComponentMouseListener<T extends BoxComponent, U extends BoxComp
 	}
 
 
+	protected Rectangle getMinimizeButtonBounds(T aNode)
+	{
+		Rectangle b = aNode.getBounds();
+		return new Rectangle(b.x + 11, b.y + 7, 20, 20);
+	}
+
+
+	protected void updateMinimize(MouseEvent aEvent, T aComponent)
+	{
+		aComponent.setMinimized(!aComponent.isMinimized());
+	}
+
+
 	private void updateSelections(MouseEvent aEvent, BoxComponent aClickedBox)
 	{
 		BoxComponent newSelection = null;
@@ -304,6 +284,11 @@ public class BoxComponentMouseListener<T extends BoxComponent, U extends BoxComp
 
 	protected int getCursor(Point aPoint, BoxComponent aNode)
 	{
+		if (aNode == null)
+		{
+			return Cursor.DEFAULT_CURSOR;
+		}
+
 		boolean rx = aNode.isResizableHorizontal();
 		boolean ry = aNode.isResizableVertical();
 
