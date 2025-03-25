@@ -32,9 +32,12 @@ public class MandelbrotExample
 	{
 		Vec2d coord = (Vec2d)self.getNode().getProperty("coord").execute(aContext);
 		int limit = ((Number)self.getNode().getProperty("limit").execute(aContext)).intValue();
+		double sx = (Double)self.getNode().getProperty("x").execute(aContext);
+		double sy = (Double)self.getNode().getProperty("y").execute(aContext);
+		double zoom = (Double)self.getNode().getProperty("zoom").execute(aContext);
 
-		double x0 = -2 + (4 * coord.x);
-		double y0 = -2 + (4 * coord.y);
+		double x0 = sx + (2 * (2*coord.x - 1))/zoom;
+		double y0 = sy + (2 * (2*coord.y - 1))/zoom;
 		int iteration = 0;
 		for (double x = 0, y = 0; x * x + y * y <= 4 && iteration < limit; iteration++)
 		{
@@ -67,18 +70,18 @@ public class MandelbrotExample
 		ImageProperty ip = aContext.getEditor().getModel().getProperty("image");
 		ValueProperty cp = aContext.getEditor().getModel().getProperty("coordinate");
 
-		ip.setImage(new BufferedImage(200, 200, BufferedImage.TYPE_INT_ARGB));
+		ip.setImage(new BufferedImage(400, 400, BufferedImage.TYPE_INT_ARGB));
 
-		for (int y = 0; y < 200; y++)
+		for (int y = 0; y < 400; y++)
 		{
-			for (int x = 0; x < 200; x++)
+			for (int x = 0; x < 400; x++)
 			{
-				cp.setValue(new Vec2d(x / 200.0, y / 200.0));
+				cp.setValue(new Vec2d(x / 400.0, y / 400.0));
 
 				Vec2d coord = (Vec2d)self.getNode().getProperty("coord").execute(aContext);
 				Vec4d argb = (Vec4d)self.getNode().getProperty("argb").execute(aContext);
 
-				ip.getImage().setRGB((int)(coord.x * 200 + 0.5), (int)(coord.y * 200 + 0.5), argb.intValue());
+				ip.getImage().setRGB((int)(coord.x * 400 + 0.5), (int)(coord.y * 400 + 0.5), argb.intValue());
 			}
 		}
 
@@ -97,28 +100,31 @@ public class MandelbrotExample
 					.setBounds(-500, 100, 150, 0)
 					.addProperty(new ValueProperty("Iterations").addConnector(OUT, GRAY).setProducer("mandelbrot"))
 					.addProperty(new ValueProperty("Coordinate").setId("coord").addConnector(OUT, PURPLE).bind("coordinate"))
-					.addProperty(new SliderProperty("Limit", 5000, 1).setId("limit"))
+					.addProperty(new SliderProperty("X", -2, 2, 0.06755).setId("x"))
+					.addProperty(new SliderProperty("Y", -2, 2, 0.635).setId("y"))
+					.addProperty(new SliderProperty("Zoom", 30000, 1).setId("zoom"))
+					.addProperty(new SliderProperty("Limit", 200000, 1).setId("limit"))
 				)
 				.addComponent(new Node("Palette")
 					.setBounds(0, -20, 150, 0)
 					.addProperty(new ValueProperty("Color").addConnector(OUT, YELLOW).setProducer("palette"))
-					.addProperty(new SliderProperty("Red", 2.3, 0.01).setId("rf"))
-					.addProperty(new SliderProperty("Green", 9.2, 0.01).setId("gf"))
-					.addProperty(new SliderProperty("Blue", 17.5, 0.01).setId("bf"))
+					.addProperty(new SliderProperty("Red", 0.0, 0.01).setId("rf"))
+					.addProperty(new SliderProperty("Green", 13.42, 0.01).setId("gf"))
+					.addProperty(new SliderProperty("Blue", 30.26, 0.01).setId("bf"))
 					.addProperty(new SliderProperty("Scale", 20.5, 0.01).setId("sf"))
 					.addProperty(new ValueProperty("Iterations").setId("iterations").addConnector(IN, GRAY))
 				)
 				.addComponent(new Node("RenderOutput")
 					.setTitleBackground(DefaultNodeColors.DARKRED)
-					.setBounds(600, 150, 220, 0)
+					.setBounds(400, 100, 420, 0)
 					.addProperty(new ValueProperty("Color").setId("argb").addConnector(IN))
 					.addProperty(new ValueProperty("Coordinate").setId("coord").addConnector(IN, PURPLE))
-					.addProperty(new ImageProperty("", 200, 200).bind("image"))
+					.addProperty(new ImageProperty("", 400, 400).bind("image"))
 					.addProperty(new ButtonProperty("Run").setIcon(DefaultIcons.RUN).bind("run"))
 				)
-				.addComponent(SimpleNodesFactory.createSourceColorRGBA().setLocation(-250, -90))
+				.addComponent(SimpleNodesFactory.createSourceColor().setLocation(-250, -90))
 				.addComponent(SimpleNodesFactory.createIntermediateMath().setLocation(-250, -250))
-				.addComponent(SimpleNodesFactory.createIntermediateColorMix().setLocation(250, -100))
+				.addComponent(SimpleNodesFactory.createIntermediateColorMix().setLocation(220, -140))
 				.addComponent(SimpleNodesFactory.createSourceColorRGBA().setLocation(-250, 250))
 				.addConnection(0, 0, 4, 4)
 				.addConnection(0, 1, 2, 1)

@@ -64,11 +64,18 @@ public class SimpleNodesFactory
 					case "Modulo":
 						return v1.clone().mod(v2);
 					case "Greater Than":
-						return v1.dot(1, 1, 1, 1) > v2.dot(1, 1, 1, 1);
+						return new Vec4d(v1.x > v2.x ? 1 : 0, v1.y > v2.y ? 1 : 0, v1.z > v2.z ? 1 : 0, v1.w > v2.w ? 1 : 0);
 				}
 			}
 		}
 		throw new IllegalArgumentException("Unsupported: " + value1.getClass() + ", " + value2.getClass() + ", " + func);
+	};
+
+	private static NodeFunction mColorAlphaProducer = (aContext, self) ->
+	{
+		Vec4d color = (Vec4d)self.getNode().getProperty("color").execute(aContext);
+		color.w = (Double)self.getNode().getProperty("alpha").execute(aContext);
+		return color;
 	};
 
 	private static NodeFunction mRGBAProducer = (aContext, self) ->
@@ -110,6 +117,7 @@ public class SimpleNodesFactory
 		aRuntime.bind(SimpleNodesFactory.class.getCanonicalName() + ".MathProducer", mMathProducer);
 		aRuntime.bind(SimpleNodesFactory.class.getCanonicalName() + ".RGBAProducer", mRGBAProducer);
 		aRuntime.bind(SimpleNodesFactory.class.getCanonicalName() + ".RGBProducer", mRGBProducer);
+		aRuntime.bind(SimpleNodesFactory.class.getCanonicalName() + ".ColorAlphaProducer", mColorAlphaProducer);
 	}
 
 
@@ -125,9 +133,19 @@ public class SimpleNodesFactory
 	}
 
 
-	public static Node createSourceColorRGB()
+	public static Node createSourceColor()
 	{
 		return new Node("Color",
+			new ValueProperty("Color").addConnector(OUT, YELLOW).setProducer(SimpleNodesFactory.class.getCanonicalName() + ".ColorAlphaProducer"),
+			new ColorChooserProperty("Color", Color.BLACK).setId("color"),
+			new SliderProperty("Alpha", 0, 1, 1).setId("alpha").addConnector(IN, GRAY)
+		).setSize(200, 0);
+	}
+
+
+	public static Node createSourceColorRGB()
+	{
+		return new Node("RGB",
 			new ValueProperty("Color").addConnector(OUT, YELLOW).setProducer(SimpleNodesFactory.class.getCanonicalName() + ".RGBProducer"),
 			new SliderProperty("Red", 0, 1, 0.5).setId("r").addConnector(IN, GRAY),
 			new SliderProperty("Green", 0, 1, 0.5).setId("g").addConnector(IN, GRAY),
@@ -138,7 +156,7 @@ public class SimpleNodesFactory
 
 	public static Node createSourceColorRGBA()
 	{
-		return new Node("Color",
+		return new Node("RGBA",
 			new ValueProperty("Color").addConnector(OUT, YELLOW).setProducer(SimpleNodesFactory.class.getCanonicalName() + ".RGBAProducer"),
 			new SliderProperty("Red", 0, 1, 0).setId("r").addConnector(IN, GRAY),
 			new SliderProperty("Green", 0, 1, 0.5).setId("g").addConnector(IN, GRAY),
@@ -161,12 +179,11 @@ public class SimpleNodesFactory
 	{
 		return new Node("Math",
 			new ValueProperty("Value").addConnector(OUT, GRAY).setProducer(SimpleNodesFactory.class.getCanonicalName() + ".MathProducer"),
-			new ComboBoxProperty("Operation", 2, "Add", "Subtract", "Multiply", "Divide", "Absolute", "Modulo", "Greater Than").setId("function"),
+			new ComboBoxProperty("Operation", 2, "Add", "Subtract", "Multiply", "Divide", "Modulo", "Greater Than").setId("function"),
 			new CheckBoxProperty("Clamp", false).setId("clamp"),
-			new SliderProperty("Value", 0.5, 0.01).setId("value1").addConnector(IN, GRAY),
+			new SliderProperty("Value", 1000, 0.01).setId("value1").addConnector(IN, GRAY),
 			new SliderProperty("Value", 0.5, 0.01).setId("value2").addConnector(IN, GRAY)
-		)
-			.setSize(200, 0);
+		).setSize(200, 0);
 	}
 
 
