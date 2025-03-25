@@ -300,10 +300,7 @@ public class Node extends BoxComponent<Node, NodeEditorPane> implements Serializ
 	}
 
 
-	/**
-	 * Return item pressed
-	 */
-	public Property mousePressed(Point aPoint)
+	public Property getPropertyAt(Point aPoint)
 	{
 		for (Property item : mProperties)
 		{

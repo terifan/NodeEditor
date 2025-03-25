@@ -46,7 +46,6 @@ public class SplineRenderer
 		aGraphics.setStroke(STROKE_WIDE);
 		aGraphics.setColor(aBackgroundColor);
 		aGraphics.draw(spline);
-
 		aGraphics.setStroke(STROKE_THIN);
 
 		if (aStartColor.equals(aEndColor))

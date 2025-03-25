@@ -54,15 +54,15 @@ public class SimpleNodesFactory
 				switch (func)
 				{
 					case "Add":
-						return v1.add(v2);
-//						case "Subtract":
-//							return v1.subtract(v2);
+						return v1.clone().add(v2);
+					case "Subtract":
+						return v1.clone().subtract(v2);
 					case "Multiply":
-						return v1.scale(v2);
-//						case "Divide":
-//							return v1.divide(v2);
-//						case "Modulo":
-//							return v1.modulo(v2);
+						return v1.clone().scale(v2);
+					case "Divide":
+						return v1.clone().divide(v2);
+					case "Modulo":
+						return v1.clone().mod(v2);
 					case "Greater Than":
 						return v1.dot(1, 1, 1, 1) > v2.dot(1, 1, 1, 1);
 				}

@@ -29,19 +29,19 @@ public class TestEditor
 			NodeModel model = new NodeModel();
 
 			NodeEditorPane editor = new NodeEditorPane(model);
-			editor.addButtonHandler(item -> {
-				((ImageProperty)item.getNode().getProperty("Image")).setImagePath(new String[]{"Big_pebbles_pxr128.jpg","Big_pebbles_pxr128_bmp.jpg","Big_pebbles_pxr128_normal.jpg"}[new Random().nextInt(3)]);
-				return true;
-			});
-			editor.addImagePainter((aPane, aNode, aProperty, aGraphics, aBounds) ->
-			{
-				if (aNode.getTitle().equals("Output") && aProperty.getImagePath() != null)
-				{
-					BufferedImage image = ImageIO.read(TestJavaSerializingNodeModel.class.getResource(aProperty.getImagePath()));
-					aGraphics.drawImage(image, aBounds.x, aBounds.y, aBounds.width, aBounds.height, null);
-				}
-				return true;
-			});
+//			editor.addButtonHandler(item -> {
+//				((ImageProperty)item.getNode().getProperty("Image")).setImagePath(new String[]{"Big_pebbles_pxr128.jpg","Big_pebbles_pxr128_bmp.jpg","Big_pebbles_pxr128_normal.jpg"}[new Random().nextInt(3)]);
+//				return true;
+//			});
+//			editor.addImagePainter((aPane, aNode, aProperty, aGraphics, aBounds) ->
+//			{
+//				if (aNode.getTitle().equals("Output") && aProperty.getImagePath() != null)
+//				{
+//					BufferedImage image = ImageIO.read(TestJavaSerializingNodeModel.class.getResource(aProperty.getImagePath()));
+//					aGraphics.drawImage(image, aBounds.x, aBounds.y, aBounds.width, aBounds.height, null);
+//				}
+//				return true;
+//			});
 			editor.center();
 			editor.setScale(1);
 

@@ -1,12 +1,14 @@
 package org.terifan.nodeeditor.widgets;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import static java.awt.Transparency.OPAQUE;
 import java.awt.image.BufferedImage;
 import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Property;
+import static org.terifan.nodeeditor.Styles.CHECKERS_BRIGHT;
+import static org.terifan.nodeeditor.Styles.CHECKERS_DARK;
 
 
 /**
@@ -18,14 +20,8 @@ public class ImageProperty extends Property<ImageProperty>
 
 	protected transient BufferedImage mImage;
 
-	@Deprecated
-	protected String mImagePath;
-
 	protected int mWidth;
 	protected int mHeight;
-	protected int mType;
-	protected String mSourceRGB;
-	protected String mSourceAlpha;
 
 
 	public ImageProperty(String aText, int aWidth, int aHeight)
@@ -34,24 +30,7 @@ public class ImageProperty extends Property<ImageProperty>
 
 		mWidth = aWidth;
 		mHeight = aHeight;
-		mType = BufferedImage.TYPE_INT_ARGB;
 		mPreferredSize = new Dimension(aWidth, aHeight);
-	}
-
-
-	public ImageProperty setConsumes(String aRGBA)
-	{
-		mSourceRGB = aRGBA;
-		mSourceAlpha = null;
-		return this;
-	}
-
-
-	public ImageProperty setConsumes(String aRGB, String aAlpha)
-	{
-		mSourceRGB = aRGB;
-		mSourceAlpha = aAlpha;
-		return this;
 	}
 
 
@@ -68,43 +47,37 @@ public class ImageProperty extends Property<ImageProperty>
 	}
 
 
-	@Deprecated
-	public String getImagePath()
-	{
-		return mImagePath;
-	}
-
-
-	@Deprecated
-	public ImageProperty setImagePath(String aImagePath)
-	{
-		mImagePath = aImagePath;
-		return this;
-	}
-
-
 	@Override
 	protected void paintComponent(NodeEditorPane aPane, Graphics2D aGraphics, boolean aHover)
 	{
 		Rectangle bounds = getBounds();
 
-		int t = 10;
-		double sx = bounds.width / (double)t;
-		double sy = bounds.height / (double)t;
-
-		aGraphics.setColor(new Color(200, 200, 200));
-		aGraphics.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
-
-		aGraphics.setColor(new Color(220, 220, 220));
-		for (int y = 0; y < t; y++)
+		if (mImage == null || mImage.getTransparency() != OPAQUE)
 		{
-			for (int x = (y & 1); x < t; x += 2)
-			{
-				aGraphics.fillRect(bounds.x + (int)(x * sx), bounds.y + (int)(y * sy), (int)sx, (int)sy);
-			}
+			paintCheckers(aGraphics, bounds);
 		}
 
-		aGraphics.drawImage(mImage, bounds.x, bounds.y, bounds.width, bounds.height, null);
-//		aPane.paintImage(this, aGraphics, bounds);
+		if (mImage != null)
+		{
+			aGraphics.drawImage(mImage, bounds.x, bounds.y, bounds.width, bounds.height, null);
+		}
+	}
+
+
+	protected void paintCheckers(Graphics2D aGraphics, Rectangle aBounds)
+	{
+		int t = 10;
+		double sx = aBounds.width / (double)t;
+		double sy = aBounds.height / (double)t;
+		aGraphics.setColor(CHECKERS_DARK);
+		aGraphics.fillRect(aBounds.x, aBounds.y, aBounds.width, aBounds.height);
+		aGraphics.setColor(CHECKERS_BRIGHT);
+		for (int y = 0; y < t; y++)
+		{
+			for (int x = y & 1; x < t; x += 2)
+			{
+				aGraphics.fillRect(aBounds.x + (int)(x * sx), aBounds.y + (int)(y * sy), (int)sx, (int)sy);
+			}
+		}
 	}
 }

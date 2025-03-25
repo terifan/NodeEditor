@@ -19,7 +19,7 @@ public class BoxComponentMouseListener<T extends BoxComponent, U extends BoxComp
 	protected U mViewPort;
 	protected Point mClickPoint;
 	protected Point mDragPoint;
-	protected boolean mClickedBox;
+	protected boolean mIsClickedNode;
 	protected T mSelectedNode;
 	protected Rectangle mStartBounds;
 	protected double mZoomSpeed;
@@ -67,8 +67,8 @@ public class BoxComponentMouseListener<T extends BoxComponent, U extends BoxComp
 				if (mCursor != Cursor.DEFAULT_CURSOR)
 				{
 					mStartBounds = new Rectangle(mSelectedNode.getBounds());
-					mViewPort.getSelectedBoxes().clear();
-					mViewPort.getSelectedBoxes().add(mSelectedNode);
+					mViewPort.getSelectedNodes().clear();
+					mViewPort.getSelectedNodes().add(mSelectedNode);
 					mViewPort.repaint();
 				}
 
@@ -100,7 +100,7 @@ public class BoxComponentMouseListener<T extends BoxComponent, U extends BoxComp
 		{
 			if (!aEvent.isControlDown())
 			{
-				mViewPort.getSelectedBoxes().clear();
+				mViewPort.getSelectedNodes().clear();
 			}
 
 			double scale = mViewPort.getScale();
@@ -113,13 +113,13 @@ public class BoxComponentMouseListener<T extends BoxComponent, U extends BoxComp
 			{
 				if (selectionRectangle.intersects(box.getBounds()))
 				{
-					if (!mViewPort.getSelectedBoxes().contains(box))
+					if (!mViewPort.getSelectedNodes().contains(box))
 					{
-						mViewPort.getSelectedBoxes().add(box);
+						mViewPort.getSelectedNodes().add(box);
 					}
 					else if (aEvent.isControlDown())
 					{
-						mViewPort.getSelectedBoxes().remove(box);
+						mViewPort.getSelectedNodes().remove(box);
 					}
 				}
 			}
@@ -164,9 +164,9 @@ public class BoxComponentMouseListener<T extends BoxComponent, U extends BoxComp
 				scroll.y += (aEvent.getY() - mDragPoint.y);
 				mDragPoint = aEvent.getPoint();
 			}
-			else if (mClickedBox || SwingUtilities.isRightMouseButton(aEvent))
+			else if (mIsClickedNode || SwingUtilities.isRightMouseButton(aEvent))
 			{
-				for (T box : (ArrayList<T>)mViewPort.getSelectedBoxes())
+				for (T box : (ArrayList<T>)mViewPort.getSelectedNodes())
 				{
 					Point pt = box.getBounds().getLocation();
 					pt.x += mClickPoint.x - oldPoint.x;
@@ -236,12 +236,12 @@ public class BoxComponentMouseListener<T extends BoxComponent, U extends BoxComp
 			{
 				clickedBox = aClickedBox;
 
-				boolean b = mViewPort.getSelectedBoxes().contains(aClickedBox);
+				boolean b = mViewPort.getSelectedNodes().contains(aClickedBox);
 				if (aEvent.isControlDown())
 				{
 					if (b)
 					{
-						mViewPort.getSelectedBoxes().remove(aClickedBox);
+						mViewPort.getSelectedNodes().remove(aClickedBox);
 					}
 					else
 					{
@@ -250,20 +250,20 @@ public class BoxComponentMouseListener<T extends BoxComponent, U extends BoxComp
 				}
 				else if (!b)
 				{
-					mViewPort.getSelectedBoxes().clear();
+					mViewPort.getSelectedNodes().clear();
 					newSelection = aClickedBox;
 				}
 			}
 		}
 
-		mClickedBox = clickedBox != null;
+		mIsClickedNode = clickedBox != null;
 
 		if (newSelection != null)
 		{
-			mViewPort.getSelectedBoxes().add(newSelection);
+			mViewPort.getSelectedNodes().add(newSelection);
 		}
 
-		if (mClickedBox)
+		if (mIsClickedNode)
 		{
 			mViewPort.getModel().moveTop(clickedBox);
 		}

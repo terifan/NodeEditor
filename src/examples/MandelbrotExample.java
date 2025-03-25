@@ -36,13 +36,13 @@ public class MandelbrotExample
 		double x0 = -2 + (4 * coord.x);
 		double y0 = -2 + (4 * coord.y);
 		int iteration = 0;
-		for (double x = 0, y = 0; x * x + y * y <= 4 && iteration < limit;)
+		for (double x = 0, y = 0; x * x + y * y <= 4 && iteration < limit; iteration++)
 		{
 			double xtemp = x * x - y * y + x0;
 			y = 2 * x * y + y0;
 			x = xtemp;
-			iteration++;
 		}
+
 		return iteration >= limit ? -1 : iteration / (double)limit;
 	};
 
@@ -58,11 +58,8 @@ public class MandelbrotExample
 		double gf = (Double)self.getNode().getProperty("gf").execute(aContext);
 		double bf = (Double)self.getNode().getProperty("bf").execute(aContext);
 		double sf = (Double)self.getNode().getProperty("sf").execute(aContext);
-		Vec4d v = new Vec4d(it, it, it, 0).scale(sf).scale(rf, gf, bf, 0).add(0, 0, 0, 1);
-		v.x %= 1;
-		v.y %= 1;
-		v.z %= 1;
-		return v;
+
+		return new Vec4d(rf, gf, bf, 0).scale(sf * it).mod(1).add(0, 0, 0, 1);
 	};
 
 	private static NodeFunction buttonAction = (aContext, self) ->
@@ -97,13 +94,13 @@ public class MandelbrotExample
 			NodeModel __model = new NodeModel()
 				.addComponent(new Node("Mandelbrot")
 					.setTitleBackground(DefaultNodeColors.GREEN)
-					.setBounds(-200, 0, 150, 0)
+					.setBounds(-500, 100, 150, 0)
 					.addProperty(new ValueProperty("Iterations").addConnector(OUT, GRAY).setProducer("mandelbrot"))
 					.addProperty(new ValueProperty("Coordinate").setId("coord").addConnector(OUT, PURPLE).bind("coordinate"))
 					.addProperty(new SliderProperty("Limit", 5000, 1).setId("limit"))
 				)
 				.addComponent(new Node("Palette")
-					.setBounds(0, -150, 150, 0)
+					.setBounds(0, -20, 150, 0)
 					.addProperty(new ValueProperty("Color").addConnector(OUT, YELLOW).setProducer("palette"))
 					.addProperty(new SliderProperty("Red", 2.3, 0.01).setId("rf"))
 					.addProperty(new SliderProperty("Green", 9.2, 0.01).setId("gf"))
@@ -113,18 +110,23 @@ public class MandelbrotExample
 				)
 				.addComponent(new Node("RenderOutput")
 					.setTitleBackground(DefaultNodeColors.DARKRED)
-					.setBounds(200, 50, 220, 0)
+					.setBounds(600, 150, 220, 0)
 					.addProperty(new ValueProperty("Color").setId("argb").addConnector(IN))
 					.addProperty(new ValueProperty("Coordinate").setId("coord").addConnector(IN, PURPLE))
 					.addProperty(new ImageProperty("", 200, 200).bind("image"))
 					.addProperty(new ButtonProperty("Run").setIcon(DefaultIcons.RUN).bind("run"))
 				)
-				.addComponent(SimpleNodesFactory.createSourceColorRGBA())
-				.addComponent(SimpleNodesFactory.createIntermediateMath())
-				.addComponent(SimpleNodesFactory.createIntermediateColorMix())
-				.addConnection(0, 0, 1, 5)
+				.addComponent(SimpleNodesFactory.createSourceColorRGBA().setLocation(-250, -90))
+				.addComponent(SimpleNodesFactory.createIntermediateMath().setLocation(-250, -250))
+				.addComponent(SimpleNodesFactory.createIntermediateColorMix().setLocation(250, -100))
+				.addComponent(SimpleNodesFactory.createSourceColorRGBA().setLocation(-250, 250))
+				.addConnection(0, 0, 4, 4)
 				.addConnection(0, 1, 2, 1)
-				.addConnection(1, 0, 2, 0);
+				.addConnection(0, 0, 1, 5)
+				.addConnection(3, 0, 5, 2)
+				.addConnection(4, 0, 5, 1)
+				.addConnection(1, 0, 5, 3)
+				.addConnection(5, 0, 2, 0);
 
 			__model.print();
 

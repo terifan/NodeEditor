@@ -61,6 +61,9 @@ public class Styles
 	public static int BOX_SHADOW_STRENGTH = 20;
 	public static int BOX_SHADOW_SIZE = 10;
 
+	public static Color CHECKERS_BRIGHT = new Color(220, 220, 220);
+	public static Color CHECKERS_DARK = new Color(200, 200, 200);
+
 
 	static
 	{
