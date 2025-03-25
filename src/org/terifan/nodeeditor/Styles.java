@@ -22,16 +22,16 @@ public class Styles
 	public static Color CONNECTOR_COLOR_OUTER_SELECTED = new Color(128, 0, 0);
 	public static Color CONNECTOR_COLOR_INNER_DRAGGED = new Color(240, 160, 62);
 
-	public static int TITLE_HEIGHT = 20;
-	public static int TITLE_HEIGHT_PADDED = TITLE_HEIGHT + 5;
-	public static int MIN_WIDTH = 40;
+	public static int TITLE_HEIGHT = 18;
+	public static int TITLE_HEIGHT_PADDED = TITLE_HEIGHT + 3;
+	public static int MIN_WIDTH = 60;
 	public static int MIN_HEIGHT = TITLE_HEIGHT + 6 + 2 * 4;
-	public static int BORDE_RADIUS = 18;
+	public static int BORDE_RADIUS = 9;
 
 	public static int COLLAPSE_BUTTON_WIDTH = 16;
 
 	public static Color BOX_FOREGROUND_COLOR = new Color(255, 255, 255, b);
-	public static Color BOX_FOREGROUND_SHADOW_COLOR = new Color(0, 0, 0, 64);
+	public static Color BOX_FOREGROUND_SHADOW_COLOR = new Color(0, 0, 0, 32);
 	public static Color BOX_FOREGROUND_ARMED_COLOR = new Color(30, 30, 30);
 	public static Color BOX_FOREGROUND_SELECTED_COLOR = new Color(255, 255, 255, b);
 	public static Color BOX_BACKGROUND_COLOR = new Color(48, 48, 48, a);
@@ -207,9 +207,9 @@ public class Styles
 		public Color GREEN = new Color(0x2B652B);
 		public Color YELLOW = new Color(0x6E6E1D);
 		public Color DARKRED = new Color(0x3C1D26);
-		public Color CYAN = new Color(0x246283);
+		public Color BLUE = new Color(0x246283);
 		public Color PURPLE = new Color(0x3C3C83);
-		public Color ORANGE = new Color(0x79461D);
+		public Color BROWN = new Color(0x79461D);
 		public Color DARKCYAN = new Color(0x203C3C);
 	}
 

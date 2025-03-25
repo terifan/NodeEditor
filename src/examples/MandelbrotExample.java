@@ -1,18 +1,24 @@
 package examples;
 
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import javax.swing.AbstractAction;
 import org.terifan.nodeeditor.widgets.SliderProperty;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JToolBar;
+import org.terifan.nodeeditor.Direction;
 import static org.terifan.nodeeditor.Direction.IN;
+import static org.terifan.nodeeditor.Direction.OUT;
 import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Node;
 import org.terifan.nodeeditor.NodeModel;
 import org.terifan.nodeeditor.widgets.ValueProperty;
-import static org.terifan.nodeeditor.Direction.OUT;
 import org.terifan.nodeeditor.NodeFunction;
 import static org.terifan.nodeeditor.Styles.DefaultConnectorColors.GRAY;
 import static org.terifan.nodeeditor.Styles.DefaultConnectorColors.PURPLE;
@@ -96,16 +102,17 @@ public class MandelbrotExample
 		{
 			NodeModel __model = new NodeModel()
 				.addComponent(new Node("Mandelbrot")
-					.setTitleBackground(DefaultNodeColors.GREEN)
+					.setTitleBackground(DefaultNodeColors.BROWN)
 					.setBounds(-500, 100, 150, 0)
 					.addProperty(new ValueProperty("Iterations").addConnector(OUT, GRAY).setProducer("mandelbrot"))
 					.addProperty(new ValueProperty("Coordinate").setId("coord").addConnector(OUT, PURPLE).bind("coordinate"))
-					.addProperty(new SliderProperty("X", -2, 2, 0.06755).setId("x"))
-					.addProperty(new SliderProperty("Y", -2, 2, 0.635).setId("y"))
+					.addProperty(new SliderProperty("X").setRange(-2, 2, 0.06755, 0.0001).setId("x"))
+					.addProperty(new SliderProperty("Y").setRange(-2, 2, 0.635, 0.0001).setId("y"))
 					.addProperty(new SliderProperty("Zoom", 30000, 1).setId("zoom"))
 					.addProperty(new SliderProperty("Limit", 200000, 1).setId("limit"))
 				)
 				.addComponent(new Node("Palette")
+					.setTitleBackground(DefaultNodeColors.GREEN)
 					.setBounds(0, -20, 150, 0)
 					.addProperty(new ValueProperty("Color").addConnector(OUT, YELLOW).setProducer("palette"))
 					.addProperty(new SliderProperty("Red", 0.0, 0.01).setId("rf"))
@@ -157,8 +164,90 @@ public class MandelbrotExample
 
 			SimpleNodesFactory.install(editor);
 
+
+
+
+			JToolBar toolbar = new JToolBar();
+
+			toolbar.add(new AbstractAction("Math")
+			{
+				@Override
+				public void actionPerformed(ActionEvent aE)
+				{
+					model.addComponent(SimpleNodesFactory.createIntermediateMath());
+					editor.repaint();
+				}
+			});
+
+			toolbar.add(new AbstractAction("Mix")
+			{
+				@Override
+				public void actionPerformed(ActionEvent aE)
+				{
+					model.addComponent(SimpleNodesFactory.createIntermediateColorMix());
+					editor.repaint();
+				}
+			});
+
+			toolbar.add(new AbstractAction("Alpha")
+			{
+				@Override
+				public void actionPerformed(ActionEvent aE)
+				{
+					model.addComponent(SimpleNodesFactory.createSourceAlpha());
+					editor.repaint();
+				}
+			});
+
+			toolbar.add(new AbstractAction("Color")
+			{
+				@Override
+				public void actionPerformed(ActionEvent aE)
+				{
+					model.addComponent(SimpleNodesFactory.createSourceColor());
+					editor.repaint();
+				}
+			});
+
+			toolbar.add(new AbstractAction("RGB")
+			{
+				@Override
+				public void actionPerformed(ActionEvent aE)
+				{
+					model.addComponent(SimpleNodesFactory.createSourceColorRGB());
+					editor.repaint();
+				}
+			});
+
+			toolbar.add(new AbstractAction("RGBA")
+			{
+				@Override
+				public void actionPerformed(ActionEvent aE)
+				{
+					model.addComponent(SimpleNodesFactory.createSourceColorRGBA());
+					editor.repaint();
+				}
+			});
+
+			toolbar.add(new AbstractAction("Value")
+			{
+				@Override
+				public void actionPerformed(ActionEvent aE)
+				{
+					model.addComponent(SimpleNodesFactory.createSourceValue());
+					editor.repaint();
+				}
+			});
+
+			JPanel panel = new JPanel(new BorderLayout());
+			panel.add(toolbar, BorderLayout.NORTH);
+			panel.add(editor, BorderLayout.CENTER);
+
+
+
+
 			JFrame frame = new JFrame();
-			frame.add(editor);
+			frame.add(panel);
 			frame.setSize(1600, 1000);
 			frame.setLocationRelativeTo(null);
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
