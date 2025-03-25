@@ -143,7 +143,7 @@ public class MandelbrotExample
 
 			__model.print();
 
-			// -- serialize/deserialize model to ensure it's stateless
+			// -- debugging only, serialize/deserialize model to ensure it's stateless
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			try (ObjectOutputStream dos = new ObjectOutputStream(baos))
 			{
@@ -238,6 +238,16 @@ public class MandelbrotExample
 					editor.repaint();
 				}
 			});
+
+//			toolbar.add(new AbstractAction("SeparateColor")
+//			{
+//				@Override
+//				public void actionPerformed(ActionEvent aE)
+//				{
+//					model.addComponent(SimpleNodesFactory.createSourceValue());
+//					editor.repaint();
+//				}
+//			});
 
 			JPanel panel = new JPanel(new BorderLayout());
 			panel.add(toolbar, BorderLayout.NORTH);

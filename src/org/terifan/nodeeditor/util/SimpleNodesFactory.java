@@ -199,7 +199,7 @@ public class SimpleNodesFactory
 
 	public static Node createIntermediateColorMix()
 	{
-		return (Node)new Node("Mix",
+		return (Node)new Node("ColorMix",
 			new ValueProperty("Color").addConnector(OUT, YELLOW).setProducer(SimpleNodesFactory.class.getCanonicalName() + ".ColorMixProducer"),
 			new SliderProperty("Fac").setRange(0, 1, 0.5, 0.1).setId("fac").addConnector(IN, GRAY),
 			new ColorChooserProperty("Color", new Color(0, 0, 0)).setId("color1").addConnector(IN, YELLOW),
