@@ -1,5 +1,7 @@
 # NodeEditor
-The NodeEditor is a Swing UI component that immitates the NodeEditor from 3D graphics editor Blender. It allowes the user to drag, resize and connect graph elements.
+The NodeEditor is a standalone Swing UI component that enable a user to create, modify and execute a node schema.
+
+Inspired by the NodeEditor component of the Blender 3D editor.
 
 Very much alpha software, somewhat functional...
  
