@@ -84,28 +84,26 @@ class NodeEditorMouseListener<T extends Node, U extends NodeEditorPane> extends 
 		{
 			mViewPort.setConnectorDragFrom(dragConnector);
 
-			boolean done = false;
+			Point point = dragConnector.getConnectorPoint();
+
 			if (dragConnector.getDirection() == Direction.IN)
 			{
 				List<Connection> list = model.getConnectionsTo(dragConnector.getProperty());
-				if (list.size() == 1)
+				if (list.size() > 0)
 				{
 					Connector out = list.get(0).getOut();
 
 					mViewPort.setConnectorDragFrom(out);
 					mViewPort.setDragEndLocation(out.getConnectorPoint());
-					mViewPort.setDragStartLocation(out.getConnectorPoint());
+					point = out.getConnectorPoint();
+
+//					out.getProperty().connectionsChanged(out);
 
 					model.getConnections().remove(list.get(0));
-
-					done = true;
 				}
 			}
 
-			if (!done)
-			{
-				mViewPort.setDragStartLocation(dragConnector.getConnectorPoint());
-			}
+			mViewPort.setDragStartLocation(point);
 			return;
 		}
 
@@ -187,7 +185,7 @@ class NodeEditorMouseListener<T extends Node, U extends NodeEditorPane> extends 
 
 			if (nearestConnector != null && mViewPort.getConnectorDragFrom().getDirection() != nearestConnector.getDirection())
 			{
-				if (mRemoveInConnectionsOnDrop)
+				if (mRemoveInConnectionsOnDrop && !aEvent.isControlDown())
 				{
 					if (nearestConnector.getDirection() == Direction.IN)
 					{
@@ -208,7 +206,7 @@ class NodeEditorMouseListener<T extends Node, U extends NodeEditorPane> extends 
 					model.addConnection(mViewPort.getConnectorDragFrom(), nearestConnector);
 				}
 
-				nearestConnector.getProperty().connectionsChanged(mViewPort, mClickPoint);
+//				nearestConnector.getProperty().connectionsChanged(nearestConnector);
 			}
 
 			mViewPort.setConnectorDragFrom(null);
@@ -261,65 +259,28 @@ class NodeEditorMouseListener<T extends Node, U extends NodeEditorPane> extends 
 			return;
 		}
 
-		Rectangle selectionRectangle = mViewPort.getSelectionRectangle();
-		Point2D.Double paneScroll = mViewPort.getPaneScroll();
-
-		Point newPoint = mViewPort.calcMousePoint(aEvent.getPoint());
-
-		if (mCursor != Cursor.DEFAULT_CURSOR && mCursor != Cursor.HAND_CURSOR && SwingUtilities.isLeftMouseButton(aEvent))
-		{
-			resizeNode(mSelectedNode, newPoint);
-			return;
-		}
-
 		if (mSelectedProperty != null)
 		{
-			mSelectedProperty.mouseDragged(mViewPort, mClickPoint, newPoint);
-			return;
+			Point point = mViewPort.calcMousePoint(aEvent.getPoint());
+			mSelectedProperty.mouseDragged(mViewPort, mClickPoint, point);
+			mViewPort.repaint();
 		}
-		if (selectionRectangle != null)
+		else if (mViewPort.getSelectionRectangle() == null && SwingUtilities.isLeftMouseButton(aEvent) && mViewPort.getConnectorDragFrom() != null)
 		{
-			int x0 = (int)(Math.min(mClickPoint.x, newPoint.x) * mViewPort.getScale());
-			int y0 = (int)(Math.min(mClickPoint.y, newPoint.y) * mViewPort.getScale());
-			int x1 = (int)(Math.max(mClickPoint.x, newPoint.x) * mViewPort.getScale());
-			int y1 = (int)(Math.max(mClickPoint.y, newPoint.y) * mViewPort.getScale());
+			Point point = mViewPort.calcMousePoint(aEvent.getPoint());
+			Connector connector = mViewPort.findNearestConnector(point, null, true);
+			if (connector != null && mViewPort.getConnectorDragFrom().getDirection() != connector.getDirection())
+			{
+				point = connector.getConnectorPoint();
+			}
 
-			selectionRectangle.setBounds(x0, y0, x1 - x0, y1 - y0);
+			mViewPort.setDragEndLocation(point);
+			mViewPort.repaint();
 		}
 		else
 		{
-			Point oldPoint = mClickPoint;
-			mClickPoint = newPoint;
-
-			if (SwingUtilities.isMiddleMouseButton(aEvent))
-			{
-				paneScroll.x += (aEvent.getX() - mDragPoint.x);
-				paneScroll.y += (aEvent.getY() - mDragPoint.y);
-				mDragPoint = aEvent.getPoint();
-			}
-			else if (mViewPort.getConnectorDragFrom() != null)
-			{
-				mViewPort.setDragEndLocation(mClickPoint);
-
-				Connector connector = mViewPort.findNearestConnector(mViewPort.getDragEndLocation(), null, true);
-				if (connector != null && mViewPort.getConnectorDragFrom().getDirection() != connector.getDirection())
-				{
-					mViewPort.setDragEndLocation(connector.getConnectorPoint());
-				}
-			}
-			else if (mIsClickedNode || SwingUtilities.isRightMouseButton(aEvent))
-			{
-				for (Node node : (ArrayList<Node>)mViewPort.getSelectedNodes())
-				{
-					Point pt = node.getBounds().getLocation();
-					pt.x += mClickPoint.x - oldPoint.x;
-					pt.y += mClickPoint.y - oldPoint.y;
-					node.setLocation(pt.x, pt.y);
-				}
-			}
+			super.mouseDragged(aEvent);
 		}
-
-		mViewPort.repaint();
 	}
 
 
@@ -441,7 +402,7 @@ class NodeEditorMouseListener<T extends Node, U extends NodeEditorPane> extends 
 	@Override
 	protected int getCursor(Point aPoint, BoxComponent aNode)
 	{
-		if (aNode == null)
+		if (aNode == null || aNode.isMinimized())
 		{
 			return Cursor.DEFAULT_CURSOR;
 		}

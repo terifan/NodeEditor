@@ -128,6 +128,13 @@ public class ComboBoxProperty extends Property<ComboBoxProperty>
 	@Override
 	public Object execute(Context aContext)
 	{
+		Object value = super.execute(aContext);
+
+		if (value != null)
+		{
+			return value;
+		}
+
 		return mOptions.get(mSelectedIndex);
 	}
 
@@ -145,5 +152,12 @@ public class ComboBoxProperty extends Property<ComboBoxProperty>
 		setText(mOptions.get(mSelectedIndex));
 
 		return this;
+	}
+
+
+	@Override
+	public String toString()
+	{
+		return mOptions.get(mSelectedIndex);
 	}
 }

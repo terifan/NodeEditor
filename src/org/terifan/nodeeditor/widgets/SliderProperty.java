@@ -171,6 +171,26 @@ public class SliderProperty extends Property<SliderProperty>
 			{
 				value = String.format("%d", (long)mValue);
 			}
+			else if (mStep == 0)
+			{
+				value = String.format("%3.1f", mValue);
+			}
+			else if (mStep < 0.000001)
+			{
+				value = String.format("%3.7f", mValue);
+			}
+			else if (mStep < 0.00001)
+			{
+				value = String.format("%3.6f", mValue);
+			}
+			else if (mStep < 0.0001)
+			{
+				value = String.format("%3.5f", mValue);
+			}
+			else if (mStep < 0.001)
+			{
+				value = String.format("%3.4f", mValue);
+			}
 			else if (mStep < 0.01)
 			{
 				value = String.format("%3.3f", mValue);
@@ -181,7 +201,7 @@ public class SliderProperty extends Property<SliderProperty>
 			}
 			else
 			{
-				value = String.format("%3.1f", mValue);
+				value = String.format("%3.8f", mValue);
 			}
 
 			if (mTextBox.getText().isEmpty())
@@ -249,11 +269,11 @@ public class SliderProperty extends Property<SliderProperty>
 	@Override
 	public Object execute(Context aContext)
 	{
-		Connector in = getConnector(Direction.IN);
+		Object value = super.execute(aContext);
 
-		if (in != null && !in.getConnectedProperties().isEmpty())
+		if (value != null)
 		{
-			return in.getConnectedProperties().get(0).execute(aContext);
+			return value;
 		}
 
 		return mValue;

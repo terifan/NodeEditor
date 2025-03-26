@@ -284,7 +284,7 @@ public class BoxComponentMouseListener<T extends BoxComponent, U extends BoxComp
 
 	protected int getCursor(Point aPoint, BoxComponent aNode)
 	{
-		if (aNode == null)
+		if (aNode == null || aNode.isMinimized())
 		{
 			return Cursor.DEFAULT_CURSOR;
 		}

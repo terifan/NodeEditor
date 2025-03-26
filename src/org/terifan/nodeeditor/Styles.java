@@ -22,10 +22,9 @@ public class Styles
 	public static Color CONNECTOR_COLOR_OUTER_SELECTED = new Color(128, 0, 0);
 	public static Color CONNECTOR_COLOR_INNER_DRAGGED = new Color(240, 160, 62);
 
-	public static int TITLE_HEIGHT = 18;
-	public static int TITLE_HEIGHT_PADDED = TITLE_HEIGHT + 3;
+	public static int TITLE_HEIGHT = 21;
 	public static int MIN_WIDTH = 60;
-	public static int MIN_HEIGHT = TITLE_HEIGHT + 6 + 2 * 4;
+	public static int MIN_HEIGHT = 21 + 3 + 2 * 4;
 	public static int BORDE_RADIUS = 9;
 
 	public static int COLLAPSE_BUTTON_WIDTH = 16;

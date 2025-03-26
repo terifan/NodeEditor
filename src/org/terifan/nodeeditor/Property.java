@@ -9,8 +9,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import static org.terifan.nodeeditor.Styles.BOX_FOREGROUND_COLOR;
-import static org.terifan.nodeeditor.Styles.BOX_FOREGROUND_SHADOW_COLOR;
 import org.terifan.ui.TextBox;
 
 
@@ -18,16 +16,15 @@ public abstract class Property<T extends Property> implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
-	private final ArrayList<Connector> mConnectors;
-	private final Rectangle mBounds;
-
-	protected Node mNode;
-	protected Dimension mPreferredSize;
+	protected final ArrayList<Connector> mConnectors;
+	protected final Dimension mPreferredSize;
+	protected final Rectangle mBounds;
+	protected final TextBox mTextBox;
 	protected boolean mUserSetSize;
+	protected Node mNode;
 	protected String mId;
 	protected String mModelId;
 	protected String mProducer;
-	protected TextBox mTextBox;
 
 
 	public Property()
@@ -37,8 +34,8 @@ public abstract class Property<T extends Property> implements Serializable
 		mBounds = new Rectangle();
 		mTextBox = new TextBox("")
 			.setFont(Styles.BOX_ITEM_FONT)
-			.setShadow(BOX_FOREGROUND_SHADOW_COLOR, 1, 1)
-			.setForeground(BOX_FOREGROUND_COLOR);
+			.setShadow(Styles.BOX_FOREGROUND_SHADOW_COLOR, 1, 1)
+			.setForeground(Styles.BOX_FOREGROUND_COLOR);
 	}
 
 
@@ -64,23 +61,6 @@ public abstract class Property<T extends Property> implements Serializable
 	{
 		mProducer = aProducer;
 		return (T)this;
-	}
-
-
-	public Object execute(Context aContext)
-	{
-		Connector in = getConnector(Direction.IN);
-
-		if (in != null)
-		{
-			return in.getConnectedProperties().get(0).execute(aContext);
-		}
-		else if (mProducer != null)
-		{
-			return aContext.invoke(this, mProducer);
-		}
-
-		return null;
 	}
 
 
@@ -198,8 +178,15 @@ public abstract class Property<T extends Property> implements Serializable
 
 	public void setPreferredSize(Dimension aPreferredSize)
 	{
-		mUserSetSize = true;
-		mPreferredSize.setSize(aPreferredSize);
+		mUserSetSize = aPreferredSize != null;
+		if (mUserSetSize)
+		{
+			mPreferredSize.setSize(aPreferredSize);
+		}
+		else
+		{
+			mPreferredSize.setSize(mTextBox.measure().getSize());
+		}
 	}
 
 
@@ -209,9 +196,10 @@ public abstract class Property<T extends Property> implements Serializable
 	}
 
 
-	protected void connectionsChanged(NodeEditorPane aPane, Point aClickPoint)
-	{
-	}
+//	protected void connectionsChanged(Connection aConnection, Connector aConnectorFrom, Connector aConnectorTo, boolean aAdded)
+//	{
+//		System.out.println(aConnection + " " + aConnectorFrom + " " + aConnectorTo + " " + aAdded);
+//	}
 
 
 	/**
@@ -240,9 +228,32 @@ public abstract class Property<T extends Property> implements Serializable
 	}
 
 
-	@Override
-	public String toString()
+	/**
+	 * Calls incoming connectors until a non-null value is returned. If there are no incoming connectors or all connectors return null then
+	 * the Producer is invoked and it's value is returned.
+	 *
+	 * @return a value from an incoming connector, a produced value or null.
+	 */
+	public <T> T execute(Context aContext)
 	{
-		return "Property{" + "mId=" + getId() + ", Node=" + mNode + "}";
+		Connector in = getConnector(Direction.IN);
+
+		if (in != null)
+		{
+			for (Property property : in.getConnectedProperties())
+			{
+				Object value = property.execute(aContext);
+				if (value != null)
+				{
+					return (T)value;
+				}
+			}
+		}
+		if (mProducer != null)
+		{
+			return (T)aContext.getEditor().getBindings().get(mProducer).invoke(new Context(aContext.getEditor(), this));
+		}
+
+		return null;
 	}
 }

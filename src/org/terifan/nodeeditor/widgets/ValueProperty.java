@@ -1,7 +1,6 @@
 package org.terifan.nodeeditor.widgets;
 
 import java.awt.Graphics2D;
-import org.terifan.nodeeditor.Connector;
 import org.terifan.nodeeditor.Context;
 import org.terifan.nodeeditor.Direction;
 import org.terifan.nodeeditor.Property;
@@ -50,24 +49,13 @@ public class ValueProperty extends Property<ValueProperty>
 	@Override
 	public Object execute(Context aContext)
 	{
-		Connector in = getConnector(Direction.IN);
+		Object value = super.execute(aContext);
 
-		if (in != null)
+		if (value != null)
 		{
-			return in.getConnectedProperties().get(0).execute(aContext);
-		}
-		else if (mProducer != null)
-		{
-			return aContext.invoke(this, mProducer);
+			return value;
 		}
 
 		return mValue;
-	}
-
-
-	@Override
-	public String toString()
-	{
-		return "ValueProperty{" + super.toString() + '}';
 	}
 }

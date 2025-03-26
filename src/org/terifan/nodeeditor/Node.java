@@ -163,7 +163,7 @@ public class Node extends BoxComponent<Node, NodeEditorPane> implements Serializ
 				mBounds.width = Math.max(mBounds.width, mMinimumSize.width);
 				mBounds.height = Math.max(mBounds.height, mMinimumSize.height);
 
-				mBounds.height += TITLE_HEIGHT_PADDED;
+				mBounds.height += TITLE_HEIGHT;
 				mBounds.height += 6 + 2 * 4;
 			}
 			else
@@ -179,7 +179,7 @@ public class Node extends BoxComponent<Node, NodeEditorPane> implements Serializ
 	{
 		if (!mMinimized)
 		{
-			int y = TITLE_HEIGHT_PADDED + 4 + 4;
+			int y = TITLE_HEIGHT + 4 + 4;
 
 			for (Property item : mProperties)
 			{
@@ -210,7 +210,7 @@ public class Node extends BoxComponent<Node, NodeEditorPane> implements Serializ
 		{
 			for (Property item : mProperties)
 			{
-				int by0 = item.getBounds().y + Math.min(item.getBounds().height, TITLE_HEIGHT_PADDED + 4) / 2 - 5;
+				int by0 = item.getBounds().y + Math.min(item.getBounds().height, TITLE_HEIGHT + 4) / 2 - 5;
 				int by1 = by0;
 
 				for (Connector connector : (ArrayList<Connector>)item.getConnectors())

@@ -93,11 +93,11 @@ public class ColorChooserProperty extends Property<ColorChooserProperty>
 	@Override
 	public Object execute(Context aContext)
 	{
-		Connector in = getConnector(Direction.IN);
+		Object value = super.execute(aContext);
 
-		if (in != null && !in.getConnectedProperties().isEmpty())
+		if (value != null)
 		{
-			return in.getConnectedProperties().get(0).execute(aContext);
+			return value;
 		}
 
 		return new Vec4d(mColor.getRed() / 255.0, mColor.getGreen() / 255.0, mColor.getBlue() / 255.0, 0);

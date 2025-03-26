@@ -1,14 +1,16 @@
 package org.terifan.nodeeditor.widgets;
 
-import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import static java.awt.Transparency.OPAQUE;
 import java.awt.image.BufferedImage;
+import org.terifan.nodeeditor.Context;
 import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Property;
 import static org.terifan.nodeeditor.Styles.CHECKERS_BRIGHT;
 import static org.terifan.nodeeditor.Styles.CHECKERS_DARK;
+import org.terifan.vecmath.Vec2i;
+import org.terifan.vecmath.Vec4d;
 
 
 /**
@@ -30,7 +32,7 @@ public class ImageProperty extends Property<ImageProperty>
 
 		mWidth = aWidth;
 		mHeight = aHeight;
-		mPreferredSize = new Dimension(aWidth, aHeight);
+		mPreferredSize.setSize(aWidth, aHeight);
 	}
 
 
@@ -80,4 +82,17 @@ public class ImageProperty extends Property<ImageProperty>
 			}
 		}
 	}
+
+
+//	@Override
+//	public <T> T execute(Context aContext)
+//	{
+//		Vec2i cp = aContext.execute("coord");
+//		Vec4d argb = aContext.execute("color");
+//		ImageProperty ip = aContext.property("image");
+//
+//		ip.getImage().setRGB(cp.x, cp.y, argb.intValue());
+//
+//		return null;
+//	}
 }

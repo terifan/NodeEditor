@@ -25,11 +25,11 @@ public class SimpleNodesFactory
 	private final static int SIZE = 150;
 
 
-	private static NodeFunction mMathProducer = (aContext, self) ->
+	private static NodeFunction mMathProducer = aContext ->
 	{
-		Object value1 = self.getNode().getProperty("value1").execute(aContext);
-		Object value2 = self.getNode().getProperty("value2").execute(aContext);
-		String func = self.getNode().getProperty("function").getText();
+		Object value1 = aContext.execute("value1");
+		Object value2 = aContext.execute("value2");
+		String func = aContext.execute("function").toString();
 		if (value1 instanceof Number v1)
 		{
 			if (value2 instanceof Number v2)
@@ -75,47 +75,47 @@ public class SimpleNodesFactory
 		throw new IllegalArgumentException("Unsupported: " + value1.getClass() + ", " + value2.getClass() + ", " + func);
 	};
 
-	private static NodeFunction mColorAlphaProducer = (aContext, self) ->
+	private static NodeFunction mColorAlphaProducer = aContext ->
 	{
-		Vec4d color = (Vec4d)self.getNode().getProperty("color").execute(aContext);
-		color.w = (Double)self.getNode().getProperty("alpha").execute(aContext);
+		Vec4d color = (Vec4d)aContext.execute("color");
+		color.w = (Double)aContext.execute("alpha");
 		return color;
 	};
 
-	private static NodeFunction mRGBAProducer = (aContext, self) ->
+	private static NodeFunction mRGBAProducer = aContext ->
 	{
-		double r = (Double)self.getNode().getProperty("r").execute(aContext);
-		double g = (Double)self.getNode().getProperty("g").execute(aContext);
-		double b = (Double)self.getNode().getProperty("b").execute(aContext);
-		double a = (Double)self.getNode().getProperty("a").execute(aContext);
+		double r = (Double)aContext.execute("r");
+		double g = (Double)aContext.execute("g");
+		double b = (Double)aContext.execute("b");
+		double a = (Double)aContext.execute("a");
 		return new Vec4d(r, g, b, a);
 	};
 
-	private static NodeFunction mRGBProducer = (aContext, self) ->
+	private static NodeFunction mRGBProducer = aContext ->
 	{
-		double r = (Double)self.getNode().getProperty("r").execute(aContext);
-		double g = (Double)self.getNode().getProperty("g").execute(aContext);
-		double b = (Double)self.getNode().getProperty("b").execute(aContext);
+		double r = (Double)aContext.execute("r");
+		double g = (Double)aContext.execute("g");
+		double b = (Double)aContext.execute("b");
 		return new Vec4d(r, g, b, 1);
 	};
 
-	private static NodeFunction mColorMixProducer = (aContext, self) ->
+	private static NodeFunction mColorMixProducer = aContext ->
 	{
-		Vec4d color1 = (Vec4d)self.getNode().getProperty("color1").execute(aContext);
-		Vec4d color2 = (Vec4d)self.getNode().getProperty("color2").execute(aContext);
-		double fac = (Double)self.getNode().getProperty("fac").execute(aContext);
+		Vec4d color1 = (Vec4d)aContext.execute("color1");
+		Vec4d color2 = (Vec4d)aContext.execute("color2");
+		double fac = (Double)aContext.execute("fac");
 		return new Vec4d().interpolate(color1, color2, fac);
 	};
 
-	private static NodeFunction mAlphaProducer = (aContext, self) ->
+	private static NodeFunction mAlphaProducer = aContext ->
 	{
-		double a = (Double)self.getNode().getProperty("a").execute(aContext);
+		double a = (Double)aContext.execute("a");
 		return new Vec4d(0, 0, 0, a);
 	};
 
-	private static NodeFunction mValueProducer = (aContext, self) ->
+	private static NodeFunction mValueProducer = aContext ->
 	{
-		return (Double)self.getNode().getProperty("value").execute(aContext);
+		return (Double)aContext.execute("value");
 	};
 
 

@@ -63,7 +63,7 @@ public class NodeEditorPane extends BoxComponentPane<Node, NodeEditorPane>
 
 	public void invoke(String aId, Property aProperty)
 	{
-		mBindings.get(aId).invoke(new Context(this), aProperty);
+		mBindings.get(aId).invoke(new Context(this, aProperty));
 	}
 
 
