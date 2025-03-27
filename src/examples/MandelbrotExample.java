@@ -8,26 +8,25 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import javax.swing.AbstractAction;
-import org.terifan.nodeeditor.widgets.SliderProperty;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import org.terifan.nodeeditor.Context;
 import static org.terifan.nodeeditor.Direction.IN;
 import static org.terifan.nodeeditor.Direction.OUT;
-import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Node;
+import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.NodeModel;
 import org.terifan.nodeeditor.widgets.ValueProperty;
 import org.terifan.nodeeditor.NodeFunction;
-import static org.terifan.nodeeditor.Styles.DefaultConnectorColors.GRAY;
-import static org.terifan.nodeeditor.Styles.DefaultConnectorColors.PURPLE;
-import static org.terifan.nodeeditor.Styles.DefaultConnectorColors.YELLOW;
+import org.terifan.nodeeditor.Styles.DefaultConnectorColors;
 import org.terifan.nodeeditor.Styles.DefaultIcons;
 import org.terifan.nodeeditor.Styles.DefaultNodeColors;
 import org.terifan.nodeeditor.util.SimpleNodesFactory;
 import org.terifan.nodeeditor.widgets.ButtonProperty;
 import org.terifan.nodeeditor.widgets.ImageProperty;
+import org.terifan.nodeeditor.widgets.SliderProperty;
 import org.terifan.vecmath.Vec2i;
 import org.terifan.vecmath.Vec4d;
 
@@ -69,7 +68,7 @@ public class MandelbrotExample
 		double bf = aContext.value("bf");
 		double sf = aContext.value("sf");
 
-		return new Vec4d(rf, gf, bf, 0).scale(sf * it).mod(1).add(0, 0, 0, 1);
+		return new Vec4d(rf, gf, bf, 0).scale(sf * it).mod(1).scale(1, 1, 1, 0).add(0, 0, 0, 1);
 	};
 
 	private static NodeFunction buttonAction = aContext ->
@@ -118,9 +117,9 @@ public class MandelbrotExample
 				.addComponent(new Node("Mandelbrot")
 					.setTitleBackground(DefaultNodeColors.BROWN)
 					.setBounds(-400, 100, 150, 0)
-					.addProperty(new ValueProperty("Iterations").addConnector(OUT, GRAY).setProducer("mandelbrot"))
-					.addProperty(new ValueProperty("Coordinate").addConnector(IN, PURPLE).setId("coord"))
-					.addProperty(new ValueProperty("Size").setId("size").addConnector(IN, GRAY))
+					.addProperty(new ValueProperty("Iterations").addConnector(OUT, DefaultConnectorColors.GRAY).setProducer("mandelbrot"))
+					.addProperty(new ValueProperty("Coordinate").addConnector(IN, DefaultConnectorColors.PURPLE).setId("coord"))
+					.addProperty(new ValueProperty("Size").setId("size").addConnector(IN, DefaultConnectorColors.GRAY))
 					.addProperty(new SliderProperty("X").setRange(-2, 2, 0.0675945, 0.0000001).setId("x"))
 					.addProperty(new SliderProperty("Y").setRange(-2, 2, 0.6349410, 0.0000001).setId("y"))
 					.addProperty(new SliderProperty("Zoom", 500000, 1).setId("zoom"))
@@ -129,18 +128,18 @@ public class MandelbrotExample
 				.addComponent(new Node("Palette")
 					.setTitleBackground(DefaultNodeColors.GREEN)
 					.setBounds(0, -20, 150, 0)
-					.addProperty(new ValueProperty("Color").addConnector(OUT, YELLOW).setProducer("palette"))
+					.addProperty(new ValueProperty("Color").addConnector(OUT, DefaultConnectorColors.YELLOW).setProducer("palette"))
 					.addProperty(new SliderProperty("Red", 0.0, 0.01).setId("rf"))
 					.addProperty(new SliderProperty("Green", 13.42, 0.01).setId("gf"))
 					.addProperty(new SliderProperty("Blue", 30.26, 0.01).setId("bf"))
 					.addProperty(new SliderProperty("Scale", 20.5, 0.01).setId("sf"))
-					.addProperty(new ValueProperty("Iterations").setId("iterations").addConnector(IN, GRAY))
+					.addProperty(new ValueProperty("Iterations").setId("iterations").addConnector(IN, DefaultConnectorColors.GRAY))
 				)
 				.addComponent(new Node("RenderOutput")
 					.setTitleBackground(DefaultNodeColors.DARKRED)
 					.setBounds(400, 100, 530, 0)
 					.addProperty(new ValueProperty("Color").setId("color").addConnector(IN))
-					.addProperty(new ValueProperty("Coordinate").setId("coord").addConnector(IN, PURPLE))
+					.addProperty(new ValueProperty("Coordinate").setId("coord").addConnector(IN, DefaultConnectorColors.PURPLE))
 					.addProperty(new ImageProperty("", 512, 512).setId("image").bind("image"))
 				)
 				.addComponent(SimpleNodesFactory.createSourceColor().setLocation(-250, -90))
@@ -149,8 +148,8 @@ public class MandelbrotExample
 				.addComponent(new Node("Renderer")
 					.setTitleBackground(DefaultNodeColors.BROWN)
 					.setBounds(-600, 400, 150, 0)
-					.addProperty(new ValueProperty("Coordinate").setId("coord").addConnector(OUT, PURPLE))
-					.addProperty(new SliderProperty("Size").setRange(0, 4096, 512, 1).setId("size").addConnector(OUT, GRAY))
+					.addProperty(new ValueProperty("Coordinate").setId("coord").addConnector(OUT, DefaultConnectorColors.PURPLE))
+					.addProperty(new SliderProperty("Size").setRange(0, 4096, 512, 1).setId("size").addConnector(OUT, DefaultConnectorColors.GRAY))
 					.addProperty(new ButtonProperty("Render").setIcon(DefaultIcons.RUN).bind("run"))
 				)
 				.addConnection(6, 1, 0, 2)
@@ -162,8 +161,6 @@ public class MandelbrotExample
 				.addConnection(4, 0, 5, 1)
 				.addConnection(1, 0, 5, 3)
 				.addConnection(5, 0, 2, 0);
-
-			__model.print();
 
 			// -- debugging only, serialize/deserialize model to ensure it's stateless
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -187,6 +184,19 @@ public class MandelbrotExample
 			SimpleNodesFactory.install(editor);
 
 			JToolBar toolbar = new JToolBar();
+
+			toolbar.add(new AbstractAction("PrintJava")
+			{
+				@Override
+				public void actionPerformed(ActionEvent aE)
+				{
+					model.printJava();
+				}
+			});
+
+			toolbar.addSeparator();
+
+			toolbar.add(new JLabel("Nodes:  "));
 
 			toolbar.add(new AbstractAction("Math")
 			{
@@ -258,15 +268,16 @@ public class MandelbrotExample
 				}
 			});
 
-//			toolbar.add(new AbstractAction("SeparateColor")
-//			{
-//				@Override
-//				public void actionPerformed(ActionEvent aE)
-//				{
-//					model.addComponent(SimpleNodesFactory.createSourceValue());
-//					editor.repaint();
-//				}
-//			});
+			toolbar.add(new AbstractAction("SeparateColor")
+			{
+				@Override
+				public void actionPerformed(ActionEvent aE)
+				{
+					model.addComponent(SimpleNodesFactory.createIntermediateSeparateColor());
+					editor.repaint();
+				}
+			});
+
 			JPanel panel = new JPanel(new BorderLayout());
 			panel.add(toolbar, BorderLayout.NORTH);
 			panel.add(editor, BorderLayout.CENTER);

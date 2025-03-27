@@ -6,6 +6,8 @@ import java.awt.LinearGradientPaint;
 import java.awt.Paint;
 import java.awt.Point;
 import java.awt.Stroke;
+import java.util.ArrayList;
+import org.terifan.nodeeditor.Connector;
 import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Property;
 import org.terifan.nodeeditor.Styles;
@@ -94,5 +96,13 @@ public class CheckBoxProperty extends Property<CheckBoxProperty>
 		mSelected = !mSelected;
 		aPane.repaint();
 		return true;
+	}
+
+
+	@Override
+	protected void printJava()
+	{
+		System.out.print("\t\t.addProperty(new " + getClass().getSimpleName() + "(\"" + getText() + "\", " + mSelected + ")");
+		super.printJava();
 	}
 }

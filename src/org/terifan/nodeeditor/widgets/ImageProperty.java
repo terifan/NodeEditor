@@ -4,13 +4,12 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import static java.awt.Transparency.OPAQUE;
 import java.awt.image.BufferedImage;
-import org.terifan.nodeeditor.Context;
+import java.util.ArrayList;
+import org.terifan.nodeeditor.Connector;
 import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Property;
 import static org.terifan.nodeeditor.Styles.CHECKERS_BRIGHT;
 import static org.terifan.nodeeditor.Styles.CHECKERS_DARK;
-import org.terifan.vecmath.Vec2i;
-import org.terifan.vecmath.Vec4d;
 
 
 /**
@@ -95,4 +94,10 @@ public class ImageProperty extends Property<ImageProperty>
 //
 //		return null;
 //	}
+	@Override
+	protected void printJava()
+	{
+		System.out.print("\t\t.addProperty(new " + getClass().getSimpleName() + "(\"" + getText() + "\", " + mWidth + ", " + mHeight + ")");
+		super.printJava();
+	}
 }

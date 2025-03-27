@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import static org.terifan.nodeeditor.Styles.*;
 import org.terifan.boxcomponentpane.BoxComponent;
+import static org.terifan.nodeeditor.Property.colorToJava;
 
 
 public class Node extends BoxComponent<Node, NodeEditorPane> implements Serializable
@@ -319,5 +320,28 @@ public class Node extends BoxComponent<Node, NodeEditorPane> implements Serializ
 	public String toString()
 	{
 		return "Node{" + mTitle + '}';
+	}
+
+
+	protected void printJava()
+	{
+		System.out.println("\t.addComponent(new Node(\"" + getTitle() + "\")");
+		if (!getTitleForeground().equals(Styles.BOX_FOREGROUND_COLOR))
+		{
+			System.out.println("\t\t.setTitleForeground(" + colorToJava(getTitleForeground()) + ")");
+		}
+		if (!getTitleBackground().equals(Styles.BOX_BACKGROUND_COLOR))
+		{
+			System.out.println("\t\t.setTitleBackground(" + colorToJava(getTitleBackground()) + ")");
+		}
+		System.out.print("\t\t.setBounds(" + mBounds.x + ", " + mBounds.y + ", " + mBounds.width + ", " + mBounds.height + ")");
+		for (Property p : getProperties())
+		{
+			System.out.println();
+			p.printJava();
+		}
+		System.out.println();
+		System.out.print("\t)");
+		System.out.println();
 	}
 }

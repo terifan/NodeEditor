@@ -68,10 +68,10 @@ public abstract class BoxComponent<T extends BoxComponent, U extends BoxComponen
 	}
 
 
-	public BoxComponent<T, U> setTitleForeground(Color aColor)
+	public T setTitleForeground(Color aColor)
 	{
 		mTitleForeground = aColor;
-		return this;
+		return (T)this;
 	}
 
 

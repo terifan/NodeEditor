@@ -24,7 +24,6 @@ public class SimpleNodesFactory
 {
 	private final static int SIZE = 150;
 
-
 	private static NodeFunction mMathProducer = aContext ->
 	{
 		Object value1 = aContext.value("value1");
@@ -47,7 +46,26 @@ public class SimpleNodesFactory
 					case "Modulo":
 						return v1.doubleValue() % v2.doubleValue();
 					case "Greater Than":
-						return v1.doubleValue() > v2.doubleValue();
+						return v1.doubleValue() > v2.doubleValue() ? 1 : 0;
+				}
+			}
+			if (value2 instanceof Vec4d v2)
+			{
+				double d = v1.doubleValue();
+				switch (func)
+				{
+					case "Add":
+						return v2.clone().add(d, d, d, d);
+					case "Subtract":
+						return v2.clone().subtract(d, d, d, d);
+					case "Multiply":
+						return v2.clone().scale(d, d, d, d);
+					case "Divide":
+						return v2.clone().divide(d, d, d, d);
+					case "Modulo":
+						return v2.clone().mod(d);
+					case "Greater Than":
+						return new Vec4d(d > v2.x ? 1 : 0, d > v2.y ? 1 : 0, d > v2.z ? 1 : 0, d > v2.w ? 1 : 0);
 				}
 			}
 		}
@@ -75,10 +93,10 @@ public class SimpleNodesFactory
 		throw new IllegalArgumentException("Unsupported: " + value1.getClass() + ", " + value2.getClass() + ", " + func);
 	};
 
-	private static NodeFunction mColorAlphaProducer = aContext ->
+	private static NodeFunction mAlphaProducer = aContext ->
 	{
 		Vec4d color = aContext.value("color");
-		color.w = aContext.value("alpha");
+		color.w = aContext.value("a");
 		return color;
 	};
 
@@ -107,27 +125,28 @@ public class SimpleNodesFactory
 		return new Vec4d().interpolate(color1, color2, fac);
 	};
 
-	private static NodeFunction mAlphaProducer = aContext ->
-	{
-		double a = aContext.value("a");
-		return new Vec4d(0, 0, 0, a);
-	};
+	private static NodeFunction mSeparateColorRedProducer = aContext -> ((Vec4d)aContext.value("color")).x;
+	private static NodeFunction mSeparateColorGreenProducer = aContext -> ((Vec4d)aContext.value("color")).y;
+	private static NodeFunction mSeparateColorBlueProducer = aContext -> ((Vec4d)aContext.value("color")).z;
+	private static NodeFunction mSeparateColorAlphaProducer = aContext -> ((Vec4d)aContext.value("color")).w;
 
-	private static NodeFunction mValueProducer = aContext ->
-	{
-		return aContext.value("value");
-	};
+	private static NodeFunction mColorAlphaProducer = aContext -> new Vec4d(0, 0, 0, aContext.value("a"));
+	private static NodeFunction mValueProducer = aContext -> aContext.value("value");
 
 
 	public static void install(NodeEditorPane aRuntime)
 	{
-		aRuntime.bind(SimpleNodesFactory.class.getCanonicalName() + ".AlphaProducer", mAlphaProducer);
+		aRuntime.bind(SimpleNodesFactory.class.getCanonicalName() + ".ColorAlphaProducer", mColorAlphaProducer);
 		aRuntime.bind(SimpleNodesFactory.class.getCanonicalName() + ".ColorMixProducer", mColorMixProducer);
 		aRuntime.bind(SimpleNodesFactory.class.getCanonicalName() + ".MathProducer", mMathProducer);
 		aRuntime.bind(SimpleNodesFactory.class.getCanonicalName() + ".RGBAProducer", mRGBAProducer);
 		aRuntime.bind(SimpleNodesFactory.class.getCanonicalName() + ".RGBProducer", mRGBProducer);
-		aRuntime.bind(SimpleNodesFactory.class.getCanonicalName() + ".ColorAlphaProducer", mColorAlphaProducer);
+		aRuntime.bind(SimpleNodesFactory.class.getCanonicalName() + ".AlphaProducer", mAlphaProducer);
 		aRuntime.bind(SimpleNodesFactory.class.getCanonicalName() + ".ValueProducer", mValueProducer);
+		aRuntime.bind(SimpleNodesFactory.class.getCanonicalName() + ".SeparateColorRedProducer", mSeparateColorRedProducer);
+		aRuntime.bind(SimpleNodesFactory.class.getCanonicalName() + ".SeparateColorGreenProducer", mSeparateColorGreenProducer);
+		aRuntime.bind(SimpleNodesFactory.class.getCanonicalName() + ".SeparateColorBlueProducer", mSeparateColorBlueProducer);
+		aRuntime.bind(SimpleNodesFactory.class.getCanonicalName() + ".SeparateColorAlphaProducer", mSeparateColorAlphaProducer);
 	}
 
 
@@ -148,7 +167,7 @@ public class SimpleNodesFactory
 		return (Node)new Node("Color",
 			new ValueProperty("Color").addConnector(OUT, YELLOW).setProducer(SimpleNodesFactory.class.getCanonicalName() + ".ColorAlphaProducer"),
 			new ColorChooserProperty("Color", Color.BLACK).setId("color"),
-			new SliderProperty("Alpha").setRange(0, 1, 1, 0.001).setId("alpha").addConnector(IN, GRAY)
+			new SliderProperty("Alpha").setRange(0, 1, 1, 0.001).setId("a").addConnector(IN, GRAY)
 		).setSize(SIZE, 0).setTitleBackground(Styles.DefaultNodeColors.RED);
 	}
 
@@ -191,7 +210,7 @@ public class SimpleNodesFactory
 			new ValueProperty("Value").addConnector(OUT, GRAY).setProducer(SimpleNodesFactory.class.getCanonicalName() + ".MathProducer"),
 			new ComboBoxProperty("Operation", 2, "Add", "Subtract", "Multiply", "Divide", "Modulo", "Greater Than").setId("function"),
 			new CheckBoxProperty("Clamp", false).setId("clamp"),
-			new SliderProperty("Value", 1000, 0.01).setId("value1").addConnector(IN, GRAY),
+			new SliderProperty("Value", 1, 0.01).setId("value1").addConnector(IN, GRAY),
 			new SliderProperty("Value", 0.5, 0.01).setId("value2").addConnector(IN, GRAY)
 		).setSize(SIZE, 0).setTitleBackground(Styles.DefaultNodeColors.BLUE);
 	}
@@ -201,10 +220,22 @@ public class SimpleNodesFactory
 	{
 		return (Node)new Node("ColorMix",
 			new ValueProperty("Color").addConnector(OUT, YELLOW).setProducer(SimpleNodesFactory.class.getCanonicalName() + ".ColorMixProducer"),
-			new SliderProperty("Fac").setRange(0, 1, 0.5, 0.1).setId("fac").addConnector(IN, GRAY),
+			new SliderProperty("Fac").setRange(0, 1, 0.5, 0.01).setId("fac").addConnector(IN, GRAY),
 			new ColorChooserProperty("Color", new Color(0, 0, 0)).setId("color1").addConnector(IN, YELLOW),
 			new ColorChooserProperty("Color", new Color(255, 255, 255)).setId("color2").addConnector(IN, YELLOW)
-		).setSize(100, 0).setTitleBackground(Styles.DefaultNodeColors.BLUE);
+		).setSize(SIZE, 0).setTitleBackground(Styles.DefaultNodeColors.BLUE);
+	}
+
+
+	public static Node createIntermediateSeparateColor()
+	{
+		return (Node)new Node("SeparateColor",
+			new ValueProperty("Red").addConnector(OUT, GRAY).setProducer(SimpleNodesFactory.class.getCanonicalName() + ".SeparateColorRedProducer"),
+			new ValueProperty("Green").addConnector(OUT, GRAY).setProducer(SimpleNodesFactory.class.getCanonicalName() + ".SeparateColorGreenProducer"),
+			new ValueProperty("Blue").addConnector(OUT, GRAY).setProducer(SimpleNodesFactory.class.getCanonicalName() + ".SeparateColorBlueProducer"),
+			new ValueProperty("Alpha").addConnector(OUT, GRAY).setProducer(SimpleNodesFactory.class.getCanonicalName() + ".SeparateColorAlphaProducer"),
+			new ColorChooserProperty("Color", new Color(0, 0, 0)).setId("color").addConnector(IN, YELLOW)
+		).setSize(SIZE, 0).setTitleBackground(Styles.DefaultNodeColors.BLUE);
 	}
 
 

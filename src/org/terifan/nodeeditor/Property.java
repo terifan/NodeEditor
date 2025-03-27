@@ -9,6 +9,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.terifan.nodeeditor.Styles.DefaultConnectorColors;
+import org.terifan.nodeeditor.Styles.DefaultNodeColors;
 import org.terifan.ui.TextBox;
 
 
@@ -124,7 +126,7 @@ public abstract class Property<T extends Property> implements Serializable
 
 	public T addConnector(Direction aDirection)
 	{
-		return addConnector(aDirection, Color.YELLOW);
+		return addConnector(aDirection, DefaultConnectorColors.YELLOW);
 	}
 
 
@@ -196,12 +198,6 @@ public abstract class Property<T extends Property> implements Serializable
 	}
 
 
-//	protected void connectionsChanged(Connection aConnection, Connector aConnectorFrom, Connector aConnectorTo, boolean aAdded)
-//	{
-//		System.out.println(aConnection + " " + aConnectorFrom + " " + aConnectorTo + " " + aAdded);
-//	}
-
-
 	/**
 	 * Should return true if the clicked point will perform an action. This method return false.
 	 */
@@ -255,5 +251,94 @@ public abstract class Property<T extends Property> implements Serializable
 		}
 
 		return null;
+	}
+
+
+	protected void printJava()
+	{
+		ArrayList<Connector> connectors = getConnectors();
+		for (Connector c : connectors)
+		{
+			System.out.print(".addConnector(" + c.getDirection() + ", " + colorToJava(c.getColor()) + ")");
+		}
+		if (getProducer() != null)
+		{
+			System.out.print(".setProducer(\"" + getProducer() + "\")");
+		}
+		if (getId() != null)
+		{
+			System.out.print(".setId(\"" + getId() + "\")");
+		}
+		if (getModelId() != null)
+		{
+			System.out.print(".bind(\"" + getModelId() + "\")");
+		}
+		System.out.print(")");
+	}
+
+
+	protected static String colorToJava(Color aColor)
+	{
+		if (aColor.equals(DefaultConnectorColors.GRAY))
+		{
+			return "DefaultConnectorColors.GRAY";
+		}
+		if (aColor.equals(DefaultConnectorColors.GREEN))
+		{
+			return "DefaultConnectorColors.GREEN";
+		}
+		if (aColor.equals(DefaultConnectorColors.PURPLE))
+		{
+			return "DefaultConnectorColors.PURPLE";
+		}
+		if (aColor.equals(DefaultConnectorColors.YELLOW))
+		{
+			return "DefaultConnectorColors.YELLOW";
+		}
+		if (aColor.equals(DefaultNodeColors.BLUE))
+		{
+			return "DefaultNodeColors.BLUE";
+		}
+		if (aColor.equals(DefaultNodeColors.BROWN))
+		{
+			return "DefaultNodeColors.BROWN";
+		}
+		if (aColor.equals(DefaultNodeColors.DARKCYAN))
+		{
+			return "DefaultNodeColors.DARKCYAN";
+		}
+		if (aColor.equals(DefaultNodeColors.DARKRED))
+		{
+			return "DefaultNodeColors.DARKRED";
+		}
+		if (aColor.equals(DefaultNodeColors.GRAY))
+		{
+			return "DefaultNodeColors.GRAY";
+		}
+		if (aColor.equals(DefaultNodeColors.GREEN))
+		{
+			return "DefaultNodeColors.GREEN";
+		}
+		if (aColor.equals(DefaultNodeColors.PURPLE))
+		{
+			return "DefaultNodeColors.PURPLE";
+		}
+		if (aColor.equals(DefaultNodeColors.RED))
+		{
+			return "DefaultNodeColors.RED";
+		}
+		if (aColor.equals(DefaultNodeColors.YELLOW))
+		{
+			return "DefaultNodeColors.YELLOW";
+		}
+		if (aColor.equals(Color.WHITE))
+		{
+			return "Color.WHITE";
+		}
+		if (aColor.equals(Color.BLACK))
+		{
+			return "Color.BLACK";
+		}
+		return "new Color(0x" + ("%06X".formatted(0xffffffL & aColor.getRGB())) + ")";
 	}
 }

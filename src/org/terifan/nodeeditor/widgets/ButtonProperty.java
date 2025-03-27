@@ -110,4 +110,12 @@ public class ButtonProperty extends Property<ButtonProperty>
 		mArmed = false;
 		aEditor.repaint();
 	}
+
+
+	@Override
+	protected void printJava()
+	{
+		System.out.print("\t\t.addProperty(new " + getClass().getSimpleName() + "(\"" + getText() + "\")");
+		super.printJava();
+	}
 }

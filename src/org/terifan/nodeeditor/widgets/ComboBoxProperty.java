@@ -160,4 +160,21 @@ public class ComboBoxProperty extends Property<ComboBoxProperty>
 	{
 		return mOptions.get(mSelectedIndex);
 	}
+
+
+	@Override
+	protected void printJava()
+	{
+		StringBuilder s = new StringBuilder();
+		for (String t : mOptions)
+		{
+			if (!s.isEmpty())
+			{
+				s.append(", ");
+			}
+			s.append("\"" + t + "\"");
+		}
+		System.out.print("\t\t.addProperty(new " + getClass().getSimpleName() + "(\"" + getText() + "\", " + mSelectedIndex + ", " + s + ")");
+		super.printJava();
+	}
 }

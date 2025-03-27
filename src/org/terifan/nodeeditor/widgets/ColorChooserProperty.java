@@ -18,9 +18,9 @@ import org.terifan.vecmath.Vec4d;
 public class ColorChooserProperty extends Property<ColorChooserProperty>
 {
 	private static final long serialVersionUID = 1L;
-	private final Rectangle mColorButtonBounds;
+	private final Rectangle mButtonBounds;
 
-	private Color mColor;
+	private final Vec4d mColor;
 
 
 	public ColorChooserProperty()
@@ -29,14 +29,27 @@ public class ColorChooserProperty extends Property<ColorChooserProperty>
 	}
 
 
+	public ColorChooserProperty(String aText)
+	{
+		this(aText, Color.BLACK);
+	}
+
+
 	public ColorChooserProperty(String aText, Color aColor)
 	{
 		super(aText);
 
-		mColorButtonBounds = new Rectangle();
-		mColor = aColor;
+		mButtonBounds = new Rectangle();
+		mColor = new Vec4d();
 
+		setColor(aColor);
 		getPreferredSize().height = 20;
+	}
+
+
+	public void setColor(Color aColor)
+	{
+		mColor.set(aColor.getRed() / 255.0, aColor.getGreen() / 255.0, aColor.getBlue() / 255.0, aColor.getAlpha() / 255.0);
 	}
 
 
@@ -57,15 +70,15 @@ public class ColorChooserProperty extends Property<ColorChooserProperty>
 			int x = bounds.x + bounds.width - w;
 
 			Rectangle nb = mNode.getBounds();
-			mColorButtonBounds.x = nb.x + bounds.x + bounds.width - w;
-			mColorButtonBounds.y = nb.y + bounds.y;
-			mColorButtonBounds.width = w;
-			mColorButtonBounds.height = bounds.height;
+			mButtonBounds.x = nb.x + bounds.x + bounds.width - w;
+			mButtonBounds.y = nb.y + bounds.y;
+			mButtonBounds.width = w;
+			mButtonBounds.height = bounds.height;
 
 			aGraphics.setColor(Styles.SLIDER_BORDER_COLOR);
 			aGraphics.fillRoundRect(x, bounds.y, w, bounds.height, FIELD_CORNER, FIELD_CORNER);
 
-			aGraphics.setColor(mColor);
+			aGraphics.setColor(new Color(mColor.intValue()));
 			aGraphics.fillRoundRect(x + 1, bounds.y + 1, w - 2, bounds.height - 2, FIELD_CORNER, FIELD_CORNER);
 		}
 	}
@@ -74,12 +87,12 @@ public class ColorChooserProperty extends Property<ColorChooserProperty>
 	@Override
 	protected boolean mousePressed(NodeEditorPane aPane, Point aClickPoint)
 	{
-		if (!isConnected(Direction.IN) && mColorButtonBounds.contains(aClickPoint))
+		if (!isConnected(Direction.IN) && mButtonBounds.contains(aClickPoint))
 		{
-			Color c = JColorChooser.showDialog(aPane, mTextBox.getText(), mColor);
-			if (c != null)
+			Color color = JColorChooser.showDialog(aPane, mTextBox.getText(), new Color(mColor.intValue()));
+			if (color != null)
 			{
-				mColor = c;
+				setColor(color);
 				aPane.repaint();
 				return true;
 			}
@@ -99,6 +112,14 @@ public class ColorChooserProperty extends Property<ColorChooserProperty>
 			return value;
 		}
 
-		return new Vec4d(mColor.getRed() / 255.0, mColor.getGreen() / 255.0, mColor.getBlue() / 255.0, 0);
+		return mColor;
+	}
+
+
+	@Override
+	protected void printJava()
+	{
+//		System.out.print("\t\t.addProperty(new " + getClass().getSimpleName() + "(\"" + getText() + "\", " + colorToJava(mColor) + ")");
+		super.printJava();
 	}
 }

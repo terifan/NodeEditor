@@ -6,7 +6,6 @@ import java.awt.Paint;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
-import org.terifan.nodeeditor.Connector;
 import org.terifan.nodeeditor.Context;
 import org.terifan.nodeeditor.Direction;
 import org.terifan.nodeeditor.NodeEditorPane;
@@ -277,5 +276,20 @@ public class SliderProperty extends Property<SliderProperty>
 		}
 
 		return mValue;
+	}
+
+
+	@Override
+	protected void printJava()
+	{
+		if (mMin == -Float.MAX_VALUE && mMax == Float.MAX_VALUE)
+		{
+			System.out.print("\t\t.addProperty(new " + getClass().getSimpleName() + "(\"" + getText() + "\", " + mValue + "," + mStep + ")");
+		}
+		else
+		{
+			System.out.print("\t\t.addProperty(new " + getClass().getSimpleName() + "(\"" + getText() + "\").setRange(" + mMin + "," + mMax + "," + mValue + "," + mStep + ")");
+		}
+		super.printJava();
 	}
 }

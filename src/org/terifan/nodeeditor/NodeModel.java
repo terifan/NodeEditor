@@ -1,12 +1,11 @@
 package org.terifan.nodeeditor;
 
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.terifan.boxcomponentpane.BoxComponentModel;
+import static org.terifan.nodeeditor.Property.colorToJava;
 import static org.terifan.util.Assert.*;
 
 
@@ -171,42 +170,14 @@ public class NodeModel extends BoxComponentModel<Node> implements Serializable
 	}
 
 
-	public void print()
+	public void printJava()
 	{
 		System.out.println("NodeModel model = new NodeModel()");
 		for (int i = 0; i < size(); i++)
 		{
 			Node node = getComponent(i);
 
-			System.out.println("\t.addNode(new Node(\"" + node.getTitle() + "\")");
-			System.out.println("\t\t.setTitleForeground(" + "new Color(0x" + ("%06X".formatted(0xffffffL & node.getTitleForeground().getRGB())) + ")");
-			System.out.println("\t\t.setTitleBackground(" + "new Color(0x" + ("%06X".formatted(0xffffffL & node.getTitleBackground().getRGB())) + ")");
-			System.out.print("\t\t.setBounds(" + node.getBounds().x + "," + node.getBounds().y + "," + node.getBounds().width + "," + node.getBounds().height + ")");
-			for (Property p : node.getProperties())
-			{
-				System.out.println();
-				System.out.print("\t\t.addProperty(new " + p.getClass().getSimpleName() + "(\"" + p.getText() + "\")");
-				ArrayList<Connector> connectors = p.getConnectors();
-				for (Connector c : connectors)
-				{
-					System.out.print(".addConnector(" + c.getDirection() + ", new Color(0x" + ("%06X".formatted(0xffffffL & c.getColor().getRGB())) + "))");
-				}
-				if (p.getProducer() != null)
-				{
-					System.out.print(".setProducer(\"" + p.getProducer() + "\")");
-				}
-				if (p.getId() != null)
-				{
-					System.out.print(".setId(\"" + p.getId() + "\")");
-				}
-				if (p.getModelId() != null)
-				{
-					System.out.print(".bind(\"" + p.getModelId() + "\")");
-				}
-			}
-			System.out.println();
-			System.out.print("\t)");
-			System.out.println();
+			node.printJava();
 		}
 		for (int i = 0; i < mConnections.size(); i++)
 		{
