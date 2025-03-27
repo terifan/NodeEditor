@@ -27,9 +27,9 @@ public class SimpleNodesFactory
 
 	private static NodeFunction mMathProducer = aContext ->
 	{
-		Object value1 = aContext.execute("value1");
-		Object value2 = aContext.execute("value2");
-		String func = aContext.execute("function").toString();
+		Object value1 = aContext.value("value1");
+		Object value2 = aContext.value("value2");
+		String func = aContext.value("function", String.class);
 		if (value1 instanceof Number v1)
 		{
 			if (value2 instanceof Number v2)
@@ -77,45 +77,45 @@ public class SimpleNodesFactory
 
 	private static NodeFunction mColorAlphaProducer = aContext ->
 	{
-		Vec4d color = (Vec4d)aContext.execute("color");
-		color.w = (Double)aContext.execute("alpha");
+		Vec4d color = aContext.value("color");
+		color.w = aContext.value("alpha");
 		return color;
 	};
 
 	private static NodeFunction mRGBAProducer = aContext ->
 	{
-		double r = (Double)aContext.execute("r");
-		double g = (Double)aContext.execute("g");
-		double b = (Double)aContext.execute("b");
-		double a = (Double)aContext.execute("a");
+		double r = aContext.value("r");
+		double g = aContext.value("g");
+		double b = aContext.value("b");
+		double a = aContext.value("a");
 		return new Vec4d(r, g, b, a);
 	};
 
 	private static NodeFunction mRGBProducer = aContext ->
 	{
-		double r = (Double)aContext.execute("r");
-		double g = (Double)aContext.execute("g");
-		double b = (Double)aContext.execute("b");
+		double r = aContext.value("r");
+		double g = aContext.value("g");
+		double b = aContext.value("b");
 		return new Vec4d(r, g, b, 1);
 	};
 
 	private static NodeFunction mColorMixProducer = aContext ->
 	{
-		Vec4d color1 = (Vec4d)aContext.execute("color1");
-		Vec4d color2 = (Vec4d)aContext.execute("color2");
-		double fac = (Double)aContext.execute("fac");
+		Vec4d color1 = aContext.value("color1");
+		Vec4d color2 = aContext.value("color2");
+		double fac = aContext.value("fac");
 		return new Vec4d().interpolate(color1, color2, fac);
 	};
 
 	private static NodeFunction mAlphaProducer = aContext ->
 	{
-		double a = (Double)aContext.execute("a");
+		double a = aContext.value("a");
 		return new Vec4d(0, 0, 0, a);
 	};
 
 	private static NodeFunction mValueProducer = aContext ->
 	{
-		return (Double)aContext.execute("value");
+		return aContext.value("value");
 	};
 
 

@@ -158,7 +158,7 @@ public class SliderProperty extends Property<SliderProperty>
 				aGraphics.fillRoundRect(x + 1, y + 1, w - 2, h - 2, FIELD_CORNER, FIELD_CORNER);
 				aGraphics.setClip(oldClip);
 			}
-			else
+			else if (mArmed)
 			{
 				Arrow.paintArrow(aGraphics, 3, x + 8, y + h / 2, 3, 3, Styles.BOX_FOREGROUND_SHADOW_COLOR, Styles.BOX_FOREGROUND_COLOR);
 				Arrow.paintArrow(aGraphics, 1, x + w - 8, y + h / 2, 3, 3, Styles.BOX_FOREGROUND_SHADOW_COLOR, Styles.BOX_FOREGROUND_COLOR);

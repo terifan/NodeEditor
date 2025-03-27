@@ -103,11 +103,6 @@ public class Node extends BoxComponent<Node, NodeEditorPane> implements Serializ
 			}
 		}
 
-		if (item == null)
-		{
-			throw new IllegalArgumentException("Failed to find property: id: " + id + ", node: " + mTitle);
-		}
-
 		return (T)item;
 	}
 

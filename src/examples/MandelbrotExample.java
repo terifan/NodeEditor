@@ -36,12 +36,12 @@ public class MandelbrotExample
 {
 	private static NodeFunction mandelbrot = aContext ->
 	{
-		Vec2i coord = aContext.execute("coord");
-		double size = aContext.execute("size");
-		int limit = ((Number)aContext.execute("limit")).intValue();
-		double sx = aContext.execute("x");
-		double sy = aContext.execute("y");
-		double zoom = aContext.execute("zoom");
+		Vec2i coord = aContext.value("coord");
+		double size = aContext.value("size");
+		int limit = aContext.value("limit", Integer.class);
+		double sx = aContext.value("x");
+		double sy = aContext.value("y");
+		double zoom = aContext.value("zoom");
 
 		double x0 = sx + (2 * (2 * coord.x / size - 1)) / zoom;
 		double y0 = sy + (2 * (2 * coord.y / size - 1)) / zoom;
@@ -58,16 +58,16 @@ public class MandelbrotExample
 
 	private static NodeFunction palette = aContext ->
 	{
-		double it = aContext.execute("iterations");
+		double it = aContext.value("iterations");
 		if (it < 0)
 		{
 			return new Vec4d();
 		}
 
-		double rf = aContext.execute("rf");
-		double gf = aContext.execute("gf");
-		double bf = aContext.execute("bf");
-		double sf = aContext.execute("sf");
+		double rf = aContext.value("rf");
+		double gf = aContext.value("gf");
+		double bf = aContext.value("bf");
+		double sf = aContext.value("sf");
 
 		return new Vec4d(rf, gf, bf, 0).scale(sf * it).mod(1).add(0, 0, 0, 1);
 	};
@@ -76,9 +76,9 @@ public class MandelbrotExample
 	{
 		new Thread(() ->
 		{
-			ImageProperty ip = aContext.find("image");
-			ValueProperty cp = aContext.property("coord");
-			int size = ((Double)aContext.execute("size")).intValue();
+			ImageProperty ip = aContext.getProperty("image");
+			ValueProperty cp = aContext.getProperty("coord");
+			int size = aContext.value("size", Integer.class);
 
 			BufferedImage image = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
 
@@ -93,8 +93,8 @@ public class MandelbrotExample
 					cp.setValue(new Vec2i(x, y));
 
 					Context ctx = new Context(aContext.getEditor(), ip);
-					Vec2i cp2 = ctx.execute("coord");
-					Vec4d color = ctx.execute("color");
+					Vec2i cp2 = ctx.value("coord");
+					Vec4d color = ctx.value("color");
 					ip.getImage().setRGB(cp2.x, cp2.y, color.intValue());
 
 //					ip.execute(new Context(aContext.getEditor(), ip));

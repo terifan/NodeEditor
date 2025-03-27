@@ -32,21 +32,55 @@ public class Context
 	}
 
 
-	public <T extends Property> T find(String aId)
+	public <T extends Property> T getProperty(String aId)
 	{
-		return mEditor.getModel().getProperty(aId);
+		T property = mProperty.getNode().getProperty(aId);
+
+		if (property == null)
+		{
+			property = mEditor.getModel().getProperty(aId);
+		}
+
+		return property;
 	}
+	
 
-
-	public <T> T execute(String aId)
+	public <T> T value(String aId)
 	{
 		Property prop = mProperty.getNode().getProperty(aId);
 		return (T)prop.execute(new Context(mEditor, prop));
 	}
 
 
-	public <T extends Property> T property(String aId)
+	public <T> T value(String aId, Class<T> aType)
 	{
-		return mProperty.getNode().getProperty(aId);
+		Property prop = mProperty.getNode().getProperty(aId);
+		Object value = prop.execute(new Context(mEditor, prop));
+		if (value.getClass().isAssignableFrom(aType))
+		{
+			return (T)value;
+		}
+		switch (value)
+		{
+			case Double v ->
+			{
+				if (aType == Integer.class)
+				{
+					return (T)(Integer)v.intValue();
+				}
+			}
+			case Integer v ->
+			{
+				if (aType == Double.class)
+				{
+					return (T)(Double)v.doubleValue();
+				}
+			}
+			default ->
+			{
+				return (T)value;
+			}
+		}
+		return (T)value;
 	}
 }

@@ -5,7 +5,6 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import javax.swing.JColorChooser;
-import org.terifan.nodeeditor.Connector;
 import org.terifan.nodeeditor.Context;
 import org.terifan.nodeeditor.Direction;
 import org.terifan.nodeeditor.NodeEditorPane;
