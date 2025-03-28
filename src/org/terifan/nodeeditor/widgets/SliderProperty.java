@@ -148,11 +148,11 @@ public class SliderProperty extends Property<SliderProperty>
 			aGraphics.setPaint(new LinearGradientPaint(0, y, 0, y + h, RANGES, Styles.SLIDER_COLORS[i][0]));
 			aGraphics.fillRoundRect(x + 1, y + 1, w - 2, h - 2, FIELD_CORNER, FIELD_CORNER);
 
-			if (mStep == 0)
+			if (mMax - mMin < 100_000)
 			{
 				Shape oldClip = aGraphics.getClip();
 
-				aGraphics.setClip(x, y, 7 + (int)((w - 7) * mValue), h);
+				aGraphics.setClip(x, y, (int)(w * mValue / (double)(mMax - mMin)), h);
 				aGraphics.setPaint(new LinearGradientPaint(0, y, 0, y + h, RANGES, Styles.SLIDER_COLORS[i][1]));
 				aGraphics.fillRoundRect(x + 1, y + 1, w - 2, h - 2, FIELD_CORNER, FIELD_CORNER);
 				aGraphics.setClip(oldClip);
@@ -172,7 +172,7 @@ public class SliderProperty extends Property<SliderProperty>
 			}
 			else if (mStep == 0)
 			{
-				value = String.format("%3.1f", mValue);
+				value = String.format("%3.3f", mValue);
 			}
 			else if (mStep < 0.000001)
 			{

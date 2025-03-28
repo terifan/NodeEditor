@@ -1,6 +1,7 @@
 package examples;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -26,6 +27,7 @@ import org.terifan.nodeeditor.Styles.DefaultNodeColors;
 import org.terifan.nodeeditor.util.SimpleNodesFactory;
 import org.terifan.nodeeditor.widgets.ButtonProperty;
 import org.terifan.nodeeditor.widgets.ImageProperty;
+import org.terifan.nodeeditor.widgets.RGBPaletteProperty;
 import org.terifan.nodeeditor.widgets.SliderProperty;
 import org.terifan.vecmath.Vec2i;
 import org.terifan.vecmath.Vec4d;
@@ -152,6 +154,11 @@ public class MandelbrotExample
 					.addProperty(new SliderProperty("Size").setRange(0, 4096, 512, 1).setId("size").addConnector(OUT, DefaultConnectorColors.GRAY))
 					.addProperty(new ButtonProperty("Render").setIcon(DefaultIcons.RUN).bind("run"))
 				)
+				.addComponent(new Node("RGB")
+					.setTitleBackground(DefaultNodeColors.BROWN)
+					.setBounds(-200, 400, 200, 200)
+					.addProperty(new RGBPaletteProperty(new Color(100,200,50)))
+				)
 				.addConnection(6, 1, 0, 2)
 				.addConnection(6, 0, 0, 1)
 				.addConnection(6, 0, 2, 1)
@@ -248,12 +255,12 @@ public class MandelbrotExample
 				}
 			});
 
-			toolbar.add(new AbstractAction("RGBA")
+			toolbar.add(new AbstractAction("CombineColor")
 			{
 				@Override
 				public void actionPerformed(ActionEvent aE)
 				{
-					model.addComponent(SimpleNodesFactory.createSourceColorRGBA());
+					model.addComponent(SimpleNodesFactory.createCombineColor());
 					editor.repaint();
 				}
 			});
@@ -274,6 +281,16 @@ public class MandelbrotExample
 				public void actionPerformed(ActionEvent aE)
 				{
 					model.addComponent(SimpleNodesFactory.createIntermediateSeparateColor());
+					editor.repaint();
+				}
+			});
+
+			toolbar.add(new AbstractAction("InvertColor")
+			{
+				@Override
+				public void actionPerformed(ActionEvent aE)
+				{
+					model.addComponent(SimpleNodesFactory.createIntermediateInvertColor());
 					editor.repaint();
 				}
 			});
