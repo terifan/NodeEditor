@@ -127,7 +127,6 @@ public class ColorChooserProperty extends Property<ColorChooserProperty>
 	@Override
 	protected void printJava()
 	{
-//		System.out.print("\t\t.addProperty(new " + getClass().getSimpleName() + "(\"" + getText() + "\", " + colorToJava(mColor) + ")");
-		super.printJava();
+		System.out.print("\t\t.addProperty(new " + getClass().getSimpleName() + "(\"" + getText() + "\", " + colorToJava(mColor) + ")");
 	}
 }

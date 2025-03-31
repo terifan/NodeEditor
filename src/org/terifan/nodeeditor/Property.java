@@ -280,7 +280,7 @@ public abstract class Property<T extends Property> implements Serializable
 
 	protected static String colorToJava(Vec4d aColor)
 	{
-		return colorToJava(new Color(aColor.intValue()));
+		return "new Vec4d(" + aColor.x + ", " + aColor.y + ", " + aColor.z + ", " + aColor.w + ")";
 	}
 
 
