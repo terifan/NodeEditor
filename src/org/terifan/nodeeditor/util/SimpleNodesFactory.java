@@ -181,7 +181,7 @@ public class SimpleNodesFactory
 	{
 		return (Node)new Node("Color",
 			new ValueProperty("Color").addConnector(OUT, YELLOW).setProducer(PREFIX + ".ColorAlphaProducer"),
-			new ColorChooserProperty("Color", Color.BLACK).setId("color"),
+			new ColorChooserProperty("Color", new Vec4d(0, 0, 0, 1)).setId("color"),
 			new SliderProperty("Alpha").setRange(0, 1, 1, 0.001).setId("a").addConnector(IN, GRAY)
 		).setSize(SIZE, 0).setTitleBackground(Styles.DefaultNodeColors.RED);
 	}
@@ -191,7 +191,7 @@ public class SimpleNodesFactory
 	{
 		return (Node)new Node("RGB",
 			new ValueProperty("Color").addConnector(OUT, YELLOW).setProducer(PREFIX + ".RGBProducer"),
-			new RGBPaletteProperty(Color.BLACK).setId("color")
+			new RGBPaletteProperty(new Vec4d(0, 0, 0, 1)).setId("color")
 		).setSize(SIZE, 0).setTitleBackground(Styles.DefaultNodeColors.RED);
 	}
 
@@ -234,8 +234,8 @@ public class SimpleNodesFactory
 		return (Node)new Node("ColorMix",
 			new ValueProperty("Color").addConnector(OUT, YELLOW).setProducer(PREFIX + ".ColorMixProducer"),
 			new SliderProperty("Fac").setRange(0, 1, 0.5, 0.01).setId("fac").addConnector(IN, GRAY),
-			new ColorChooserProperty("Color", new Color(0, 0, 0)).setId("color1").addConnector(IN, YELLOW),
-			new ColorChooserProperty("Color", new Color(255, 255, 255)).setId("color2").addConnector(IN, YELLOW)
+			new ColorChooserProperty("Color", new Vec4d(0, 0, 0, 1)).setId("color1").addConnector(IN, YELLOW),
+			new ColorChooserProperty("Color", new Vec4d(1, 1, 1, 1)).setId("color2").addConnector(IN, YELLOW)
 		).setSize(SIZE, 0).setTitleBackground(Styles.DefaultNodeColors.BLUE);
 	}
 
@@ -247,7 +247,7 @@ public class SimpleNodesFactory
 			new ValueProperty("Green").addConnector(OUT, GRAY).setProducer(PREFIX + ".SeparateColorGreenProducer"),
 			new ValueProperty("Blue").addConnector(OUT, GRAY).setProducer(PREFIX + ".SeparateColorBlueProducer"),
 			new ValueProperty("Alpha").addConnector(OUT, GRAY).setProducer(PREFIX + ".SeparateColorAlphaProducer"),
-			new ColorChooserProperty("Color", new Color(0, 0, 0)).setId("color").addConnector(IN, YELLOW)
+			new ColorChooserProperty("Color", new Vec4d(0, 0, 0, 1)).setId("color").addConnector(IN, YELLOW)
 		).setSize(SIZE, 0).setTitleBackground(Styles.DefaultNodeColors.BLUE);
 	}
 
@@ -257,7 +257,7 @@ public class SimpleNodesFactory
 		return (Node)new Node("InvertColor",
 			new ValueProperty("Red").addConnector(OUT, GRAY).setProducer(PREFIX + ".InvertColorProducer"),
 			new SliderProperty("Fac").setId("factor").setRange(0, 1, 1, 0).addConnector(IN, GRAY),
-			new ColorChooserProperty("Color", new Color(0, 0, 0)).setId("color").addConnector(IN, YELLOW)
+			new ColorChooserProperty("Color", new Vec4d(0, 0, 0, 1)).setId("color").addConnector(IN, YELLOW)
 		).setSize(SIZE, 0).setTitleBackground(Styles.DefaultNodeColors.YELLOW);
 	}
 

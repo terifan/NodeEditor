@@ -3,43 +3,62 @@ package org.terifan.nodeeditor.widgets;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.HeadlessException;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.awt.image.BufferedImage;
+import javax.swing.JColorChooser;
 import org.terifan.nodeeditor.Context;
 import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Property;
 import static org.terifan.nodeeditor.Styles.FIELD_CORNER;
+import org.terifan.vecmath.Vec4d;
 
 
 public class RGBPaletteProperty extends Property<RGBPaletteProperty>
 {
 	private final static long serialVersionUID = 1L;
-	private final static int S = 100;
+
+	private static final BasicStroke BASIC_STROKE_05 = new BasicStroke(0.5f);
+	private static final BasicStroke BASIC_STROKE_1 = new BasicStroke(1f);
+	private static final Color HANDLE_BRIGHT = new Color(255, 255, 255);
+	private static final Color HANDLE_DARK = new Color(0, 0, 0, 224);
+	private static final Color TARGET_BRIGHT = new Color(255, 255, 255);
+	private static final Color TARGET_DARK = new Color(0, 0, 0);
 
 	private transient boolean mArmed;
+	private transient int mHSBCircleOffet;
+	private transient BufferedImage mHSBCircleImage;
+	private transient BufferedImage mBrightnessBarImage;
+	private transient float mHSBCircleImageKey = -1f;
 
-	protected Color mColor;
+	protected int mSize;
+	protected int mBrightnessWidth;
+	protected int mButtonHeight;
+	protected Vec4d mColor;
 	protected float[] mHSB;
 
 
-	public RGBPaletteProperty(Color aColor)
+	public RGBPaletteProperty(Vec4d aColor)
 	{
 		setColor(aColor);
 
+		mSize = 100;
+		mButtonHeight = 20;
+		mBrightnessWidth = 15;
 		mPreferredSize.setSize(200, 250);
 	}
 
 
-	public Color getColor()
+	public Vec4d getColor()
 	{
 		return mColor;
 	}
 
 
-	public RGBPaletteProperty setColor(Color aColor)
+	public RGBPaletteProperty setColor(Vec4d aColor)
 	{
 		mColor = aColor;
 
@@ -48,36 +67,42 @@ public class RGBPaletteProperty extends Property<RGBPaletteProperty>
 			mHSB = new float[3];
 		}
 
-		mHSB = Color.RGBtoHSB(mColor.getRed(), mColor.getGreen(), mColor.getBlue(), mHSB);
+		mHSB = Color.RGBtoHSB((int)(255 * mColor.x + 0.5), (int)(255 * mColor.y + 0.5), (int)(255 * mColor.z + 0.5), mHSB);
 		return this;
 	}
-
-	int mChartOffet;
-	BufferedImage mChartImage;
 
 
 	@Override
 	protected void paintComponent(NodeEditorPane aPane, Graphics2D aGraphics, boolean aHover)
 	{
-		mPreferredSize.setSize(S + 30, S + 20);
+		mPreferredSize.setSize(mSize + 30, mSize + 20);
 
 		Stroke s = aGraphics.getStroke();
 
-		mChartImage = createHSBCircle();
-		BufferedImage strength = createBrightnessBar();
+		if (mHSB[2] != mHSBCircleImageKey)
+		{
+			mHSBCircleImage = createHSBCircle(mSize, mHSB[2]);
+			mHSBCircleImageKey = mHSB[2];
+		}
+		if (mBrightnessBarImage == null || mBrightnessBarImage.getHeight() != mSize)
+		{
+			mBrightnessBarImage = createBrightnessBar(mBrightnessWidth, mSize);
+		}
+
 		Rectangle bounds = getBounds();
 
 		int x = bounds.x;
 		int y = bounds.y;
 		int w = bounds.width;
-		mChartOffet = x + ((w - 20) - S) / 2;
+
+		mHSBCircleOffet = x + ((w - 20) - mSize) / 2;
 
 		aGraphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-		aGraphics.drawImage(mChartImage, mChartOffet, y, S, S, null);
-		aGraphics.drawImage(strength, x + w - 15, y, 15, S, null);
+		aGraphics.drawImage(mHSBCircleImage, mHSBCircleOffet, y, mSize, mSize, null);
+		aGraphics.drawImage(mBrightnessBarImage, x + w - mBrightnessBarImage.getWidth(), y, mBrightnessBarImage.getWidth(), mSize, null);
 
 		aGraphics.setColor(Color.getHSBColor(mHSB[0], mHSB[1], mHSB[2]));
-		aGraphics.fillRoundRect(x + 1, y + S + 5, w - 2, 15, FIELD_CORNER, FIELD_CORNER);
+		aGraphics.fillRoundRect(x + 1, y + mSize + 5, w - 2, mButtonHeight, FIELD_CORNER, FIELD_CORNER);
 
 		paintHandle(aGraphics, x, y, w);
 		paintTarget(aGraphics, x, y);
@@ -88,69 +113,69 @@ public class RGBPaletteProperty extends Property<RGBPaletteProperty>
 
 	protected void paintTarget(Graphics2D aGraphics, int aX, int aY)
 	{
-		int ox = mChartOffet;
+		int ox = mHSBCircleOffet;
 		int oy = aY;
 
 		double dx = mHSB[0];
-		double r = mHSB[1] * S / 2;
-		ox += S / 2 - (int)(Math.sin(Math.PI * 2 * dx) * r);
-		oy += S / 2 + (int)(Math.cos(Math.PI * 2 * dx) * r);
+		double r = mHSB[1] * mSize / 2;
+		ox += mSize / 2 - (int)(Math.sin(Math.PI * 2 * dx) * r);
+		oy += mSize / 2 + (int)(Math.cos(Math.PI * 2 * dx) * r);
 
-		aGraphics.setColor(new Color(255, 255, 255));
-		aGraphics.setStroke(new BasicStroke(1f));
+		aGraphics.setColor(TARGET_BRIGHT);
+		aGraphics.setStroke(BASIC_STROKE_1);
 		aGraphics.drawOval(ox - 6, oy - 6, 13, 13);
-		aGraphics.setColor(new Color(0, 0, 0));
-		aGraphics.setStroke(new BasicStroke(0.5f));
+		aGraphics.setColor(TARGET_DARK);
+		aGraphics.setStroke(BASIC_STROKE_05);
 		aGraphics.drawOval(ox - 6, oy - 6, 13, 13);
 	}
 
 
 	private void paintHandle(Graphics2D aGraphics, int aX, int aY, int aW)
 	{
-		int bo = (int)((1 - mHSB[2]) * (S - 5));
-		aGraphics.setStroke(new BasicStroke(1f));
-		aGraphics.setColor(new Color(0, 0, 0, 128));
-		aGraphics.drawRect(aX + aW - 15 - 1, aY + bo - 1, 15 + 2, 5 + 2);
-		aGraphics.setColor(Color.WHITE);
-		aGraphics.drawRect(aX + aW - 15, aY + bo, 15, 5);
+		int bo = (int)((1 - mHSB[2]) * (mSize - 5));
+		aGraphics.setStroke(BASIC_STROKE_1);
+		aGraphics.setColor(HANDLE_DARK);
+		aGraphics.drawRect(aX + aW - mBrightnessWidth - 1, aY + bo - 1, mBrightnessWidth + 2, 5 + 2);
+		aGraphics.setColor(HANDLE_BRIGHT);
+		aGraphics.drawRect(aX + aW - mBrightnessWidth, aY + bo, mBrightnessWidth, 5);
 	}
 
 
-	protected BufferedImage createBrightnessBar()
+	protected BufferedImage createBrightnessBar(int aWidth, int aHeight)
 	{
-		BufferedImage strength = new BufferedImage(15, 4, BufferedImage.TYPE_INT_ARGB);
+		BufferedImage strength = new BufferedImage(aWidth, aHeight, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = strength.createGraphics();
-		g.setColor(Color.WHITE);
-		g.drawLine(0, 0, 15, 0);
-		g.setColor(new Color(160, 160, 160));
-		g.drawLine(0, 1, 15, 1);
-		g.setColor(new Color(128, 128, 128));
-		g.drawLine(0, 2, 15, 2);
-		g.setColor(Color.BLACK);
-		g.drawLine(0, 3, 15, 3);
+		for (int i = 0; i < aHeight; i++)
+		{
+			int c = 255 - i * 255 / aHeight;
+			g.setColor(new Color(c, c, c));
+			g.drawLine(0, i, aWidth, i);
+		}
 		g.dispose();
 		return strength;
 	}
 
 
-	protected BufferedImage createHSBCircle()
+	protected BufferedImage createHSBCircle(int aSize, float aBrightness)
 	{
-		int q = 2;
-		int s = q * S;
-		BufferedImage chart = new BufferedImage(s, s, BufferedImage.TYPE_INT_ARGB);
+		int q = 4;
+		int s = q * aSize;
+		BufferedImage image = new BufferedImage(s, s, BufferedImage.TYPE_INT_ARGB);
 		for (int y = 0; y < s; y++)
 		{
 			for (int x = 0; x < q * 360; x++)
 			{
-				double dx = x / 360.0 / q;
+				float dx = x / (q * 360f);
+				float dy = y / (float)s;
+				double f = Math.PI * 2 * dx;
 				double r = y / 2.0;
-				int _x = s / 2 - (int)(Math.sin(Math.PI * 2 * dx) * r);
-				int _y = s / 2 + (int)(Math.cos(Math.PI * 2 * dx) * r);
-
-				chart.setRGB(_x, _y, Color.getHSBColor(x / 360f / q, y / (float)s, (float)mHSB[2]).getRGB());
+				int ix = s / 2 - (int)(Math.sin(f) * r);
+				int iy = s / 2 + (int)(Math.cos(f) * r);
+				int rgb = Color.getHSBColor(dx, dy, aBrightness).getRGB();
+				image.setRGB(ix, iy, rgb);
 			}
 		}
-		return chart;
+		return image;
 	}
 
 
@@ -158,7 +183,7 @@ public class RGBPaletteProperty extends Property<RGBPaletteProperty>
 	protected boolean mousePressed(NodeEditorPane aPane, Point aClickPoint)
 	{
 		mArmed = true;
-		handleMouse(aPane, aClickPoint);
+		handleMouse(aPane, aClickPoint, true);
 		return true;
 	}
 
@@ -174,11 +199,11 @@ public class RGBPaletteProperty extends Property<RGBPaletteProperty>
 	@Override
 	protected void mouseDragged(NodeEditorPane aPane, Point aClickPoint, Point aDragPoint)
 	{
-		handleMouse(aPane, aDragPoint);
+		handleMouse(aPane, aDragPoint, false);
 	}
 
 
-	private void handleMouse(NodeEditorPane aPane, Point aPoint)
+	private void handleMouse(NodeEditorPane aPane, Point aPoint, boolean aPressed)
 	{
 		try
 		{
@@ -187,60 +212,58 @@ public class RGBPaletteProperty extends Property<RGBPaletteProperty>
 			int x = aPoint.x - cb.x - nb.x;
 			int y = aPoint.y - cb.y - nb.y;
 
-			if (x > cb.width - 20)
+			if (y > mSize)
 			{
-				mHSB[2] = 1f - (float)Math.min(1, Math.max(0, y / (double)S));
+				if (aPressed)
+				{
+					Vec4d color = openColorChooser(aPane);
+					if (color != null)
+					{
+						setColor(color);
+						aPane.repaint();
+					}
+				}
+			}
+			else if (x > cb.width - 20)
+			{
+				mHSB[2] = 1f - (float)Math.min(1, Math.max(0, y / (double)mSize));
+				setColor(new Vec4d().set(Color.getHSBColor(mHSB[0], mHSB[1], mHSB[2]).getRGB()));
 				aPane.repaint();
 			}
 			else
 			{
-				x -= mChartOffet - cb.x;
+				x -= mHSBCircleOffet - cb.x;
 
-				if (x >= 0 && x < S && y >= 0 && y < S)
+				if (x >= 0 && x < mSize && y >= 0 && y < mSize)
 				{
-					int s = mChartImage.getWidth();
-					int q = s / S;
-					x *= q;
-					y *= q;
-					int rgb = mChartImage.getRGB(x, y);
+					int iw = mHSBCircleImage.getWidth();
+					int rgb = mHSBCircleImage.getRGB(x * iw / mSize, y * iw / mSize);
 
 					if ((rgb >>> 24) == 255)
 					{
-						setColor(new Color(rgb));
+						setColor(new Vec4d().set(rgb));
+						aPane.repaint();
 					}
-					else
-					{
-//						double l = Math.sqrt(Math.pow(x - s / 2, 2) + Math.pow(y - s / 2, 2));
-//						System.out.println(l);
-//						double dx = (x - s / 2) / ((double)s / 2);
-//						double dy = (y - s / 2) / ((double)s / 2);
-						double dx = (x - s / 2) / ((double)s / 2);
-						double dy = (y - s / 2) / ((double)s / 2);
-						System.out.println(dx + " " + dy);
-						x = s / 2 + (int)(s / 2 * dx);
-						y = s / 2 + (int)(s / 2 * dy);
-						rgb = mChartImage.getRGB(x, y);
-						if ((rgb >>> 24) == 255)
-						{
-							setColor(new Color(mChartImage.getRGB(x, y)));
-						}
-					}
-					aPane.repaint();
 				}
 			}
 		}
 		catch (Exception e)
 		{
-			System.out.println("#");
 			// ignore
 		}
+	}
+
+
+	protected Vec4d openColorChooser(NodeEditorPane aPane) throws HeadlessException
+	{
+		return new Vec4d().set(JColorChooser.showDialog(aPane, "", new Color(mColor.intValue())).getRGB());
 	}
 
 
 	@Override
 	public Object execute(Context aContext)
 	{
-		return mColor;
+		return mColor.clone();
 	}
 
 

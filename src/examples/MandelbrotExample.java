@@ -157,7 +157,7 @@ public class MandelbrotExample
 				.addComponent(new Node("RGB")
 					.setTitleBackground(DefaultNodeColors.BROWN)
 					.setBounds(-200, 400, 200, 200)
-					.addProperty(new RGBPaletteProperty(new Color(100,200,50)))
+					.addProperty(new RGBPaletteProperty(new Vec4d(0.4,0.8,0.1,1)).addConnector(OUT, Color.yellow))
 				)
 				.addConnection(6, 1, 0, 2)
 				.addConnection(6, 0, 0, 1)

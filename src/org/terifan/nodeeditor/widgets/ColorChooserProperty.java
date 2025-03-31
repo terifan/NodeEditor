@@ -2,6 +2,7 @@ package org.terifan.nodeeditor.widgets;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.HeadlessException;
 import java.awt.Point;
 import java.awt.Rectangle;
 import javax.swing.JColorChooser;
@@ -20,36 +21,37 @@ public class ColorChooserProperty extends Property<ColorChooserProperty>
 	private static final long serialVersionUID = 1L;
 	private final Rectangle mButtonBounds;
 
-	private final Vec4d mColor;
+	private Vec4d mColor;
 
 
 	public ColorChooserProperty()
 	{
-		this("", Color.BLACK);
+		this("");
 	}
 
 
 	public ColorChooserProperty(String aText)
 	{
-		this(aText, Color.BLACK);
+		this(aText, new Vec4d(0, 0, 0, 1));
 	}
 
 
-	public ColorChooserProperty(String aText, Color aColor)
+	public ColorChooserProperty(String aText, Vec4d aColor)
 	{
 		super(aText);
 
 		mButtonBounds = new Rectangle();
-		mColor = new Vec4d();
+		mColor = new Vec4d(0, 0, 0, 1);
 
 		setColor(aColor);
 		getPreferredSize().height = 20;
 	}
 
 
-	public void setColor(Color aColor)
+	public ColorChooserProperty setColor(Vec4d aColor)
 	{
-		mColor.set(aColor.getRed() / 255.0, aColor.getGreen() / 255.0, aColor.getBlue() / 255.0, aColor.getAlpha() / 255.0);
+		mColor = aColor;
+		return this;
 	}
 
 
@@ -89,7 +91,7 @@ public class ColorChooserProperty extends Property<ColorChooserProperty>
 	{
 		if (!isConnected(Direction.IN) && mButtonBounds.contains(aClickPoint))
 		{
-			Color color = JColorChooser.showDialog(aPane, mTextBox.getText(), new Color(mColor.intValue()));
+			Vec4d color = openColorChooser(aPane);
 			if (color != null)
 			{
 				setColor(color);
@@ -99,6 +101,12 @@ public class ColorChooserProperty extends Property<ColorChooserProperty>
 		}
 
 		return false;
+	}
+
+
+	protected Vec4d openColorChooser(NodeEditorPane aPane) throws HeadlessException
+	{
+		return new Vec4d().set(JColorChooser.showDialog(aPane, mTextBox.getText(), new Color(mColor.intValue())).getRGB());
 	}
 
 
@@ -112,7 +120,7 @@ public class ColorChooserProperty extends Property<ColorChooserProperty>
 			return value;
 		}
 
-		return mColor;
+		return mColor.clone();
 	}
 
 

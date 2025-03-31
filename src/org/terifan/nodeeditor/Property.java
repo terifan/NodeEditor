@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import org.terifan.nodeeditor.Styles.DefaultConnectorColors;
 import org.terifan.nodeeditor.Styles.DefaultNodeColors;
 import org.terifan.ui.TextBox;
+import org.terifan.vecmath.Vec4d;
 
 
 public abstract class Property<T extends Property> implements Serializable
@@ -274,6 +275,12 @@ public abstract class Property<T extends Property> implements Serializable
 			System.out.print(".bind(\"" + getModelId() + "\")");
 		}
 		System.out.print(")");
+	}
+
+
+	protected static String colorToJava(Vec4d aColor)
+	{
+		return colorToJava(new Color(aColor.intValue()));
 	}
 
 
