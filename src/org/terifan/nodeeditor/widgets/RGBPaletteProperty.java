@@ -216,9 +216,9 @@ public class RGBPaletteProperty extends Property<RGBPaletteProperty>
 //						double dy = (y - s / 2) / ((double)s / 2);
 						double dx = (x - s / 2) / ((double)s / 2);
 						double dy = (y - s / 2) / ((double)s / 2);
-						System.out.println(dx+" "+dy);
-						x = s/2+(int)(s/2 * dx);
-						y = s/2+(int)(s/2 * dy);
+						System.out.println(dx + " " + dy);
+						x = s / 2 + (int)(s / 2 * dx);
+						y = s / 2 + (int)(s / 2 * dy);
 						rgb = mChartImage.getRGB(x, y);
 						if ((rgb >>> 24) == 255)
 						{
