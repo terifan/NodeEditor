@@ -109,15 +109,15 @@ public class Node extends BoxComponent<Node, NodeEditorPane> implements Serializ
 
 
 	@Override
-	public void paintComponent(NodeEditorPane aPane, Graphics2D aGraphics, int aWidth, int aHeight, boolean aSelected)
+	public void paintComponent(NodeEditorPane aEditor, Graphics2D aGraphics, int aWidth, int aHeight, boolean aSelected)
 	{
-		super.paintComponent(aPane, aGraphics, aWidth, aHeight, aSelected);
+		super.paintComponent(aEditor, aGraphics, aWidth, aHeight, aSelected);
 
 		if (!mMinimized)
 		{
 			for (Property item : mProperties)
 			{
-				item.paintComponent(aPane, aGraphics, false);
+				item.paintComponent(aEditor, aGraphics, false);
 			}
 		}
 

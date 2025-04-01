@@ -6,8 +6,6 @@ import java.awt.LinearGradientPaint;
 import java.awt.Paint;
 import java.awt.Point;
 import java.awt.Stroke;
-import java.util.ArrayList;
-import org.terifan.nodeeditor.Connector;
 import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.Property;
 import org.terifan.nodeeditor.Styles;
@@ -39,7 +37,7 @@ public class CheckBoxProperty extends Property<CheckBoxProperty>
 
 
 	@Override
-	protected void paintComponent(NodeEditorPane aPane, Graphics2D aGraphics, boolean aHover)
+	protected void paintComponent(NodeEditorPane aEditor, Graphics2D aGraphics, boolean aHover)
 	{
 		int x = getBounds().x;
 		int y = getBounds().y;
@@ -91,10 +89,10 @@ public class CheckBoxProperty extends Property<CheckBoxProperty>
 
 
 	@Override
-	protected boolean mousePressed(NodeEditorPane aPane, Point aClickPoint)
+	protected boolean mousePressed(NodeEditorPane aEditor, Point aClickPoint)
 	{
 		mSelected = !mSelected;
-		aPane.repaint();
+		aEditor.repaint();
 		return true;
 	}
 

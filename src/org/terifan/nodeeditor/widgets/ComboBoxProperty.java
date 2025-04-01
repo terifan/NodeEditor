@@ -48,7 +48,7 @@ public class ComboBoxProperty extends Property<ComboBoxProperty>
 
 
 	@Override
-	protected void paintComponent(NodeEditorPane aPane, Graphics2D aGraphics, boolean aHover)
+	protected void paintComponent(NodeEditorPane aEditor, Graphics2D aGraphics, boolean aHover)
 	{
 		Paint oldPaint = aGraphics.getPaint();
 		Rectangle bounds = getBounds();
@@ -76,7 +76,7 @@ public class ComboBoxProperty extends Property<ComboBoxProperty>
 
 
 	@Override
-	protected boolean mousePressed(NodeEditorPane aPane, Point aClickPoint)
+	protected boolean mousePressed(NodeEditorPane aEditor, Point aClickPoint)
 	{
 		mArmed = true;
 
@@ -106,22 +106,22 @@ public class ComboBoxProperty extends Property<ComboBoxProperty>
 			});
 		}
 
-		Popup popup = new Popup(aPane, this, mHeader, getBounds(), options, e -> setSelectedIndex(options.indexOf(e)));
+		Popup popup = new Popup(aEditor, this, mHeader, getBounds(), options, e -> setSelectedIndex(options.indexOf(e)));
 
-		aPane.setPopup(popup);
-		aPane.repaint();
+		aEditor.setPopup(popup);
+		aEditor.repaint();
 
 		return true;
 	}
 
 
 	@Override
-	protected void mouseReleased(NodeEditorPane aPane, Point aClickPoint)
+	protected void mouseReleased(NodeEditorPane aEditor, Point aClickPoint)
 	{
 		mArmed = false;
 
-		aPane.setPopup(null);
-		aPane.repaint();
+		aEditor.setPopup(null);
+		aEditor.repaint();
 	}
 
 

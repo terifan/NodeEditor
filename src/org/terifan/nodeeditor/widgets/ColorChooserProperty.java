@@ -56,7 +56,7 @@ public class ColorChooserProperty extends Property<ColorChooserProperty>
 
 
 	@Override
-	protected void paintComponent(NodeEditorPane aPane, Graphics2D aGraphics, boolean aHover)
+	protected void paintComponent(NodeEditorPane aEditor, Graphics2D aGraphics, boolean aHover)
 	{
 		Rectangle bounds = getBounds();
 		Rectangle tb = mTextBox
@@ -87,15 +87,15 @@ public class ColorChooserProperty extends Property<ColorChooserProperty>
 
 
 	@Override
-	protected boolean mousePressed(NodeEditorPane aPane, Point aClickPoint)
+	protected boolean mousePressed(NodeEditorPane aEditor, Point aClickPoint)
 	{
 		if (!isConnected(Direction.IN) && mButtonBounds.contains(aClickPoint))
 		{
-			Vec4d color = openColorChooser(aPane);
+			Vec4d color = openColorChooser(aEditor);
 			if (color != null)
 			{
 				setColor(color);
-				aPane.repaint();
+				aEditor.repaint();
 				return true;
 			}
 		}

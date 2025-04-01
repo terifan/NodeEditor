@@ -156,8 +156,9 @@ public class MandelbrotExample
 				)
 				.addComponent(new Node("RGB")
 					.setTitleBackground(DefaultNodeColors.BROWN)
-					.setBounds(-200, 400, 200, 200)
-					.addProperty(new RGBPaletteProperty(new Vec4d(0.4,0.8,0.1,1)).addConnector(OUT, Color.yellow))
+					.setBounds(-200, 400, 200, 0)
+					.addProperty(new ValueProperty("Color").addConnector(OUT, Color.yellow).setReference("color"))
+					.addProperty(new RGBPaletteProperty(new Vec4d(0.4,0.8,0.1,1)).setId("color"))
 				)
 				.addConnection(6, 1, 0, 2)
 				.addConnection(6, 0, 0, 1)
@@ -183,10 +184,12 @@ public class MandelbrotExample
 			// --
 
 			NodeEditorPane editor = new NodeEditorPane(model)
+				.center();
+
+			editor.getRegistry()
 				.bind("palette", palette)
 				.bind("mandelbrot", mandelbrot)
-				.bind("run", buttonAction)
-				.center();
+				.bind("run", buttonAction);
 
 			SimpleNodesFactory.install(editor);
 

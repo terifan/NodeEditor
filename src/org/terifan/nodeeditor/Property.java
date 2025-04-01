@@ -19,15 +19,16 @@ public abstract class Property<T extends Property> implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
-	protected final ArrayList<Connector> mConnectors;
-	protected final Dimension mPreferredSize;
-	protected final Rectangle mBounds;
-	protected final TextBox mTextBox;
+	protected ArrayList<Connector> mConnectors;
+	protected Dimension mPreferredSize;
+	protected Rectangle mBounds;
+	protected TextBox mTextBox;
 	protected boolean mUserSetSize;
 	protected Node mNode;
 	protected String mId;
 	protected String mModelId;
 	protected String mProducer;
+	protected String mReference;
 
 
 	public Property()
@@ -51,7 +52,7 @@ public abstract class Property<T extends Property> implements Serializable
 	}
 
 
-	protected abstract void paintComponent(NodeEditorPane aPane, Graphics2D aGraphics, boolean aHover);
+	protected abstract void paintComponent(NodeEditorPane aEditor, Graphics2D aGraphics, boolean aHover);
 
 
 	public String getProducer()
@@ -102,6 +103,19 @@ public abstract class Property<T extends Property> implements Serializable
 	public String getModelId()
 	{
 		return mModelId;
+	}
+
+
+	public String getReference()
+	{
+		return mReference;
+	}
+
+
+	public T setReference(String aReference)
+	{
+		mReference = aReference;
+		return (T)this;
 	}
 
 
@@ -202,26 +216,26 @@ public abstract class Property<T extends Property> implements Serializable
 	/**
 	 * Should return true if the clicked point will perform an action. This method return false.
 	 */
-	protected boolean mousePressed(NodeEditorPane aPane, Point aClickPoint)
+	protected boolean mousePressed(NodeEditorPane aEditor, Point aClickPoint)
 	{
 		return false;
 	}
 
 
-	protected void mouseReleased(NodeEditorPane aPane, Point aClickPoint)
+	protected void mouseReleased(NodeEditorPane aEditor, Point aClickPoint)
 	{
 	}
 
 
-	protected void mouseDragged(NodeEditorPane aPane, Point aClickPoint, Point aDragPoint)
+	protected void mouseDragged(NodeEditorPane aEditor, Point aClickPoint, Point aDragPoint)
 	{
 	}
 
 
 	// ugly, remove somehow
-	public void fireMouseReleased(NodeEditorPane aPane, Point aPoint)
+	public void fireMouseReleased(NodeEditorPane aEditor, Point aPoint)
 	{
-		mouseReleased(aPane, aPoint);
+		mouseReleased(aEditor, aPoint);
 	}
 
 
@@ -248,7 +262,11 @@ public abstract class Property<T extends Property> implements Serializable
 		}
 		if (mProducer != null)
 		{
-			return (T)aContext.getEditor().getBindings().get(mProducer).invoke(new Context(aContext.getEditor(), this));
+			return (T)aContext.getEditor().getRegistry().get(mProducer, NodeFunction.class).invoke(new Context(aContext.getEditor(), this));
+		}
+		if (mReference != null)
+		{
+			return (T)getNode().getProperty(mReference).execute(aContext);
 		}
 
 		return null;

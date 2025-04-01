@@ -20,17 +20,15 @@ import org.terifan.nodeeditor.graphics.SplineRenderer;
 class NodeEditorMouseListener<T extends Node, U extends NodeEditorPane> extends BoxComponentMouseListener<Node, NodeEditorPane>
 {
 	private boolean mIgnoreNextMouseRelease;
-	private boolean mConnectorSelectionAllowed;
 	private boolean mRemoveInConnectionsOnDrop;
 	private Property mSelectedProperty;
 
 
-	public NodeEditorMouseListener(NodeEditorPane aPane)
+	public NodeEditorMouseListener(NodeEditorPane aEditor)
 	{
-		super(aPane);
+		super(aEditor);
 
 		mRemoveInConnectionsOnDrop = true;
-		mConnectorSelectionAllowed = true;
 	}
 
 
@@ -89,15 +87,13 @@ class NodeEditorMouseListener<T extends Node, U extends NodeEditorPane> extends 
 			if (dragConnector.getDirection() == Direction.IN)
 			{
 				List<Connection> list = model.getConnectionsTo(dragConnector.getProperty());
-				if (list.size() > 0)
+				if (!list.isEmpty())
 				{
 					Connector out = list.get(0).getOut();
 
 					mViewPort.setConnectorDragFrom(out);
 					mViewPort.setDragEndLocation(out.getConnectorPoint());
 					point = out.getConnectorPoint();
-
-//					out.getProperty().connectionsChanged(out);
 
 					model.getConnections().remove(list.get(0));
 				}
@@ -106,7 +102,6 @@ class NodeEditorMouseListener<T extends Node, U extends NodeEditorPane> extends 
 			mViewPort.setDragStartLocation(point);
 			return;
 		}
-
 
 		if (mCursor != Cursor.DEFAULT_CURSOR && mCursor != Cursor.HAND_CURSOR)
 		{
@@ -375,7 +370,7 @@ class NodeEditorMouseListener<T extends Node, U extends NodeEditorPane> extends 
 			mViewPort.getModel().moveTop(newClicked);
 			mViewPort.setSelectedConnection(null);
 		}
-		else if (mConnectorSelectionAllowed)
+		else if (mViewPort.isConnectorSelectionAllowed())
 		{
 			double dist = 50;
 			Connection nearest = null;

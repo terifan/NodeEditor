@@ -124,7 +124,7 @@ public class SliderProperty extends Property<SliderProperty>
 
 
 	@Override
-	protected void paintComponent(NodeEditorPane aPane, Graphics2D aGraphics, boolean aHover)
+	protected void paintComponent(NodeEditorPane aEditor, Graphics2D aGraphics, boolean aHover)
 	{
 		Rectangle bounds = getBounds();
 
@@ -217,13 +217,13 @@ public class SliderProperty extends Property<SliderProperty>
 
 
 	@Override
-	protected boolean mousePressed(NodeEditorPane aPane, Point aClickPoint)
+	protected boolean mousePressed(NodeEditorPane aEditor, Point aClickPoint)
 	{
 		if (!isConnected(Direction.IN))
 		{
 			mArmed = true;
 			mStartValue = mValue;
-			aPane.repaint();
+			aEditor.repaint();
 			return true;
 		}
 
@@ -232,18 +232,18 @@ public class SliderProperty extends Property<SliderProperty>
 
 
 	@Override
-	protected void mouseReleased(NodeEditorPane aPane, Point aClickPoint)
+	protected void mouseReleased(NodeEditorPane aEditor, Point aClickPoint)
 	{
 		if (!isConnected(Direction.IN))
 		{
 			mArmed = false;
-			aPane.repaint();
+			aEditor.repaint();
 		}
 	}
 
 
 	@Override
-	protected void mouseDragged(NodeEditorPane aPane, Point aClickPoint, Point aDragPoint)
+	protected void mouseDragged(NodeEditorPane aEditor, Point aClickPoint, Point aDragPoint)
 	{
 		if (!isConnected(Direction.IN))
 		{
@@ -260,7 +260,7 @@ public class SliderProperty extends Property<SliderProperty>
 
 			mValue = Math.max(Math.min(mValue, mMax), mMin);
 
-			aPane.repaint();
+			aEditor.repaint();
 		}
 	}
 

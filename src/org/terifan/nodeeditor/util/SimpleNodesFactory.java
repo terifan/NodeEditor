@@ -6,6 +6,7 @@ import static org.terifan.nodeeditor.Direction.OUT;
 import org.terifan.nodeeditor.Node;
 import org.terifan.nodeeditor.NodeEditorPane;
 import org.terifan.nodeeditor.NodeFunction;
+import org.terifan.nodeeditor.Registry;
 import org.terifan.nodeeditor.Styles;
 import static org.terifan.nodeeditor.Styles.DefaultConnectorColors.GRAY;
 import static org.terifan.nodeeditor.Styles.DefaultConnectorColors.PURPLE;
@@ -148,20 +149,21 @@ public class SimpleNodesFactory
 	private static NodeFunction mValueProducer = aContext -> aContext.value("value");
 
 
-	public static void install(NodeEditorPane aRuntime)
+	public static void install(NodeEditorPane aEditor)
 	{
-		aRuntime.bind(PREFIX + ".ColorAlphaProducer", mColorAlphaProducer);
-		aRuntime.bind(PREFIX + ".ColorMixProducer", mColorMixProducer);
-		aRuntime.bind(PREFIX + ".MathProducer", mMathProducer);
-		aRuntime.bind(PREFIX + ".CombineColorProducer", mCombineColorProducer);
-		aRuntime.bind(PREFIX + ".RGBProducer", mRGBProducer);
-		aRuntime.bind(PREFIX + ".AlphaProducer", mAlphaProducer);
-		aRuntime.bind(PREFIX + ".ValueProducer", mValueProducer);
-		aRuntime.bind(PREFIX + ".SeparateColorRedProducer", mSeparateColorRedProducer);
-		aRuntime.bind(PREFIX + ".SeparateColorGreenProducer", mSeparateColorGreenProducer);
-		aRuntime.bind(PREFIX + ".SeparateColorBlueProducer", mSeparateColorBlueProducer);
-		aRuntime.bind(PREFIX + ".SeparateColorAlphaProducer", mSeparateColorAlphaProducer);
-		aRuntime.bind(PREFIX + ".InvertColorProducer", mInvertColorProducer);
+		Registry registry = aEditor.getRegistry();
+		registry.bind(PREFIX + ".ColorAlphaProducer", mColorAlphaProducer);
+		registry.bind(PREFIX + ".ColorMixProducer", mColorMixProducer);
+		registry.bind(PREFIX + ".MathProducer", mMathProducer);
+		registry.bind(PREFIX + ".CombineColorProducer", mCombineColorProducer);
+		registry.bind(PREFIX + ".RGBProducer", mRGBProducer);
+		registry.bind(PREFIX + ".AlphaProducer", mAlphaProducer);
+		registry.bind(PREFIX + ".ValueProducer", mValueProducer);
+		registry.bind(PREFIX + ".SeparateColorRedProducer", mSeparateColorRedProducer);
+		registry.bind(PREFIX + ".SeparateColorGreenProducer", mSeparateColorGreenProducer);
+		registry.bind(PREFIX + ".SeparateColorBlueProducer", mSeparateColorBlueProducer);
+		registry.bind(PREFIX + ".SeparateColorAlphaProducer", mSeparateColorAlphaProducer);
+		registry.bind(PREFIX + ".InvertColorProducer", mInvertColorProducer);
 	}
 
 

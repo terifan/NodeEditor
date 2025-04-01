@@ -6,27 +6,20 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.function.Function;
 import org.terifan.boxcomponentpane.BoxComponentPane;
 import org.terifan.nodeeditor.graphics.SplineRenderer;
-import org.terifan.nodeeditor.widgets.ButtonProperty;
 
 
 public class NodeEditorPane extends BoxComponentPane<Node, NodeEditorPane>
 {
 	private static final long serialVersionUID = 1L;
 
-	private transient Function<String, BufferedImage> mIconProvider;
-
-	private transient final ArrayList<OnClickHandler> mButtonHandlers;
-	private transient Property mClickedItem;
 	private transient Popup mPopup;
+	private transient Property mClickedItem;
 	private transient Connection mSelectedConnection;
 	private transient Connector mConnectorDragFrom;
-	private transient HashMap<String, NodeFunction> mBindings;
+	private transient Registry mRegistry;
 
 	private boolean mConnectorSelectionAllowed;
 	private boolean mRemoveInConnectionsOnDrop;
@@ -36,47 +29,27 @@ public class NodeEditorPane extends BoxComponentPane<Node, NodeEditorPane>
 	{
 		super(aModel);
 
-		mBindings = new HashMap<>();
-		mButtonHandlers = new ArrayList<>();
+		mRegistry = new Registry();
 		mRemoveInConnectionsOnDrop = true;
-
-		setIconProvider(Styles::loadIcon);
 	}
 
 
-	public NodeEditorPane bind(String aId, NodeFunction aFunction)
+	public Registry getRegistry()
 	{
-		if (mBindings.containsKey(aId))
-		{
-			throw new IllegalArgumentException("ID already bound: " + aId);
-		}
-		mBindings.put(aId, aFunction);
+		return mRegistry;
+	}
+
+
+	public NodeEditorPane setRegistry(Registry aRegistry)
+	{
+		mRegistry = aRegistry;
 		return this;
-	}
-
-
-	public HashMap<String, NodeFunction> getBindings()
-	{
-		return mBindings;
 	}
 
 
 	public void invoke(String aId, Property aProperty)
 	{
-		mBindings.get(aId).invoke(new Context(this, aProperty));
-	}
-
-
-	public NodeEditorPane setIconProvider(Function<String, BufferedImage> aProvider)
-	{
-		mIconProvider = aProvider;
-		return this;
-	}
-
-
-	public Function<String, BufferedImage> getIconProvider()
-	{
-		return mIconProvider;
+		mRegistry.get(aId, NodeFunction.class).invoke(new Context(this, aProperty));
 	}
 
 
@@ -172,25 +145,6 @@ public class NodeEditorPane extends BoxComponentPane<Node, NodeEditorPane>
 	}
 
 
-	public NodeEditorPane addButtonHandler(OnClickHandler aHandler)
-	{
-		mButtonHandlers.add(aHandler);
-		return this;
-	}
-
-
-	public void fireButtonClicked(ButtonProperty aButton)
-	{
-		for (OnClickHandler handler : mButtonHandlers)
-		{
-			if (handler.onClick(aButton))
-			{
-				return;
-			}
-		}
-	}
-
-
 	public Connector findNearestConnector(Point aPoint, Node aPrioritizeNode, boolean aDropTarget)
 	{
 		Connector nearest = null;
@@ -264,8 +218,6 @@ public class NodeEditorPane extends BoxComponentPane<Node, NodeEditorPane>
 //
 //		return nearest;
 //	}
-
-
 	@Override
 	protected void paintBoxComponents(Graphics2D aGraphics)
 	{

@@ -4,7 +4,6 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import javax.imageio.ImageIO;
 
 
@@ -178,15 +177,15 @@ public class Styles
 	public static int POPUP_DEFAULT_OPTION_HEIGHT = 20;
 	public static Color POPUP_FOREGROUND = new Color(255, 255, 255);
 	public static Color POPUP_HEADER_FOREGROUND = new Color(128, 128, 128);
-	public static Color POPUP_SELECTION_BACKGROUND = new Color(71,114,179);
+	public static Color POPUP_SELECTION_BACKGROUND = new Color(71, 114, 179);
 	public static Color POPUP_HEADER_LINE = new Color(55, 55, 55);
 	public static Color POPUP_BACKGROUND = new Color(16, 16, 16, 220);
 
 
 	public static interface DefaultIcons
 	{
-		public String FOLDER = "folder";
-		public String RUN = "run";
+		public String FOLDER = DefaultIcons.class.getCanonicalName() + ".folder";
+		public String RUN = DefaultIcons.class.getCanonicalName() + ".run";
 	}
 
 
@@ -224,9 +223,8 @@ public class Styles
 		{
 			return ImageIO.read(Styles.class.getResource("icons/" + aName + ".png"));
 		}
-		catch (IOException e)
+		catch (Exception e)
 		{
-			e.printStackTrace(System.err);
 			return null;
 		}
 	}

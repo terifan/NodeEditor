@@ -39,7 +39,7 @@ public class Popup implements Renderable<Node, NodeEditorPane>
 	 * @param aOptions list of selectable options, can be empty
 	 * @param aResultReceiver
 	 */
-	public Popup(NodeEditorPane aPane, Property aOwner, String aHeader, Rectangle aBounds, List<Option> aOptions, ResultReceiver aResultReceiver)
+	public Popup(NodeEditorPane aEditor, Property aOwner, String aHeader, Rectangle aBounds, List<Option> aOptions, ResultReceiver aResultReceiver)
 	{
 		mHeader = aHeader;
 		mOwner = aOwner;
@@ -70,7 +70,7 @@ public class Popup implements Renderable<Node, NodeEditorPane>
 		{
 			mBounds.y += aOwner.getBounds().height;
 		}
-		mPane = aPane;
+		mPane = aEditor;
 	}
 
 
@@ -88,7 +88,7 @@ public class Popup implements Renderable<Node, NodeEditorPane>
 
 
 	@Override
-	public void paintComponent(NodeEditorPane aPane, Graphics2D aGraphics, int aWidth, int aHeight, boolean aSelected)
+	public void paintComponent(NodeEditorPane aEditor, Graphics2D aGraphics, int aWidth, int aHeight, boolean aSelected)
 	{
 		int w = aWidth;
 		int h = aHeight;

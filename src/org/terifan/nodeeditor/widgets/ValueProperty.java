@@ -1,8 +1,6 @@
 package org.terifan.nodeeditor.widgets;
 
 import java.awt.Graphics2D;
-import java.util.ArrayList;
-import org.terifan.nodeeditor.Connector;
 import org.terifan.nodeeditor.Context;
 import org.terifan.nodeeditor.Direction;
 import org.terifan.nodeeditor.Property;
@@ -26,7 +24,7 @@ public class ValueProperty extends Property<ValueProperty>
 
 
 	@Override
-	protected void paintComponent(NodeEditorPane aPane, Graphics2D aGraphics, boolean aHover)
+	protected void paintComponent(NodeEditorPane aEditor, Graphics2D aGraphics, boolean aHover)
 	{
 		mTextBox
 			.setBounds(getBounds())

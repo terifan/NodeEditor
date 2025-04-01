@@ -16,7 +16,10 @@ import org.terifan.ui.ImageResizer;
 public class ButtonProperty extends Property<ButtonProperty>
 {
 	private final static long serialVersionUID = 1L;
-	private final static float[] RANGES = new float[]{0f,1f};
+	private final static float[] RANGES = new float[]
+	{
+		0f, 1f
+	};
 
 	private transient boolean mArmed;
 
@@ -28,6 +31,7 @@ public class ButtonProperty extends Property<ButtonProperty>
 		super(aText);
 
 		setIcon(Styles.DefaultIcons.FOLDER);
+
 		mTextBox.setAnchor(Anchor.CENTER).setMargins(4, 0, 4, 0).setMaxLineCount(1).setFont(Styles.SLIDER_FONT);
 	}
 
@@ -54,7 +58,7 @@ public class ButtonProperty extends Property<ButtonProperty>
 
 
 	@Override
-	protected void paintComponent(NodeEditorPane aPane, Graphics2D aGraphics, boolean aHover)
+	protected void paintComponent(NodeEditorPane aEditor, Graphics2D aGraphics, boolean aHover)
 	{
 		int x = getBounds().x;
 		int y = getBounds().y;
@@ -71,11 +75,11 @@ public class ButtonProperty extends Property<ButtonProperty>
 
 		if (mIcon != null)
 		{
-			BufferedImage image = aPane.getIconProvider().apply(mIcon);
+			BufferedImage image = aEditor.getRegistry().get(mIcon, BufferedImage.class);
 			if (image != null)
 			{
 				int t = h - 6;
-				int s = (int)(t * aPane.getScale());
+				int s = (int)(t * aEditor.getScale());
 				aGraphics.drawImage(ImageResizer.getScaledImageAspect(image, s, s, true), x + 4, y + 3, t, t, null);
 			}
 		}

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.terifan.boxcomponentpane.BoxComponentModel;
-import static org.terifan.nodeeditor.Property.colorToJava;
 import static org.terifan.util.Assert.*;
 
 
