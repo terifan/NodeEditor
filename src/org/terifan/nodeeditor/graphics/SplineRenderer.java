@@ -9,6 +9,7 @@ import java.awt.Stroke;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
+import java.util.Random;
 import org.terifan.math.VectorMath;
 import org.terifan.nodeeditor.Connection;
 import org.terifan.nodeeditor.Styles;
@@ -22,19 +23,19 @@ public class SplineRenderer
 	}
 
 
-	public static void drawSpline(Graphics2D aGraphics, Point aFrom, Point aTo, double aScale, Color aBackgroundColor, Color aStartColor, Color aEndColor)
+	public static void drawSpline(Graphics2D aGraphics, Point aFrom, Point aTo, double aScale, Color aBackgroundColor, Color aStartColor, Color aEndColor, boolean aDashed)
 	{
-		drawSplineImpl(aGraphics, createSpline(aFrom, aTo), aScale, aBackgroundColor, aStartColor, aEndColor);
+		drawSplineImpl(aGraphics, createSpline(aFrom, aTo), aScale, aBackgroundColor, aStartColor, aEndColor, aDashed);
 	}
 
 
-	public static void drawSpline(Graphics2D aGraphics, Connection aConnection, double aScale, Color aBackgroundColor, Color aStartColor, Color aEndColor)
+	public static void drawSpline(Graphics2D aGraphics, Connection aConnection, double aScale, Color aBackgroundColor, Color aStartColor, Color aEndColor, boolean aDashed)
 	{
-		drawSplineImpl(aGraphics, createSpline(aConnection), aScale, aBackgroundColor, aStartColor, aEndColor);
+		drawSplineImpl(aGraphics, createSpline(aConnection), aScale, aBackgroundColor, aStartColor, aEndColor, aDashed);
 	}
 
 
-	private static void drawSplineImpl(Graphics2D aGraphics, BSpline aSpline, double aScale, Color aBackgroundColor, Color aStartColor, Color aEndColor)
+	private static void drawSplineImpl(Graphics2D aGraphics, BSpline aSpline, double aScale, Color aBackgroundColor, Color aStartColor, Color aEndColor, boolean aDashed)
 	{
 		Stroke old = aGraphics.getStroke();
 
@@ -42,7 +43,7 @@ public class SplineRenderer
 		BasicStroke STROKE_WIDE = new BasicStroke(Styles.CONNECTOR_STROKE_WIDTH_OUTER * strokeScale, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND);
 		BasicStroke STROKE_THIN = new BasicStroke(Styles.CONNECTOR_STROKE_WIDTH_INNER * strokeScale, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND);
 
-		Path2D.Double spline = createPath(aSpline, aScale, 0.0, 1.0);
+		Path2D.Double spline = createPath(aSpline, aScale, 0.0, 1.0, aDashed);
 		aGraphics.setStroke(STROKE_WIDE);
 		aGraphics.setColor(aBackgroundColor);
 		aGraphics.draw(spline);
@@ -66,7 +67,7 @@ public class SplineRenderer
 
 			for (int i = 0; i < segments; i++)
 			{
-				spline = createPath(aSpline, aScale, i / (double)segments, (i + 1) / (double)segments);
+				spline = createPath(aSpline, aScale, i / (double)segments, (i + 1) / (double)segments, aDashed);
 
 				double a = i / (double)(segments - 1);
 				int r = (int)(a * r1 + (1 - a) * r0);
@@ -108,17 +109,17 @@ public class SplineRenderer
 	}
 
 
-	private static Path2D.Double createPath(BSpline aSpline, double aScale, double aStart, double aEnd)
+	private static Path2D.Double createPath(BSpline aSpline, double aScale, double aStart, double aEnd, boolean aDashed)
 	{
-		int segments = Math.max(20, (int)aSpline.getPoint(0).distance(aSpline.getPoint(1)) / 4);
-
+		int segments = Math.max(10, (int)aSpline.getPoint(0).distance(aSpline.getPoint(1)) / 8);
 		Path2D.Double path = new Path2D.Double(Path2D.WIND_EVEN_ODD, segments);
 
 		boolean first = true;
+		boolean odd = true;
 		for (int i = (int)(segments * aStart); i < (int)(segments * aEnd) + 1; i++)
 		{
 			Point2D.Double pt = aSpline.getPoint(i / (double)(segments - 1));
-			if (first)
+			if (first || aDashed && odd)
 			{
 				first = false;
 				path.moveTo(pt.x, pt.y);
@@ -127,6 +128,7 @@ public class SplineRenderer
 			{
 				path.lineTo(pt.x, pt.y);
 			}
+			odd = !odd;
 		}
 
 		AffineTransform affineTransform = new AffineTransform();

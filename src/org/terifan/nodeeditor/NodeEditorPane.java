@@ -236,27 +236,29 @@ public class NodeEditorPane extends BoxComponentPane<Node, NodeEditorPane>
 				Color start = selected ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : connection.mOut.getColor();
 				Color end = selected ? Styles.CONNECTOR_COLOR_INNER_FOCUSED : connection.mIn.getColor();
 
-				SplineRenderer.drawSpline(aGraphics, connection, getScale(), Styles.CONNECTOR_COLOR_OUTER, start, end);
+				SplineRenderer.drawSpline(aGraphics, connection, getScale(), Styles.CONNECTOR_COLOR_OUTER, start, end, false);
 			}
 		}
 
 		super.paintBoxComponents(aGraphics);
 
+		aGraphics.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+
 		if (getDragEndLocation() != null)
 		{
 			if (mConnectorDragFrom.getDirection() == Direction.OUT)
 			{
-				SplineRenderer.drawSpline(aGraphics, getDragStartLocation(), getDragEndLocation(), getScale(), Styles.CONNECTOR_COLOR_OUTER, Styles.CONNECTOR_COLOR_INNER_DRAGGED, Styles.CONNECTOR_COLOR_INNER_DRAGGED);
+				SplineRenderer.drawSpline(aGraphics, getDragStartLocation(), getDragEndLocation(), getScale(), Styles.CONNECTOR_COLOR_OUTER, Styles.CONNECTOR_COLOR_INNER_DRAGGED, Styles.CONNECTOR_COLOR_INNER_DRAGGED, false);
 			}
 			else
 			{
-				SplineRenderer.drawSpline(aGraphics, getDragEndLocation(), getDragStartLocation(), getScale(), Styles.CONNECTOR_COLOR_OUTER, Styles.CONNECTOR_COLOR_INNER_DRAGGED, Styles.CONNECTOR_COLOR_INNER_DRAGGED);
+				SplineRenderer.drawSpline(aGraphics, getDragEndLocation(), getDragStartLocation(), getScale(), Styles.CONNECTOR_COLOR_OUTER, Styles.CONNECTOR_COLOR_INNER_DRAGGED, Styles.CONNECTOR_COLOR_INNER_DRAGGED, false);
 			}
 		}
 
 		if (mSelectedConnection != null)
 		{
-			SplineRenderer.drawSpline(aGraphics, mSelectedConnection, getScale(), Styles.CONNECTOR_COLOR_OUTER_SELECTED, mSelectedConnection.mOut.getColor(), mSelectedConnection.mIn.getColor());
+			SplineRenderer.drawSpline(aGraphics, mSelectedConnection, getScale(), Styles.CONNECTOR_COLOR_OUTER_SELECTED, mSelectedConnection.mOut.getColor(), mSelectedConnection.mIn.getColor(), false);
 		}
 
 		if (mPopup != null)
