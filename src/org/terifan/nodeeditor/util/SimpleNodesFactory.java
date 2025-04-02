@@ -50,6 +50,8 @@ public class SimpleNodesFactory
 						return v1.doubleValue() % v2.doubleValue();
 					case "Greater Than":
 						return v1.doubleValue() > v2.doubleValue() ? 1 : 0;
+					case "Pow":
+						return Math.pow(v1.doubleValue(), v2.doubleValue());
 				}
 			}
 			if (value2 instanceof Vec4d v2)
@@ -69,6 +71,8 @@ public class SimpleNodesFactory
 						return v2.clone().mod(d);
 					case "Greater Than":
 						return new Vec4d(d > v2.x ? 1 : 0, d > v2.y ? 1 : 0, d > v2.z ? 1 : 0, d > v2.w ? 1 : 0);
+					case "Pow":
+						return new Vec4d(Math.pow(d, v2.x), Math.pow(d, v2.y), Math.pow(d, v2.z), Math.pow(d, v2.w));
 				}
 			}
 		}
@@ -90,6 +94,8 @@ public class SimpleNodesFactory
 						return v1.clone().mod(v2);
 					case "Greater Than":
 						return new Vec4d(v1.x > v2.x ? 1 : 0, v1.y > v2.y ? 1 : 0, v1.z > v2.z ? 1 : 0, v1.w > v2.w ? 1 : 0);
+					case "Pow":
+						return new Vec4d(Math.pow(v1.x, v2.x), Math.pow(v1.y, v2.y), Math.pow(v1.z, v2.z), Math.pow(v1.w, v2.w));
 				}
 			}
 		}
@@ -223,7 +229,7 @@ public class SimpleNodesFactory
 	{
 		return (Node)new Node("Math",
 			new ValueProperty("Value").addConnector(OUT, GRAY).setProducer(PREFIX + ".MathProducer"),
-			new ComboBoxProperty("Operation", 2, "Add", "Subtract", "Multiply", "Divide", "Modulo", "Greater Than").setId("function"),
+			new ComboBoxProperty("Operation", 2, "Add", "Subtract", "Multiply", "Divide", "Modulo", "Pow", "Greater Than").setId("function"),
 			new CheckBoxProperty("Clamp", false).setId("clamp"),
 			new SliderProperty("Value", 1, 0.01).setId("value1").addConnector(IN, GRAY),
 			new SliderProperty("Value", 0.5, 0.01).setId("value2").addConnector(IN, GRAY)
