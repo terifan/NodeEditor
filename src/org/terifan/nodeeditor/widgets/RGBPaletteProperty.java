@@ -152,15 +152,17 @@ public class RGBPaletteProperty extends Property<RGBPaletteProperty>
 		ox += mSize / 2 - (int)(Math.sin(Math.PI * 2 * dx) * r);
 		oy += mSize / 2 + (int)(Math.cos(Math.PI * 2 * dx) * r);
 
-		aGraphics.setColor(new Color(255 - (int)(255 * mColor.z), 255 - (int)(255 * mColor.z), 255 - (int)(255 * mColor.z)));
+//		int g = (int)(255 * (mColor.x * 0.2126 + mColor.y * 0.7152 + mColor.z * 0.0722));
+		int g = mColor.z < 0.5 ? 255 : 0;
+		aGraphics.setColor(new Color(g, g, g));
 		aGraphics.setStroke(BASIC_STROKE_1);
+		aGraphics.translate(0, 0.5);
 		aGraphics.drawOval(ox - 6, oy - 6, 13, 13);
-
-//		aGraphics.setColor(TARGET_BRIGHT);
+		aGraphics.translate(0, -0.5);
+//		g = (int)(255 * (mColor.x * 0.2126 + mColor.y * 0.7152 + mColor.z * 0.0722));
+//		g = 255 - g;
+//		aGraphics.setColor(new Color(g, g, g));
 //		aGraphics.setStroke(BASIC_STROKE_1);
-//		aGraphics.drawOval(ox - 6, oy - 6, 13, 13);
-//		aGraphics.setColor(TARGET_DARK);
-//		aGraphics.setStroke(BASIC_STROKE_05);
 //		aGraphics.drawOval(ox - 6, oy - 6, 13, 13);
 	}
 
